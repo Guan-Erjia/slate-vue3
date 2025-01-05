@@ -8,6 +8,7 @@ import { defineComponent, h, onMounted, ref } from 'vue'
  * Leaf content strings.
  */
 const String = defineComponent({
+  name: 'String',
   props: {
     isLast: {},
     leaf: {},

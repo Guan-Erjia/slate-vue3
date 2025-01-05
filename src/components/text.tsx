@@ -14,6 +14,7 @@ import { defineComponent, h, onMounted, ref, type VNodeArrayChildren } from 'vue
  * Text.
  */
 export const TextComp = defineComponent({
+  name: 'Text',
   props: {
     decorations: {},
     isLast: {},
