@@ -1,5 +1,5 @@
-import { Element, type DecoratedRange, Text as SlateText } from 'slate'
-import { ReactEditor, useSlateStatic } from '..'
+import { Element, type DecoratedRange, Text as SlateText, Editor } from 'slate'
+import { ReactEditor, } from '../plugin/react-editor'
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
@@ -8,7 +8,7 @@ import {
 import { Leaf } from './leaf'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
-import { defineComponent, h, onMounted, ref, type VNodeArrayChildren } from 'vue'
+import { defineComponent, h, inject, onMounted, ref, toRaw, type VNodeArrayChildren } from 'vue'
 
 /**
  * Text.
@@ -33,7 +33,8 @@ export const TextComp = defineComponent({
   }) {
     const { decorations, isLast, parent, renderPlaceholder, renderLeaf, text } =
       props
-    const editor = useSlateStatic()
+    const editor = inject("editorRef") as Editor;
+    const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement | null>(null)
     const leaves = SlateText.decorations(text, decorations)
     const key = ReactEditor.findKey(editor, text)
@@ -58,7 +59,7 @@ export const TextComp = defineComponent({
     // Update element-related weak maps with the DOM element ref.
 
     onMounted(() => {
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
+      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
       if (spanRef.value) {
         KEY_TO_ELEMENT?.set(key, spanRef.value)
         NODE_TO_ELEMENT.set(text, spanRef.value)

@@ -65,7 +65,7 @@ export const Slate = defineComponent({
       };
     });
 
-    const focusCb = () => (editorIsFocus.value = ReactEditor.isFocused(editor));
+    const focusCb = () => editorIsFocus.value = ReactEditor.isFocused(editor)
     onMounted(() => {
       if (!Node.isNodeList(initialValue)) {
         throw new Error(
@@ -86,7 +86,7 @@ export const Slate = defineComponent({
     });
 
     onUnmounted(() => {
-      EDITOR_TO_ON_CHANGE.set(editor, () => { });
+      EDITOR_TO_ON_CHANGE.delete(editor);
       document.removeEventListener("focusin", focusCb);
       document.removeEventListener("focusout", focusCb);
     });

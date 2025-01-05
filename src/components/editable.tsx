@@ -1,8 +1,7 @@
 import { direction } from 'direction'
 import debounce from 'lodash/debounce'
 import throttle from 'lodash/throttle'
-import React, {
-} from 'react'
+import React from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import {
   Editor,
@@ -533,6 +532,12 @@ export const Editable = defineComponent({
               // Therefore we don't allow native events to insert text at the end of anchor nodes.
               const { anchor } = selection
 
+
+              const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
+              const [node1] = Editor.node(editor, anchor.path);
+              console.log(KEY_TO_ELEMENT?.get(DOMEditor.findKey(editor, node1)), DOMEditor.findKey(editor, node1))
+
+
               const [node, offset] = ReactEditor.toDOMPoint(editor, anchor)
               const anchorNode = node.parentElement?.closest('a')
 
@@ -1058,7 +1063,7 @@ export const Editable = defineComponent({
               domSelection?.removeAllRanges()
             }
 
-            IS_FOCUSED.delete(editor)
+            IS_FOCUSED.delete(rawEditor)
           }}
         onClick={(event: MouseEvent) => {
           if (
@@ -1372,7 +1377,7 @@ export const Editable = defineComponent({
                 return
               }
 
-              IS_FOCUSED.set(editor, true)
+              IS_FOCUSED.set(rawEditor, true)
             }
           }}
         onKeydown={

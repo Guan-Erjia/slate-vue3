@@ -2,26 +2,17 @@
 import { createEditor } from "slate";
 import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
-import { h, ref } from "vue";
+import { h } from "vue";
 import { withDOM } from "slate-dom";
 
 const initialValue = [
   {
     type: "paragraph",
     children: [{ text: "A line of text in a paragraph." }],
-  }, {
-    type: "paragraph",
-    children: [{ text: "A line of text in a paragraph." }],
-  }, {
-    type: "paragraph",
-    children: [{ text: "A line of text in a paragraph." }],
-  }, {
-    type: "paragraph",
-    children: [{ text: "A line of text in a paragraph." }],
-  },
+  }
 ];
 
-const editor = ref(withDOM(createEditor()))
+const editor = withDOM(createEditor())
 const renderElement = ({ attributes, children, }) => {
   return h('p', attributes, children)
 }
