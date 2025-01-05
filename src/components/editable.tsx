@@ -16,7 +16,6 @@ import {
   type DecoratedRange,
 } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
-import { useSlate } from '../hooks/use-slate'
 import { ReactEditor } from '../plugin/react-editor'
 import { TRIPLE_CLICK } from 'slate-dom'
 import {
@@ -62,7 +61,7 @@ import {
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
 import type { EditableProps, RenderPlaceholderProps } from './interface'
 import { computed, defineComponent, h, inject, onBeforeUnmount, onMounted, onUpdated, ref, watch, type Ref } from 'vue'
-import Children from '../hooks/Children'
+import { Children } from './children'
 
 type DeferredOperation = () => void
 const defaultRenderPlaceholder =
@@ -1694,7 +1693,6 @@ export const Editable = defineComponent({
             }
           }}
       >
-        <div>32141234</div>
         <Children
           decorations={decorations}
           node={editor}

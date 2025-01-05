@@ -7,7 +7,7 @@ import {
   type DecoratedRange,
 } from 'slate'
 import { ReactEditor, useReadOnly, useSlateStatic } from '..'
-import Children from '../hooks/Children'
+import { Children } from './children'
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
@@ -15,11 +15,11 @@ import {
   NODE_TO_INDEX,
   NODE_TO_PARENT,
 } from 'slate-dom'
-import Text from './text'
+import { TextComp } from './text'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
 import { defineComponent, onMounted, ref } from 'vue'
-import { DefaultElement } from './DefaultElement'
+import { DefaultElement } from './defaultElement'
 
 /**
  * Element.
@@ -68,7 +68,8 @@ const Element = defineComponent({
       }
     })
 
-    let children: JSX.Element = <Children decorations={decorations}
+    let children: JSX.Element = <Children
+      decorations={decorations}
       node={element}
       renderElement={renderElement}
       renderPlaceholder={renderPlaceholder}
@@ -125,7 +126,7 @@ const Element = defineComponent({
             position: 'absolute',
           }}
         >
-          <Text
+          <TextComp
             renderPlaceholder={renderPlaceholder}
             decorations={[]}
             isLast={false}

@@ -51,55 +51,25 @@ const String = defineComponent({
       return () => <ZeroWidthString isMarkPlaceholder={isMarkPlaceholder} />
     }
 
-    // COMPAT: Browsers will collapse trailing new lines at the end of blocks,
-    // so we need to add an extra trailing new lines to prevent that.
-    return () => <TextString isTrailing={isLast && leaf.text.slice(-1) === '\n'} text={leaf.text} />
-  }
-})
-
-/**
- * Leaf strings with text in them.
- */
-const TextString = defineComponent({
-  props: { text: {}, isTrailing: {} },
-  setup(props: { text: string; isTrailing?: boolean }) {
-    const { text, isTrailing = false } = props
     const spanRef = ref<HTMLSpanElement>()
+    const isTrailing = isLast && leaf.text.slice(-1) === '\n'
     const getTextContent = () => {
-      return `${text ?? ''}${isTrailing ? '\n' : ''}`
+      return `${leaf.text ?? ''}${isTrailing ? '\n' : ''}`
     }
-    const initialText = ref(getTextContent)
 
-    // This is the actual text rendering boundary where we interface with the DOM
-    // The text is not rendered as part of the virtual DOM, as since we handle basic character insertions natively,
-    // updating the DOM is not a one way dataflow anymore. What we need here is not reconciliation and diffing
-    // with previous version of the virtual DOM, but rather diffing with the actual DOM element, and replace the DOM <span> content
-    // exactly if and only if its current content does not match our current virtual DOM.
-    // Otherwise the DOM TextNode would always be replaced by React as the user types, which interferes with native text features,
-    // eg makes native spellcheck opt out from checking the text node.
-
-    // useLayoutEffect: updating our span before browser paint
     onMounted(() => {
-      // null coalescing text to make sure we're not outputing "null" as a string in the extreme case it is nullish at runtime
       const textWithTrailing = getTextContent()
-
       if (spanRef.value && spanRef.value?.textContent !== textWithTrailing) {
         spanRef.value.textContent = textWithTrailing
       }
-
-      // intentionally not specifying dependencies, so that this effect runs on every render
-      // as this effectively replaces "specifying the text in the virtual DOM under the <span> below" on each render
     })
 
-    // We intentionally render a memoized <span> that only receives the initial text content when the component is mounted.
-    // We defer to the layout effect above to update the `textContent` of the span element when needed.
     return () => h('span', {
       dataSlateString: true,
       ref: spanRef
-    }, initialText.value)
+    }, getTextContent)
   }
 })
-
 
 
 /**

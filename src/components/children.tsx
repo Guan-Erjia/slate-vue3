@@ -10,21 +10,21 @@ import {
 } from 'slate'
 
 
-import ElementComponent from '../components/element'
-import TextComponent from '../components/text'
+import ElementComponent from './element'
+import { TextComp } from './text'
 import { ReactEditor } from '../plugin/react-editor'
-import { IS_NODE_MAP_DIRTY, NODE_TO_ELEMENT, NODE_TO_INDEX, NODE_TO_KEY, NODE_TO_PARENT } from 'slate-dom'
+import { IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from 'slate-dom'
 import { useDecorate } from '../hooks/use-decorate'
 import { useSlateStatic } from '../hooks/use-slate-static'
 import type { JSX } from 'vue/jsx-runtime'
-import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from '../components/interface'
+import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
 import { defineComponent } from 'vue'
 
 /**
  * Children.
  */
 
-const Children = defineComponent({
+export const Children = defineComponent({
   name: 'Children',
   props: {
     decorations: {},
@@ -52,10 +52,8 @@ const Children = defineComponent({
     } = props
     const decorate = useDecorate()
     const editor = useSlateStatic()
-    console.log(editor.children)
     IS_NODE_MAP_DIRTY.set(editor as ReactEditor, false)
     const children: JSX.Element[] = []
-    console.log(NODE_TO_PARENT,NODE_TO_INDEX,NODE_TO_ELEMENT,NODE_TO_KEY, editor)
     const path = ReactEditor.findPath(editor, node)
     const isLeafBlock =
       Element.isElement(node) &&
@@ -92,7 +90,7 @@ const Children = defineComponent({
         )
       } else {
         children.push(
-          <TextComponent
+          <TextComp
             decorations={ds}
             key={key.id}
             isLast={isLeafBlock && i === node.children.length - 1}
@@ -112,4 +110,3 @@ const Children = defineComponent({
   }
 })
 
-export default Children

@@ -3,7 +3,7 @@ export {
   Editable, DefaultPlaceholder
 } from './components/editable'
 
-export { DefaultElement } from './components/DefaultElement'
+export { DefaultElement } from './components/defaultElement'
 export { DefaultLeaf } from './components/leaf'
 
 // Hooks
