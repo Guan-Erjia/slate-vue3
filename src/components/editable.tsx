@@ -60,7 +60,7 @@ import {
 } from 'slate-dom'
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
 import type { EditableProps, RenderPlaceholderProps } from './interface'
-import { computed, defineComponent, h, inject, onBeforeUnmount, onMounted, onUpdated, ref, watch, type Ref } from 'vue'
+import { computed, defineComponent, h, inject, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, watch, type Ref } from 'vue'
 import { Children } from './children'
 
 type DeferredOperation = () => void
@@ -102,7 +102,7 @@ export const Editable = defineComponent({
       disableDefaultStyles = false,
       ...attributes
     } = props
-    const editor = inject("editorRef") as Editor;
+    const editor = toRaw(inject("editorRef")) as Editor;
     // Rerender editor when composition status changed
     const isComposing = ref(false)
     const callbackRef = ref<HTMLDivElement | null>(null)
