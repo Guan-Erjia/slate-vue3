@@ -16,7 +16,7 @@ import {
 } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
 import { ReactEditor } from '../plugin/react-editor'
-import { DOMEditor, EDITOR_TO_KEY_TO_ELEMENT, TRIPLE_CLICK } from '../slate-dom'
+import { TRIPLE_CLICK } from '../slate-dom'
 import {
   DOMElement,
   DOMRange,
@@ -532,13 +532,7 @@ export const Editable = defineComponent({
               // Therefore we don't allow native events to insert text at the end of anchor nodes.
               const { anchor } = selection
 
-
-              const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
-              const [node1] = Editor.node(editor, anchor.path);
-              console.log(KEY_TO_ELEMENT, DOMEditor.findKey(editor, node1))
-
-
-              const [node, offset] = ReactEditor.toDOMPoint(editor, anchor)
+              const [node, offset] = ReactEditor.toDOMPoint(rawEditor, anchor)
               const anchorNode = node.parentElement?.closest('a')
 
               const window = ReactEditor.getWindow(editor)

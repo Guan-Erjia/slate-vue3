@@ -3,10 +3,13 @@ import { createEditor } from "slate";
 import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
 import { h } from "vue";
-import { withDOM } from "slate-dom";
+import { withDOM } from "./slate-dom";
 
 const initialValue = [
   {
+    type: "paragraph",
+    children: [{ text: "A line of text in a paragraph." }],
+  }, {
     type: "paragraph",
     children: [{ text: "A line of text in a paragraph." }],
   }

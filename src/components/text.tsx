@@ -37,7 +37,7 @@ export const TextComp = defineComponent({
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement | null>(null)
     const leaves = SlateText.decorations(text, decorations)
-    const key = ReactEditor.findKey(editor, text)
+    const key = ReactEditor.findKey(editor, toRaw(text))
     const children: VNodeArrayChildren = []
 
     for (let i = 0; i < leaves.length; i++) {

@@ -16,7 +16,7 @@ import { useDecorate } from '../hooks/use-decorate'
 import { useSlateStatic } from '../hooks/use-slate-static'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
-import { defineComponent } from 'vue'
+import { defineComponent, toRaw } from 'vue'
 
 /**
  * Children.
@@ -61,7 +61,8 @@ export const Children = defineComponent({
     for (let i = 0; i < node.children.length; i++) {
       const p = path.concat(i)
       const n = node.children[i] as Descendant
-      const key = ReactEditor.findKey(editor, n)
+
+      const key = ReactEditor.findKey(editor, toRaw(n))
       const range = Editor.range(editor, p)
       const sel = selection && Range.intersection(range, selection)
       const ds = decorate([n, p])

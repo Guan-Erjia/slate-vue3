@@ -18,7 +18,7 @@ import {
 import { TextComp } from './text'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { defineComponent, inject, onMounted, ref } from 'vue'
+import { defineComponent, inject, onMounted, ref, toRaw } from 'vue'
 
 
 export const DefaultElement = defineComponent({
@@ -72,7 +72,7 @@ export const Element = defineComponent({
     const editor = useSlateStatic()
     const readOnly = useReadOnly()
     const isInline = editor.isInline(element)
-    const key = ReactEditor.findKey(editor, element)
+    const key = ReactEditor.findKey(editor, toRaw(element))
     const elemRef = ref(null)
     onMounted(() => {
       // Update element-related weak maps with the DOM element ref.
