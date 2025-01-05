@@ -2,7 +2,6 @@ import { direction } from 'direction'
 import debounce from 'lodash/debounce'
 import throttle from 'lodash/throttle'
 import React, {
-  useReducer,
 } from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import {
@@ -18,7 +17,6 @@ import {
 } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
 import useChildren from '../hooks/use-children'
-import { useIsomorphicLayoutEffect } from '../hooks/use-isomorphic-layout-effect'
 import { useSlate } from '../hooks/use-slate'
 import { useTrackUserInput } from '../hooks/use-track-user-input'
 import { ReactEditor } from '../plugin/react-editor'
@@ -66,7 +64,7 @@ import {
 import RestoreDOM from './restore-dom/index.vue'
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
 import type { EditableProps, RenderPlaceholderProps } from './interface'
-import { computed, defineComponent, h, onMounted, onUpdated, ref, watch, type Ref } from 'vue'
+import { computed, defineComponent, h, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, watch, type Ref } from 'vue'
 
 type DeferredOperation = () => void
 
@@ -110,8 +108,8 @@ export const Editable = defineComponent({
 
     const { onUserInput, receivedUserInput } = useTrackUserInput()
 
-    const [, forceRender] = useReducer(s => s + 1, 0)
-    EDITOR_TO_FORCE_RENDER.set(editor, forceRender)
+    const forceRender = ref(0)
+    EDITOR_TO_FORCE_RENDER.set(editor, () => forceRender.value++)
 
     // Update internal state on each render.
     IS_READ_ONLY.set(editor, readOnly)
@@ -244,7 +242,7 @@ export const Editable = defineComponent({
     }
 
 
-    useIsomorphicLayoutEffect(() => {
+    onMounted(() => {
       // Update element-related weak maps with the DOM element ref.
       let window
       if (callbackRef.value && (window = getDefaultView(callbackRef.value))) {
@@ -770,9 +768,14 @@ export const Editable = defineComponent({
       }
     })
 
-    useIsomorphicLayoutEffect(() => {
+    // Listen for dragend and drop globally. In Firefox, if a drop handler
+    // initiates an operation that causes the originally dragged element to
+    // unmount, that element will not emit a dragend event. (2024/06/21)
+    const stoppedDragging = () => {
+      state.value.isDraggingInternally = false
+    }
+    onMounted(() => {
       const window = ReactEditor.getWindow(editor)
-
       // Attach a native DOM event handler for `selectionchange`, because React's
       // built-in `onSelect` handler doesn't fire for all selection changes. It's
       // a leaky polyfill that only fires on keypresses or clicks. Instead, we
@@ -783,24 +786,19 @@ export const Editable = defineComponent({
         scheduleOnDOMSelectionChange
       )
 
-      // Listen for dragend and drop globally. In Firefox, if a drop handler
-      // initiates an operation that causes the originally dragged element to
-      // unmount, that element will not emit a dragend event. (2024/06/21)
-      const stoppedDragging = () => {
-        state.value.isDraggingInternally = false
-      }
+
       window.document.addEventListener('dragend', stoppedDragging)
       window.document.addEventListener('drop', stoppedDragging)
+    })
 
-      return () => {
-        window.document.removeEventListener(
-          'selectionchange',
-          scheduleOnDOMSelectionChange
-        )
-        window.document.removeEventListener('dragend', stoppedDragging)
-        window.document.removeEventListener('drop', stoppedDragging)
-      }
-    }, [scheduleOnDOMSelectionChange, state])
+    onBeforeUnmount(() => {
+      window.document.removeEventListener(
+        'selectionchange',
+        scheduleOnDOMSelectionChange
+      )
+      window.document.removeEventListener('dragend', stoppedDragging)
+      window.document.removeEventListener('drop', stoppedDragging)
+    })
 
     const decorations = decorate([editor, []])
 
@@ -880,7 +878,7 @@ export const Editable = defineComponent({
       })
     })
 
-    return (
+    return () => (
       <RestoreDOM node={callbackRef.value} receivedUserInput={receivedUserInput}>
         <div
           role={readOnly ? undefined : 'textbox'}

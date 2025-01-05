@@ -1,6 +1,7 @@
-import { createContext, useContext } from 'react'
+import { createContext, } from 'react'
 import { Editor } from 'slate'
 import { ReactEditor } from '../plugin/react-editor'
+import { inject } from 'vue'
 
 /**
  * A React context for sharing the editor object.
@@ -13,7 +14,8 @@ export const EditorContext = createContext<ReactEditor | null>(null)
  */
 
 export const useSlateStatic = (): Editor => {
-  const editor = useContext(EditorContext)
+  const editor = inject("editorRef") as Editor;
+
 
   if (!editor) {
     throw new Error(

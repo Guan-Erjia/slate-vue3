@@ -25,8 +25,7 @@ const editor = ref(createEditor())
   </div>
   <Slate :initial-value="initialValue" :editor="editor">
     <div style="height: 20px; background-color: red"></div>
-    <Editable renderElement="{renderElement}" renderLeaf="{renderLeaf}" placeholder="Enter some rich text…" spellCheck
-      autoFocus />
+    <Editable placeholder="Enter some rich text…" spellCheck autoFocus />
   </Slate>
 </template>
 

@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
 import { Editor } from 'slate'
 import { ReactEditor } from '../plugin/react-editor'
+import { inject } from 'vue'
 
 /**
  * A React context for sharing the editor object, in a way that re-renders the
@@ -22,15 +23,15 @@ export const SlateContext = createContext<{
  */
 
 export const useSlate = (): Editor => {
-  const context = useContext(SlateContext)
+  const editor = inject("editorRef") as Editor;
 
-  if (!context) {
+
+  if (!editor) {
     throw new Error(
       `The \`useSlate\` hook must be used inside the <Slate> component's context.`
     )
   }
 
-  const { editor } = context
   return editor
 }
 
