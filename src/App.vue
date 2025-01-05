@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
-import { h, ref } from "vue";
+import { h, ref, } from "vue";
 import { DOMEditor } from "./slate-dom";
+import type { RenderElementProps, RenderLeafProps } from "./components/interface";
 
 const initialValue = [
   {
@@ -14,11 +15,11 @@ const initialValue = [
   }
 ];
 
-const renderElement = ({ attributes, children, }) => {
+const renderElement = ({ attributes, children, }: RenderElementProps) => {
   return h('p', attributes, children)
 }
 
-const renderLeaf = ({ attributes, children, }) => {
+const renderLeaf = ({ attributes, children, }: RenderLeafProps) => {
   return h('span', attributes, children)
 }
 const editor = ref<DOMEditor>()
