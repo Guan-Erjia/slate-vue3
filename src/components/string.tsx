@@ -65,7 +65,7 @@ const String = defineComponent({
     })
 
     return () => h('span', {
-      dataSlateString: true,
+      'data-slate-string': true,
       ref: spanRef
     }, getTextContent)
   }

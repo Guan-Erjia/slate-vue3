@@ -72,7 +72,7 @@ export const TextComp = defineComponent({
     })
 
     return () => h('span', {
-      dataSlateNode: 'text',
+      'data-slate-node': 'text',
       ref: spanRef
     }, children)
   }

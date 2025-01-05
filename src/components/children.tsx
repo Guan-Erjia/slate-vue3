@@ -8,8 +8,6 @@ import {
   Element,
   Range,
 } from 'slate'
-
-
 import ElementComponent from './element'
 import { TextComp } from './text'
 import { ReactEditor } from '../plugin/react-editor'
