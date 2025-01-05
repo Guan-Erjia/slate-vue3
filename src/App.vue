@@ -2,7 +2,7 @@
 import { createEditor } from "slate";
 import Slate from "./components/Slate.vue";
 import { Editable } from "./components/editable";
-import { ref } from "vue";
+import { h, ref } from "vue";
 
 const initialValue = [
   {
@@ -12,6 +12,14 @@ const initialValue = [
 ];
 
 const editor = ref(createEditor())
+const renderElement = ({ attributes, children, }) => {
+  return h('p', attributes, children)
+}
+
+const renderLeaf = ({ attributes, children, }) => {
+  return h('span', attributes, children)
+}
+
 </script>
 
 <template>
@@ -25,7 +33,8 @@ const editor = ref(createEditor())
   </div>
   <Slate :initial-value="initialValue" :editor="editor">
     <div style="height: 20px; background-color: red"></div>
-    <Editable placeholder="Enter some rich text…" spellCheck autoFocus />
+    <Editable placeholder="Enter some rich text…" spellCheck autoFocus :render-element="renderElement"
+      :render-leaf="renderLeaf" />
   </Slate>
 </template>
 

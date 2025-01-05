@@ -2,11 +2,6 @@
 export {
   Editable, DefaultPlaceholder
 } from './components/editable'
-export type {
-  RenderElementProps,
-  RenderLeafProps,
-  RenderPlaceholderProps
-} from './components/editable'
 
 export { DefaultElement } from './components/element'
 export { DefaultLeaf } from './components/leaf'

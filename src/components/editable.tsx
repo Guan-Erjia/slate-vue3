@@ -78,6 +78,20 @@ const Children = (props: Parameters<typeof useChildren>[0]) => (
  */
 export const Editable = defineComponent({
   name: 'Editable',
+  props: {
+    decorate: {},
+    onDOMBeforeInput: {},
+    placeholder: {},
+    readOnl: {},
+    role: {},
+    style: {},
+    renderElement: {},
+    renderLeaf: {},
+    renderPlaceholder: {},
+    scrollSelectionIntoView: {},
+    as: {},
+    disableDefaultStyles: {},
+  },
   setup(props: EditableProps) {
     const defaultRenderPlaceholder =
       (props: RenderPlaceholderProps) => <DefaultPlaceholder {...props} />
@@ -131,7 +145,6 @@ export const Editable = defineComponent({
         callbackRef.value.focus()
       }
     })
-
 
     /**
      * The AndroidInputManager object has a cyclical dependency on onDOMSelectionChange
@@ -804,7 +817,7 @@ export const Editable = defineComponent({
 
     const showPlaceholder =
       placeholder &&
-      editor.children.length === 1 &&
+      editor.children?.length === 1 &&
       Array.from(Node.texts(editor)).length === 1 &&
       Node.string(editor) === '' &&
       !isComposing.value
@@ -1693,14 +1706,15 @@ export const Editable = defineComponent({
               }
             }}
         >
-          <Children
+          <div>32141234</div>
+          {<Children
             decorations={decorations}
             node={editor}
             renderElement={renderElement}
             renderPlaceholder={renderPlaceholder}
             renderLeaf={renderLeaf}
             selection={editor.selection}
-          />
+          />}
         </div>
       </RestoreDOM >
 
