@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useSlateStatic } from "../use-slate-static";
-import { IS_ANDROID } from "slate-dom";
-import { EDITOR_TO_SCHEDULE_FLUSH } from "slate-dom";
+import { IS_ANDROID } from "../../slate-dom";
+import { EDITOR_TO_SCHEDULE_FLUSH } from "../../slate-dom";
 import {
   createAndroidInputManager,
   type CreateAndroidInputManagerOptions,
 } from "./android-input-manager";
 import { useIsMounted } from "../use-is-mounted";
 import { useMutationObserver } from "../use-mutation-observer";
-import type { Ref } from "vue";
+import { inject, toRaw, type Ref } from "vue";
+import type { Editor } from "slate";
 
 type UseAndroidInputManagerOptions = {
   node: Ref<HTMLElement>;
@@ -30,12 +30,13 @@ export const useAndroidInputManager = !IS_ANDROID
         return null;
       }
 
-      const editor = useSlateStatic();
+      const editor = inject("editorRef") as Editor;
+      const rawEditor = toRaw(editor);
       const isMounted = useIsMounted();
 
       const [inputManager] = useState(() =>
         createAndroidInputManager({
-          editor,
+          editor: rawEditor,
           ...options,
         })
       );

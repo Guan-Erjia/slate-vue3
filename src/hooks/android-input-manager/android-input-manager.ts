@@ -11,8 +11,8 @@ import {
   targetRange,
   type TextDiff,
   verifyDiffState,
-} from "slate-dom";
-import { isDOMSelection, isTrackedMutation } from "slate-dom";
+} from "../../slate-dom";
+import { isDOMSelection, isTrackedMutation } from "../../slate-dom";
 import {
   EDITOR_TO_FORCE_RENDER,
   EDITOR_TO_PENDING_ACTION,
@@ -23,7 +23,7 @@ import {
   EDITOR_TO_USER_MARKS,
   IS_COMPOSING,
   IS_NODE_MAP_DIRTY,
-} from "slate-dom";
+} from "../../slate-dom";
 
 export type Action = { at?: Point | Range; run: () => void };
 
@@ -61,7 +61,7 @@ export type AndroidInputManager = {
   handleCompositionEnd: (event: CompositionEvent) => void;
   handleCompositionStart: (event: CompositionEvent) => void;
   handleDOMBeforeInput: (event: InputEvent) => void;
-  handleKeyDown: (event: React.KeyboardEvent<HTMLDivElement>) => void;
+  handleKeyDown: (event: KeyboardEvent) => void;
 
   handleDomMutations: (mutations: MutationRecord[]) => void;
   handleInput: () => void;
@@ -744,7 +744,7 @@ export function createAndroidInputManager({
     }
   };
 
-  const handleKeyDown = (_: React.KeyboardEvent) => {
+  const handleKeyDown = (_: KeyboardEvent) => {
     // COMPAT: Swiftkey closes the keyboard when typing inside a empty node
     // directly next to a non-contenteditable element (= the placeholder).
     // The only event fired soon enough for us to allow hiding the placeholder
