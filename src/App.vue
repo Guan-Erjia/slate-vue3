@@ -3,6 +3,7 @@ import { createEditor } from "slate";
 import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
 import { h, ref } from "vue";
+import { withDOM } from "slate-dom";
 
 const initialValue = [
   {
@@ -20,7 +21,7 @@ const initialValue = [
   },
 ];
 
-const editor = ref(createEditor())
+const editor = ref(withDOM(createEditor()))
 const renderElement = ({ attributes, children, }) => {
   return h('p', attributes, children)
 }

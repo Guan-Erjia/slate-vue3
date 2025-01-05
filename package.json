@@ -9,11 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@juggle/resize-observer": "^3.4.0",
     "direction": "^2.0.1",
     "lodash": "^4.17.21",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
     "scroll-into-view-if-needed": "^3.1.0",
     "slate": "^0.112.0",
     "slate-dom": "^0.111.0",
@@ -21,11 +18,10 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.14",
-    "@types/react": "^19.0.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
-    "typescript": "~5.6.2",
+    "typescript": "~5.7.2",
     "vite": "^6.0.5",
     "vue-tsc": "^2.2.0"
   }

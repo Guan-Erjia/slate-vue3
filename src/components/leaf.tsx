@@ -1,5 +1,4 @@
 import { Element, Text } from 'slate'
-import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer'
 import { String } from './string'
 import {
   PLACEHOLDER_SYMBOL,
@@ -89,7 +88,6 @@ export const Leaf = defineComponent({
 
           if (!placeholderResizeObserver.value) {
             // Create a new observer and observe the placeholder element.
-            const ResizeObserver = window.ResizeObserver || ResizeObserverPolyfill
             placeholderResizeObserver.value = new ResizeObserver(() => {
               leaf.onPlaceholderResize?.(placeholderEl)
             })

@@ -17,7 +17,7 @@ import {
 } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
 import { ReactEditor } from '../plugin/react-editor'
-import { TRIPLE_CLICK } from 'slate-dom'
+import { DOMEditor, EDITOR_TO_KEY_TO_ELEMENT, TRIPLE_CLICK } from 'slate-dom'
 import {
   DOMElement,
   DOMRange,
@@ -102,7 +102,8 @@ export const Editable = defineComponent({
       disableDefaultStyles = false,
       ...attributes
     } = props
-    const editor = toRaw(inject("editorRef")) as Editor;
+    const editor = inject("editorRef") as Editor;
+    const rawEditor = toRaw(editor)
     // Rerender editor when composition status changed
     const isComposing = ref(false)
     const callbackRef = ref<HTMLDivElement | null>(null)
@@ -1074,7 +1075,7 @@ export const Editable = defineComponent({
             // and that it still refers to the same node.
             if (
               !Editor.hasPath(editor, path) ||
-              Node.get(editor, path) !== node
+              Node.get(rawEditor, path) !== node
             ) {
               return
             }
@@ -1403,7 +1404,7 @@ export const Editable = defineComponent({
 
               const { selection } = editor
               const element =
-                editor.children[
+                rawEditor.children[
                 selection !== null ? selection.focus.path[0] : 0
                 ]
               const isRTL = direction(Node.string(element)) === 'rtl'
