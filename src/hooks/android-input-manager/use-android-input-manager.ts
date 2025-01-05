@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { IS_ANDROID } from "../../slate-dom";
 import { EDITOR_TO_SCHEDULE_FLUSH } from "../../slate-dom";
 import {
@@ -34,12 +33,10 @@ export const useAndroidInputManager = !IS_ANDROID
       const rawEditor = toRaw(editor);
       const isMounted = useIsMounted();
 
-      const [inputManager] = useState(() =>
-        createAndroidInputManager({
-          editor: rawEditor,
-          ...options,
-        })
-      );
+      const inputManager = createAndroidInputManager({
+        editor: rawEditor,
+        ...options,
+      });
 
       useMutationObserver(
         node,

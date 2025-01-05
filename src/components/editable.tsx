@@ -98,7 +98,7 @@ export const Editable = defineComponent({
       as = 'div',
       disableDefaultStyles = false,
     } = props
-    
+
     const editor = inject("editorRef") as Editor;
     const attributes: HTMLAttributes = useAttrs()
     const rawEditor = toRaw(editor)
