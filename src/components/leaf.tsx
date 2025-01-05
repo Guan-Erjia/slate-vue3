@@ -42,6 +42,14 @@ function clearTimeoutRef(timeoutRef: Ref<TimerId>) {
 
 const Leaf = defineComponent({
   name: 'Leaf',
+  props: {
+    isLast: {},
+    leaf: {},
+    parent: {},
+    renderPlaceholder: {},
+    renderLeaf: {},
+    text: {},
+  },
   setup(props: {
     isLast: boolean
     leaf: Text
@@ -154,7 +162,7 @@ const Leaf = defineComponent({
       'data-slate-leaf': true,
     }
 
-    return renderLeaf({ attributes, children, leaf, text })
+    return () => renderLeaf({ attributes, children, leaf, text })
   }
 })
 

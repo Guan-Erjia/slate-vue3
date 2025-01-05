@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { createEditor } from "slate";
-import Slate from "./components/Slate.vue";
+import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
 import { h, ref } from "vue";
 
