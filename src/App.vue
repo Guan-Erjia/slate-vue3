@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { createEditor } from "slate";
 import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
-import { h } from "vue";
-import { withDOM } from "./slate-dom";
+import { h, ref } from "vue";
+import { DOMEditor } from "./slate-dom";
 
 const initialValue = [
   {
@@ -15,7 +14,6 @@ const initialValue = [
   }
 ];
 
-const editor = withDOM(createEditor())
 const renderElement = ({ attributes, children, }) => {
   return h('p', attributes, children)
 }
@@ -23,6 +21,7 @@ const renderElement = ({ attributes, children, }) => {
 const renderLeaf = ({ attributes, children, }) => {
   return h('span', attributes, children)
 }
+const editor = ref<DOMEditor>()
 
 </script>
 
@@ -35,7 +34,7 @@ const renderLeaf = ({ attributes, children, }) => {
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <Slate :initial-value="initialValue" :editor="editor">
+  <Slate :initial-value="initialValue" ref="editor">
     <div style="height: 20px; background-color: red"></div>
     <Editable placeholder="Enter some rich text…" spellCheck autoFocus :render-element="renderElement"
       :render-leaf="renderLeaf" />

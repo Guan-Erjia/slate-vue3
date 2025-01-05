@@ -1,7 +1,6 @@
 import { direction } from 'direction'
 import debounce from 'lodash/debounce'
 import throttle from 'lodash/throttle'
-import React from 'react'
 import scrollIntoView from 'scroll-into-view-if-needed'
 import {
   Editor,
@@ -59,7 +58,7 @@ import {
 } from '../slate-dom'
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
 import type { EditableProps, RenderPlaceholderProps } from './interface'
-import { computed, defineComponent, h, inject, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, watch, type Ref } from 'vue'
+import { computed, defineComponent, h, inject, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, useAttrs, type CSSProperties, type HTMLAttributes, type Ref, } from 'vue'
 import { Children } from './children'
 
 type DeferredOperation = () => void
@@ -87,7 +86,6 @@ export const Editable = defineComponent({
   setup(props: EditableProps) {
 
     const {
-      autoFocus,
       decorate = defaultDecorate,
       onDOMBeforeInput: propsOnDOMBeforeInput,
       placeholder,
@@ -97,11 +95,12 @@ export const Editable = defineComponent({
       renderPlaceholder = defaultRenderPlaceholder,
       scrollSelectionIntoView = defaultScrollSelectionIntoView,
       style: userStyle = {},
-      as: Component = 'div',
+      as = 'div',
       disableDefaultStyles = false,
-      ...attributes
     } = props
+    
     const editor = inject("editorRef") as Editor;
+    const attributes: HTMLAttributes = useAttrs()
     const rawEditor = toRaw(editor)
     // Rerender editor when composition status changed
     const isComposing = ref(false)
@@ -128,13 +127,6 @@ export const Editable = defineComponent({
       })
     )
 
-    // The autoFocus TextareaHTMLAttribute doesn't do anything on a div, so it
-    // needs to be manually focused.
-    watch(() => autoFocus, () => {
-      if (callbackRef.value && autoFocus) {
-        callbackRef.value.focus()
-      }
-    })
 
     /**
      * The AndroidInputManager object has a cyclical dependency on onDOMSelectionChange
@@ -882,6 +874,7 @@ export const Editable = defineComponent({
 
     return () => (
       <div
+        is={as}
         role={readOnly ? undefined : 'textbox'}
         aria-multiline={readOnly ? undefined : true}
         {...attributes}
@@ -892,17 +885,17 @@ export const Editable = defineComponent({
         // not CAN_USE_DOM (SSR) and default to falsy value
         spellcheck={
           HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM
-            ? attributes.spellCheck
+            ? attributes.spellcheck
             : false
         }
         autocorrect={
           HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM
-            ? attributes.autoCorrect
+            ? attributes.autocorrect
             : 'false'
         }
         autocapitalize={
           HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM
-            ? attributes.autoCapitalize
+            ? attributes.autocapitalize
             : 'false'
         }
         data-slate-editor
@@ -930,7 +923,7 @@ export const Editable = defineComponent({
                 : {}),
             }),
           // Allow for passed-in styles to override anything.
-          ...userStyle,
+          ...(userStyle as CSSProperties),
         }}
         onBeforeinput={
           (event: Event) => {
@@ -940,7 +933,7 @@ export const Editable = defineComponent({
             if (
               !HAS_BEFORE_INPUT_SUPPORT &&
               !readOnly &&
-              !isEventHandled(event, attributes.onBeforeInput) &&
+              !isEventHandled(event, attributes.onBeforeinput) &&
               ReactEditor.hasSelectableTarget(editor, event.target)
             ) {
               event.preventDefault()
@@ -1135,7 +1128,7 @@ export const Editable = defineComponent({
               )
 
               if (
-                isEventHandled(event, attributes.onCompositionEnd) ||
+                isEventHandled(event, attributes.onCompositionend) ||
                 IS_ANDROID
               ) {
                 return
@@ -1177,7 +1170,7 @@ export const Editable = defineComponent({
           (event: CompositionEvent) => {
             if (
               ReactEditor.hasSelectableTarget(editor, event.target) &&
-              !isEventHandled(event, attributes.onCompositionUpdate)
+              !isEventHandled(event, attributes.onCompositionupdate)
             ) {
               if (!ReactEditor.isComposing(editor)) {
                 isComposing.value = (true)
@@ -1192,7 +1185,7 @@ export const Editable = defineComponent({
             )
 
             if (
-              isEventHandled(event, attributes.onCompositionStart) ||
+              isEventHandled(event, attributes.onCompositionstart) ||
               IS_ANDROID
             ) {
               return
@@ -1256,7 +1249,7 @@ export const Editable = defineComponent({
           (event: DragEvent) => {
             if (
               ReactEditor.hasTarget(editor, event.target) &&
-              !isEventHandled(event, attributes.onDragOver)
+              !isEventHandled(event, attributes.onDragover)
             ) {
               // Only when the target is void, call `preventDefault` to signal
               // that drops are allowed. Editable content is droppable by
@@ -1276,7 +1269,7 @@ export const Editable = defineComponent({
             if (
               !readOnly &&
               ReactEditor.hasTarget(editor, event.target) &&
-              !isEventHandled(event, attributes.onDragStart)
+              !isEventHandled(event, attributes.onDragstart)
             ) {
               const node = ReactEditor.toSlateNode(editor, event.target)
               const path = ReactEditor.findPath(editor, node)
@@ -1345,10 +1338,10 @@ export const Editable = defineComponent({
             if (
               !readOnly &&
               state.value.isDraggingInternally &&
-              attributes.onDragEnd &&
+              attributes.onDragend &&
               ReactEditor.hasTarget(editor, event.target)
             ) {
-              attributes.onDragEnd(event)
+              attributes.onDragend(event)
             }
           }}
         onFocus={
@@ -1395,7 +1388,7 @@ export const Editable = defineComponent({
               }
 
               if (
-                isEventHandled(event, attributes.onKeyDown) ||
+                isEventHandled(event, attributes.onKeydown) ||
                 ReactEditor.isComposing(editor)
               ) {
                 return
@@ -1758,7 +1751,7 @@ const defaultScrollSelectionIntoView = (
  */
 
 export const isEventHandled = <
-  EventType extends React.SyntheticEvent<unknown, unknown>,
+  EventType extends Event,
 >(
   event: any,
   handler?: (event: EventType) => void | boolean
@@ -1781,7 +1774,7 @@ export const isEventHandled = <
  * Check if the event's target is an input element
  */
 export const isDOMEventTargetInput = <
-  EventType extends React.SyntheticEvent<unknown, unknown>,
+  EventType extends Event,
 >(
   event: EventType
 ) => {

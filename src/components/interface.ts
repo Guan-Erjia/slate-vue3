@@ -1,7 +1,8 @@
 import type { DecoratedRange, NodeEntry, Text, Element } from "slate";
-import type { DOMRange } from "slate-dom";
+import type { DOMRange } from "../slate-dom";
 import type { JSX } from "vue/jsx-runtime";
 import type { ReactEditor } from "../plugin/react-editor";
+import type { CSSProperties, HTMLAttributes } from "vue";
 
 /**
  * The props that get passed to renderPlaceholder
@@ -13,7 +14,7 @@ export type RenderPlaceholderProps = {
     dir?: "rtl";
     contentEditable: boolean;
     ref: React.RefCallback<any>;
-    style: React.CSSProperties;
+    style: CSSProperties;
   };
 };
 
@@ -55,11 +56,11 @@ export type EditableProps = {
   placeholder?: string;
   readOnly?: boolean;
   role?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   renderElement?: (props: RenderElementProps) => JSX.Element;
   renderLeaf?: (props: RenderLeafProps) => JSX.Element;
   renderPlaceholder?: (props: RenderPlaceholderProps) => JSX.Element;
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
-  as?: React.ElementType;
+  as?: string;
   disableDefaultStyles?: boolean;
-} & React.TextareaHTMLAttributes<HTMLDivElement>;
+} & HTMLAttributes;

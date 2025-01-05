@@ -43,7 +43,7 @@ export const DefaultElement = defineComponent({
 /**
  * Element.
  */
-export const Element = defineComponent({
+export const ElementComp = defineComponent({
   name: 'Element',
   props: {
     decorations: {},
@@ -165,4 +165,3 @@ export const Element = defineComponent({
 
 
 
-export default Element

@@ -1,44 +1,34 @@
-<template>
-  <slot></slot>
-</template>
 import {
+  createEditor,
   type Descendant,
   Editor,
   Node,
   Operation,
   Scrubber,
 } from "slate";
-import { EDITOR_TO_ON_CHANGE } from "slate-dom";
+import { EDITOR_TO_ON_CHANGE } from "../slate-dom";
 import { ReactEditor } from "../plugin/react-editor";
 import { defineComponent, onMounted, onUnmounted, provide, ref, renderSlot } from "vue";
+import { withDOM } from "../slate-dom";
 
 type EditorChangeHandler = (editor: Editor) => void;
 
 export const Slate = defineComponent({
   name: 'Slate',
   props: {
-    editor: {},
     initialValue: {}
   },
   setup(props: {
-    editor: ReactEditor;
     initialValue: Descendant[];
-  }, { emit, slots }) {
-    const { editor, initialValue, ...rest } = props;
+  }, { emit, slots, expose }) {
 
-    editor.children = initialValue;
-    Object.assign(editor, rest);
-    const editorRef = ref<Editor>(editor);
+    const editor = withDOM(createEditor())
+    editor.children = props.initialValue;
+    expose(editor)
+
     const editorVersion = ref(0);
     const editorIsFocus = ref(ReactEditor.isFocused(editor));
     const eventListeners = ref<EditorChangeHandler[]>([]);
-
-    const handleSelectorChange = (editor: Editor) => {
-      editorRef.value = editor;
-      eventListeners.value.forEach((listener: EditorChangeHandler) =>
-        listener(editor)
-      );
-    };
 
     const onContextChange = (options?: { operation?: Operation }) => {
       emit("change", editor.children);
@@ -51,13 +41,12 @@ export const Slate = defineComponent({
       }
 
       editorVersion.value++;
-      handleSelectorChange(editor);
     };
 
 
     provide("editorIsFocus", editorIsFocus);
-    provide("editorRef", editorRef.value);
-    provide("editorVersion", editorVersion.value);
+    provide("editorRef", editor);
+    provide("editorVersion", editorVersion);
     provide("addEventListener", (callback: EditorChangeHandler) => {
       eventListeners.value.push(callback);
       return () => {
@@ -67,10 +56,10 @@ export const Slate = defineComponent({
 
     const focusCb = () => editorIsFocus.value = ReactEditor.isFocused(editor)
     onMounted(() => {
-      if (!Node.isNodeList(initialValue)) {
+      if (!Node.isNodeList(props.initialValue)) {
         throw new Error(
           `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
-            initialValue
+            props.initialValue
           )}`
         );
       }
@@ -92,7 +81,7 @@ export const Slate = defineComponent({
     });
 
     return () => renderSlot(slots, 'default')
-  }
+  },
 })
 
 
