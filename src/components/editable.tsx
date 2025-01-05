@@ -951,7 +951,7 @@ export const Editable = defineComponent({
             }
           }}
         onInput={
-          (event: Event) => {
+          (event) => {
             if (isEventHandled(event, attributes.onInput)) {
               return
             }
@@ -977,14 +977,14 @@ export const Editable = defineComponent({
             if (!ReactEditor.isFocused(editor)) {
               const maybeHistoryEditor: any = editor
               if (
-                event.inputType === 'historyUndo' &&
+                'inputType' in event && event.inputType === 'historyUndo' &&
                 typeof maybeHistoryEditor.undo === 'function'
               ) {
                 maybeHistoryEditor.undo()
                 return
               }
               if (
-                event.inputType === 'historyRedo' &&
+                'inputType' in event && event.inputType === 'historyRedo' &&
                 typeof maybeHistoryEditor.redo === 'function'
               ) {
                 maybeHistoryEditor.redo()

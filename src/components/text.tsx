@@ -5,7 +5,7 @@ import {
   ELEMENT_TO_NODE,
   NODE_TO_ELEMENT,
 } from 'slate-dom'
-import Leaf from './leaf'
+import { Leaf } from './leaf'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
 import { defineComponent, h, onMounted, ref, type VNodeArrayChildren } from 'vue'

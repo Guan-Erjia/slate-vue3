@@ -7,7 +7,7 @@ import { defineComponent, h, onMounted, ref } from 'vue'
 /**
  * Leaf content strings.
  */
-const String = defineComponent({
+export const String = defineComponent({
   name: 'String',
   props: {
     isLast: {},
@@ -112,4 +112,3 @@ export const ZeroWidthString = defineComponent({
   }
 })
 
-export default String

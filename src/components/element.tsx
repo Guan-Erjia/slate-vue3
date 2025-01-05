@@ -18,13 +18,32 @@ import {
 import { TextComp } from './text'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { defineComponent, onMounted, ref } from 'vue'
-import { DefaultElement } from './defaultElement'
+import { defineComponent, inject, onMounted, ref } from 'vue'
+
+
+export const DefaultElement = defineComponent({
+  name: 'DefaultElement',
+  props: {
+    children: {},
+    element: {},
+    attributes: {},
+  },
+  setup(props: RenderElementProps) {
+    const { attributes, children, element } = props
+    const editor = inject("editorRef") as Editor;
+    const Tag = editor.isInline(element) ? 'span' : 'div'
+    return () => <Tag {...attributes} style={{ position: 'relative' }}>
+      {children}
+    </Tag>
+  }
+})
+
+
 
 /**
  * Element.
  */
-const Element = defineComponent({
+export const Element = defineComponent({
   name: 'Element',
   props: {
     decorations: {},

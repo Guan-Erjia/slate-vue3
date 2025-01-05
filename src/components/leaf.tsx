@@ -1,6 +1,6 @@
 import { Element, Text } from 'slate'
 import { ResizeObserver as ResizeObserverPolyfill } from '@juggle/resize-observer'
-import String from './string'
+import { String } from './string'
 import {
   PLACEHOLDER_SYMBOL,
   EDITOR_TO_PLACEHOLDER_ELEMENT,
@@ -40,7 +40,7 @@ function clearTimeoutRef(timeoutRef: Ref<TimerId>) {
  * Individual leaves in a text node with unique formatting.
  */
 
-const Leaf = defineComponent({
+export const Leaf = defineComponent({
   name: 'Leaf',
   props: {
     isLast: {},
@@ -170,5 +170,3 @@ export const DefaultLeaf = (props: RenderLeafProps) => {
   const { attributes, children } = props
   return h('span', attributes, children)
 }
-
-export default Leaf
