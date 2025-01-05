@@ -14,7 +14,7 @@ import {
   NODE_TO_ELEMENT,
   NODE_TO_INDEX,
   NODE_TO_PARENT,
-} from 'slate-dom'
+} from '../slate-dom'
 import { TextComp } from './text'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'

@@ -16,7 +16,7 @@ import {
 } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
 import { ReactEditor } from '../plugin/react-editor'
-import { DOMEditor, EDITOR_TO_KEY_TO_ELEMENT, TRIPLE_CLICK } from 'slate-dom'
+import { DOMEditor, EDITOR_TO_KEY_TO_ELEMENT, TRIPLE_CLICK } from '../slate-dom'
 import {
   DOMElement,
   DOMRange,
@@ -27,7 +27,7 @@ import {
   isDOMElement,
   isDOMNode,
   isPlainTextOnlyPaste,
-} from 'slate-dom'
+} from '../slate-dom'
 import {
   CAN_USE_DOM,
   HAS_BEFORE_INPUT_SUPPORT,
@@ -39,8 +39,8 @@ import {
   IS_WEBKIT,
   IS_UC_MOBILE,
   IS_WECHATBROWSER,
-} from 'slate-dom'
-import { Hotkeys } from 'slate-dom'
+} from '../slate-dom'
+import { Hotkeys } from '../slate-dom'
 import {
   IS_NODE_MAP_DIRTY,
   EDITOR_TO_ELEMENT,
@@ -56,7 +56,7 @@ import {
   MARK_PLACEHOLDER_SYMBOL,
   NODE_TO_ELEMENT,
   PLACEHOLDER_SYMBOL,
-} from 'slate-dom'
+} from '../slate-dom'
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
 import type { EditableProps, RenderPlaceholderProps } from './interface'
 import { computed, defineComponent, h, inject, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, watch, type Ref } from 'vue'
@@ -535,7 +535,7 @@ export const Editable = defineComponent({
 
               const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
               const [node1] = Editor.node(editor, anchor.path);
-              console.log(KEY_TO_ELEMENT?.get(DOMEditor.findKey(editor, node1)), DOMEditor.findKey(editor, node1))
+              console.log(KEY_TO_ELEMENT, DOMEditor.findKey(editor, node1))
 
 
               const [node, offset] = ReactEditor.toDOMPoint(editor, anchor)

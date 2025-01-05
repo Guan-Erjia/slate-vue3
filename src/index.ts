@@ -21,4 +21,4 @@ export { useSlateSelection } from './hooks/use-slate-selection'
 export { ReactEditor } from './plugin/react-editor'
 
 // Utils
-export { NODE_TO_INDEX, NODE_TO_PARENT } from 'slate-dom'
+export { NODE_TO_INDEX, NODE_TO_PARENT } from './slate-dom'

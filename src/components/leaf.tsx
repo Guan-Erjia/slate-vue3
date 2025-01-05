@@ -3,9 +3,9 @@ import { String } from './string'
 import {
   PLACEHOLDER_SYMBOL,
   EDITOR_TO_PLACEHOLDER_ELEMENT,
-} from 'slate-dom'
+} from '../slate-dom'
 import { useSlateStatic } from '../hooks/use-slate-static'
-import { IS_WEBKIT, IS_ANDROID } from 'slate-dom'
+import { IS_WEBKIT, IS_ANDROID } from '../slate-dom'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
 import { defineComponent, h, onBeforeUnmount, onMounted, ref, type Ref } from 'vue'

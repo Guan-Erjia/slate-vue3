@@ -11,7 +11,7 @@ import {
 import ElementComponent from './element'
 import { TextComp } from './text'
 import { ReactEditor } from '../plugin/react-editor'
-import { IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from 'slate-dom'
+import { IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from '../slate-dom'
 import { useDecorate } from '../hooks/use-decorate'
 import { useSlateStatic } from '../hooks/use-slate-static'
 import type { JSX } from 'vue/jsx-runtime'

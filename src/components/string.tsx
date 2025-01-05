@@ -1,7 +1,7 @@
 import { Editor, Text, Path, Element, Node } from 'slate'
 import { ReactEditor, useSlateStatic } from '..'
-import { IS_ANDROID, IS_IOS } from 'slate-dom'
-import { MARK_PLACEHOLDER_SYMBOL } from 'slate-dom'
+import { IS_ANDROID, IS_IOS } from '../slate-dom'
+import { MARK_PLACEHOLDER_SYMBOL } from '../slate-dom'
 import { defineComponent, h, onMounted, ref } from 'vue'
 
 /**

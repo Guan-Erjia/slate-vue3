@@ -4,7 +4,7 @@ import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
   NODE_TO_ELEMENT,
-} from 'slate-dom'
+} from '../slate-dom'
 import { Leaf } from './leaf'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
