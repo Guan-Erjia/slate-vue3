@@ -7,7 +7,7 @@ import {
   Scrubber,
 } from "slate";
 import { EDITOR_TO_ON_CHANGE } from "../slate-dom";
-import { ReactEditor } from "../plugin/react-editor";
+import { DOMEditor } from "../plugin/react-editor";
 import { defineComponent, onMounted, onUnmounted, provide, ref, renderSlot } from "vue";
 import { withDOM } from "../slate-dom";
 
@@ -27,7 +27,7 @@ export const Slate = defineComponent({
     expose(editor)
 
     const editorVersion = ref(0);
-    const editorIsFocus = ref(ReactEditor.isFocused(editor));
+    const editorIsFocus = ref(DOMEditor.isFocused(editor));
     const eventListeners = ref<EditorChangeHandler[]>([]);
 
     const onContextChange = (options?: { operation?: Operation }) => {
@@ -54,7 +54,7 @@ export const Slate = defineComponent({
       };
     });
 
-    const focusCb = () => editorIsFocus.value = ReactEditor.isFocused(editor)
+    const focusCb = () => editorIsFocus.value = DOMEditor.isFocused(editor)
     onMounted(() => {
       if (!Node.isNodeList(props.initialValue)) {
         throw new Error(

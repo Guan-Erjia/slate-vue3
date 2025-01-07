@@ -1,7 +1,7 @@
 import type { DecoratedRange, NodeEntry, Text, Element } from "slate";
 import type { DOMRange } from "../slate-dom";
 import type { JSX } from "vue/jsx-runtime";
-import type { ReactEditor } from "../plugin/react-editor";
+import type { DOMEditor } from "../plugin/react-editor";
 import type { CSSProperties, HTMLAttributes, VNode } from "vue";
 
 /**
@@ -60,7 +60,7 @@ export type EditableProps = {
   renderElement?: (props: RenderElementProps) => VNode;
   renderLeaf?: (props: RenderLeafProps) => VNode;
   renderPlaceholder?: (props: RenderPlaceholderProps) => JSX.Element;
-  scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void;
+  scrollSelectionIntoView?: (editor: DOMEditor, domRange: DOMRange) => void;
   as?: string;
   disableDefaultStyles?: boolean;
 } & HTMLAttributes;

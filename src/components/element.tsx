@@ -6,7 +6,7 @@ import {
   Range,
   type DecoratedRange,
 } from 'slate'
-import { ReactEditor, useReadOnly, useSlateStatic } from '..'
+import { DOMEditor, useReadOnly, useSlateStatic } from '..'
 import { Children } from './children'
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -72,7 +72,7 @@ export const ElementComp = defineComponent({
     const editor = useSlateStatic()
     const readOnly = useReadOnly()
     const isInline = editor.isInline(element)
-    const key = ReactEditor.findKey(editor, toRaw(element))
+    const key = DOMEditor.findKey(editor, toRaw(element))
     const elemRef = ref(null)
     onMounted(() => {
       // Update element-related weak maps with the DOM element ref.

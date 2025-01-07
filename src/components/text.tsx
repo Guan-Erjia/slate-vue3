@@ -1,5 +1,5 @@
-import { Element, type DecoratedRange, Text as SlateText, Editor } from 'slate'
-import { ReactEditor, } from '../plugin/react-editor'
+import { Element, type DecoratedRange, Text as SlateText } from 'slate'
+import { DOMEditor } from '../plugin/react-editor'
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
@@ -8,7 +8,7 @@ import {
 import { Leaf } from './leaf'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
-import { defineComponent, h, inject, onMounted, ref, toRaw, type VNodeArrayChildren } from 'vue'
+import { defineComponent, h, inject, onMounted, onUnmounted, ref, toRaw, type VNodeArrayChildren } from 'vue'
 
 /**
  * Text.
@@ -33,11 +33,11 @@ export const TextComp = defineComponent({
   }) {
     const { decorations, isLast, parent, renderPlaceholder, renderLeaf, text } =
       props
-    const editor = inject("editorRef") as Editor;
+    const editor = inject("editorRef") as DOMEditor;
     const rawEditor = toRaw(editor)
-    const spanRef = ref<HTMLSpanElement | null>(null)
+    const spanRef = ref<HTMLSpanElement>()
     const leaves = SlateText.decorations(text, decorations)
-    const key = ReactEditor.findKey(editor, toRaw(text))
+    const key = DOMEditor.findKey(editor, toRaw(text))
     const children: VNodeArrayChildren = []
 
     for (let i = 0; i < leaves.length; i++) {
@@ -57,9 +57,9 @@ export const TextComp = defineComponent({
     }
 
     // Update element-related weak maps with the DOM element ref.
+    const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
 
     onMounted(() => {
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
       if (spanRef.value) {
         KEY_TO_ELEMENT?.set(key, spanRef.value)
         NODE_TO_ELEMENT.set(text, spanRef.value)
@@ -70,6 +70,14 @@ export const TextComp = defineComponent({
         if (spanRef.value) {
           ELEMENT_TO_NODE.delete(spanRef.value)
         }
+      }
+    })
+
+    onUnmounted(() => {
+      KEY_TO_ELEMENT?.delete(key)
+      NODE_TO_ELEMENT.delete(text)
+      if (spanRef.value) {
+        ELEMENT_TO_NODE.delete(spanRef.value)
       }
     })
 

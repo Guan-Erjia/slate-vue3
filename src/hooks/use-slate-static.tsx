@@ -1,13 +1,13 @@
 import { createContext, } from 'react'
 import { Editor } from 'slate'
-import { ReactEditor } from '../plugin/react-editor'
+import { DOMEditor } from '../plugin/react-editor'
 import { inject } from 'vue'
 
 /**
  * A React context for sharing the editor object.
  */
 
-export const EditorContext = createContext<ReactEditor | null>(null)
+export const EditorContext = createContext<DOMEditor | null>(null)
 
 /**
  * Get the current editor object from the React context.

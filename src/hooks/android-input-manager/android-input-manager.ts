@@ -1,6 +1,6 @@
 import type { DebouncedFunc } from "lodash";
 import { Editor, Node, Path, Point, Range, Text, Transforms } from "slate";
-import { ReactEditor } from "../../plugin/react-editor";
+import { DOMEditor } from "../../plugin/react-editor";
 import {
   applyStringDiff,
   mergeStringDiffs,
@@ -42,7 +42,7 @@ const isDataTransfer = (value: any): value is DataTransfer =>
   value?.constructor.name === "DataTransfer";
 
 export type CreateAndroidInputManagerOptions = {
-  editor: ReactEditor;
+  editor: DOMEditor;
 
   scheduleOnDOMSelectionChange: DebouncedFunc<() => void>;
   onDOMSelectionChange: DebouncedFunc<() => void>;
@@ -361,7 +361,7 @@ export function createAndroidInputManager({
 
     let [nativeTargetRange] = (event as any).getTargetRanges();
     if (nativeTargetRange) {
-      targetRange = ReactEditor.toSlateRange(editor, nativeTargetRange, {
+      targetRange = DOMEditor.toSlateRange(editor, nativeTargetRange, {
         exactMatch: false,
         suppressThrow: true,
       });
@@ -369,11 +369,11 @@ export function createAndroidInputManager({
 
     // COMPAT: SelectionChange event is fired after the action is performed, so we
     // have to manually get the selection here to ensure it's up-to-date.
-    const window = ReactEditor.getWindow(editor);
+    const window = DOMEditor.getWindow(editor);
     const domSelection = window.getSelection();
     if (!targetRange && domSelection) {
       nativeTargetRange = domSelection;
-      targetRange = ReactEditor.toSlateRange(editor, domSelection, {
+      targetRange = DOMEditor.toSlateRange(editor, domSelection, {
         exactMatch: false,
         suppressThrow: true,
       });
@@ -584,7 +584,7 @@ export function createAndroidInputManager({
       case "insertReplacementText":
       case "insertText": {
         if (isDataTransfer(data)) {
-          return scheduleAction(() => ReactEditor.insertData(editor, data), {
+          return scheduleAction(() => DOMEditor.insertData(editor, data), {
             at: targetRange,
           });
         }

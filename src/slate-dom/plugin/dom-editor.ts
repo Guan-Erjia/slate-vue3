@@ -823,7 +823,7 @@ export const DOMEditor: DOMEditorInterface = {
             ...getLeafNodes(elementNode),
           ];
           leafNode =
-            leafNodes.findLast((leaf) => isBefore(nonEditableNode, leaf)) ??
+            leafNodes.findLast((leaf: DOMNode) => isBefore(nonEditableNode, leaf)) ??
             null;
         }
 

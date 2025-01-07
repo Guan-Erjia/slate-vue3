@@ -1,4 +1,4 @@
-import { ReactEditor } from "../../plugin/react-editor";
+import { DOMEditor } from "../../plugin/react-editor";
 import { isTrackedMutation } from "slate-dom";
 
 export type RestoreDOMManager = {
@@ -8,7 +8,7 @@ export type RestoreDOMManager = {
 };
 
 export const createRestoreDomManager = (
-  editor: ReactEditor,
+  editor: DOMEditor,
   receivedUserInput: boolean
 ): RestoreDOMManager => {
   let bufferedMutations: MutationRecord[] = [];

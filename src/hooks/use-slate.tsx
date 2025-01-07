@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react'
 import { Editor } from 'slate'
-import { ReactEditor } from '../plugin/react-editor'
+import { DOMEditor } from '../plugin/react-editor'
 import { inject } from 'vue'
 
 /**
@@ -10,12 +10,12 @@ import { inject } from 'vue'
 
 export interface SlateContextValue {
   v: number
-  editor: ReactEditor
+  editor: DOMEditor
 }
 
 export const SlateContext = createContext<{
   v: number
-  editor: ReactEditor
+  editor: DOMEditor
 } | null>(null)
 
 /**

@@ -9,7 +9,7 @@ import {
 } from 'slate'
 import { ElementComp } from './element'
 import { TextComp } from './text'
-import { ReactEditor } from '../plugin/react-editor'
+import { DOMEditor } from '../plugin/react-editor'
 import { IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from '../slate-dom'
 import { useDecorate } from '../hooks/use-decorate'
 import type { JSX } from 'vue/jsx-runtime'
@@ -48,9 +48,9 @@ export const Children = defineComponent({
     const decorate = useDecorate()
     const editor = inject("editorRef") as Editor;
     const editorVersion = inject<Ref<number>>("editorVersion")
-    IS_NODE_MAP_DIRTY.set(editor as ReactEditor, false)
+    IS_NODE_MAP_DIRTY.set(editor as DOMEditor, false)
 
-    const path = ReactEditor.findPath(editor, node)
+    const path = DOMEditor.findPath(editor, node)
     const isLeafBlock =
       Element.isElement(node) &&
       !editor.isInline(node) &&
@@ -65,7 +65,7 @@ export const Children = defineComponent({
     return () => nodeChildren.value.map((child, i) => {
       const n = toRaw(child)
       const p = path.concat(i)
-      const key = ReactEditor.findKey(editor, toRaw(n))
+      const key = DOMEditor.findKey(editor, toRaw(n))
       const range = Editor.range(editor, p)
       const sel = selection && Range.intersection(range, selection)
       const ds = decorate([n, p])

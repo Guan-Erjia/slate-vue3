@@ -1,5 +1,5 @@
 import { Editor, Text, Path, Element, Node } from 'slate'
-import { ReactEditor, useSlateStatic } from '..'
+import { DOMEditor, useSlateStatic } from '..'
 import { IS_ANDROID, IS_IOS } from '../slate-dom'
 import { MARK_PLACEHOLDER_SYMBOL } from '../slate-dom'
 import { defineComponent, h, onMounted, ref } from 'vue'
@@ -23,7 +23,7 @@ export const String = defineComponent({
   }) {
     const { isLast, leaf, parent, text } = props
     const editor = useSlateStatic()
-    const path = ReactEditor.findPath(editor, text)
+    const path = DOMEditor.findPath(editor, text)
     const parentPath = Path.parent(path)
     const isMarkPlaceholder = Boolean(leaf[MARK_PLACEHOLDER_SYMBOL])
 

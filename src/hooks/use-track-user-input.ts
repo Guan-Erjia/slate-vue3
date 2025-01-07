@@ -1,4 +1,4 @@
-import { ReactEditor } from "../plugin/react-editor";
+import { DOMEditor } from "../plugin/react-editor";
 import { useSlateStatic } from "./use-slate-static";
 import { onBeforeUnmount, ref } from "vue";
 
@@ -15,7 +15,7 @@ export function useTrackUserInput() {
 
     receivedUserInput.value = true;
 
-    const window = ReactEditor.getWindow(editor);
+    const window = DOMEditor.getWindow(editor);
     window.cancelAnimationFrame(animationFrameIdRef.value);
 
     animationFrameIdRef.value = window.requestAnimationFrame(() => {
