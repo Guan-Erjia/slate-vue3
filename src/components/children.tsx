@@ -1,7 +1,4 @@
-import {
-  type Ancestor,
-  type DecoratedRange,
-} from 'slate'
+import type { Ancestor, DecoratedRange, } from 'slate'
 import {
   Editor,
   Element,
@@ -98,4 +95,3 @@ export const Children = defineComponent({
     })
   }
 })
-
