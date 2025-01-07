@@ -6,17 +6,19 @@ import {
   Operation,
   Scrubber,
 } from "slate";
-import { EDITOR_TO_ON_CHANGE } from "../slate-dom";
+import { withDOM, EDITOR_TO_ON_CHANGE } from "../slate-dom";
 import { DOMEditor } from "../plugin/react-editor";
 import { defineComponent, onMounted, onUnmounted, provide, ref, renderSlot } from "vue";
-import { withDOM } from "../slate-dom";
 
 type EditorChangeHandler = (editor: Editor) => void;
 
 export const Slate = defineComponent({
-  name: 'Slate',
+  name: 'slate-editor',
   props: {
-    initialValue: {}
+    initialValue: {
+      type: Array,
+      default: () => [{ type: "paragraph", children: [{ text: "" }] }]
+    },
   },
   setup(props: {
     initialValue: Descendant[];
@@ -28,10 +30,10 @@ export const Slate = defineComponent({
 
     const editorVersion = ref(0);
     const editorIsFocus = ref(DOMEditor.isFocused(editor));
-    const eventListeners = ref<EditorChangeHandler[]>([]);
 
     const onContextChange = (options?: { operation?: Operation }) => {
       emit("change", editor.children);
+      console.log(options)
       switch (options?.operation?.type) {
         case "set_selection":
           emit("selectionchange", editor.selection);
@@ -39,7 +41,6 @@ export const Slate = defineComponent({
         default:
           emit("valuechange", editor.children);
       }
-
       editorVersion.value++;
     };
 
@@ -47,6 +48,8 @@ export const Slate = defineComponent({
     provide("editorIsFocus", editorIsFocus);
     provide("editorRef", editor);
     provide("editorVersion", editorVersion);
+
+    const eventListeners = ref<EditorChangeHandler[]>([]);
     provide("addEventListener", (callback: EditorChangeHandler) => {
       eventListeners.value.push(callback);
       return () => {
@@ -54,7 +57,7 @@ export const Slate = defineComponent({
       };
     });
 
-    const focusCb = () => editorIsFocus.value = DOMEditor.isFocused(editor)
+    const fn = () => editorIsFocus.value = DOMEditor.isFocused(editor)
     onMounted(() => {
       if (!Node.isNodeList(props.initialValue)) {
         throw new Error(
@@ -69,15 +72,15 @@ export const Slate = defineComponent({
         );
       }
 
-      document.addEventListener("focusin", focusCb);
-      document.addEventListener("focusout", focusCb);
+      document.addEventListener("focusin", fn);
+      document.addEventListener("focusout", fn);
       EDITOR_TO_ON_CHANGE.set(editor, onContextChange);
     });
 
     onUnmounted(() => {
       EDITOR_TO_ON_CHANGE.delete(editor);
-      document.removeEventListener("focusin", focusCb);
-      document.removeEventListener("focusout", focusCb);
+      document.removeEventListener("focusin", fn);
+      document.removeEventListener("focusout", fn);
     });
 
     return () => renderSlot(slots, 'default')

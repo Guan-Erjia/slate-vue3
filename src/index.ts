@@ -4,7 +4,6 @@ export {
 } from './components/editable'
 
 export { DefaultElement } from './components/element'
-export { DefaultLeaf } from './components/leaf'
 
 // Hooks
 export { useEditor } from './hooks/use-editor'

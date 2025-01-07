@@ -2,7 +2,7 @@ import type { DecoratedRange, NodeEntry, Text, Element } from "slate";
 import type { DOMRange } from "../slate-dom";
 import type { JSX } from "vue/jsx-runtime";
 import type { DOMEditor } from "../plugin/react-editor";
-import type { CSSProperties, HTMLAttributes, VNode } from "vue";
+import type { CSSProperties, HTMLAttributes, VNode, VNodeRef } from "vue";
 
 /**
  * The props that get passed to renderPlaceholder
@@ -13,7 +13,7 @@ export type RenderPlaceholderProps = {
     "data-slate-placeholder": boolean;
     dir?: "rtl";
     contentEditable: boolean;
-    ref: React.RefCallback<any>;
+    ref: VNodeRef;
     style: CSSProperties;
   };
 };
@@ -22,7 +22,7 @@ export type RenderPlaceholderProps = {
  * `RenderLeafProps` are passed to the `renderLeaf` handler.
  */
 export interface RenderLeafProps {
-  children: any;
+  children: JSX.Element;
   leaf: Text;
   text: Text;
   attributes: {

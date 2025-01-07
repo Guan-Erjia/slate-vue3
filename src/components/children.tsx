@@ -32,9 +32,9 @@ export const Children = defineComponent({
   setup(props: {
     decorations: DecoratedRange[]
     node: Ancestor
-    renderElement?: (props: RenderElementProps) => JSX.Element
+    renderElement: (props: RenderElementProps) => JSX.Element
     renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
-    renderLeaf?: (props: RenderLeafProps) => JSX.Element
+    renderLeaf: (props: RenderLeafProps) => JSX.Element
     selection: Range | null
   }) {
     const {
@@ -46,7 +46,7 @@ export const Children = defineComponent({
       selection,
     } = props
     const decorate = useDecorate()
-    const editor = inject("editorRef") as Editor;
+    const editor = inject("editorRef") as DOMEditor;
     const editorVersion = inject<Ref<number>>("editorVersion")
     IS_NODE_MAP_DIRTY.set(editor as DOMEditor, false)
 

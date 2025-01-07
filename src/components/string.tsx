@@ -1,20 +1,13 @@
 import { Editor, Text, Path, Element, Node } from 'slate'
-import { DOMEditor, useSlateStatic } from '..'
-import { IS_ANDROID, IS_IOS } from '../slate-dom'
-import { MARK_PLACEHOLDER_SYMBOL } from '../slate-dom'
-import { defineComponent, h, onMounted, ref } from 'vue'
+import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL } from '../slate-dom'
+import { defineComponent, h, inject, onMounted, ref } from 'vue'
 
 /**
  * Leaf content strings.
  */
-export const String = defineComponent({
-  name: 'String',
-  props: {
-    isLast: {},
-    leaf: {},
-    parent: {},
-    text: {},
-  },
+export const StringComp = defineComponent({
+  name: 'slate-string',
+  props: ['isLast', 'leaf', 'parent', 'text'],
   setup(props: {
     isLast: boolean
     leaf: Text
@@ -22,7 +15,8 @@ export const String = defineComponent({
     text: Text
   }) {
     const { isLast, leaf, parent, text } = props
-    const editor = useSlateStatic()
+    const editor = inject("editorRef") as DOMEditor;
+
     const path = DOMEditor.findPath(editor, text)
     const parentPath = Path.parent(path)
     const isMarkPlaceholder = Boolean(leaf[MARK_PLACEHOLDER_SYMBOL])
@@ -30,7 +24,7 @@ export const String = defineComponent({
     // COMPAT: Render text inside void nodes with a zero-width space.
     // So the node can contain selection but the text is not visible.
     if (editor.isVoid(parent)) {
-      return <ZeroWidthString length={Node.string(parent).length} />
+      return () => h(ZeroWidthString, { length: Node.string(parent).length })
     }
 
     // COMPAT: If this is the last text node in an empty block, render a zero-
@@ -42,17 +36,17 @@ export const String = defineComponent({
       !editor.isInline(parent) &&
       Editor.string(editor, parentPath) === ''
     ) {
-      return () => <ZeroWidthString isLineBreak isMarkPlaceholder={isMarkPlaceholder} />
+      return () => h(ZeroWidthString, { isLineBreak: true, isMarkPlaceholder: isMarkPlaceholder })
     }
 
     // COMPAT: If the text is empty, it's because it's on the edge of an inline
     // node, so we render a zero-width space so that the selection can be
     // inserted next to it still.
     if (leaf.text === '') {
-      return () => <ZeroWidthString isMarkPlaceholder={isMarkPlaceholder} />
+      return () => h(ZeroWidthString, { isMarkPlaceholder: isMarkPlaceholder })
     }
 
-    const spanRef = ref<HTMLSpanElement>()
+    const textRef = ref<HTMLSpanElement>()
     const isTrailing = isLast && leaf.text.slice(-1) === '\n'
     const getTextContent = () => {
       return `${leaf.text ?? ''}${isTrailing ? '\n' : ''}`
@@ -60,14 +54,14 @@ export const String = defineComponent({
 
     onMounted(() => {
       const textWithTrailing = getTextContent()
-      if (spanRef.value && spanRef.value?.textContent !== textWithTrailing) {
-        spanRef.value.textContent = textWithTrailing
+      if (textRef.value && textRef.value?.textContent !== textWithTrailing) {
+        textRef.value.textContent = textWithTrailing
       }
     })
 
     return () => h('span', {
       'data-slate-string': true,
-      ref: spanRef
+      ref: textRef
     }, getTextContent)
   }
 })

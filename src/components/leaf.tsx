@@ -1,14 +1,14 @@
 import { Element, Text } from 'slate'
-import { String } from './string'
+import { StringComp } from './string'
 import {
   PLACEHOLDER_SYMBOL,
   EDITOR_TO_PLACEHOLDER_ELEMENT,
+  DOMEditor,
 } from '../slate-dom'
-import { useSlateStatic } from '../hooks/use-slate-static'
 import { IS_WEBKIT, IS_ANDROID } from '../slate-dom'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { defineComponent, h, onBeforeUnmount, onMounted, ref, type Ref } from 'vue'
+import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref, type Ref, type VNode, type VNodeRef } from 'vue'
 
 // Delay the placeholder on Android to prevent the keyboard from closing.
 // (https://github.com/ianstormtaylor/slate/pull/5368)
@@ -39,22 +39,23 @@ function clearTimeoutRef(timeoutRef: Ref<TimerId>) {
  * Individual leaves in a text node with unique formatting.
  */
 
-export const Leaf = defineComponent({
-  name: 'Leaf',
-  props: {
-    isLast: {},
-    leaf: {},
-    parent: {},
-    renderPlaceholder: {},
-    renderLeaf: {},
-    text: {},
+export const LeafComp = defineComponent({
+  name: 'slate-leaf',
+  props:
+  {
+    isLast: Boolean,
+    leaf: Object,
+    parent: Object,
+    renderPlaceholder: Function,
+    renderLeaf: Function,
+    text: Object,
   },
   setup(props: {
     isLast: boolean
     leaf: Text
     parent: Element
     renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
-    renderLeaf?: (props: RenderLeafProps) => JSX.Element
+    renderLeaf: (props: RenderLeafProps) => VNode
     text: Text
   }) {
     const {
@@ -63,18 +64,18 @@ export const Leaf = defineComponent({
       text,
       parent,
       renderPlaceholder,
-      renderLeaf = (props: RenderLeafProps) => <DefaultLeaf {...props} />,
+      renderLeaf,
     } = props
 
 
-    const editor = useSlateStatic()
+    const editor = inject("editorRef") as DOMEditor;
     const placeholderResizeObserver = ref<ResizeObserver | null>(null)
     const placeholderRef = ref<HTMLElement | null>(null)
     const showPlaceholder = ref(false)
     const showPlaceholderTimeoutRef = ref<TimerId>(null)
 
-    const callbackPlaceholderRef =
-      (placeholderEl: HTMLElement | null) => {
+    const callbackPlaceholderRef: VNodeRef =
+      (placeholderEl) => {
         disconnectPlaceholderResizeObserver(
           placeholderResizeObserver,
           placeholderEl == null
@@ -83,7 +84,7 @@ export const Leaf = defineComponent({
         if (placeholderEl == null) {
           EDITOR_TO_PLACEHOLDER_ELEMENT.delete(editor)
           leaf.onPlaceholderResize?.(null)
-        } else {
+        } else if (placeholderEl instanceof HTMLElement) {
           EDITOR_TO_PLACEHOLDER_ELEMENT.set(editor, placeholderEl)
 
           if (!placeholderResizeObserver.value) {
@@ -97,11 +98,10 @@ export const Leaf = defineComponent({
         }
       }
 
-    let children = (
-      <String isLast={isLast} leaf={leaf} parent={parent} text={text} />
-    )
+
 
     const leafIsPlaceholder = Boolean(leaf[PLACEHOLDER_SYMBOL])
+
     onMounted(() => {
       if (leafIsPlaceholder) {
         if (!showPlaceholderTimeoutRef.value) {
@@ -120,8 +120,12 @@ export const Leaf = defineComponent({
       clearTimeoutRef(showPlaceholderTimeoutRef)
     ])
 
-    if (leafIsPlaceholder && showPlaceholder) {
-      const placeholderProps: RenderPlaceholderProps = {
+    let children = (
+      <StringComp isLast={isLast} leaf={leaf} parent={parent} text={text} />
+    )
+
+    const placeholderProps = computed<RenderPlaceholderProps>(() => {
+      return {
         children: leaf.placeholder,
         attributes: {
           'data-slate-placeholder': true,
@@ -142,11 +146,13 @@ export const Leaf = defineComponent({
           ref: callbackPlaceholderRef,
         },
       }
+    })
 
+    if (leafIsPlaceholder && showPlaceholder) {
       children = (
         <>
-          {renderPlaceholder(placeholderProps)}
-          {children}
+          {renderPlaceholder(placeholderProps.value)}
+          <StringComp isLast={isLast} leaf={leaf} parent={parent} text={text} />
         </>
       )
     }
@@ -164,7 +170,3 @@ export const Leaf = defineComponent({
   }
 })
 
-export const DefaultLeaf = (props: RenderLeafProps) => {
-  const { attributes, children } = props
-  return h('span', attributes, children)
-}
