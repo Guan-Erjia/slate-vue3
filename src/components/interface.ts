@@ -57,9 +57,9 @@ export type EditableProps = {
   readOnly?: boolean;
   role?: string;
   style?: CSSProperties;
-  renderElement?: (props: RenderElementProps) => VNode;
-  renderLeaf?: (props: RenderLeafProps) => VNode;
-  renderPlaceholder?: (props: RenderPlaceholderProps) => JSX.Element;
+  renderElement: (props: RenderElementProps) => VNode;
+  renderLeaf: (props: RenderLeafProps) => VNode;
+  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   scrollSelectionIntoView?: (editor: DOMEditor, domRange: DOMRange) => void;
   as?: string;
   disableDefaultStyles?: boolean;

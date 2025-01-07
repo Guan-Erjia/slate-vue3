@@ -57,18 +57,17 @@ import {
   PLACEHOLDER_SYMBOL,
 } from '../slate-dom'
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
-import type { EditableProps, RenderPlaceholderProps } from './interface'
-import { computed, defineComponent, h, inject, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, useAttrs, type CSSProperties, type HTMLAttributes, type Ref, } from 'vue'
+import type { EditableProps } from './interface'
+import { computed, defineComponent, inject, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, useAttrs, type CSSProperties, type HTMLAttributes, type Ref, } from 'vue'
 import { Children } from './children'
 
 type DeferredOperation = () => void
-const defaultRenderPlaceholder =
-  (props: RenderPlaceholderProps) => <DefaultPlaceholder {...props} />
+
 /**
  * Editable.
  */
 export const Editable = defineComponent({
-  name: 'Editable',
+  name: 'slate-editable',
   props: {
     decorate: {},
     onDOMBeforeInput: {},
@@ -92,7 +91,7 @@ export const Editable = defineComponent({
       readOnly = false,
       renderElement,
       renderLeaf,
-      renderPlaceholder = defaultRenderPlaceholder,
+      renderPlaceholder,
       scrollSelectionIntoView = defaultScrollSelectionIntoView,
       style: userStyle = {},
       as = 'div',
@@ -1699,19 +1698,6 @@ export const Editable = defineComponent({
   }
 })
 
-
-/**
- * The default placeholder element
- */
-
-export const DefaultPlaceholder = ({
-  attributes,
-  children,
-}: RenderPlaceholderProps) =>
-  h('span', attributes, [
-    children,
-    IS_ANDROID ? h('br') : undefined
-  ])
 
 
 /**
