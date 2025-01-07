@@ -50,7 +50,7 @@ import {
 } from '../slate-dom'
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
 import type { EditableProps } from './interface'
-import { computed, defineComponent, getCurrentInstance, inject, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, useAttrs, } from 'vue'
+import { computed, defineComponent, getCurrentInstance, inject, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, useAttrs, } from 'vue'
 import type { CSSProperties, HTMLAttributes, VNodeRef, } from 'vue'
 import { Children } from './children'
 import { useTrackUserInput } from '../hooks/use-track-user-input'
@@ -137,9 +137,9 @@ export const Editable = defineComponent({
       as,
     } = props
 
-    const editor = inject("editorRef") as Editor;
+    // weakMap 需要原始指针
+    const editor = toRaw(inject("editorRef")) as Editor;
     const attributes: HTMLAttributes = useAttrs()
-    const rawEditor = toRaw(editor)
 
     // Rerender editor when composition status changed
     const isComposing = ref(false)
@@ -170,7 +170,7 @@ export const Editable = defineComponent({
       if (node instanceof HTMLDivElement) {
         editableRef.value = node
       }
-      expose(editableRef)
+      expose(editableRef.value)
     }
 
     const deferredOperations = ref<Array<() => void>>([])
@@ -294,7 +294,7 @@ export const Editable = defineComponent({
     })
 
 
-    onUpdated(() => {
+    onMounted(() => {
       // Update element-related weak maps with the DOM element ref.
       let window
       if (editableRef.value && (window = getDefaultView(editableRef.value))) {
@@ -582,7 +582,7 @@ export const Editable = defineComponent({
               // Therefore we don't allow native events to insert text at the end of anchor nodes.
               const { anchor } = selection
 
-              const [node, offset] = DOMEditor.toDOMPoint(rawEditor, anchor)
+              const [node, offset] = DOMEditor.toDOMPoint(editor, anchor)
               const anchorNode = node.parentElement?.closest('a')
 
               const window = DOMEditor.getWindow(editor)
@@ -826,6 +826,7 @@ export const Editable = defineComponent({
     const stoppedDragging = () => {
       state.value.isDraggingInternally = false
     }
+
     onMounted(() => {
       const window = DOMEditor.getWindow(editor)
       // Attach a native DOM event handler for `selectionchange`, because React's
@@ -837,8 +838,6 @@ export const Editable = defineComponent({
         'selectionchange',
         scheduleOnDOMSelectionChange
       )
-
-
       window.document.addEventListener('dragend', stoppedDragging)
       window.document.addEventListener('drop', stoppedDragging)
     })
@@ -853,22 +852,18 @@ export const Editable = defineComponent({
     })
 
     const decorations = decorate([editor, []])
-
-    const showPlaceholder =
-      placeholder &&
-      editor.children?.length === 1 &&
+    const showPlaceholder = placeholder && editor.children?.length === 1 &&
       Array.from(Node.texts(editor)).length === 1 &&
       Node.string(editor) === '' &&
       !isComposing.value
 
-    const placeHolderResizeHandler =
-      (placeholderEl: HTMLElement | null) => {
-        if (placeholderEl && showPlaceholder) {
-          placeholderHeight.value = (placeholderEl.getBoundingClientRect()?.height)
-        } else {
-          placeholderHeight.value = (undefined)
-        }
+    const placeHolderResizeHandler = (placeholderEl: HTMLElement | null) => {
+      if (placeholderEl && showPlaceholder) {
+        placeholderHeight.value = (placeholderEl.getBoundingClientRect()?.height)
+      } else {
+        placeholderHeight.value = (undefined)
       }
+    }
 
     if (showPlaceholder) {
       const start = Editor.start(editor, [])
@@ -912,12 +907,9 @@ export const Editable = defineComponent({
     // Update EDITOR_TO_MARK_PLACEHOLDER_MARKS in setTimeout useEffect to ensure we don't set it
     // before we receive the composition end event.
     onUpdated(() => {
-      setTimeout(() => {
-        const { selection } = editor
-        if (selection) {
-          const { anchor } = selection
-          const text = Node.leaf(editor, anchor.path)
-
+      nextTick(() => {
+        if (editor.selection) {
+          const text = Node.leaf(editor, editor.selection.anchor.path)
           // While marks isn't a 'complete' text, we can still use loose Text.equals
           // here which only compares marks anyway.
           if (marks && !Text.equals(text, marks as Text, { loose: true })) {
@@ -925,7 +917,6 @@ export const Editable = defineComponent({
             return
           }
         }
-
         EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor)
       })
     })
@@ -1105,7 +1096,7 @@ export const Editable = defineComponent({
                 domSelection?.removeAllRanges()
               }
 
-              IS_FOCUSED.delete(rawEditor)
+              IS_FOCUSED.delete(editor)
             }}
           onClick={(event: MouseEvent) => {
             if (
@@ -1122,7 +1113,7 @@ export const Editable = defineComponent({
               // and that it still refers to the same node.
               if (
                 !Editor.hasPath(editor, path) ||
-                Node.get(rawEditor, path) !== node
+                Node.get(editor, path) !== node
               ) {
                 return
               }
@@ -1419,7 +1410,7 @@ export const Editable = defineComponent({
                   return
                 }
 
-                IS_FOCUSED.set(rawEditor, true)
+                IS_FOCUSED.set(editor, true)
               }
             }}
           onKeydown={
@@ -1451,7 +1442,7 @@ export const Editable = defineComponent({
 
                 const { selection } = editor
                 const element =
-                  rawEditor.children[
+                  editor.children[
                   selection !== null ? selection.focus.path[0] : 0
                   ]
                 const isRTL = direction(Node.string(element)) === 'rtl'
@@ -1754,9 +1745,6 @@ export const Editable = defineComponent({
     )
   }
 })
-
-
-
 
 
 /**
