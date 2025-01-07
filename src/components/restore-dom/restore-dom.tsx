@@ -19,7 +19,7 @@ export const RestoreDOM = defineComponent({
   props: ['receivedUserInput', 'node'],
   setup(props: {
     receivedUserInput: Ref<boolean>
-    node: Ref<HTMLDivElement>
+    node: Ref<HTMLElement | undefined>
   }, { slots }) {
     const mutationObserver = ref<MutationObserver | null>(null)
     const manager = ref<RestoreDOMManager | null>(null)

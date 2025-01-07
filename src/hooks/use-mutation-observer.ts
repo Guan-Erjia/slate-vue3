@@ -3,7 +3,7 @@ import { useIsomorphicLayoutEffect } from "./use-isomorphic-layout-effect";
 import type { Ref } from "vue";
 
 export function useMutationObserver(
-  node: Ref<HTMLElement>,
+  node: Ref<HTMLElement | undefined>,
   callback: MutationCallback,
   options: MutationObserverInit
 ) {

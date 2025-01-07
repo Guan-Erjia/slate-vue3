@@ -51,16 +51,15 @@ export interface RenderElementProps {
  */
 
 export type EditableProps = {
-  decorate?: (entry: NodeEntry) => DecoratedRange[];
+  decorate: (entry: NodeEntry) => DecoratedRange[];
   onDOMBeforeInput?: (event: InputEvent) => void;
   placeholder?: string;
-  readOnly?: boolean;
+  readOnly: boolean;
   role?: string;
-  style?: CSSProperties;
+  style: CSSProperties;
   renderElement: (props: RenderElementProps) => VNode;
   renderLeaf: (props: RenderLeafProps) => VNode;
   renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
-  scrollSelectionIntoView?: (editor: DOMEditor, domRange: DOMRange) => void;
-  as?: string;
-  disableDefaultStyles?: boolean;
+  scrollSelectionIntoView: (editor: DOMEditor, domRange: DOMRange) => void;
+  as: string;
 } & HTMLAttributes;

@@ -10,7 +10,7 @@ import { inject, toRaw, type Ref } from "vue";
 import type { Editor } from "slate";
 
 type UseAndroidInputManagerOptions = {
-  node: Ref<HTMLElement>;
+  node: Ref<HTMLElement | undefined>;
 } & Omit<
   CreateAndroidInputManagerOptions,
   "editor" | "onUserInput" | "receivedUserInput"
