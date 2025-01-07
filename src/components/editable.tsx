@@ -293,7 +293,8 @@ export const Editable = defineComponent({
       scheduleOnDOMSelectionChange,
     })
 
-
+    const animationFrameId = ref<number>()
+    const timeoutId = ref<number>()
     onMounted(() => {
       // Update element-related weak maps with the DOM element ref.
       let window
@@ -452,8 +453,7 @@ export const Editable = defineComponent({
         return
       }
 
-      let timeoutId: ReturnType<typeof setTimeout> | null = null
-      const animationFrameId = requestAnimationFrame(() => {
+      animationFrameId.value = requestAnimationFrame(() => {
         if (ensureSelection) {
           const ensureDomSelection = (forceChange?: boolean) => {
             try {
@@ -472,7 +472,7 @@ export const Editable = defineComponent({
           // visible flicker.
           ensureDomSelection()
 
-          timeoutId = setTimeout(() => {
+          timeoutId.value = setTimeout(() => {
             // COMPAT: While setting the selection in an animation frame visually correctly sets the selection,
             // it doesn't update GBoards spellchecker state. We have to manually trigger a selection change after
             // the animation frame to ensure it displays the correct state.
@@ -481,12 +481,12 @@ export const Editable = defineComponent({
           })
         }
       })
+    })
 
-      return () => {
-        cancelAnimationFrame(animationFrameId)
-        if (timeoutId) {
-          clearTimeout(timeoutId)
-        }
+    onBeforeUnmount(() => {
+      animationFrameId.value && cancelAnimationFrame(animationFrameId.value)
+      if (timeoutId) {
+        clearTimeout(timeoutId.value)
       }
     })
 
