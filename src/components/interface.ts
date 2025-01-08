@@ -4,6 +4,7 @@ import {
   type Text,
   type Element,
   Range,
+  Operation,
 } from "slate";
 import type { DOMRange } from "../slate-dom";
 import type { JSX } from "vue/jsx-runtime";
@@ -149,3 +150,8 @@ export const defaultScrollSelectionIntoView = (
     delete leafEl.getBoundingClientRect;
   }
 };
+
+export const EDITOR_TO_EDITABLE_ON_CHANGE = new WeakMap<
+  DOMEditor,
+  (options?: { operation?: Operation }) => void
+>();

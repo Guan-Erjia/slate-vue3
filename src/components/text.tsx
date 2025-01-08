@@ -24,12 +24,13 @@ export const TextComp = defineComponent({
     renderLeaf: (props: RenderLeafProps) => JSX.Element
     text: Text
   }) {
-    const { decorations, isLast, parent, renderPlaceholder, renderLeaf, text } = props
+    const { decorations, isLast, parent, renderPlaceholder, renderLeaf, } = props
     const editor = toRaw(inject("editorRef")) as DOMEditor;
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
     const leaves = Text.decorations(props.text, decorations)
-    const key = DOMEditor.findKey(editor, toRaw(text))
+    const rawText = toRaw(props.text)
+    const key = DOMEditor.findKey(editor, rawText)
 
     // Update element-related weak maps with the DOM element ref.
     const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
@@ -37,20 +38,17 @@ export const TextComp = defineComponent({
     onMounted(() => {
       if (spanRef.value) {
         KEY_TO_ELEMENT?.set(key, spanRef.value)
-        NODE_TO_ELEMENT.set(text, spanRef.value)
-        ELEMENT_TO_NODE.set(spanRef.value, text)
-      } else {
-        KEY_TO_ELEMENT?.delete(key)
-        NODE_TO_ELEMENT.delete(text)
-        if (spanRef.value) {
-          ELEMENT_TO_NODE.delete(spanRef.value)
-        }
+        ELEMENT_TO_NODE.set(spanRef.value, rawText)
+        NODE_TO_ELEMENT.set(rawText, spanRef.value)
       }
+      setTimeout(() => {
+        console.log(NODE_TO_ELEMENT)
+      }, 1000);
     })
 
     onBeforeUnmount(() => {
       KEY_TO_ELEMENT?.delete(key)
-      NODE_TO_ELEMENT.delete(text)
+      NODE_TO_ELEMENT.delete(rawText)
       if (spanRef.value) {
         ELEMENT_TO_NODE.delete(spanRef.value)
       }
@@ -65,7 +63,7 @@ export const TextComp = defineComponent({
       renderPlaceholder,
       renderLeaf,
       leaf,
-      text,
+      text: props.text,
       parent,
     })))
   }

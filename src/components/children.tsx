@@ -11,7 +11,7 @@ import { IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from '../slate-dom'
 import { useDecorate } from '../hooks/use-decorate'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
-import { defineComponent, inject, ref, toRaw, watch, type Ref } from 'vue'
+import { defineComponent, inject, toRaw } from 'vue'
 
 /**
  * Children.
@@ -44,7 +44,6 @@ export const Children = defineComponent({
     } = props
     const decorate = useDecorate()
     const editor = toRaw(inject("editorRef")) as DOMEditor;
-    const editorVersion = inject<Ref<number>>("editorVersion")
     IS_NODE_MAP_DIRTY.set(editor as DOMEditor, false)
 
     const path = DOMEditor.findPath(editor, toRaw(node))
@@ -53,12 +52,7 @@ export const Children = defineComponent({
       !editor.isInline(node) &&
       Editor.hasInlines(editor, node)
 
-    const nodeChildren = ref(node.children)
-    watch(() => editorVersion?.value, () => {
-      nodeChildren.value = node.children
-    })
-
-    return () => nodeChildren.value.map((child, i) => {
+    return () => node.children.map((child, i) => {
       const n = toRaw(child)
       const p = path.concat(i)
       const key = DOMEditor.findKey(editor, toRaw(n))

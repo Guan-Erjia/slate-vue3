@@ -45,22 +45,23 @@ export const ElementComp = defineComponent({
     } = props
     const editor = toRaw(inject("editorRef")) as DOMEditor;
     const readOnly = useReadOnly()
+    const rawElement = toRaw(element)
 
     const elementRef = ref<HTMLElement | null>(null)
     onMounted(() => {
-      const key = DOMEditor.findKey(editor, toRaw(element))
+      const key = DOMEditor.findKey(editor, rawElement)
       const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
       if (elementRef.value) {
         KEY_TO_ELEMENT?.set(key, elementRef.value)
-        NODE_TO_ELEMENT.set(element, elementRef.value)
-        ELEMENT_TO_NODE.set(elementRef.value, element)
+        NODE_TO_ELEMENT.set(rawElement, elementRef.value)
+        ELEMENT_TO_NODE.set(elementRef.value, rawElement)
       }
     })
     onUnmounted(() => {
-      const key = DOMEditor.findKey(editor, toRaw(element))
+      const key = DOMEditor.findKey(editor, rawElement)
       const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
       KEY_TO_ELEMENT?.delete(key)
-      NODE_TO_ELEMENT.delete(element)
+      NODE_TO_ELEMENT.delete(rawElement)
     })
 
     const isInline = computed(() => editor.isInline(element))
@@ -140,7 +141,7 @@ export const ElementComp = defineComponent({
       )
 
       NODE_TO_INDEX.set(text, 0)
-      NODE_TO_PARENT.set(text, element)
+      NODE_TO_PARENT.set(text, rawElement)
     }
 
     return () => renderElement({ attributes: attributes.value, children, element })

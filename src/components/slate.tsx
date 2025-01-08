@@ -27,9 +27,13 @@ export const Slate = defineComponent({
     const editor = withDOM(createEditor())
     editor.children = props.initialValue;
     expose(editor)
+    provide("editorRef", editor);
 
     const editorVersion = ref(0);
+    provide("editorVersion", editorVersion);
     const editorIsFocus = ref(DOMEditor.isFocused(editor));
+    const fn = () => editorIsFocus.value = DOMEditor.isFocused(editor)
+    provide("editorIsFocus", editorIsFocus);
 
     const onContextChange = (options?: { operation?: Operation }) => {
       emit("change", editor.children);
@@ -41,13 +45,8 @@ export const Slate = defineComponent({
         default:
           emit("valuechange", editor.children);
       }
-      editorVersion.value++;
     };
 
-
-    provide("editorIsFocus", editorIsFocus);
-    provide("editorRef", editor);
-    provide("editorVersion", editorVersion);
     const eventListeners: EditorChangeHandler[] = []
     provide("addEventListener", (callback: EditorChangeHandler) => {
       eventListeners.push(callback);
@@ -56,7 +55,6 @@ export const Slate = defineComponent({
       };
     });
 
-    const fn = () => editorIsFocus.value = DOMEditor.isFocused(editor)
     onMounted(() => {
       if (!Node.isNodeList(props.initialValue)) {
         throw new Error(
