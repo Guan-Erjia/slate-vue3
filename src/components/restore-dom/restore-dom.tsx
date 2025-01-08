@@ -1,9 +1,5 @@
-import { DOMEditor, IS_ANDROID, } from '../../slate-dom'
-import {
-  createRestoreDomManager,
-  type RestoreDOMManager,
-} from './restore-dom-manager'
-import { defineComponent, inject, onBeforeUnmount, onBeforeUpdate, onMounted, onUpdated, ref, renderSlot, type Ref } from 'vue'
+import { DOMEditor, IS_ANDROID, isTrackedMutation, } from '../../slate-dom'
+import { inject, onBeforeUnmount, onBeforeUpdate, onMounted, onUpdated, reactive, ref, type Ref } from 'vue'
 
 const MUTATION_OBSERVER_CONFIG: MutationObserverInit = {
   subtree: true,
@@ -14,63 +10,90 @@ const MUTATION_OBSERVER_CONFIG: MutationObserverInit = {
 
 // We have to use a class component here since we rely on `getSnapshotBeforeUpdate` which has no FC equivalent
 // to run code synchronously immediately before react commits the component update to the DOM.
-export const RestoreDOM = defineComponent({
-  name: 'slate-restore-DOM',
-  props: ['receivedUserInput', 'node'],
-  setup(props: {
-    receivedUserInput: Ref<boolean>
-    node: Ref<HTMLElement | undefined>
-  }, { slots }) {
-    const mutationObserver = ref<MutationObserver | null>(null)
-    const manager = ref<RestoreDOMManager | null>(null)
-    const observe = () => {
-      if (!props.node.value) {
-        throw new Error('Failed to attach MutationObserver, `node` is undefined')
-      }
+export const useRestoreDOM = (
+  receivedUserInput: Ref<boolean>,
+  node: Ref<HTMLElement | undefined>
+) => {
 
-      mutationObserver.value?.observe(props.node.value, MUTATION_OBSERVER_CONFIG)
+  const mutationObserver = ref<MutationObserver | null>(null)
+  const manager = reactive<{
+    registerMutations: (mutations: MutationRecord[]) => void;
+    restoreDOM: () => void;
+    clear: () => void;
+  }>({
+    registerMutations: () => { },
+    restoreDOM: () => { },
+    clear: () => { },
+  })
+  const editor = inject("editorRef") as DOMEditor;
+  const bufferedMutations = ref<MutationRecord[]>([]);
+  const observe = () => {
+    if (!node.value) {
+      throw new Error('Failed to attach MutationObserver, `node` is undefined')
+    }
+    mutationObserver.value?.observe(node.value, MUTATION_OBSERVER_CONFIG)
+  }
+
+
+  onMounted(() => {
+    if (!IS_ANDROID) return
+
+    manager.clear = () => { bufferedMutations.value = [] };
+    manager.registerMutations = (mutations: MutationRecord[]) => {
+      if (!receivedUserInput.value) {
+        return;
+      }
+      bufferedMutations.value.push(...mutations.filter((mutation) =>
+        isTrackedMutation(editor, mutation, mutations)
+      ));
+    };
+    manager.restoreDOM = () => {
+      if (bufferedMutations.value.length > 0) {
+        bufferedMutations.value.reverse().forEach((mutation) => {
+          if (mutation.type === "characterData") {
+            // We don't want to restore the DOM for characterData mutations
+            // because this interrupts the composition.
+            return;
+          }
+
+          mutation.removedNodes.forEach((node) => {
+            mutation.target.insertBefore(node, mutation.nextSibling);
+          });
+
+          mutation.addedNodes.forEach((node) => {
+            mutation.target.removeChild(node);
+          });
+        });
+
+        // Clear buffered mutations to ensure we don't undo them twice
+        manager.clear();
+      }
     }
 
-    onMounted(() => {
-      if (!IS_ANDROID) {
-        return
-      }
-      const editor = inject("editorRef") as DOMEditor;
-      manager.value = createRestoreDomManager(editor, props.receivedUserInput)
-      mutationObserver.value = new MutationObserver(manager.value.registerMutations)
-      observe()
-    })
+    mutationObserver.value = new MutationObserver(manager.registerMutations)
+    observe()
+  })
 
-    onBeforeUpdate(() => {
-      if (!IS_ANDROID) {
-        return
-      }
-      const pendingMutations = mutationObserver.value?.takeRecords()
-      if (pendingMutations?.length) {
-        manager.value?.registerMutations(pendingMutations)
-      }
+  onBeforeUpdate(() => {
+    if (!IS_ANDROID) return
+    const pendingMutations = mutationObserver.value?.takeRecords()
+    if (pendingMutations?.length) {
+      manager?.registerMutations(pendingMutations)
+    }
 
-      mutationObserver.value?.disconnect()
-      manager.value?.restoreDOM()
-      return null
-    })
+    mutationObserver.value?.disconnect()
+    manager?.restoreDOM()
+    return null
+  })
 
-    onUpdated(() => {
-      if (!IS_ANDROID) {
-        return
-      }
-      manager.value?.clear()
-      observe()
-    })
+  onUpdated(() => {
+    if (!IS_ANDROID) return
+    manager?.clear()
+    observe()
+  })
 
-    onBeforeUnmount(() => {
-      if (!IS_ANDROID) {
-        return
-      }
-      mutationObserver.value?.disconnect()
-    })
-
-    return () => renderSlot(slots, 'default')
-  }
-})
-
+  onBeforeUnmount(() => {
+    if (!IS_ANDROID) return
+    mutationObserver.value?.disconnect()
+  })
+}

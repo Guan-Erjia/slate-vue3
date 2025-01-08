@@ -1,9 +1,8 @@
-import { DOMEditor } from "../plugin/react-editor";
-import { useSlateStatic } from "./use-slate-static";
-import { onBeforeUnmount, ref } from "vue";
+import { DOMEditor } from "../slate-dom";
+import { inject, onBeforeUnmount, ref } from "vue";
 
 export function useTrackUserInput() {
-  const editor = useSlateStatic();
+  const editor = inject("editorRef") as DOMEditor;
 
   const receivedUserInput = ref<boolean>(false);
   const animationFrameIdRef = ref<number>(0);

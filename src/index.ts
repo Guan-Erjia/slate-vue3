@@ -3,12 +3,10 @@ export { Editable } from "./components/editable";
 
 // Hooks
 export { useEditor } from "./hooks/use-editor";
-export { useSlateStatic } from "./hooks/use-slate-static";
 export { useComposing } from "./hooks/use-composing";
 export { useFocused } from "./hooks/use-focused";
 export { useReadOnly } from "./hooks/use-read-only";
 export { useSelected } from "./hooks/use-selected";
-export { useSlate, useSlateWithV } from "./hooks/use-slate";
 export { useSlateSelector } from "./hooks/use-slate-selector";
 export { useSlateSelection } from "./hooks/use-slate-selection";
 
