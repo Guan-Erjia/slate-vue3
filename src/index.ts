@@ -2,7 +2,6 @@
 export { Editable } from "./components/editable";
 
 // Hooks
-export { useEditor } from "./hooks/use-editor";
 export { useComposing } from "./hooks/use-composing";
 export { useFocused } from "./hooks/use-focused";
 export { useReadOnly } from "./hooks/use-read-only";

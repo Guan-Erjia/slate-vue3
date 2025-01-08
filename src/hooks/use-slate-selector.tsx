@@ -3,8 +3,7 @@ import {
   useContext,
 } from 'react'
 import { Editor } from 'slate'
-import { useIsomorphicLayoutEffect } from './use-isomorphic-layout-effect'
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onBeforeUpdate, onMounted, ref } from 'vue'
 
 function isError(error: any): error is Error {
   return error instanceof Error
@@ -66,47 +65,40 @@ export function useSlateSelector<T>(
 
     throw err
   }
-  useIsomorphicLayoutEffect(() => {
+  onBeforeUpdate(() => {
     latestSelector.value = selector
     latestSelectedState.value = selectedState
     latestSubscriptionCallbackError.value = undefined
   })
 
-  useIsomorphicLayoutEffect(
-    () => {
-      function checkForUpdates() {
-        try {
-          const newSelectedState = latestSelector.value(getSlate())
 
-          if (equalityFn(newSelectedState, latestSelectedState.value)) {
-            return
-          }
+  function checkForUpdates() {
+    try {
+      const newSelectedState = latestSelector.value(getSlate())
 
-          latestSelectedState.value = newSelectedState
-        } catch (err) {
-          // we ignore all errors here, since when the component
-          // is re-rendered, the selectors are called again, and
-          // will throw again, if neither props nor store state
-          // changed
-          if (err instanceof Error) {
-            latestSubscriptionCallbackError.value = err
-          } else {
-            latestSubscriptionCallbackError.value = new Error(String(err))
-          }
-        }
-
-        forceRender.value++
+      if (equalityFn(newSelectedState, latestSelectedState.value)) {
+        return
       }
 
-      const unsubscribe = addEventListener(checkForUpdates)
+      latestSelectedState.value = newSelectedState
+    } catch (err) {
+      // we ignore all errors here, since when the component
+      // is re-rendered, the selectors are called again, and
+      // will throw again, if neither props nor store state
+      // changed
+      if (err instanceof Error) {
+        latestSubscriptionCallbackError.value = err
+      } else {
+        latestSubscriptionCallbackError.value = new Error(String(err))
+      }
+    }
 
-      checkForUpdates()
+    forceRender.value++
+  }
 
-      return () => unsubscribe()
-    },
-    // don't rerender on equalityFn change since we want to be able to define it inline
-    [addEventListener, getSlate]
+  onMounted(() => checkForUpdates()
   )
+  onBeforeUnmount(() => addEventListener(checkForUpdates)())
 
   return selectedState
 }
@@ -121,13 +113,12 @@ export function useSelectorContext(editor: Editor) {
   }>({
     editor,
   }).value
-  const onChange =
-    (editor: Editor) => {
-      slateRef.editor = editor
-      eventListeners.forEach((listener: EditorChangeHandler) =>
-        listener(editor)
-      )
-    }
+  const onChange = (editor: Editor) => {
+    slateRef.editor = editor
+    eventListeners.forEach((listener: EditorChangeHandler) =>
+      listener(editor)
+    )
+  }
 
   const selectorContext = computed(() => {
     return {

@@ -4,12 +4,13 @@ import {
   createAndroidInputManager,
   type CreateAndroidInputManagerOptions,
 } from "./android-input-manager";
-import { useIsMounted } from "../use-is-mounted";
 import {
   inject,
   onBeforeUnmount,
   onBeforeUpdate,
   onMounted,
+  onUnmounted,
+  ref,
   toRaw,
   type Ref,
 } from "vue";
@@ -36,7 +37,10 @@ export const useAndroidInputManager = !IS_ANDROID
 
       const editor = inject("editorRef") as DOMEditor;
       const rawEditor = toRaw(editor);
-      const isMounted = useIsMounted();
+
+      const isMounted = ref(false);
+      onMounted(() => (isMounted.value = true));
+      onUnmounted(() => (isMounted.value = false));
 
       const inputManager = createAndroidInputManager({
         editor: rawEditor,
@@ -67,7 +71,7 @@ export const useAndroidInputManager = !IS_ANDROID
       });
 
       EDITOR_TO_SCHEDULE_FLUSH.set(editor, inputManager.scheduleFlush);
-      if (isMounted) {
+      if (isMounted.value) {
         inputManager.flush();
       }
 
