@@ -19,10 +19,7 @@ const MUTATION_OBSERVER_CONFIG: MutationObserverInit = {
 
 // We have to use a class component here since we rely on `getSnapshotBeforeUpdate` which has no FC equivalent
 // to run code synchronously immediately before react commits the component update to the DOM.
-export const useRestoreDOM = (
-  receivedUserInput: Ref<boolean>,
-  node: Ref<HTMLElement | undefined>
-) => {
+export const useRestoreDOM = (node: Ref<HTMLElement | undefined>) => {
   const mutationObserver = ref<MutationObserver>();
   const manager = reactive<{
     registerMutations: (mutations: MutationRecord[]) => void;
@@ -41,6 +38,26 @@ export const useRestoreDOM = (
     }
     mutationObserver.value?.observe(node.value, MUTATION_OBSERVER_CONFIG);
   };
+  const receivedUserInput = ref<boolean>(false);
+  const animationFrameIdRef = ref<number>(0);
+
+  const onUserInput = () => {
+    if (receivedUserInput.value) {
+      return;
+    }
+
+    receivedUserInput.value = true;
+
+    const window = DOMEditor.getWindow(editor);
+    window.cancelAnimationFrame(animationFrameIdRef.value);
+
+    animationFrameIdRef.value = window.requestAnimationFrame(() => {
+      receivedUserInput.value = false;
+    });
+  };
+  onBeforeUnmount(() => {
+    cancelAnimationFrame(animationFrameIdRef.value);
+  });
 
   onMounted(() => {
     if (!IS_ANDROID) return;
@@ -104,4 +121,8 @@ export const useRestoreDOM = (
     if (!IS_ANDROID) return;
     mutationObserver.value?.disconnect();
   });
+
+  return {
+    onUserInput,
+  };
 };

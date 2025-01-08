@@ -52,7 +52,6 @@ import type { EditableProps } from './interface'
 import { computed, defineComponent, getCurrentInstance, inject, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, useAttrs, } from 'vue'
 import type { CSSProperties, HTMLAttributes, } from 'vue'
 import { Children } from './children'
-import { useTrackUserInput } from '../hooks/use-track-user-input'
 import { useRestoreDOM } from '../hooks/use-restore-dom'
 
 /**
@@ -117,7 +116,7 @@ export const Editable = defineComponent({
       type: Function,
       required: true,
     },
-    as: {
+    is: {
       type: String,
       default: 'div',
     },
@@ -131,7 +130,7 @@ export const Editable = defineComponent({
       renderLeaf,
       renderPlaceholder,
       scrollSelectionIntoView,
-      as,
+      is,
     } = props
 
     // weakMap 需要原始指针
@@ -142,8 +141,7 @@ export const Editable = defineComponent({
     const isComposing = ref(false)
 
     const editableRef = ref<HTMLElement>()
-    const { onUserInput, receivedUserInput } = useTrackUserInput()
-    useRestoreDOM(receivedUserInput, editableRef)
+    const { onUserInput } = useRestoreDOM(editableRef)
 
     onMounted(() => {
       if (HAS_BEFORE_INPUT_SUPPORT) {
@@ -926,7 +924,7 @@ export const Editable = defineComponent({
 
     return () => (
       <div
-        is={as}
+        is={is}
         role={readOnly ? undefined : 'textbox'}
         aria-multiline={readOnly ? undefined : true}
         {...attributes}

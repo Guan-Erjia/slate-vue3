@@ -61,5 +61,5 @@ export type EditableProps = {
   renderLeaf: (props: RenderLeafProps) => VNode;
   renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   scrollSelectionIntoView: (editor: DOMEditor, domRange: DOMRange) => void;
-  as: string;
+  is: string;
 } & HTMLAttributes;
