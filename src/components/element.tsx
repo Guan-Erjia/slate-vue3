@@ -26,9 +26,10 @@ import { useReadOnly } from '../hooks/use-read-only'
  */
 export const ElementComp = defineComponent({
   name: 'slate-element',
-  props: ['decorations', 'element', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'selection'],
+  props: ['decorations', 'element', 'refElement', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'selection'],
   setup(props: {
     element: Element
+    refElement: Element
     decorations: DecoratedRange[]
     renderElement: (props: RenderElementProps) => JSX.Element
     renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
@@ -37,6 +38,7 @@ export const ElementComp = defineComponent({
   }) {
     const {
       element,
+      refElement,
       decorations,
       renderElement,
       renderPlaceholder,
@@ -107,7 +109,7 @@ export const ElementComp = defineComponent({
     let children: JSX.Element = <Children
       decorations={decorations}
       node={element}
-      refNode={element}
+      refNode={refElement}
       renderElement={renderElement}
       renderPlaceholder={renderPlaceholder}
       renderLeaf={renderLeaf}
@@ -118,6 +120,7 @@ export const ElementComp = defineComponent({
 
       const Tag = isInline.value ? 'span' : 'div'
       const [[text]] = Node.texts(element)
+      const [[refText]] = Node.texts(refElement)
 
       children = (
         <Tag
@@ -136,6 +139,7 @@ export const ElementComp = defineComponent({
             isLast={false}
             parent={element}
             text={text}
+            refText={refText}
           />
         </Tag>
       )

@@ -1,4 +1,4 @@
-import type { Ancestor, DecoratedRange, } from 'slate'
+import type { Ancestor, DecoratedRange, Text, } from 'slate'
 import {
   Editor,
   Element,
@@ -11,7 +11,7 @@ import { IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from '../slate-dom'
 import { useDecorate } from '../hooks/use-decorate'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
-import { defineComponent, inject, toRaw, } from 'vue'
+import { computed, defineComponent, inject, toRaw, } from 'vue'
 
 /**
  * Children.
@@ -50,13 +50,14 @@ export const Children = defineComponent({
     IS_NODE_MAP_DIRTY.set(editor as DOMEditor, false)
 
     const path = DOMEditor.findPath(editor, toRaw(node))
-    const isLeafBlock =
-      Element.isElement(node) &&
-      !editor.isInline(node) &&
-      Editor.hasInlines(editor, node)
+    console.log(refNode)
+    const isLeafBlock = computed(() => Element.isElement(refNode) &&
+      !editor.isInline(refNode) &&
+      Editor.hasInlines(editor, refNode))
+
 
     return () => refNode.children.map((child, i) => {
-      const n = toRaw(child)
+      const n = toRaw(node.children[i])
       const p = path.concat(i)
       const key = DOMEditor.findKey(editor, n)
       const range = Editor.range(editor, p)
@@ -72,7 +73,8 @@ export const Children = defineComponent({
       NODE_TO_PARENT.set(n, toRaw(node))
       return Element.isElement(child) ? <ElementComp
         decorations={ds}
-        element={child}
+        element={n as Element}
+        refElement={child}
         key={key.id}
         renderElement={renderElement}
         renderPlaceholder={renderPlaceholder}
@@ -80,12 +82,13 @@ export const Children = defineComponent({
         selection={sel}
       /> : <TextComp
         decorations={ds}
+        text={n as Text}
+        refText={child}
         key={key.id}
-        isLast={isLeafBlock && i === node.children.length - 1}
+        isLast={isLeafBlock.value && i === refNode.children.length - 1}
         parent={node}
         renderPlaceholder={renderPlaceholder}
         renderLeaf={renderLeaf}
-        text={child}
       />
     })
   }
