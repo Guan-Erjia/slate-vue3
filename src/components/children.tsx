@@ -50,11 +50,9 @@ export const Children = defineComponent({
     IS_NODE_MAP_DIRTY.set(editor as DOMEditor, false)
 
     const path = DOMEditor.findPath(editor, toRaw(node))
-    console.log(refNode)
     const isLeafBlock = computed(() => Element.isElement(refNode) &&
       !editor.isInline(refNode) &&
       Editor.hasInlines(editor, refNode))
-
 
     return () => refNode.children.map((child, i) => {
       const n = toRaw(node.children[i])
@@ -62,7 +60,7 @@ export const Children = defineComponent({
       const key = DOMEditor.findKey(editor, n)
       const range = Editor.range(editor, p)
       const sel = selection && Range.intersection(range, selection)
-      const ds = decorate([child, p])
+      const ds = decorate([n, p])
       decorations.forEach(dec => {
         const d = Range.intersection(dec, range)
         if (d) {
@@ -83,9 +81,8 @@ export const Children = defineComponent({
       /> : <TextComp
         decorations={ds}
         text={n as Text}
-        refText={child}
         key={key.id}
-        isLast={isLeafBlock.value && i === refNode.children.length - 1}
+        isLast={isLeafBlock.value && i === node.children.length - 1}
         parent={node}
         renderPlaceholder={renderPlaceholder}
         renderLeaf={renderLeaf}

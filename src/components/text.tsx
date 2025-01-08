@@ -15,7 +15,7 @@ import { defineComponent, h, inject, onBeforeUnmount, onMounted, ref, toRaw } fr
  */
 export const TextComp = defineComponent({
   name: 'slate-text',
-  props: ['decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text', 'refText'],
+  props: ['decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text'],
   setup(props: {
     decorations: DecoratedRange[]
     isLast: boolean
@@ -23,7 +23,6 @@ export const TextComp = defineComponent({
     renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
     renderLeaf: (props: RenderLeafProps) => JSX.Element
     text: Text
-    refText: Text
   }) {
     const { decorations, isLast, parent, renderPlaceholder, renderLeaf, } = props
     const editor = toRaw(inject("editorRef")) as DOMEditor;
