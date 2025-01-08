@@ -54,13 +54,14 @@ export const Children = defineComponent({
       Element.isElement(node) &&
       !editor.isInline(node) &&
       Editor.hasInlines(editor, node)
+
     return () => refNode.children.map((child, i) => {
       const n = toRaw(child)
       const p = path.concat(i)
-      const key = DOMEditor.findKey(editor, toRaw(n))
+      const key = DOMEditor.findKey(editor, n)
       const range = Editor.range(editor, p)
       const sel = selection && Range.intersection(range, selection)
-      const ds = decorate([n, p])
+      const ds = decorate([child, p])
       decorations.forEach(dec => {
         const d = Range.intersection(dec, range)
         if (d) {

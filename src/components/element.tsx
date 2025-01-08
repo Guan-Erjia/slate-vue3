@@ -104,7 +104,6 @@ export const ElementComp = defineComponent({
       }
       return attr
     })
-    console.log(element)
     let children: JSX.Element = <Children
       decorations={decorations}
       node={element}
