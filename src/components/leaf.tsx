@@ -8,7 +8,7 @@ import {
 import { IS_WEBKIT, IS_ANDROID } from '../slate-dom'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref, type Ref, type VNode, type VNodeRef } from 'vue'
+import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref, toRaw, type Ref, type VNode, type VNodeRef } from 'vue'
 
 // Delay the placeholder on Android to prevent the keyboard from closing.
 // (https://github.com/ianstormtaylor/slate/pull/5368)
@@ -66,9 +66,8 @@ export const LeafComp = defineComponent({
       renderPlaceholder,
       renderLeaf,
     } = props
+    const editor = toRaw(inject("editorRef")) as DOMEditor;
 
-
-    const editor = inject("editorRef") as DOMEditor;
     const placeholderResizeObserver = ref<ResizeObserver | null>(null)
     const placeholderRef = ref<HTMLElement | null>(null)
     const showPlaceholder = ref(false)

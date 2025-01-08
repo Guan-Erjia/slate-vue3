@@ -43,7 +43,7 @@ export const ElementComp = defineComponent({
       renderLeaf,
       selection,
     } = props
-    const editor = inject("editorRef") as DOMEditor;
+    const editor = toRaw(inject("editorRef")) as DOMEditor;
     const readOnly = useReadOnly()
 
     const elementRef = ref<HTMLElement | null>(null)

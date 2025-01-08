@@ -24,9 +24,8 @@ export const TextComp = defineComponent({
     renderLeaf: (props: RenderLeafProps) => JSX.Element
     text: Text
   }) {
-    const { decorations, isLast, parent, renderPlaceholder, renderLeaf, text } =
-      props
-    const editor = inject("editorRef") as DOMEditor;
+    const { decorations, isLast, parent, renderPlaceholder, renderLeaf, text } = props
+    const editor = toRaw(inject("editorRef")) as DOMEditor;
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
     const leaves = Text.decorations(props.text, decorations)

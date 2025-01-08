@@ -199,6 +199,7 @@ export const Editable = defineComponent({
         const focusNodeInEditor = DOMEditor.hasTarget(editor, focusNode)
 
         if (anchorNodeSelectable && focusNodeInEditor) {
+          console.log(domSelection)
           const range = DOMEditor.toSlateRange(editor, domSelection, {
             exactMatch: false,
             suppressThrow: true,

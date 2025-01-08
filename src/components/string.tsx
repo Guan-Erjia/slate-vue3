@@ -1,6 +1,6 @@
 import { Editor, Text, Path, Element, Node } from 'slate'
-import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL } from '../slate-dom'
-import { defineComponent, h, inject, onMounted, ref } from 'vue'
+import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL, } from '../slate-dom'
+import { defineComponent, h, inject, onMounted, ref, toRaw } from 'vue'
 
 /**
  * Leaf content strings.
@@ -15,9 +15,9 @@ export const StringComp = defineComponent({
     text: Text
   }) {
     const { isLast, leaf, parent, text } = props
-    const editor = inject("editorRef") as DOMEditor;
+    const editor = toRaw(inject("editorRef")) as DOMEditor;
 
-    const path = DOMEditor.findPath(editor, text)
+    const path = DOMEditor.findPath(editor, toRaw(text))
     const parentPath = Path.parent(path)
     const isMarkPlaceholder = Boolean(leaf[MARK_PLACEHOLDER_SYMBOL])
 

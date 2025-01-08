@@ -43,18 +43,17 @@ export const Children = defineComponent({
       selection,
     } = props
     const decorate = useDecorate()
-    const editor = inject("editorRef") as DOMEditor;
+    const editor = toRaw(inject("editorRef")) as DOMEditor;
     const editorVersion = inject<Ref<number>>("editorVersion")
     IS_NODE_MAP_DIRTY.set(editor as DOMEditor, false)
 
-    const path = DOMEditor.findPath(editor, node)
+    const path = DOMEditor.findPath(editor, toRaw(node))
     const isLeafBlock =
       Element.isElement(node) &&
       !editor.isInline(node) &&
       Editor.hasInlines(editor, node)
 
     const nodeChildren = ref(node.children)
-
     watch(() => editorVersion?.value, () => {
       nodeChildren.value = node.children
     })
@@ -72,12 +71,11 @@ export const Children = defineComponent({
           ds.push(d)
         }
       })
-
       NODE_TO_INDEX.set(n, i)
-      NODE_TO_PARENT.set(n, node)
-      return Element.isElement(n) ? <ElementComp
+      NODE_TO_PARENT.set(n, toRaw(node))
+      return Element.isElement(child) ? <ElementComp
         decorations={ds}
-        element={n}
+        element={child}
         key={key.id}
         renderElement={renderElement}
         renderPlaceholder={renderPlaceholder}
@@ -90,7 +88,7 @@ export const Children = defineComponent({
         parent={node}
         renderPlaceholder={renderPlaceholder}
         renderLeaf={renderLeaf}
-        text={n}
+        text={child}
       />
     })
   }
