@@ -28,6 +28,8 @@ export const Slate = defineComponent({
     editor.children = props.initialValue;
     expose(editor)
     provide("editorRef", editor);
+    const reactiveEditor = ref(editor)
+    provide("reactiveEditor", reactiveEditor);
 
     const editorVersion = ref(0);
     provide("editorVersion", editorVersion);
@@ -37,6 +39,7 @@ export const Slate = defineComponent({
 
     const onContextChange = (options?: { operation?: Operation }) => {
       emit("change", editor.children);
+      reactiveEditor.value.children = editor.children;
       console.log(options)
       switch (options?.operation?.type) {
         case "set_selection":

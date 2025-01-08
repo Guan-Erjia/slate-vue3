@@ -48,7 +48,7 @@ import {
 } from '../slate-dom'
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
 import { computed, defineComponent, getCurrentInstance, inject, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, useAttrs, } from 'vue'
-import type { CSSProperties, HTMLAttributes, } from 'vue'
+import type { CSSProperties, HTMLAttributes, Ref, } from 'vue'
 import { Children } from './children'
 import { useRestoreDOM } from '../hooks/use-restore-dom'
 import { type EditableProps, isDOMEventHandled, isEventHandled, isDOMEventTargetInput, defaultScrollSelectionIntoView } from './interface'
@@ -199,7 +199,6 @@ export const Editable = defineComponent({
         const focusNodeInEditor = DOMEditor.hasTarget(editor, focusNode)
 
         if (anchorNodeSelectable && focusNodeInEditor) {
-          console.log(domSelection)
           const range = DOMEditor.toSlateRange(editor, domSelection, {
             exactMatch: false,
             suppressThrow: true,
@@ -1607,6 +1606,8 @@ export const Editable = defineComponent({
     const autocorrect = computed(() => HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.autocorrect : undefined)
     const autocapitalize = computed(() => HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.autocapitalize : undefined)
 
+    const reactiveEditor = inject('reactiveEditor') as Ref<DOMEditor>
+
     return () => (
       <div
         is={is}
@@ -1641,6 +1642,7 @@ export const Editable = defineComponent({
         <Children
           decorations={decorations}
           node={editor}
+          refNode={reactiveEditor.value}
           renderElement={renderElement}
           renderPlaceholder={renderPlaceholder}
           renderLeaf={renderLeaf}

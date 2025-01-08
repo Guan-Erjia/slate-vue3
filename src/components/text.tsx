@@ -41,9 +41,6 @@ export const TextComp = defineComponent({
         ELEMENT_TO_NODE.set(spanRef.value, rawText)
         NODE_TO_ELEMENT.set(rawText, spanRef.value)
       }
-      setTimeout(() => {
-        console.log(NODE_TO_ELEMENT)
-      }, 1000);
     })
 
     onBeforeUnmount(() => {
