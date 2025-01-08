@@ -53,7 +53,7 @@ import { computed, defineComponent, getCurrentInstance, inject, nextTick, onBefo
 import type { CSSProperties, HTMLAttributes, } from 'vue'
 import { Children } from './children'
 import { useTrackUserInput } from '../hooks/use-track-user-input'
-import { useRestoreDOM } from './restore-dom/restore-dom'
+import { useRestoreDOM } from '../hooks/use-restore-dom'
 
 /**
  * A default implement to scroll dom range into view.
