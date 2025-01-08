@@ -5,8 +5,14 @@ import {
   type CreateAndroidInputManagerOptions,
 } from "./android-input-manager";
 import { useIsMounted } from "../use-is-mounted";
-import { useMutationObserver } from "../use-mutation-observer";
-import { inject, toRaw, type Ref } from "vue";
+import {
+  inject,
+  onBeforeUnmount,
+  onBeforeUpdate,
+  onMounted,
+  toRaw,
+  type Ref,
+} from "vue";
 
 type UseAndroidInputManagerOptions = {
   node: Ref<HTMLElement | undefined>;
@@ -37,11 +43,28 @@ export const useAndroidInputManager = !IS_ANDROID
         ...options,
       });
 
-      useMutationObserver(
-        node,
-        inputManager.handleDomMutations,
-        MUTATION_OBSERVER_CONFIG
+      const mutationObserver = new MutationObserver(
+        inputManager.handleDomMutations
       );
+
+      onBeforeUpdate(() => {
+        // Discard mutations caused during render phase. This works due to react calling
+        // useLayoutEffect synchronously after the render phase before the next tick.
+        mutationObserver.takeRecords();
+      });
+
+      onMounted(() => {
+        if (!node.value) {
+          throw new Error(
+            "Failed to attach MutationObserver, `node` is undefined"
+          );
+        }
+        mutationObserver.observe(node.value, MUTATION_OBSERVER_CONFIG);
+      });
+
+      onBeforeUnmount(() => {
+        mutationObserver.disconnect();
+      });
 
       EDITOR_TO_SCHEDULE_FLUSH.set(editor, inputManager.scheduleFlush);
       if (isMounted) {
