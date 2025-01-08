@@ -81,6 +81,7 @@ export const Children = defineComponent({
       /> : <TextComp
         decorations={ds}
         text={n as Text}
+        refText={child}
         key={key.id}
         isLast={isLeafBlock.value && i === node.children.length - 1}
         parent={node}

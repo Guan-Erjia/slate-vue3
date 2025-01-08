@@ -120,6 +120,7 @@ export const ElementComp = defineComponent({
 
       const Tag = isInline.value ? 'span' : 'div'
       const [[text]] = Node.texts(element)
+      const [[refText]] = Node.texts(refElement)
 
       children = (
         <Tag
@@ -138,6 +139,7 @@ export const ElementComp = defineComponent({
             isLast={false}
             parent={element}
             text={text}
+            refText={refText}
           />
         </Tag>
       )
