@@ -48,12 +48,11 @@ export const Slate = defineComponent({
     provide("editorIsFocus", editorIsFocus);
     provide("editorRef", editor);
     provide("editorVersion", editorVersion);
-
-    const eventListeners = ref<EditorChangeHandler[]>([]);
+    const eventListeners: EditorChangeHandler[] = []
     provide("addEventListener", (callback: EditorChangeHandler) => {
-      eventListeners.value.push(callback);
+      eventListeners.push(callback);
       return () => {
-        eventListeners.value.splice(eventListeners.value.indexOf(callback), 1);
+        eventListeners.splice(eventListeners.indexOf(callback), 1);
       };
     });
 
@@ -78,9 +77,9 @@ export const Slate = defineComponent({
     });
 
     onUnmounted(() => {
-      EDITOR_TO_ON_CHANGE.delete(editor);
       document.removeEventListener("focusin", fn);
       document.removeEventListener("focusout", fn);
+      EDITOR_TO_ON_CHANGE.delete(editor);
     });
 
     return () => renderSlot(slots, 'default')
