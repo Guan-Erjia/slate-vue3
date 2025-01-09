@@ -1,4 +1,3 @@
-import { createDraft, finishDraft, isDraft } from 'immer'
 import {
   type Ancestor,
   type Descendant,
@@ -319,18 +318,13 @@ const applyToDraft = (editor: Editor, selection: Selection, op: Operation) => {
 // eslint-disable-next-line no-redeclare
 export const GeneralTransforms: GeneralTransforms = {
   transform(editor: Editor, op: Operation): void {
-    editor.children = createDraft(editor.children)
-    let selection = editor.selection && createDraft(editor.selection)
+    let selection = editor.selection
 
     try {
       selection = applyToDraft(editor, selection, op)
     } finally {
-      editor.children = finishDraft(editor.children)
-
       if (selection) {
-        editor.selection = isDraft(selection)
-          ? (finishDraft(selection) as Range)
-          : selection
+        editor.selection = selection
       } else {
         editor.selection = null
       }

@@ -209,7 +209,6 @@ export const Editable = defineComponent({
               !androidInputManager?.hasPendingChanges() &&
               !androidInputManager?.isFlushing()
             ) {
-              console.log(editor, range)
               Transforms.select(editor, range)
             } else {
               androidInputManager?.handleUserSelect(range)
@@ -1190,6 +1189,7 @@ export const Editable = defineComponent({
         }
 
         const { selection } = editor
+        console.log(selection)
         const element =
           editor.children[
           selection !== null ? selection.focus.path[0] : 0

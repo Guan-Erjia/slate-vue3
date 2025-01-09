@@ -38,7 +38,7 @@ export const Slate = defineComponent({
     provide("editorIsFocus", editorIsFocus);
 
     const onContextChange = (options?: { operation?: Operation }) => {
-      console.log(reactiveEditor.value)
+      console.log(reactiveEditor.value.selection)
       emit("change", editor.children);
       switch (options?.operation?.type) {
         case "set_selection":

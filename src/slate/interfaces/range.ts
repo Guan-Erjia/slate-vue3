@@ -1,4 +1,3 @@
-import { produce } from 'immer'
 import { isPlainObject } from 'is-plain-object'
 import { type ExtendedType, Operation, Path, Point, type PointEntry } from '..'
 import type { RangeDirection } from '../types/types'
@@ -221,7 +220,7 @@ export const Range: RangeInterface = {
     op: Operation,
     options: RangeTransformOptions = {}
   ): Range | null {
-    return produce(range, r => {
+    let r = range
       if (r === null) {
         return null
       }
@@ -262,6 +261,6 @@ export const Range: RangeInterface = {
 
       r.anchor = anchor
       r.focus = focus
-    })
-  },
+      return r
+    },
 }

@@ -1,5 +1,4 @@
 import { isPlainObject } from 'is-plain-object'
-import { produce } from 'immer'
 import { type ExtendedType, Operation, Path } from '..'
 import type { TextDirection } from '../types/types'
 
@@ -100,7 +99,7 @@ export const Point: PointInterface = {
     op: Operation,
     options: PointTransformOptions = {}
   ): Point | null {
-    return produce(point, p => {
+    let p = point
       if (p === null) {
         return null
       }
@@ -174,7 +173,7 @@ export const Point: PointInterface = {
           break
         }
       }
-    })
+      return p
   },
 }
 
