@@ -1190,6 +1190,7 @@ export const Editable = defineComponent({
         }
 
         const { selection } = editor
+        console.log(editor)
         const element =
           editor.children[
           selection !== null ? selection.focus.path[0] : 0

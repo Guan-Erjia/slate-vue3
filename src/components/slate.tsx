@@ -9,7 +9,6 @@ import {
 import { withDOM, EDITOR_TO_ON_CHANGE } from "../slate-dom";
 import { DOMEditor } from "../plugin/react-editor";
 import { defineComponent, onMounted, onUnmounted, provide, ref, renderSlot } from "vue";
-import { cloneDeep } from "lodash";
 
 type EditorChangeHandler = (editor: Editor) => void;
 
@@ -39,8 +38,8 @@ export const Slate = defineComponent({
     provide("editorIsFocus", editorIsFocus);
 
     const onContextChange = (options?: { operation?: Operation }) => {
+      console.log(reactiveEditor.value)
       emit("change", editor.children);
-      reactiveEditor.value.children = cloneDeep(editor.children);
       switch (options?.operation?.type) {
         case "set_selection":
           emit("selectionchange", editor.selection);

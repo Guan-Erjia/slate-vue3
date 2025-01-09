@@ -8,7 +8,7 @@ import {
 import { LeafComp } from './leaf'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
-import { defineComponent, h, inject, onBeforeUnmount, onMounted, ref, toRaw } from 'vue'
+import { defineComponent, h, inject, onMounted, onUnmounted, ref, toRaw } from 'vue'
 
 /**
  * Text.
@@ -33,18 +33,19 @@ export const TextComp = defineComponent({
     const rawText = toRaw(props.text)
     const key = DOMEditor.findKey(editor, rawText)
 
-    // Update element-related weak maps with the DOM element ref.
-    const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
-
     onMounted(() => {
+      const key = DOMEditor.findKey(editor, rawText)
       if (spanRef.value) {
+        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
         KEY_TO_ELEMENT?.set(key, spanRef.value)
         ELEMENT_TO_NODE.set(spanRef.value, rawText)
         NODE_TO_ELEMENT.set(rawText, spanRef.value)
       }
     })
 
-    onBeforeUnmount(() => {
+    onUnmounted(() => {
+      const key = DOMEditor.findKey(editor, rawText)
+      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
       KEY_TO_ELEMENT?.delete(key)
       NODE_TO_ELEMENT.delete(rawText)
       if (spanRef.value) {

@@ -1,5 +1,5 @@
 {
-  "name": "slate-vue2",
+  "name": "slate-vue3",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -28,5 +28,10 @@
     "typescript": "~5.7.2",
     "vite": "^6.0.5",
     "vue-tsc": "^2.2.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "slate@0.112.0": "patches/slate@0.112.0.patch"
+    }
   }
 }
