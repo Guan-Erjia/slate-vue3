@@ -203,13 +203,13 @@ export const Editable = defineComponent({
             exactMatch: false,
             suppressThrow: true,
           })
-
           if (range) {
             if (
               !DOMEditor.isComposing(editor) &&
               !androidInputManager?.hasPendingChanges() &&
               !androidInputManager?.isFlushing()
             ) {
+              console.log(editor, range)
               Transforms.select(editor, range)
             } else {
               androidInputManager?.handleUserSelect(range)
@@ -1190,7 +1190,6 @@ export const Editable = defineComponent({
         }
 
         const { selection } = editor
-        console.log(editor)
         const element =
           editor.children[
           selection !== null ? selection.focus.path[0] : 0
