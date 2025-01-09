@@ -359,7 +359,7 @@ export const Node: NodeInterface = {
       )
     }
 
-    const newRoot = produce({ children: root.children }, r => {
+      let r = { children: root.children }
       const [start, end] = Range.edges(range)
       const nodeEntries = Node.nodes(r, {
         reverse: true,
@@ -387,9 +387,8 @@ export const Node: NodeInterface = {
       if (Editor.isEditor(r)) {
         r.selection = null
       }
-    })
 
-    return newRoot.children
+    return r.children
   },
 
   get(root: Node, path: Path): Node {
