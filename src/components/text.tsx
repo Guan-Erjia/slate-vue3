@@ -8,14 +8,14 @@ import {
 import { LeafComp } from './leaf'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
-import { defineComponent, h, inject, onMounted, onUnmounted, ref, toRaw } from 'vue'
+import { defineComponent, h, onMounted, onUnmounted, ref, toRaw } from 'vue'
 
 /**
  * Text.
  */
 export const TextComp = defineComponent({
   name: 'slate-text',
-  props: ['decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text', 'refText'],
+  props: ['editor', 'decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text', 'refText'],
   setup(props: {
     decorations: DecoratedRange[]
     isLast: boolean
@@ -24,9 +24,9 @@ export const TextComp = defineComponent({
     renderLeaf: (props: RenderLeafProps) => JSX.Element
     text: Text
     refText: Text
+    editor: DOMEditor
   }) {
-    const { decorations, isLast, parent, renderPlaceholder, renderLeaf, } = props
-    const editor = toRaw(inject("editorRef")) as DOMEditor;
+    const { editor, decorations, isLast, parent, renderPlaceholder, renderLeaf, } = props
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
     const leaves = Text.decorations(props.refText, decorations)
@@ -64,6 +64,7 @@ export const TextComp = defineComponent({
       leaf,
       text: props.refText,
       parent,
+      editor
     })))
   }
 })

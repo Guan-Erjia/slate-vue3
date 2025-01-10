@@ -1,6 +1,5 @@
 import { DOMEditor, IS_ANDROID, isTrackedMutation } from "slate-dom";
 import {
-  inject,
   onBeforeUnmount,
   onBeforeUpdate,
   onMounted,
@@ -19,7 +18,10 @@ const MUTATION_OBSERVER_CONFIG: MutationObserverInit = {
 
 // We have to use a class component here since we rely on `getSnapshotBeforeUpdate` which has no FC equivalent
 // to run code synchronously immediately before react commits the component update to the DOM.
-export const useRestoreDOM = (node: Ref<HTMLElement | undefined>) => {
+export const useRestoreDOM = (
+  node: Ref<HTMLElement | undefined>,
+  editor: DOMEditor
+) => {
   const mutationObserver = ref<MutationObserver>();
   const manager = reactive<{
     registerMutations: (mutations: MutationRecord[]) => void;
@@ -30,7 +32,6 @@ export const useRestoreDOM = (node: Ref<HTMLElement | undefined>) => {
     restoreDOM: () => {},
     clear: () => {},
   });
-  const editor = inject("editorRef") as DOMEditor;
   let bufferedMutations: MutationRecord[] = [];
   const observe = () => {
     if (!node.value) {

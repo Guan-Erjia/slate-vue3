@@ -5,6 +5,7 @@ import {
   type Element,
   Range,
   Operation,
+  type Descendant,
 } from "slate";
 import type { DOMEditor, DOMRange } from "slate-dom";
 import type { JSX } from "vue/jsx-runtime";
@@ -66,6 +67,7 @@ export type EditableProps = {
   renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   scrollSelectionIntoView: (editor: DOMEditor, domRange: DOMRange) => void;
   is: string;
+  initialValue: Descendant[];
 } & HTMLAttributes;
 
 import { isDOMNode } from "slate-dom";

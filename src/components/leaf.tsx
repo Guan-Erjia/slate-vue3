@@ -8,7 +8,7 @@ import {
 } from 'slate-dom'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref, toRaw, type Ref, type VNode, type VNodeRef } from 'vue'
+import { computed, defineComponent, onBeforeUnmount, onMounted, ref, type Ref, type VNode, type VNodeRef } from 'vue'
 
 // Delay the placeholder on Android to prevent the keyboard from closing.
 // (https://github.com/ianstormtaylor/slate/pull/5368)
@@ -49,6 +49,7 @@ export const LeafComp = defineComponent({
     renderPlaceholder: Function,
     renderLeaf: Function,
     text: Object,
+    editor: Object
   },
   setup(props: {
     isLast: boolean
@@ -57,6 +58,7 @@ export const LeafComp = defineComponent({
     renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
     renderLeaf: (props: RenderLeafProps) => VNode
     text: Text
+    editor: DOMEditor
   }) {
     const {
       leaf,
@@ -65,8 +67,8 @@ export const LeafComp = defineComponent({
       parent,
       renderPlaceholder,
       renderLeaf,
+      editor
     } = props
-    const editor = toRaw(inject("editorRef")) as DOMEditor;
 
     const placeholderResizeObserver = ref<ResizeObserver | null>(null)
     const placeholderRef = ref<HTMLElement | null>(null)
@@ -118,9 +120,8 @@ export const LeafComp = defineComponent({
     onBeforeUnmount(() => [
       clearTimeoutRef(showPlaceholderTimeoutRef)
     ])
-
     let children = (
-      <StringComp isLast={isLast} leaf={leaf} parent={parent} text={text} />
+      <StringComp editor={editor} isLast={isLast} leaf={leaf} parent={parent} text={text} />
     )
 
     const placeholderProps = computed<RenderPlaceholderProps>(() => {
@@ -151,7 +152,7 @@ export const LeafComp = defineComponent({
       children = (
         <>
           {renderPlaceholder(placeholderProps.value)}
-          <StringComp isLast={isLast} leaf={leaf} parent={parent} text={text} />
+          <StringComp editor={editor} isLast={isLast} leaf={leaf} parent={parent} text={text} />
         </>
       )
     }

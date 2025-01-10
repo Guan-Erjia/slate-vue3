@@ -10,7 +10,7 @@ import { DOMEditor, IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from 'sla
 import { useDecorate } from '../hooks/use-decorate'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
-import { computed, defineComponent, inject, toRaw, } from 'vue'
+import { computed, defineComponent, toRaw, } from 'vue'
 
 /**
  * Children.
@@ -24,39 +24,41 @@ export const Children = defineComponent({
     renderPlaceholder: {},
     renderLeaf: {},
     selection: {},
-    refNode: {}
+    refNode: {},
+    editor: {}
   },
   setup(props: {
     node: Ancestor
-    refNode: Ancestor
     renderElement: (props: RenderElementProps) => JSX.Element
     renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
     renderLeaf: (props: RenderLeafProps) => JSX.Element
     selection: Range | null
     decorations: DecoratedRange[]
+    editor: DOMEditor
   }) {
     const {
+      editor,
       decorations,
       node,
-      refNode,
       renderElement,
       renderPlaceholder,
       renderLeaf,
       selection,
     } = props
     const decorate = useDecorate()
-    const editor = toRaw(inject("editorRef")) as DOMEditor;
-    IS_NODE_MAP_DIRTY.set(editor, false)
+    const getRawEditor = () => toRaw(editor)
+
+    IS_NODE_MAP_DIRTY.set(getRawEditor(), false)
 
     const path = DOMEditor.findPath(editor, toRaw(node))
-    const isLeafBlock = computed(() => Element.isElement(refNode) &&
-      !editor.isInline(refNode) &&
-      Editor.hasInlines(editor, refNode))
+    const isLeafBlock = computed(() => Element.isElement(node) &&
+      !editor.isInline(node) &&
+      Editor.hasInlines(editor, node))
 
-    return () => refNode.children.map((child, i) => {
+    return () => node.children.map((child, i) => {
       const n = toRaw(node.children[i])
       const p = path.concat(i)
-      const key = DOMEditor.findKey(editor, n)
+      const key = DOMEditor.findKey(getRawEditor(), n)
       const range = Editor.range(editor, p)
       const sel = selection && Range.intersection(range, selection)
       const ds = decorate([n, p])
@@ -77,6 +79,7 @@ export const Children = defineComponent({
         renderPlaceholder={renderPlaceholder}
         renderLeaf={renderLeaf}
         selection={sel}
+        editor={editor}
       /> : <TextComp
         decorations={ds}
         text={n as Text}
@@ -86,6 +89,7 @@ export const Children = defineComponent({
         parent={node}
         renderPlaceholder={renderPlaceholder}
         renderLeaf={renderLeaf}
+        editor={editor}
       />
     })
   }

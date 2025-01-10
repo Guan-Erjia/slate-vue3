@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
-import { h, ref, } from "vue";
-import { DOMEditor, IS_ANDROID } from "slate-dom";
+import { h, } from "vue";
+import { IS_ANDROID } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "./components/interface";
 
 const initialValue = [
@@ -29,14 +29,13 @@ const renderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => 
     IS_ANDROID ? h('br') : undefined
   ])
 }
-const editor = ref<DOMEditor>()
 
 </script>
 
 <template>
-  <Slate :initial-value="initialValue" ref="editor">
-    <Editable placeholder="Enter some rich text…" spellCheck autoFocus :render-element="renderElement"
-      :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder" />
+  <Slate>
+    <Editable placeholder="Enter some rich text…" :initial-value="initialValue" spellCheck autoFocus
+      :render-element="renderElement" :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder" />
   </Slate>
 </template>
 

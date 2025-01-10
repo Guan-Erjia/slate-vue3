@@ -18,7 +18,7 @@ import {
 import { TextComp } from './text'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { computed, defineComponent, inject, onMounted, onUnmounted, ref, toRaw, } from 'vue'
+import { computed, defineComponent, onMounted, onUnmounted, ref, toRaw, } from 'vue'
 import { useReadOnly } from '../hooks/use-read-only'
 
 /**
@@ -26,7 +26,7 @@ import { useReadOnly } from '../hooks/use-read-only'
  */
 export const ElementComp = defineComponent({
   name: 'slate-element',
-  props: ['decorations', 'element', 'refElement', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'selection'],
+  props: ['editor', 'decorations', 'element', 'refElement', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'selection'],
   setup(props: {
     element: Element
     refElement: Element
@@ -34,7 +34,8 @@ export const ElementComp = defineComponent({
     renderElement: (props: RenderElementProps) => JSX.Element
     renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
     renderLeaf: (props: RenderLeafProps) => JSX.Element
-    selection: Range | null
+    selection: Range | null,
+    editor: DOMEditor
   }) {
     const {
       element,
@@ -44,8 +45,8 @@ export const ElementComp = defineComponent({
       renderPlaceholder,
       renderLeaf,
       selection,
+      editor
     } = props
-    const editor = toRaw(inject("editorRef")) as DOMEditor;
     const readOnly = useReadOnly()
     const rawElement = toRaw(element)
 
@@ -65,7 +66,6 @@ export const ElementComp = defineComponent({
       KEY_TO_ELEMENT?.delete(key)
       NODE_TO_ELEMENT.delete(rawElement)
     })
-
     const isInline = computed(() => editor.isInline(element))
     // Attributes that the developer must mix into the element in their
     // custom node renderer component.
@@ -109,7 +109,7 @@ export const ElementComp = defineComponent({
     let children: JSX.Element = <Children
       decorations={decorations}
       node={element}
-      refNode={refElement}
+      editor={editor}
       renderElement={renderElement}
       renderPlaceholder={renderPlaceholder}
       renderLeaf={renderLeaf}
@@ -140,6 +140,7 @@ export const ElementComp = defineComponent({
             parent={element}
             text={text}
             refText={refText}
+            editor={editor}
           />
         </Tag>
       )
