@@ -6,8 +6,7 @@ import {
 } from 'slate'
 import { ElementComp } from './element'
 import { TextComp } from './text'
-import { DOMEditor } from '../plugin/react-editor'
-import { IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from '../slate-dom'
+import { DOMEditor, IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from 'slate-dom'
 import { useDecorate } from '../hooks/use-decorate'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
@@ -47,7 +46,7 @@ export const Children = defineComponent({
     } = props
     const decorate = useDecorate()
     const editor = toRaw(inject("editorRef")) as DOMEditor;
-    IS_NODE_MAP_DIRTY.set(editor as DOMEditor, false)
+    IS_NODE_MAP_DIRTY.set(editor, false)
 
     const path = DOMEditor.findPath(editor, toRaw(node))
     const isLeafBlock = computed(() => Element.isElement(refNode) &&

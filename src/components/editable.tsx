@@ -5,9 +5,8 @@ import {
   Editor, Element, Node, Path, Range, Text, Transforms,
 } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
-import { DOMEditor, TRIPLE_CLICK } from '../slate-dom'
 import {
-  DOMElement,
+  DOMEditor, TRIPLE_CLICK, DOMElement,
   DOMRange,
   DOMText,
   getActiveElement,
@@ -16,8 +15,7 @@ import {
   isDOMElement,
   isDOMNode,
   isPlainTextOnlyPaste,
-} from '../slate-dom'
-import {
+
   CAN_USE_DOM,
   HAS_BEFORE_INPUT_SUPPORT,
   IS_ANDROID,
@@ -28,9 +26,8 @@ import {
   IS_WEBKIT,
   IS_UC_MOBILE,
   IS_WECHATBROWSER,
-} from '../slate-dom'
-import { Hotkeys } from '../slate-dom'
-import {
+  Hotkeys,
+
   IS_NODE_MAP_DIRTY,
   EDITOR_TO_ELEMENT,
   EDITOR_TO_FORCE_RENDER,
@@ -45,7 +42,8 @@ import {
   MARK_PLACEHOLDER_SYMBOL,
   NODE_TO_ELEMENT,
   PLACEHOLDER_SYMBOL,
-} from '../slate-dom'
+} from 'slate-dom'
+
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
 import { computed, defineComponent, getCurrentInstance, inject, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, toRaw, useAttrs, } from 'vue'
 import type { CSSProperties, HTMLAttributes, Ref, } from 'vue'

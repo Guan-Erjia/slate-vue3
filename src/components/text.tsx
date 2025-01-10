@@ -1,10 +1,10 @@
 import { Element, type DecoratedRange, Text } from 'slate'
-import { DOMEditor } from '../plugin/react-editor'
 import {
+  DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
   NODE_TO_ELEMENT,
-} from '../slate-dom'
+} from 'slate-dom'
 import { LeafComp } from './leaf'
 import type { JSX } from 'vue/jsx-runtime'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'

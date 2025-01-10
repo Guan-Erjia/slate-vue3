@@ -4,8 +4,8 @@ import {
   PLACEHOLDER_SYMBOL,
   EDITOR_TO_PLACEHOLDER_ELEMENT,
   DOMEditor,
-} from '../slate-dom'
-import { IS_WEBKIT, IS_ANDROID } from '../slate-dom'
+  IS_WEBKIT, IS_ANDROID
+} from 'slate-dom'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
 import { computed, defineComponent, inject, onBeforeUnmount, onMounted, ref, toRaw, type Ref, type VNode, type VNodeRef } from 'vue'

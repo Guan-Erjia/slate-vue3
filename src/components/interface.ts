@@ -6,9 +6,8 @@ import {
   Range,
   Operation,
 } from "slate";
-import type { DOMRange } from "../slate-dom";
+import type { DOMEditor, DOMRange } from "slate-dom";
 import type { JSX } from "vue/jsx-runtime";
-import type { DOMEditor } from "../plugin/react-editor";
 import type { CSSProperties, HTMLAttributes, VNode, VNodeRef } from "vue";
 
 /**
@@ -69,7 +68,7 @@ export type EditableProps = {
   is: string;
 } & HTMLAttributes;
 
-import { isDOMNode } from "../slate-dom";
+import { isDOMNode } from "slate-dom";
 import scrollIntoView from "scroll-into-view-if-needed";
 
 /**

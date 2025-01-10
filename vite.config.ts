@@ -8,7 +8,8 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   resolve: {
     alias: {
-      "slate": path.resolve(__dirname, "./src/slate"), // 配置 @ 指向 src 目录
+      slate: path.resolve(__dirname, "./src/slate"),
+      "slate-dom": path.resolve(__dirname, "./src/slate-dom"),
     },
   },
 });

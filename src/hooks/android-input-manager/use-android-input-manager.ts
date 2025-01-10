@@ -1,5 +1,4 @@
-import { DOMEditor, IS_ANDROID } from "../../slate-dom";
-import { EDITOR_TO_SCHEDULE_FLUSH } from "../../slate-dom";
+import { DOMEditor, IS_ANDROID, EDITOR_TO_SCHEDULE_FLUSH } from "slate-dom";
 import {
   createAndroidInputManager,
   type CreateAndroidInputManagerOptions,

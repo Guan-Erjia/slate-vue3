@@ -1,5 +1,5 @@
 import { Editor, Text, Path, Element, Node } from 'slate'
-import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL, } from '../slate-dom'
+import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL, } from 'slate-dom'
 import { defineComponent, h, inject, onMounted, ref, toRaw } from 'vue'
 
 /**

@@ -6,8 +6,7 @@ import {
   Operation,
   Scrubber,
 } from "slate";
-import { withDOM, EDITOR_TO_ON_CHANGE } from "../slate-dom";
-import { DOMEditor } from "../plugin/react-editor";
+import { withDOM, EDITOR_TO_ON_CHANGE, DOMEditor } from "slate-dom";
 import { defineComponent, onMounted, onUnmounted, provide, ref, renderSlot } from "vue";
 
 type EditorChangeHandler = (editor: Editor) => void;

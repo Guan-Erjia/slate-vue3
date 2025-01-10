@@ -2,7 +2,7 @@
 import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
 import { h, ref, } from "vue";
-import { DOMEditor, IS_ANDROID } from "./slate-dom";
+import { DOMEditor, IS_ANDROID } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "./components/interface";
 
 const initialValue = [

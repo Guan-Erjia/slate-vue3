@@ -1,8 +1,8 @@
 import type { DebouncedFunc } from "lodash";
 import { Editor, Node, Path, Point, Range, Text, Transforms } from "slate";
-import { DOMEditor } from "../../plugin/react-editor";
 import {
   applyStringDiff,
+  DOMEditor,
   mergeStringDiffs,
   normalizePoint,
   normalizeRange,
@@ -11,8 +11,8 @@ import {
   targetRange,
   type TextDiff,
   verifyDiffState,
-} from "../../slate-dom";
-import { isDOMSelection, isTrackedMutation } from "../../slate-dom";
+} from "slate-dom";
+import { isDOMSelection, isTrackedMutation } from "slate-dom";
 import {
   EDITOR_TO_FORCE_RENDER,
   EDITOR_TO_PENDING_ACTION,
@@ -23,7 +23,7 @@ import {
   EDITOR_TO_USER_MARKS,
   IS_COMPOSING,
   IS_NODE_MAP_DIRTY,
-} from "../../slate-dom";
+} from "slate-dom";
 
 export type Action = { at?: Point | Range; run: () => void };
 

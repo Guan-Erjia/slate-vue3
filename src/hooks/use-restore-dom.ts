@@ -1,4 +1,4 @@
-import { DOMEditor, IS_ANDROID, isTrackedMutation } from "../slate-dom";
+import { DOMEditor, IS_ANDROID, isTrackedMutation } from "slate-dom";
 import {
   inject,
   onBeforeUnmount,
