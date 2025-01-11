@@ -25,11 +25,11 @@ export const TextComp = defineComponent({
     text: Text
     editor: DOMEditor
   }) {
-    const { editor, decorations, isLast, parent, renderPlaceholder, renderLeaf, } = props
+    const { editor, decorations, isLast, parent, renderPlaceholder, renderLeaf, text } = props
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
-    const leaves = Text.decorations(props.text, decorations)
-    const rawText = toRaw(props.text)
+    const leaves = Text.decorations(text, decorations)
+    const rawText = toRaw(text)
     const key = DOMEditor.findKey(editor, rawText)
 
     onMounted(() => {
@@ -61,7 +61,7 @@ export const TextComp = defineComponent({
       renderPlaceholder,
       renderLeaf,
       leaf,
-      text: props.text,
+      text,
       parent,
       editor
     })))

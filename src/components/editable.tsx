@@ -557,7 +557,7 @@ export const Editable = defineComponent({
               // Therefore we don't allow native events to insert text at the end of anchor nodes.
               const { anchor } = selection
 
-              const [node, offset] = DOMEditor.toDOMPoint(getRawEditor(), toRaw(anchor))
+              const [node, offset] = DOMEditor.toDOMPoint(getRawEditor(), anchor)
               const anchorNode = node.parentElement?.closest('a')
 
               const window = DOMEditor.getWindow(getRawEditor())
@@ -1232,7 +1232,6 @@ export const Editable = defineComponent({
           return
         }
 
-        console.log(selection)
         const element =
           editor.children[
           selection !== null ? selection.focus.path[1] : 0

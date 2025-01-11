@@ -112,7 +112,7 @@ export const Text: TextInterface = {
   },
 
   decorations(node: Text, decorations: DecoratedRange[]): Text[] {
-    let leaves: Text[] = [{ ...node }]
+    let leaves: Text[] = [node]
 
     for (const dec of decorations) {
       const { anchor, focus, merge: mergeDecoration, ...rest } = dec

@@ -1,6 +1,6 @@
 import { Editor, Text, Path, Element, Node } from 'slate'
 import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL, } from 'slate-dom'
-import { defineComponent, h, onMounted, ref, toRaw } from 'vue'
+import { computed, defineComponent, h, onMounted, ref, toRaw } from 'vue'
 
 /**
  * Leaf content strings.
@@ -48,12 +48,12 @@ export const StringComp = defineComponent({
 
     const textRef = ref<HTMLSpanElement>()
     const isTrailing = isLast && leaf.text.slice(-1) === '\n'
-    const getTextContent = () => {
+    const getTextContent = computed(() => {
       return `${leaf.text ?? ''}${isTrailing ? '\n' : ''}`
-    }
+    })
 
     onMounted(() => {
-      const textWithTrailing = getTextContent()
+      const textWithTrailing = getTextContent.value
       if (textRef.value && textRef.value?.textContent !== textWithTrailing) {
         textRef.value.textContent = textWithTrailing
       }
@@ -62,7 +62,7 @@ export const StringComp = defineComponent({
     return () => h('span', {
       'data-slate-string': true,
       ref: textRef
-    }, getTextContent)
+    }, getTextContent.value)
   }
 })
 

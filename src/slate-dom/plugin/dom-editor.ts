@@ -44,6 +44,7 @@ import {
   NODE_TO_KEY,
   NODE_TO_PARENT,
 } from "../utils/weak-maps";
+import { isProxy, toRaw } from "vue";
 
 /**
  * A DOM-specific version of the `Editor` interface.
@@ -555,9 +556,10 @@ export const DOMEditor: DOMEditorInterface = {
 
   toDOMNode: (editor, node) => {
     const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
+    const rawNode = isProxy(node) ? toRaw(node) : node;
     const domNode = Editor.isEditor(node)
       ? EDITOR_TO_ELEMENT.get(editor)
-      : KEY_TO_ELEMENT?.get(DOMEditor.findKey(editor, node));
+      : KEY_TO_ELEMENT?.get(DOMEditor.findKey(editor, rawNode));
 
     if (!domNode) {
       throw new Error(
@@ -570,6 +572,7 @@ export const DOMEditor: DOMEditorInterface = {
 
   toDOMPoint: (editor, point) => {
     const [node] = Editor.node(editor, point.path);
+
     const el = DOMEditor.toDOMNode(editor, node);
     let domPoint: DOMPoint | undefined;
 
@@ -823,8 +826,9 @@ export const DOMEditor: DOMEditorInterface = {
             ...getLeafNodes(elementNode),
           ];
           leafNode =
-            leafNodes.findLast((leaf: DOMNode) => isBefore(nonEditableNode, leaf)) ??
-            null;
+            leafNodes.findLast((leaf: DOMNode) =>
+              isBefore(nonEditableNode, leaf)
+            ) ?? null;
         }
 
         if (leafNode) {

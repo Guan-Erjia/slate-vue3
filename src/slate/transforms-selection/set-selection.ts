@@ -9,7 +9,6 @@ export const setSelection: SelectionTransforms['setSelection'] = (
   const { selection } = editor
   const oldProps: Partial<Range> | null = {}
   const newProps: Partial<Range> = {}
-  console.log(editor.selection, selection)
   if (!selection) {
     return
   }
