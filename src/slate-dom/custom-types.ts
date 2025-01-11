@@ -1,9 +1,7 @@
 import type { BaseRange, BaseText } from 'slate'
-import { DOMEditor } from './plugin/dom-editor'
 
 declare module 'slate' {
   interface CustomTypes {
-    Editor: DOMEditor
     Text: BaseText & {
       placeholder?: string
       onPlaceholderResize?: (node: HTMLElement | null) => void
