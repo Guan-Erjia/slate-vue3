@@ -85,13 +85,13 @@ import {
   unwrapNodes,
   wrapNodes,
 } from "./transforms-node";
-import { reactive } from "vue";
+import { reactive, type Reactive } from "vue";
 
 /**
  * Create a new Slate `Editor` object.
  */
 export const createEditor = (children: Descendant[]): Editor => {
-  const editor: Editor = reactive<Editor>({
+  const editor: Reactive<Editor> = reactive<Editor>({
     children,
     operations: [],
     selection: null,

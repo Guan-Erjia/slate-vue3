@@ -8,37 +8,15 @@ import {
 } from 'slate-dom'
 import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { computed, defineComponent, onBeforeUnmount, onMounted, ref, type Ref, type VNode, type VNodeRef } from 'vue'
+import { computed, defineComponent, onMounted, onUnmounted, ref, type VNode, } from 'vue'
 
 // Delay the placeholder on Android to prevent the keyboard from closing.
 // (https://github.com/ianstormtaylor/slate/pull/5368)
 const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0
 
-function disconnectPlaceholderResizeObserver(
-  placeholderResizeObserver: Ref<ResizeObserver | null>,
-  releaseObserver: boolean
-) {
-  if (placeholderResizeObserver.value) {
-    placeholderResizeObserver.value.disconnect()
-    if (releaseObserver) {
-      placeholderResizeObserver.value = null
-    }
-  }
-}
-
-type TimerId = ReturnType<typeof setTimeout> | null
-
-function clearTimeoutRef(timeoutRef: Ref<TimerId>) {
-  if (timeoutRef.value) {
-    clearTimeout(timeoutRef.value)
-    timeoutRef.value = null
-  }
-}
-
 /**
  * Individual leaves in a text node with unique formatting.
  */
-
 export const LeafComp = defineComponent({
   name: 'slate-leaf',
   props:
@@ -73,56 +51,35 @@ export const LeafComp = defineComponent({
     const placeholderResizeObserver = ref<ResizeObserver | null>(null)
     const placeholderRef = ref<HTMLElement | null>(null)
     const showPlaceholder = ref(false)
-    const showPlaceholderTimeoutRef = ref<TimerId>(null)
-
-    const callbackPlaceholderRef: VNodeRef =
-      (placeholderEl) => {
-        disconnectPlaceholderResizeObserver(
-          placeholderResizeObserver,
-          placeholderEl == null
-        )
-
-        if (placeholderEl == null) {
-          EDITOR_TO_PLACEHOLDER_ELEMENT.delete(editor)
-          leaf.onPlaceholderResize?.(null)
-        } else if (placeholderEl instanceof HTMLElement) {
-          EDITOR_TO_PLACEHOLDER_ELEMENT.set(editor, placeholderEl)
-
-          if (!placeholderResizeObserver.value) {
-            // Create a new observer and observe the placeholder element.
-            placeholderResizeObserver.value = new ResizeObserver(() => {
-              leaf.onPlaceholderResize?.(placeholderEl)
-            })
-          }
-          placeholderResizeObserver.value.observe(placeholderEl)
-          placeholderRef.value = placeholderEl
-        }
-      }
-
-
-
+    const showPlaceholderTimeoutRef = ref<number | null>(null)
     const leafIsPlaceholder = Boolean(leaf[PLACEHOLDER_SYMBOL])
 
     onMounted(() => {
+      if (placeholderRef.value) {
+        EDITOR_TO_PLACEHOLDER_ELEMENT.set(editor, placeholderRef.value)
+        placeholderResizeObserver.value = new ResizeObserver(() => {
+          leaf.onPlaceholderResize?.(placeholderRef.value)
+        })
+        placeholderResizeObserver.value.observe(placeholderRef.value)
+      }
+
       if (leafIsPlaceholder) {
-        if (!showPlaceholderTimeoutRef.value) {
-          // Delay the placeholder, so it will not render in a selection
-          showPlaceholderTimeoutRef.value = setTimeout(() => {
-            showPlaceholder.value = (true)
-            showPlaceholderTimeoutRef.value = null
-          }, PLACEHOLDER_DELAY)
-        }
-      } else {
-        clearTimeoutRef(showPlaceholderTimeoutRef)
-        showPlaceholder.value = (false)
+        showPlaceholderTimeoutRef.value = setTimeout(() => {
+          showPlaceholder.value = (true)
+          showPlaceholderTimeoutRef.value = null
+        }, PLACEHOLDER_DELAY)
       }
     })
-    onBeforeUnmount(() => [
-      clearTimeoutRef(showPlaceholderTimeoutRef)
-    ])
-    let children = (
-      <StringComp editor={editor} isLast={isLast} leaf={leaf} parent={parent} text={text} />
-    )
+
+    onUnmounted(() => {
+      EDITOR_TO_PLACEHOLDER_ELEMENT.delete(editor)
+      placeholderResizeObserver.value?.disconnect()
+      placeholderResizeObserver.value = null
+      leaf.onPlaceholderResize?.(null)
+
+      clearTimeout(showPlaceholderTimeoutRef.value!)
+      showPlaceholderTimeoutRef.value = null
+    })
 
     const placeholderProps = computed<RenderPlaceholderProps>(() => {
       return {
@@ -143,19 +100,17 @@ export const LeafComp = defineComponent({
             WebkitUserModify: IS_WEBKIT ? 'inherit' : undefined,
           },
           contentEditable: false,
-          ref: callbackPlaceholderRef,
+          ref: placeholderRef,
         },
       }
     })
 
-    if (leafIsPlaceholder && showPlaceholder) {
-      children = (
-        <>
-          {renderPlaceholder(placeholderProps.value)}
-          <StringComp editor={editor} isLast={isLast} leaf={leaf} parent={parent} text={text} />
-        </>
-      )
-    }
+    let children = (
+      <>
+        {leafIsPlaceholder && showPlaceholder.value && renderPlaceholder(placeholderProps.value)}
+        <StringComp editor={editor} isLast={isLast} leaf={leaf} parent={parent} text={text} />
+      </>
+    )
 
     // COMPAT: Having the `data-` attributes on these leaf elements ensures that
     // in certain misbehaving browsers they aren't weirdly cloned/destroyed by

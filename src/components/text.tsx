@@ -29,24 +29,23 @@ export const TextComp = defineComponent({
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
     const leaves = Text.decorations(text, decorations)
-    const rawText = toRaw(text)
-    const key = DOMEditor.findKey(editor, rawText)
+    const key = DOMEditor.findKey(editor, toRaw(text))
 
     onMounted(() => {
-      const key = DOMEditor.findKey(editor, rawText)
+      const key = DOMEditor.findKey(editor, toRaw(text))
       if (spanRef.value) {
         const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
         KEY_TO_ELEMENT?.set(key, spanRef.value)
-        ELEMENT_TO_NODE.set(spanRef.value, rawText)
-        NODE_TO_ELEMENT.set(rawText, spanRef.value)
+        ELEMENT_TO_NODE.set(spanRef.value, toRaw(text))
+        NODE_TO_ELEMENT.set(toRaw(text), spanRef.value)
       }
     })
 
     onUnmounted(() => {
-      const key = DOMEditor.findKey(editor, rawText)
+      const key = DOMEditor.findKey(editor, toRaw(text))
       const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
       KEY_TO_ELEMENT?.delete(key)
-      NODE_TO_ELEMENT.delete(rawText)
+      NODE_TO_ELEMENT.delete(toRaw(text))
       if (spanRef.value) {
         ELEMENT_TO_NODE.delete(spanRef.value)
       }
