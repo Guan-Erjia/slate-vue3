@@ -112,13 +112,9 @@ export const Editable = defineComponent({
       scrollSelectionIntoView,
       is,
     } = props
-
     // weakMap 需要原始指针
-    const editor = ref<DOMEditor>(withDOM(createEditor()))
-    editor.value.children = props.initialValue
-    provide("editorRef", editor);
-
-    const getRawEditor = () => toRaw(editor.value)
+    const editor = withDOM(createEditor(props.initialValue))
+    const getRawEditor = () => toRaw(editor)
 
     const attributes: HTMLAttributes = useAttrs()
     const isComposing = ref(false)
@@ -200,7 +196,7 @@ export const Editable = defineComponent({
         return
       }
 
-      const el = DOMEditor.toDOMNode(getRawEditor(), editor.value)
+      const el = DOMEditor.toDOMNode(getRawEditor(), editor)
       const root = el.getRootNode()
 
       if (!processing.value && IS_WEBKIT && root instanceof ShadowRoot) {
@@ -211,7 +207,7 @@ export const Editable = defineComponent({
         if (active) {
           document.execCommand('indent')
         } else {
-          Transforms.deselect(editor.value)
+          Transforms.deselect(editor)
         }
 
         processing.value = false
@@ -237,7 +233,7 @@ export const Editable = defineComponent({
         }
 
         if (!domSelection) {
-          return Transforms.deselect(editor.value)
+          return Transforms.deselect(editor)
         }
 
         const { anchorNode, focusNode } = domSelection
@@ -259,7 +255,7 @@ export const Editable = defineComponent({
               !androidInputManager?.hasPendingChanges() &&
               !androidInputManager?.isFlushing()
             ) {
-              Transforms.select(editor.value, range)
+              Transforms.select(editor, range)
             } else {
               androidInputManager?.handleUserSelect(range)
             }
@@ -268,7 +264,7 @@ export const Editable = defineComponent({
 
         // Deselect the editor if the dom selection is not selectable in readonly mode
         if (readOnly && (!anchorNodeSelectable || !focusNodeInEditor)) {
-          Transforms.deselect(editor.value)
+          Transforms.deselect(editor)
         }
       }
     }, 100)
@@ -292,7 +288,7 @@ export const Editable = defineComponent({
       }
 
       // Make sure the DOM selection state is in sync.
-      const { selection } = editor.value
+      const { selection } = editor
       const root = DOMEditor.findDocumentOrShadowRoot(getRawEditor())
       const domSelection = getSelection(root)
 
@@ -379,7 +375,7 @@ export const Editable = defineComponent({
         // but Slate's value is not being updated through any operation
         // and thus it doesn't transform selection on its own
         if (selection && !DOMEditor.hasRange(getRawEditor(), selection)) {
-          editor.value.selection = DOMEditor.toSlateRange(getRawEditor(), domSelection, {
+          editor.selection = DOMEditor.toSlateRange(getRawEditor(), domSelection, {
             exactMatch: false,
             suppressThrow: true,
           })
@@ -494,7 +490,7 @@ export const Editable = defineComponent({
             suppressThrow: false,
           })
 
-          Transforms.select(editor.value, slateRange)
+          Transforms.select(editor, slateRange)
 
           event.preventDefault()
           event.stopImmediatePropagation()
@@ -527,7 +523,7 @@ export const Editable = defineComponent({
 
           // COMPAT: use composition change events as a hint to where we should insert
           // composition text if we aren't composing to work around https://github.com/ianstormtaylor/slate/issues/5038
-          if (isCompositionChange && DOMEditor.isComposing(editor)) {
+          if (isCompositionChange && DOMEditor.isComposing(getRawEditor())) {
             return
           }
 
@@ -556,20 +552,20 @@ export const Editable = defineComponent({
             }
 
             // If the NODE_MAP is dirty, we can't trust the selection anchor (eg DOMEditor.toDOMPoint)
-            if (!IS_NODE_MAP_DIRTY.get(editor)) {
+            if (!IS_NODE_MAP_DIRTY.get(getRawEditor())) {
               // Chrome also has issues correctly editing the end of anchor elements: https://bugs.chromium.org/p/chromium/issues/detail?id=1259100
               // Therefore we don't allow native events to insert text at the end of anchor nodes.
               const { anchor } = selection
 
-              const [node, offset] = DOMEditor.toDOMPoint(editor, anchor)
+              const [node, offset] = DOMEditor.toDOMPoint(getRawEditor(), toRaw(anchor))
               const anchorNode = node.parentElement?.closest('a')
 
-              const window = DOMEditor.getWindow(editor)
+              const window = DOMEditor.getWindow(getRawEditor())
 
               if (
                 native &&
                 anchorNode &&
-                DOMEditor.hasDOMNode(editor, anchorNode)
+                DOMEditor.hasDOMNode(getRawEditor(), toRaw(anchorNode))
               ) {
                 // Find the last text node inside the anchor.
                 const lastText = window?.document
@@ -630,7 +626,7 @@ export const Editable = defineComponent({
                 Transforms.select(editor, range)
 
                 if (selectionRef) {
-                  EDITOR_TO_USER_SELECTION.set(editor, selectionRef)
+                  EDITOR_TO_USER_SELECTION.set(getRawEditor(), selectionRef)
                 }
               }
             }
@@ -734,9 +730,9 @@ export const Editable = defineComponent({
                 // then we will abort because we're still composing and the selection
                 // won't be updated properly.
                 // https://www.w3.org/TR/input-events-2/
-                if (DOMEditor.isComposing(editor)) {
+                if (DOMEditor.isComposing(getRawEditor())) {
                   isComposing.value = false
-                  IS_COMPOSING.set(editor, false)
+                  IS_COMPOSING.set(getRawEditor(), false)
                 }
               }
 
@@ -762,8 +758,8 @@ export const Editable = defineComponent({
           }
 
           // Restore the actual user section if nothing manually set it.
-          const toRestore = EDITOR_TO_USER_SELECTION.get(editor)?.unref()
-          EDITOR_TO_USER_SELECTION.delete(editor)
+          const toRestore = EDITOR_TO_USER_SELECTION.get(getRawEditor())?.unref()
+          EDITOR_TO_USER_SELECTION.delete(getRawEditor())
 
           if (
             toRestore &&
@@ -774,9 +770,9 @@ export const Editable = defineComponent({
         }
       } else if (!readOnly &&
         !isEventHandled(event, attributes.onBeforeinput) &&
-        DOMEditor.hasSelectableTarget(editor, event.target)) {
+        DOMEditor.hasSelectableTarget(getRawEditor(), event.target)) {
         event.preventDefault()
-        if (!DOMEditor.isComposing(editor)) {
+        if (!DOMEditor.isComposing(getRawEditor())) {
           const text = (event as any).data as string
           Editor.insertText(editor, text)
         }
@@ -898,16 +894,16 @@ export const Editable = defineComponent({
         !isEventHandled(event, attributes.onClick) &&
         isDOMNode(event.target)
       ) {
-        const node = DOMEditor.toSlateNode(editor.value, event.target)
-        const path = DOMEditor.findPath(editor.value, node)
+        const node = DOMEditor.toSlateNode(editor, event.target)
+        const path = DOMEditor.findPath(editor, node)
 
         // At this time, the Slate document may be arbitrarily different,
         // because onClick handlers can change the document before we get here.
         // Therefore we must check that this path actually exists,
         // and that it still refers to the same node.
         if (
-          !Editor.hasPath(editor.value, path) ||
-          Node.get(editor.value, path) !== node
+          !Editor.hasPath(editor, path) ||
+          Node.get(editor, path) !== node
         ) {
           return
         }
@@ -917,20 +913,20 @@ export const Editable = defineComponent({
           if (
             !(
               Element.isElement(node) &&
-              Editor.isBlock(editor.value, node)
+              Editor.isBlock(editor, node)
             )
           ) {
-            const block = Editor.above(editor.value, {
+            const block = Editor.above(editor, {
               match: n =>
-                Element.isElement(n) && Editor.isBlock(editor.value, n),
+                Element.isElement(n) && Editor.isBlock(editor, n),
               at: path,
             })
 
             blockPath = block?.[1] ?? path.slice(0, 1)
           }
 
-          const range = Editor.range(editor.value, blockPath)
-          Transforms.select(editor.value, range)
+          const range = Editor.range(editor, blockPath)
+          Transforms.select(editor, range)
           return
         }
 
@@ -938,10 +934,10 @@ export const Editable = defineComponent({
           return
         }
 
-        const start = Editor.start(editor.value, path)
-        const end = Editor.end(editor.value, path)
-        const startVoid = Editor.void(editor.value, { at: start })
-        const endVoid = Editor.void(editor.value, { at: end })
+        const start = Editor.start(editor, path)
+        const end = Editor.end(editor, path)
+        const startVoid = Editor.void(editor, { at: start })
+        const endVoid = Editor.void(editor, { at: end })
 
         if (
           startVoid &&
@@ -1236,10 +1232,10 @@ export const Editable = defineComponent({
           return
         }
 
-        const { selection } = editor.value
+        console.log(selection)
         const element =
-          editor.value.children[
-          selection !== null ? selection.focus.path[0] : 0
+          editor.children[
+          selection !== null ? selection.focus.path[1] : 0
           ]
         const isRTL = direction(Node.string(element)) === 'rtl'
 
@@ -1275,19 +1271,19 @@ export const Editable = defineComponent({
         // (2017/10/17)
         if (Hotkeys.isMoveLineBackward(event)) {
           event.preventDefault()
-          Transforms.move(editor.value, { unit: 'line', reverse: true })
+          Transforms.move(editor, { unit: 'line', reverse: true })
           return
         }
 
         if (Hotkeys.isMoveLineForward(event)) {
           event.preventDefault()
-          Transforms.move(editor.value, { unit: 'line' })
+          Transforms.move(editor, { unit: 'line' })
           return
         }
 
         if (Hotkeys.isExtendLineBackward(event)) {
           event.preventDefault()
-          Transforms.move(editor.value, {
+          Transforms.move(editor, {
             unit: 'line',
             edge: 'focus',
             reverse: true,
@@ -1297,7 +1293,7 @@ export const Editable = defineComponent({
 
         if (Hotkeys.isExtendLineForward(event)) {
           event.preventDefault()
-          Transforms.move(editor.value, { unit: 'line', edge: 'focus' })
+          Transforms.move(editor, { unit: 'line', edge: 'focus' })
           return
         }
 
@@ -1310,9 +1306,9 @@ export const Editable = defineComponent({
           event.preventDefault()
 
           if (selection && Range.isCollapsed(selection)) {
-            Transforms.move(editor.value, { reverse: !isRTL })
+            Transforms.move(editor, { reverse: !isRTL })
           } else {
-            Transforms.collapse(editor.value, {
+            Transforms.collapse(editor, {
               edge: isRTL ? 'end' : 'start',
             })
           }
@@ -1324,9 +1320,9 @@ export const Editable = defineComponent({
           event.preventDefault()
 
           if (selection && Range.isCollapsed(selection)) {
-            Transforms.move(editor.value, { reverse: isRTL })
+            Transforms.move(editor, { reverse: isRTL })
           } else {
-            Transforms.collapse(editor.value, {
+            Transforms.collapse(editor, {
               edge: isRTL ? 'start' : 'end',
             })
           }
@@ -1338,10 +1334,10 @@ export const Editable = defineComponent({
           event.preventDefault()
 
           if (selection && Range.isExpanded(selection)) {
-            Transforms.collapse(editor.value, { edge: 'focus' })
+            Transforms.collapse(editor, { edge: 'focus' })
           }
 
-          Transforms.move(editor.value, {
+          Transforms.move(editor, {
             unit: 'word',
             reverse: !isRTL,
           })
@@ -1352,10 +1348,10 @@ export const Editable = defineComponent({
           event.preventDefault()
 
           if (selection && Range.isExpanded(selection)) {
-            Transforms.collapse(editor.value, { edge: 'focus' })
+            Transforms.collapse(editor, { edge: 'focus' })
           }
 
-          Transforms.move(editor.value, {
+          Transforms.move(editor, {
             unit: 'word',
             reverse: isRTL,
           })
@@ -1379,13 +1375,13 @@ export const Editable = defineComponent({
 
           if (Hotkeys.isSoftBreak(event)) {
             event.preventDefault()
-            Editor.insertSoftBreak(editor.value)
+            Editor.insertSoftBreak(editor)
             return
           }
 
           if (Hotkeys.isSplitBlock(event)) {
             event.preventDefault()
-            Editor.insertBreak(editor.value)
+            Editor.insertBreak(editor)
             return
           }
 
@@ -1393,11 +1389,11 @@ export const Editable = defineComponent({
             event.preventDefault()
 
             if (selection && Range.isExpanded(selection)) {
-              Editor.deleteFragment(editor.value, {
+              Editor.deleteFragment(editor, {
                 direction: 'backward',
               })
             } else {
-              Editor.deleteBackward(editor.value)
+              Editor.deleteBackward(editor)
             }
 
             return
@@ -1407,11 +1403,11 @@ export const Editable = defineComponent({
             event.preventDefault()
 
             if (selection && Range.isExpanded(selection)) {
-              Editor.deleteFragment(editor.value, {
+              Editor.deleteFragment(editor, {
                 direction: 'forward',
               })
             } else {
-              Editor.deleteForward(editor.value)
+              Editor.deleteForward(editor)
             }
 
             return
@@ -1421,11 +1417,11 @@ export const Editable = defineComponent({
             event.preventDefault()
 
             if (selection && Range.isExpanded(selection)) {
-              Editor.deleteFragment(editor.value, {
+              Editor.deleteFragment(editor, {
                 direction: 'backward',
               })
             } else {
-              Editor.deleteBackward(editor.value, { unit: 'line' })
+              Editor.deleteBackward(editor, { unit: 'line' })
             }
 
             return
@@ -1435,11 +1431,11 @@ export const Editable = defineComponent({
             event.preventDefault()
 
             if (selection && Range.isExpanded(selection)) {
-              Editor.deleteFragment(editor.value, {
+              Editor.deleteFragment(editor, {
                 direction: 'forward',
               })
             } else {
-              Editor.deleteForward(editor.value, { unit: 'line' })
+              Editor.deleteForward(editor, { unit: 'line' })
             }
 
             return
@@ -1449,11 +1445,11 @@ export const Editable = defineComponent({
             event.preventDefault()
 
             if (selection && Range.isExpanded(selection)) {
-              Editor.deleteFragment(editor.value, {
+              Editor.deleteFragment(editor, {
                 direction: 'backward',
               })
             } else {
-              Editor.deleteBackward(editor.value, { unit: 'word' })
+              Editor.deleteBackward(editor, { unit: 'word' })
             }
 
             return
@@ -1463,11 +1459,11 @@ export const Editable = defineComponent({
             event.preventDefault()
 
             if (selection && Range.isExpanded(selection)) {
-              Editor.deleteFragment(editor.value, {
+              Editor.deleteFragment(editor, {
                 direction: 'forward',
               })
             } else {
-              Editor.deleteForward(editor.value, { unit: 'word' })
+              Editor.deleteForward(editor, { unit: 'word' })
             }
 
             return
@@ -1483,18 +1479,18 @@ export const Editable = defineComponent({
               Range.isCollapsed(selection)
             ) {
               const currentNode = Node.parent(
-                editor.value,
+                editor,
                 selection.anchor.path
               )
 
               if (
                 Element.isElement(currentNode) &&
-                Editor.isVoid(editor.value, currentNode) &&
-                (Editor.isInline(editor.value, currentNode) ||
-                  Editor.isBlock(editor.value, currentNode))
+                Editor.isVoid(editor, currentNode) &&
+                (Editor.isInline(editor, currentNode) ||
+                  Editor.isBlock(editor, currentNode))
               ) {
                 event.preventDefault()
-                Editor.deleteBackward(editor.value, { unit: 'block' })
+                Editor.deleteBackward(editor, { unit: 'block' })
 
                 return
               }
@@ -1523,7 +1519,7 @@ export const Editable = defineComponent({
           IS_WEBKIT
         ) {
           event.preventDefault()
-          event.clipboardData && DOMEditor.insertData(editor.value, event.clipboardData)
+          event.clipboardData && DOMEditor.insertData(editor, event.clipboardData)
         }
       }
     }
@@ -1566,10 +1562,10 @@ export const Editable = defineComponent({
       window.document.removeEventListener('drop', stoppedDragging)
     })
 
-    const decorations = decorate([editor.value, []])
-    const showPlaceholder = computed(() => placeholder && editor.value.children?.length === 1 &&
-      Array.from(Node.texts(editor.value)).length === 1 &&
-      Node.string(editor.value) === '' &&
+    const decorations = decorate([editor, []])
+    const showPlaceholder = computed(() => placeholder && editor.children?.length === 1 &&
+      Array.from(Node.texts(editor)).length === 1 &&
+      Node.string(editor) === '' &&
       !isComposing.value)
 
     const placeHolderResizeHandler = (placeholderEl: HTMLElement | null) => {
@@ -1581,7 +1577,7 @@ export const Editable = defineComponent({
     }
 
     if (showPlaceholder.value) {
-      const start = Editor.start(editor.value, [])
+      const start = Editor.start(editor, [])
       decorations.push({
         [PLACEHOLDER_SYMBOL]: true,
         placeholder,
@@ -1591,13 +1587,13 @@ export const Editable = defineComponent({
       })
     }
 
-    const marks = editor.value.marks
-    const selection = editor.value.selection
+    const marks = editor.marks
+    const selection = editor.selection
     state.value.hasMarkPlaceholder = false
 
     if (selection && Range.isCollapsed(selection) && marks) {
       const anchor = selection.anchor
-      const leaf = Node.leaf(editor.value, anchor.path)
+      const leaf = Node.leaf(editor, anchor.path)
       const { text, ...rest } = leaf
 
       // While marks isn't a 'complete' text, we can still use loose Text.equals
@@ -1624,8 +1620,8 @@ export const Editable = defineComponent({
     // before we receive the composition end event.
     onUpdated(() => {
       nextTick(() => {
-        if (editor.value.selection) {
-          const text = Node.leaf(editor.value, editor.value.selection.anchor.path)
+        if (editor.selection) {
+          const text = Node.leaf(editor, editor.selection.anchor.path)
           // While marks isn't a 'complete' text, we can still use loose Text.equals
           // here which only compares marks anyway.
           if (marks && !Text.equals(text, marks as Text, { loose: true })) {
@@ -1687,12 +1683,12 @@ export const Editable = defineComponent({
       >
         <Children
           decorations={decorations}
-          node={editor.value}
-          editor={editor.value}
+          node={editor}
+          editor={editor}
           renderElement={renderElement}
           renderPlaceholder={renderPlaceholder}
           renderLeaf={renderLeaf}
-          selection={editor.value.selection}
+          selection={editor.selection}
         />
       </div>
     )

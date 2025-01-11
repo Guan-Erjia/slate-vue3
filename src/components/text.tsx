@@ -15,7 +15,7 @@ import { defineComponent, h, onMounted, onUnmounted, ref, toRaw } from 'vue'
  */
 export const TextComp = defineComponent({
   name: 'slate-text',
-  props: ['editor', 'decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text', 'refText'],
+  props: ['editor', 'decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text',],
   setup(props: {
     decorations: DecoratedRange[]
     isLast: boolean
@@ -23,13 +23,12 @@ export const TextComp = defineComponent({
     renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
     renderLeaf: (props: RenderLeafProps) => JSX.Element
     text: Text
-    refText: Text
     editor: DOMEditor
   }) {
     const { editor, decorations, isLast, parent, renderPlaceholder, renderLeaf, } = props
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
-    const leaves = Text.decorations(props.refText, decorations)
+    const leaves = Text.decorations(props.text, decorations)
     const rawText = toRaw(props.text)
     const key = DOMEditor.findKey(editor, rawText)
 
@@ -62,7 +61,7 @@ export const TextComp = defineComponent({
       renderPlaceholder,
       renderLeaf,
       leaf,
-      text: props.refText,
+      text: props.text,
       parent,
       editor
     })))

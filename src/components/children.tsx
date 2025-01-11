@@ -1,4 +1,4 @@
-import type { Ancestor, DecoratedRange, Text, } from 'slate'
+import type { Ancestor, DecoratedRange, } from 'slate'
 import {
   Editor,
   Element,
@@ -24,7 +24,6 @@ export const Children = defineComponent({
     renderPlaceholder: {},
     renderLeaf: {},
     selection: {},
-    refNode: {},
     editor: {}
   },
   setup(props: {
@@ -72,8 +71,7 @@ export const Children = defineComponent({
       NODE_TO_PARENT.set(n, toRaw(node))
       return Element.isElement(child) ? <ElementComp
         decorations={ds}
-        element={n as Element}
-        refElement={child}
+        element={child}
         key={key.id}
         renderElement={renderElement}
         renderPlaceholder={renderPlaceholder}
@@ -82,8 +80,7 @@ export const Children = defineComponent({
         editor={editor}
       /> : <TextComp
         decorations={ds}
-        text={n as Text}
-        refText={child}
+        text={child}
         key={key.id}
         isLast={isLeafBlock.value && i === node.children.length - 1}
         parent={node}
