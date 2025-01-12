@@ -3,12 +3,14 @@ import { isPlainObject } from 'is-plain-object'
 import { Range } from '../interfaces/range'
 import { Node } from '../interfaces/node'
 import { Operation } from '../interfaces/operation'
+import { isProxy, toRaw } from 'vue'
 
 const IS_EDITOR_CACHE = new WeakMap<object, boolean>()
 
 export const isEditor: EditorInterface['isEditor'] = (
-  value: any
-): value is Editor => {
+  val: any
+): val is Editor => {
+  let value = isProxy(val) ? toRaw(val) : val
   const cachedIsEditor = IS_EDITOR_CACHE.get(value)
   if (cachedIsEditor !== undefined) {
     return cachedIsEditor

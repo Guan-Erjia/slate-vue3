@@ -1,5 +1,7 @@
+import { cloneDeep } from 'lodash'
 import { Editor, Path, Range, Scrubber, Text } from '..'
 import { Element, type ElementEntry } from './element'
+import { nextTick } from 'vue'
 
 /**
  * The `Node` union type represents all of the different types of nodes that
@@ -358,10 +360,10 @@ export const Node: NodeInterface = {
         )}`
       )
     }
-
-      let r = { children: root.children }
+      // 这里不能影响现有节点数据，必须深拷贝
+      let r = { children: cloneDeep(root.children) }
       const [start, end] = Range.edges(range)
-      const nodeEntries = Node.nodes(r, {
+      const nodeEntries = Node.nodes(root, {
         reverse: true,
         pass: ([, path]) => !Range.includes(range, path),
       })
@@ -384,8 +386,11 @@ export const Node: NodeInterface = {
         }
       }
 
-      if (Editor.isEditor(r)) {
-        r.selection = null
+      if (Editor.isEditor(root)) {
+      // 修改完毕后才能设置 selection
+        nextTick(() => {
+          root.selection = null
+        });
       }
 
     return r.children

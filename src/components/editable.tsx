@@ -1056,7 +1056,7 @@ export const Editable = defineComponent({
     const onCut = (event: ClipboardEvent) => {
       if (
         !readOnly &&
-        DOMEditor.hasSelectableTarget(editor, event.target) &&
+        DOMEditor.hasSelectableTarget(getRawEditor(), event.target) &&
         !isEventHandled(event, attributes.onCut) &&
         !isDOMEventTargetInput(event)
       ) {
@@ -1066,7 +1066,7 @@ export const Editable = defineComponent({
           event.clipboardData,
           'cut'
         )
-        const { selection } = editor
+        const selection = editor.selection
 
         if (selection) {
           if (Range.isExpanded(selection)) {
