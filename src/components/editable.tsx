@@ -48,7 +48,7 @@ import {
 } from 'slate-dom'
 
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
-import { computed, defineComponent, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, onUnmounted, onUpdated, ref, toRaw, useAttrs, } from 'vue'
+import { computed, defineComponent, getCurrentInstance, nextTick, onBeforeUnmount, onMounted, onUnmounted, onUpdated, reactive, ref, toRaw, useAttrs, } from 'vue'
 import type { CSSProperties, HTMLAttributes, } from 'vue'
 import { Children } from './children'
 import { useRestoreDOM } from '../hooks/use-restore-dom'
@@ -171,7 +171,7 @@ export const Editable = defineComponent({
 
 
     // Keep track of some state for the event handler logic.
-    const state = ref({
+    const state = reactive({
       isDraggingInternally: false,
       isUpdatingSelection: false,
       latestElement: null as DOMElement | null,
@@ -217,8 +217,8 @@ export const Editable = defineComponent({
       const androidInputManager = androidInputManagerRef.value
       if (
         (IS_ANDROID || !DOMEditor.isComposing(getRawEditor())) &&
-        (!state.value.isUpdatingSelection || androidInputManager?.isFlushing()) &&
-        !state.value.isDraggingInternally
+        (!state.isUpdatingSelection || androidInputManager?.isFlushing()) &&
+        !state.isDraggingInternally
       ) {
         const root = DOMEditor.findDocumentOrShadowRoot(getRawEditor())
         const { activeElement } = root
@@ -226,7 +226,7 @@ export const Editable = defineComponent({
         const domSelection = getSelection(root)
 
         if (activeElement === el) {
-          state.value.latestElement = activeElement
+          state.latestElement = activeElement
           IS_FOCUSED.set(getRawEditor(), true)
         } else {
           IS_FOCUSED.delete(getRawEditor())
@@ -355,7 +355,7 @@ export const Editable = defineComponent({
           })
 
           if (slateRange && Range.equals(slateRange, selection)) {
-            if (!state.value.hasMarkPlaceholder) {
+            if (!state.hasMarkPlaceholder) {
               return
             }
 
@@ -383,7 +383,7 @@ export const Editable = defineComponent({
         }
 
         // Otherwise the DOM selection is out of sync, so update it.
-        state.value.isUpdatingSelection = true
+        state.isUpdatingSelection = true
 
         let newDomRange: DOMRange | null = null
 
@@ -418,7 +418,10 @@ export const Editable = defineComponent({
 
         return newDomRange
       }
-
+      setInterval(() => {
+        setDomSelection()
+        console.log(134324)
+      }, 1000);
       // In firefox if there is more then 1 range and we call setDomSelection we remove the ability to select more cells in a table
       if (domSelection.rangeCount <= 1) {
         setDomSelection()
@@ -428,7 +431,7 @@ export const Editable = defineComponent({
 
       if (!IS_ANDROID || !ensureSelection) {
         setTimeout(() => {
-          state.value.isUpdatingSelection = false
+          state.isUpdatingSelection = false
         })
         return
       }
@@ -457,7 +460,7 @@ export const Editable = defineComponent({
             // it doesn't update GBoards spellchecker state. We have to manually trigger a selection change after
             // the animation frame to ensure it displays the correct state.
             ensureDomSelection(true)
-            state.value.isUpdatingSelection = false
+            state.isUpdatingSelection = false
           })
         }
       })
@@ -824,7 +827,7 @@ export const Editable = defineComponent({
     const onBlur = (event: FocusEvent) => {
       if (
         readOnly ||
-        state.value.isUpdatingSelection ||
+        state.isUpdatingSelection ||
         !DOMEditor.hasSelectableTarget(getRawEditor(), event.target) ||
         isEventHandled(event, attributes.onBlur)
       ) {
@@ -836,7 +839,7 @@ export const Editable = defineComponent({
       // itself becomes unfocused, so we want to abort early to allow to
       // editor to stay focused when the tab becomes focused again.
       const root = DOMEditor.findDocumentOrShadowRoot(getRawEditor())
-      if (state.value.latestElement === root.activeElement) {
+      if (state.latestElement === root.activeElement) {
         return
       }
 
@@ -1123,7 +1126,7 @@ export const Editable = defineComponent({
           Transforms.select(editor, range)
         }
 
-        state.value.isDraggingInternally = true
+        state.isDraggingInternally = true
 
         event.dataTransfer && DOMEditor.setFragmentData(
           editor,
@@ -1150,7 +1153,7 @@ export const Editable = defineComponent({
 
         Transforms.select(editor, range)
 
-        if (state.value.isDraggingInternally) {
+        if (state.isDraggingInternally) {
           if (
             draggedRange &&
             !Range.equals(draggedRange, range) &&
@@ -1175,7 +1178,7 @@ export const Editable = defineComponent({
     const onDragend = (event: DragEvent) => {
       if (
         !readOnly &&
-        state.value.isDraggingInternally &&
+        state.isDraggingInternally &&
         attributes.onDragend &&
         DOMEditor.hasTarget(editor, event.target)
       ) {
@@ -1186,13 +1189,13 @@ export const Editable = defineComponent({
     const onFocus = (event: FocusEvent) => {
       if (
         !readOnly &&
-        !state.value.isUpdatingSelection &&
+        !state.isUpdatingSelection &&
         DOMEditor.hasEditableTarget(getRawEditor(), event.target) &&
         !isEventHandled(event, attributes.onFocus)
       ) {
         const el = DOMEditor.toDOMNode(getRawEditor(), getRawEditor())
         const root = DOMEditor.findDocumentOrShadowRoot(getRawEditor())
-        state.value.latestElement = root.activeElement
+        state.latestElement = root.activeElement
 
         // COMPAT: If the editor has nested editable elements, the focus
         // can go to them. In Firefox, this must be prevented because it
@@ -1526,7 +1529,7 @@ export const Editable = defineComponent({
     // Listen for dragend and drop globally. In Firefox, if a drop handler
     // initiates an operation that causes the originally dragged element to
     // unmount, that element will not emit a dragend event. (2024/06/21)
-    const stoppedDragging = () => state.value.isDraggingInternally = false
+    const stoppedDragging = () => state.isDraggingInternally = false
     onMounted(() => {
       const window = DOMEditor.getWindow(getRawEditor())
       // Attach a native DOM event handler for `selectionchange`, because React's
@@ -1588,7 +1591,7 @@ export const Editable = defineComponent({
 
     const marks = editor.marks
     const selection = editor.selection
-    state.value.hasMarkPlaceholder = false
+    state.hasMarkPlaceholder = false
 
     if (selection && Range.isCollapsed(selection) && marks) {
       const anchor = selection.anchor
@@ -1598,7 +1601,7 @@ export const Editable = defineComponent({
       // While marks isn't a 'complete' text, we can still use loose Text.equals
       // here which only compares marks anyway.
       if (!Text.equals(leaf, marks as Text, { loose: true })) {
-        state.value.hasMarkPlaceholder = true
+        state.hasMarkPlaceholder = true
 
         const unset = Object.fromEntries(
           Object.keys(rest).map(mark => [mark, null])

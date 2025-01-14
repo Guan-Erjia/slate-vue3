@@ -34,8 +34,9 @@ const renderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => 
 
 <template>
   <Slate>
-    <Editable style="border: 1px solid red" placeholder="Enter some rich text…" :initial-value="initialValue" spellCheck autoFocus
-      :render-element="renderElement" :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder" />
+    <Editable style="border: 1px solid red;padding: 10px;" placeholder="Enter some rich text…"
+      :initial-value="initialValue" spellCheck autoFocus :render-element="renderElement" :render-leaf="renderLeaf"
+      :render-placeholder="renderPlaceHolder" />
   </Slate>
 </template>
 
