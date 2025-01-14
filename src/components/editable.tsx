@@ -136,10 +136,8 @@ export const Editable = defineComponent({
 
     const onContextChange = (options?: { operation?: Operation }) => {
       emit("change", getRawEditor().children);
-      setDomSelection()
       switch (options?.operation?.type) {
         case "set_selection":
-          console.log(32412314)
           emit("selectionchange", getRawEditor().selection);
           break;
         default:
