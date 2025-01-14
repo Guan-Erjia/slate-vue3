@@ -462,8 +462,11 @@ export const Editable = defineComponent({
 
     const onContextChange = (options?: { operation?: Operation }) => {
       emit("change", getRawEditor().children);
-      console.log(options?.operation)
-      changeEffect()
+      switch (options?.operation?.type) {
+        case "remove_text":
+          changeEffect()
+          break;
+      }
       switch (options?.operation?.type) {
         case "set_selection":
           emit("selectionchange", getRawEditor().selection);
@@ -601,7 +604,6 @@ export const Editable = defineComponent({
             selection.anchor.offset !== 0
           ) {
             native = true
-
             // Skip native if there are marks, as
             // `insertText` will insert a node, not just text.
             if (editor.marks) {
