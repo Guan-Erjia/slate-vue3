@@ -136,8 +136,10 @@ export const Editable = defineComponent({
 
     const onContextChange = (options?: { operation?: Operation }) => {
       emit("change", getRawEditor().children);
+      setDomSelection()
       switch (options?.operation?.type) {
         case "set_selection":
+          console.log(32412314)
           emit("selectionchange", getRawEditor().selection);
           break;
         default:
@@ -389,13 +391,10 @@ export const Editable = defineComponent({
       state.isUpdatingSelection = true
 
       let newDomRange: DOMRange | null = null
-      console.log('setDomSelection', editor)
 
       try {
         newDomRange = editor.selection && DOMEditor.toDOMRange(getRawEditor(), editor.selection)
-        console.log(newDomRange, editor.selection)
       } catch (e) {
-        console.error(e)
         // Ignore, dom and state might be out of sync
       }
 
@@ -1602,17 +1601,14 @@ export const Editable = defineComponent({
       })
     }
 
-    const marks = editor.marks
-    state.hasMarkPlaceholder = false
-
-    if (editor.selection && Range.isCollapsed(editor.selection) && marks) {
+    if (editor.selection && Range.isCollapsed(editor.selection) && editor.marks) {
       const anchor = editor.selection.anchor
       const leaf = Node.leaf(editor, anchor.path)
       const { text, ...rest } = leaf
 
       // While marks isn't a 'complete' text, we can still use loose Text.equals
       // here which only compares marks anyway.
-      if (!Text.equals(leaf, marks as Text, { loose: true })) {
+      if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
         state.hasMarkPlaceholder = true
 
         const unset = Object.fromEntries(
@@ -1622,7 +1618,7 @@ export const Editable = defineComponent({
         decorations.push({
           [MARK_PLACEHOLDER_SYMBOL]: true,
           ...unset,
-          ...marks,
+          ...editor.marks,
 
           anchor,
           focus: anchor,
@@ -1637,8 +1633,8 @@ export const Editable = defineComponent({
         const text = Node.leaf(editor, editor.selection.anchor.path)
         // While marks isn't a 'complete' text, we can still use loose Text.equals
         // here which only compares marks anyway.
-        if (marks && !Text.equals(text, marks as Text, { loose: true })) {
-          EDITOR_TO_PENDING_INSERTION_MARKS.set(getRawEditor(), marks)
+        if (editor.marks && !Text.equals(text, editor.marks as Text, { loose: true })) {
+          EDITOR_TO_PENDING_INSERTION_MARKS.set(getRawEditor(), editor.marks)
           return
         }
       }
