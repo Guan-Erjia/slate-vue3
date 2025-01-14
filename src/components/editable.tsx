@@ -134,34 +134,6 @@ export const Editable = defineComponent({
     const fn = () => editorIsFocus.value = DOMEditor.isFocused(getRawEditor())
 
 
-    const onContextChange = (options?: { operation?: Operation }) => {
-      emit("change", getRawEditor().children);
-      switch (options?.operation?.type) {
-        case "set_selection":
-          emit("selectionchange", getRawEditor().selection);
-          break;
-        default:
-          emit("valuechange", getRawEditor().children);
-      }
-    };
-
-    onMounted(() => {
-      if (!Node.isNodeList(props.initialValue)) {
-        throw new Error(
-          `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
-            props.initialValue
-          )}`
-        );
-      }
-      if (!Editor.isEditor(getRawEditor())) {
-        throw new Error(
-          `[Slate] editor is invalid! You passed: ${Scrubber.stringify(editor)}`
-        );
-      }
-      document.addEventListener("focusin", fn);
-      document.addEventListener("focusout", fn);
-      EDITOR_TO_ON_CHANGE.set(getRawEditor(), onContextChange);
-    });
 
     onUnmounted(() => {
       document.removeEventListener("focusin", fn);
@@ -275,7 +247,6 @@ export const Editable = defineComponent({
       scheduleOnDOMSelectionChange,
     })
 
-    const animationFrameId = ref<number>()
     const timeoutId = ref<number>()
     const { onUserInput } = useRestoreDOM(editableRef, getRawEditor())
 
@@ -297,6 +268,7 @@ export const Editable = defineComponent({
       EDITOR_TO_ELEMENT.delete(getRawEditor())
       NODE_TO_ELEMENT.delete(getRawEditor())
     })
+
 
 
     const setDomSelection = (forceChange?: boolean) => {
@@ -422,7 +394,19 @@ export const Editable = defineComponent({
       return newDomRange
     }
 
-    onMounted(() => {
+    const ensureDomSelection = (forceChange?: boolean) => {
+      try {
+        const el = DOMEditor.toDOMNode(getRawEditor(), getRawEditor())
+        el.focus()
+
+        setDomSelection(forceChange)
+      } catch (e) {
+        // Ignore, dom and state might be out of sync
+      }
+    }
+
+    const animationFrameId = ref<number>()
+    const changeEffect = () => {
       // Make sure the DOM selection state is in sync.
       const root = DOMEditor.findDocumentOrShadowRoot(getRawEditor())
       const domSelection = getSelection(root)
@@ -450,16 +434,7 @@ export const Editable = defineComponent({
 
       animationFrameId.value = requestAnimationFrame(() => {
         if (ensureSelection) {
-          const ensureDomSelection = (forceChange?: boolean) => {
-            try {
-              const el = DOMEditor.toDOMNode(getRawEditor(), getRawEditor())
-              el.focus()
 
-              setDomSelection(forceChange)
-            } catch (e) {
-              // Ignore, dom and state might be out of sync
-            }
-          }
 
           // Compat: Android IMEs try to force their selection by manually re-applying it even after we set it.
           // This essentially would make setting the slate selection during an update meaningless, so we force it
@@ -476,7 +451,7 @@ export const Editable = defineComponent({
           })
         }
       })
-    })
+    }
 
     onUnmounted(() => {
       animationFrameId.value && cancelAnimationFrame(animationFrameId.value)
@@ -484,6 +459,37 @@ export const Editable = defineComponent({
         clearTimeout(timeoutId.value)
       }
     })
+
+    const onContextChange = (options?: { operation?: Operation }) => {
+      emit("change", getRawEditor().children);
+      console.log(options?.operation)
+      changeEffect()
+      switch (options?.operation?.type) {
+        case "set_selection":
+          emit("selectionchange", getRawEditor().selection);
+          break;
+        default:
+          emit("valuechange", getRawEditor().children);
+      }
+    };
+
+    onMounted(() => {
+      if (!Node.isNodeList(props.initialValue)) {
+        throw new Error(
+          `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
+            props.initialValue
+          )}`
+        );
+      }
+      if (!Editor.isEditor(getRawEditor())) {
+        throw new Error(
+          `[Slate] editor is invalid! You passed: ${Scrubber.stringify(editor)}`
+        );
+      }
+      document.addEventListener("focusin", fn);
+      document.addEventListener("focusout", fn);
+      EDITOR_TO_ON_CHANGE.set(getRawEditor(), onContextChange);
+    });
 
     // Listen for dragend and drop globally. In Firefox, if a drop handler
     // initiates an operation that causes the originally dragged element to
