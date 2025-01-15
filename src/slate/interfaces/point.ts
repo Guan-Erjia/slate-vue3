@@ -1,6 +1,7 @@
 import { isPlainObject } from 'is-plain-object'
 import { type ExtendedType, Operation, Path } from '..'
 import type { TextDirection } from '../types/types'
+import { cloneDeep } from 'lodash'
 
 /**
  * `Point` objects refer to a specific location in a text node in a Slate
@@ -99,7 +100,7 @@ export const Point: PointInterface = {
     op: Operation,
     options: PointTransformOptions = {}
   ): Point | null {
-    let p = point
+    let p = cloneDeep(point)
       if (p === null) {
         return null
       }

@@ -462,11 +462,7 @@ export const Editable = defineComponent({
 
     const onContextChange = (options?: { operation?: Operation }) => {
       emit("change", getRawEditor().children);
-      switch (options?.operation?.type) {
-        case "remove_text":
-          changeEffect()
-          break;
-      }
+      changeEffect()
       switch (options?.operation?.type) {
         case "set_selection":
           emit("selectionchange", getRawEditor().selection);
