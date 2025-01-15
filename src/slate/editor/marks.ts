@@ -1,5 +1,5 @@
-import { Editor, type EditorInterface } from '../interfaces/editor'
-import { type NodeEntry } from '../interfaces/node'
+import { Editor, EditorInterface } from '../interfaces/editor'
+import { NodeEntry } from '../interfaces/node'
 import { Range } from '../interfaces/range'
 import { Path } from '../interfaces/path'
 import { Text } from '../interfaces/text'

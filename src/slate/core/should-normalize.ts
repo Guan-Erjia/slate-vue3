@@ -1,4 +1,4 @@
-import { type WithEditorFirstArg } from '../utils/types'
+import { WithEditorFirstArg } from '../utils/types'
 import { Editor } from '../interfaces/editor'
 
 export const shouldNormalize: WithEditorFirstArg<Editor['shouldNormalize']> = (

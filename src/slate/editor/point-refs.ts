@@ -1,4 +1,4 @@
-import { type EditorInterface } from '../interfaces/editor'
+import { EditorInterface } from '../interfaces/editor'
 import { POINT_REFS } from '../utils/weak-maps'
 
 export const pointRefs: EditorInterface['pointRefs'] = editor => {

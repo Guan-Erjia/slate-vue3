@@ -1,4 +1,4 @@
-import { type EditorInterface } from '../interfaces/editor'
+import { EditorInterface } from '../interfaces/editor'
 import { Path } from '../interfaces/path'
 import { Node } from '../interfaces/node'
 import { Text } from '../interfaces/text'

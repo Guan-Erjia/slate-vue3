@@ -1,116 +1,116 @@
-import { TextTransforms } from "../interfaces/transforms/text";
-import { Editor } from "../interfaces/editor";
-import { Range } from "../interfaces/range";
-import { Point } from "../interfaces/point";
-import { Path } from "../interfaces/path";
-import { Transforms } from "../interfaces/transforms";
-import { Element } from "../interfaces/element";
-import { type NodeEntry } from "../interfaces/node";
+import { TextTransforms } from '../interfaces/transforms/text'
+import { Editor } from '../interfaces/editor'
+import { Range } from '../interfaces/range'
+import { Point } from '../interfaces/point'
+import { Path } from '../interfaces/path'
+import { Transforms } from '../interfaces/transforms'
+import { Element } from '../interfaces/element'
+import { NodeEntry } from '../interfaces/node'
 
-export const deleteText: TextTransforms["delete"] = (editor, options = {}) => {
+export const deleteText: TextTransforms['delete'] = (editor, options = {}) => {
   Editor.withoutNormalizing(editor, () => {
     const {
       reverse = false,
-      unit = "character",
+      unit = 'character',
       distance = 1,
       voids = false,
-    } = options;
-    let { at = editor.selection, hanging = false } = options;
+    } = options
+    let { at = editor.selection, hanging = false } = options
 
     if (!at) {
-      return;
+      return
     }
 
-    let isCollapsed = false;
+    let isCollapsed = false
     if (Range.isRange(at) && Range.isCollapsed(at)) {
-      isCollapsed = true;
-      at = at.anchor;
+      isCollapsed = true
+      at = at.anchor
     }
 
     if (Point.isPoint(at)) {
-      const furthestVoid = Editor.void(editor, { at, mode: "highest" });
+      const furthestVoid = Editor.void(editor, { at, mode: 'highest' })
 
       if (!voids && furthestVoid) {
-        const [, voidPath] = furthestVoid;
-        at = voidPath;
+        const [, voidPath] = furthestVoid
+        at = voidPath
       } else {
-        const opts = { unit, distance };
+        const opts = { unit, distance }
         const target = reverse
           ? Editor.before(editor, at, opts) || Editor.start(editor, [])
-          : Editor.after(editor, at, opts) || Editor.end(editor, []);
-        at = { anchor: at, focus: target };
-        hanging = true;
+          : Editor.after(editor, at, opts) || Editor.end(editor, [])
+        at = { anchor: at, focus: target }
+        hanging = true
       }
     }
 
     if (Path.isPath(at)) {
-      Transforms.removeNodes(editor, { at, voids });
-      return;
+      Transforms.removeNodes(editor, { at, voids })
+      return
     }
 
     if (Range.isCollapsed(at)) {
-      return;
+      return
     }
 
     if (!hanging) {
-      const [, end] = Range.edges(at);
-      const endOfDoc = Editor.end(editor, []);
+      const [, end] = Range.edges(at)
+      const endOfDoc = Editor.end(editor, [])
 
       if (!Point.equals(end, endOfDoc)) {
-        at = Editor.unhangRange(editor, at, { voids });
+        at = Editor.unhangRange(editor, at, { voids })
       }
     }
 
-    let [start, end] = Range.edges(at);
+    let [start, end] = Range.edges(at)
     const startBlock = Editor.above(editor, {
-      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+      match: n => Element.isElement(n) && Editor.isBlock(editor, n),
       at: start,
       voids,
-    });
+    })
     const endBlock = Editor.above(editor, {
-      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+      match: n => Element.isElement(n) && Editor.isBlock(editor, n),
       at: end,
       voids,
-    });
+    })
     const isAcrossBlocks =
-      startBlock && endBlock && !Path.equals(startBlock[1], endBlock[1]);
-    const isSingleText = Path.equals(start.path, end.path);
+      startBlock && endBlock && !Path.equals(startBlock[1], endBlock[1])
+    const isSingleText = Path.equals(start.path, end.path)
     const startNonEditable = voids
       ? null
-      : Editor.void(editor, { at: start, mode: "highest" }) ??
-        Editor.elementReadOnly(editor, { at: start, mode: "highest" });
+      : Editor.void(editor, { at: start, mode: 'highest' }) ??
+        Editor.elementReadOnly(editor, { at: start, mode: 'highest' })
     const endNonEditable = voids
       ? null
-      : Editor.void(editor, { at: end, mode: "highest" }) ??
-        Editor.elementReadOnly(editor, { at: end, mode: "highest" });
+      : Editor.void(editor, { at: end, mode: 'highest' }) ??
+        Editor.elementReadOnly(editor, { at: end, mode: 'highest' })
 
     // If the start or end points are inside an inline void, nudge them out.
     if (startNonEditable) {
-      const before = Editor.before(editor, start);
+      const before = Editor.before(editor, start)
 
       if (before && startBlock && Path.isAncestor(startBlock[1], before.path)) {
-        start = before;
+        start = before
       }
     }
 
     if (endNonEditable) {
-      const after = Editor.after(editor, end);
+      const after = Editor.after(editor, end)
 
       if (after && endBlock && Path.isAncestor(endBlock[1], after.path)) {
-        end = after;
+        end = after
       }
     }
 
     // Get the highest nodes that are completely inside the range, as well as
     // the start and end nodes.
-    const matches: NodeEntry[] = [];
-    let lastPath: Path | undefined;
+    const matches: NodeEntry[] = []
+    let lastPath: Path | undefined
 
     for (const entry of Editor.nodes(editor, { at, voids })) {
-      const [node, path] = entry;
+      const [node, path] = entry
 
       if (lastPath && Path.compare(path, lastPath) === 0) {
-        continue;
+        continue
       }
 
       if (
@@ -120,44 +120,44 @@ export const deleteText: TextTransforms["delete"] = (editor, options = {}) => {
             Editor.isElementReadOnly(editor, node))) ||
         (!Path.isCommon(path, start.path) && !Path.isCommon(path, end.path))
       ) {
-        matches.push(entry);
-        lastPath = path;
+        matches.push(entry)
+        lastPath = path
       }
     }
 
-    const pathRefs = Array.from(matches, ([, p]) => Editor.pathRef(editor, p));
-    const startRef = Editor.pointRef(editor, start);
-    const endRef = Editor.pointRef(editor, end);
+    const pathRefs = Array.from(matches, ([, p]) => Editor.pathRef(editor, p))
+    const startRef = Editor.pointRef(editor, start)
+    const endRef = Editor.pointRef(editor, end)
 
-    let removedText = "";
+    let removedText = ''
 
     if (!isSingleText && !startNonEditable) {
-      const point = startRef.current!;
-      const [node] = Editor.leaf(editor, point);
-      const { path } = point;
-      const { offset } = start;
-      const text = node.text.slice(offset);
+      const point = startRef.current!
+      const [node] = Editor.leaf(editor, point)
+      const { path } = point
+      const { offset } = start
+      const text = node.text.slice(offset)
       if (text.length > 0) {
-        editor.apply({ type: "remove_text", path, offset, text });
-        removedText = text;
+        editor.apply({ type: 'remove_text', path, offset, text })
+        removedText = text
       }
     }
 
     pathRefs
       .reverse()
-      .map((r) => r.unref())
+      .map(r => r.unref())
       .filter((r): r is Path => r !== null)
-      .forEach((p) => Transforms.removeNodes(editor, { at: p, voids }));
+      .forEach(p => Transforms.removeNodes(editor, { at: p, voids }))
 
     if (!endNonEditable) {
-      const point = endRef.current!;
-      const [node] = Editor.leaf(editor, point);
-      const { path } = point;
-      const offset = isSingleText ? start.offset : 0;
-      const text = node.text.slice(offset, end.offset);
+      const point = endRef.current!
+      const [node] = Editor.leaf(editor, point)
+      const { path } = point
+      const offset = isSingleText ? start.offset : 0
+      const text = node.text.slice(offset, end.offset)
       if (text.length > 0) {
-        editor.apply({ type: "remove_text", path, offset, text });
-        removedText = text;
+        editor.apply({ type: 'remove_text', path, offset, text })
+        removedText = text
       }
     }
 
@@ -166,7 +166,7 @@ export const deleteText: TextTransforms["delete"] = (editor, options = {}) => {
         at: endRef.current,
         hanging: true,
         voids,
-      });
+      })
     }
 
     // For Thai script, deleting N character(s) backward should delete
@@ -175,22 +175,22 @@ export const deleteText: TextTransforms["delete"] = (editor, options = {}) => {
     if (
       isCollapsed &&
       reverse &&
-      unit === "character" &&
+      unit === 'character' &&
       removedText.length > 1 &&
       removedText.match(/[\u0E00-\u0E7F]+/)
     ) {
       Transforms.insertText(
         editor,
         removedText.slice(0, removedText.length - distance)
-      );
+      )
     }
 
-    const startUnref = startRef.unref();
-    const endUnref = endRef.unref();
-    const point = reverse ? startUnref || endUnref : endUnref || startUnref;
+    const startUnref = startRef.unref()
+    const endUnref = endRef.unref()
+    const point = reverse ? startUnref || endUnref : endUnref || startUnref
 
     if (options.at == null && point) {
-      Transforms.select(editor, point);
+      Transforms.select(editor, point)
     }
-  });
-};
+  })
+}

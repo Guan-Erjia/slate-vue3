@@ -1,4 +1,4 @@
-import { Editor, type EditorInterface } from '../interfaces/editor'
+import { Editor, EditorInterface } from '../interfaces/editor'
 import { DIRTY_PATH_KEYS, DIRTY_PATHS } from '../utils/weak-maps'
 import { Path } from '../interfaces/path'
 import { Node } from '../interfaces/node'

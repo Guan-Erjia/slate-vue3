@@ -1,16 +1,16 @@
 import {
-  type Ancestor,
-  type Descendant,
+  Ancestor,
+  Descendant,
   Editor,
   Element,
   Node,
-  type NodeEntry,
+  NodeEntry,
   Operation,
   Path,
   Point,
   Range,
   Scrubber,
-  type Selection,
+  Selection,
   Text,
 } from '../../index'
 
@@ -323,6 +323,7 @@ export const GeneralTransforms: GeneralTransforms = {
     try {
       selection = applyToDraft(editor, selection, op)
     } finally {
+
       if (selection) {
         editor.selection = selection
       } else {

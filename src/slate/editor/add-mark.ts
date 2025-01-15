@@ -4,7 +4,7 @@ import { Text } from '../interfaces/text'
 import { Range } from '../interfaces/range'
 import { Transforms } from '../interfaces/transforms'
 import { FLUSHING } from '../utils/weak-maps'
-import { Editor, type EditorInterface } from '../interfaces/editor'
+import { Editor, EditorInterface } from '../interfaces/editor'
 
 export const addMark: EditorInterface['addMark'] = (editor, key, value) => {
   const { selection } = editor

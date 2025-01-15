@@ -1,4 +1,4 @@
-import { type EditorInterface, Node, Path, Point, Range } from '../interfaces'
+import { EditorInterface, Node, Path, Point, Range } from '../interfaces'
 
 export const path: EditorInterface['path'] = (editor, at, options = {}) => {
   const { depth, edge } = options

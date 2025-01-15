@@ -1,4 +1,4 @@
-import { type WithEditorFirstArg } from '../utils/types'
+import { WithEditorFirstArg } from '../utils/types'
 import { Path } from '../interfaces/path'
 import { Text } from '../interfaces/text'
 import { Node } from '../interfaces/node'

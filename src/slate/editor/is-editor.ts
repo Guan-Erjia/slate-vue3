@@ -1,4 +1,4 @@
-import { Editor, type EditorInterface } from '../interfaces/editor'
+import { Editor, EditorInterface } from '../interfaces/editor'
 import { isPlainObject } from 'is-plain-object'
 import { Range } from '../interfaces/range'
 import { Node } from '../interfaces/node'

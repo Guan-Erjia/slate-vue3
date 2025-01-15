@@ -1,6 +1,6 @@
 import { Range } from '../interfaces/range'
 import { Transforms } from '../interfaces/transforms'
-import { type EditorInterface } from '../interfaces/editor'
+import { EditorInterface } from '../interfaces/editor'
 
 export const deleteFragment: EditorInterface['deleteFragment'] = (
   editor,

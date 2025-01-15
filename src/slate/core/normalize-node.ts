@@ -1,8 +1,8 @@
-import { type WithEditorFirstArg } from '../utils/types'
+import { WithEditorFirstArg } from '../utils/types'
 import { Text } from '../interfaces/text'
 import { Element } from '../interfaces/element'
 import { Transforms } from '../interfaces/transforms'
-import { type Descendant, Node } from '../interfaces/node'
+import { Descendant, Node } from '../interfaces/node'
 import { Editor } from '../interfaces/editor'
 
 export const normalizeNode: WithEditorFirstArg<Editor['normalizeNode']> = (

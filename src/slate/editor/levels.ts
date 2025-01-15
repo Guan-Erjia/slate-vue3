@@ -1,5 +1,5 @@
-import { Node, type NodeEntry } from '../interfaces/node'
-import { Editor, type EditorLevelsOptions } from '../interfaces/editor'
+import { Node, NodeEntry } from '../interfaces/node'
+import { Editor, EditorLevelsOptions } from '../interfaces/editor'
 import { Element } from '../interfaces/element'
 
 export function* levels<T extends Node>(

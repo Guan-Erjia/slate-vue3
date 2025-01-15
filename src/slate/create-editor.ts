@@ -12,9 +12,9 @@ import {
   normalizeNode,
   removeMark,
   shouldNormalize,
-  type Descendant,
-} from "./";
-import { apply } from "./core";
+  Descendant
+} from './'
+import { apply } from './core'
 import {
   above,
   after,
@@ -63,8 +63,8 @@ import {
   string,
   unhangRange,
   withoutNormalizing,
-} from "./editor";
-import { deleteText } from "./transforms-text";
+} from './editor'
+import { deleteText } from './transforms-text'
 import {
   collapse,
   deselect,
@@ -72,7 +72,7 @@ import {
   select,
   setPoint,
   setSelection,
-} from "./transforms-selection";
+} from './transforms-selection'
 import {
   insertNodes,
   liftNodes,
@@ -84,7 +84,7 @@ import {
   unsetNodes,
   unwrapNodes,
   wrapNodes,
-} from "./transforms-node";
+} from './transforms-node'
 import { reactive, type Reactive } from "vue";
 
 /**
@@ -188,5 +188,5 @@ export const createEditor = (children: Descendant[]): Editor => {
       shouldMergeNodesRemovePrevNode(editor, ...args),
   });
 
-  return editor;
-};
+  return editor
+}

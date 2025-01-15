@@ -1,5 +1,5 @@
 import { Element } from '../interfaces/element'
-import { Editor, type EditorInterface } from '../interfaces/editor'
+import { Editor, EditorInterface } from '../interfaces/editor'
 
 export const elementReadOnly: EditorInterface['elementReadOnly'] = (
   editor,

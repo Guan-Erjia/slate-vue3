@@ -1,6 +1,6 @@
-import { Editor, type EditorInterface } from '../interfaces/editor'
+import { Editor, EditorInterface } from '../interfaces/editor'
 import { Path } from '../interfaces/path'
-import type { Ancestor, NodeEntry } from '../interfaces/node'
+import { Ancestor, NodeEntry } from '../interfaces/node'
 
 export const parent: EditorInterface['parent'] = (editor, at, options = {}) => {
   const path = Editor.path(editor, at, options)

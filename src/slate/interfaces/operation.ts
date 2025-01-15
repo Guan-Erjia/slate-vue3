@@ -1,4 +1,4 @@
-import { type ExtendedType, Node, Path, Range } from '..'
+import { ExtendedType, Node, Path, Range } from '..'
 import { isPlainObject } from 'is-plain-object'
 
 export type BaseInsertNodeOperation = {

@@ -9,7 +9,7 @@ import { Element } from '../interfaces/element'
 import { Path } from '../interfaces/path'
 import { getDefaultInsertLocation } from '../utils'
 import { batchDirtyPaths } from '../core/batch-dirty-paths'
-import type { BaseInsertNodeOperation } from '../interfaces'
+import { BaseInsertNodeOperation } from '../interfaces'
 import { updateDirtyPaths } from '../core/update-dirty-paths'
 
 export const insertNodes: NodeTransforms['insertNodes'] = (

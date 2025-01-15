@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash'
 import { Editor, Path, Range, Scrubber, Text } from '..'
-import { Element, type ElementEntry } from './element'
+import { Element, ElementEntry } from './element'
 import { nextTick } from 'vue'
 
 /**

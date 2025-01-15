@@ -12,7 +12,8 @@
     "paths": {
       "slate": ["./src/slate/index.ts"],
       "slate-dom": ["./src/slate-dom/index.ts"]
-    }
+    },
+    "verbatimModuleSyntax": false
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

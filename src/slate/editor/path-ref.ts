@@ -1,4 +1,4 @@
-import { Editor, type EditorInterface } from '../interfaces/editor'
+import { Editor, EditorInterface } from '../interfaces/editor'
 import { PathRef } from '../interfaces/path-ref'
 
 export const pathRef: EditorInterface['pathRef'] = (

@@ -1,4 +1,4 @@
-import { Editor, type EditorInterface } from '../interfaces/editor'
+import { Editor, EditorInterface } from '../interfaces/editor'
 import { Span } from '../interfaces/location'
 import { Path } from '../interfaces/path'
 

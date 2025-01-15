@@ -1,4 +1,4 @@
-import { Editor, type EditorPositionsOptions } from '../interfaces/editor'
+import { Editor, EditorPositionsOptions } from '../interfaces/editor'
 import { Point } from '../interfaces/point'
 import { Range } from '../interfaces/range'
 import { Element } from '../interfaces/element'

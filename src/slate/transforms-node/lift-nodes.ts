@@ -3,7 +3,7 @@ import { Editor } from '../interfaces/editor'
 import { Path } from '../interfaces/path'
 import { matchPath } from '../utils/match-path'
 import { Element } from '../interfaces/element'
-import type { Ancestor, NodeEntry } from '../interfaces/node'
+import { Ancestor, NodeEntry } from '../interfaces/node'
 import { Transforms } from '../interfaces/transforms'
 
 export const liftNodes: NodeTransforms['liftNodes'] = (
