@@ -53,41 +53,41 @@ export const withDOM = <T extends BaseEditor>(
   clipboardFormatKey = "x-slate-fragment"
 ): T & DOMEditor => {
   const e = editor as T & DOMEditor;
-  const getRawEditor = () => toRaw(e);
+  const rawEditor =  toRaw(e);
   const { apply, onChange, deleteBackward, addMark, removeMark } = e;
 
   // The WeakMap which maps a key to a specific HTMLElement must be scoped to the editor instance to
   // avoid collisions between editors in the DOM that share the same value.
-  EDITOR_TO_KEY_TO_ELEMENT.set(getRawEditor(), new WeakMap());
+  EDITOR_TO_KEY_TO_ELEMENT.set(rawEditor, new WeakMap());
 
   e.addMark = (key, value) => {
-    EDITOR_TO_SCHEDULE_FLUSH.get(getRawEditor())?.();
+    EDITOR_TO_SCHEDULE_FLUSH.get(rawEditor)?.();
 
     if (
-      !EDITOR_TO_PENDING_INSERTION_MARKS.get(getRawEditor()) &&
-      EDITOR_TO_PENDING_DIFFS.get(getRawEditor())?.length
+      !EDITOR_TO_PENDING_INSERTION_MARKS.get(rawEditor) &&
+      EDITOR_TO_PENDING_DIFFS.get(rawEditor)?.length
     ) {
       // Ensure the current pending diffs originating from changes before the addMark
       // are applied with the current formatting
-      EDITOR_TO_PENDING_INSERTION_MARKS.set(getRawEditor(), null);
+      EDITOR_TO_PENDING_INSERTION_MARKS.set(rawEditor, null);
     }
 
-    EDITOR_TO_USER_MARKS.delete(getRawEditor());
+    EDITOR_TO_USER_MARKS.delete(rawEditor);
 
     addMark(key, value);
   };
 
   e.removeMark = (key) => {
     if (
-      !EDITOR_TO_PENDING_INSERTION_MARKS.get(getRawEditor()) &&
-      EDITOR_TO_PENDING_DIFFS.get(getRawEditor())?.length
+      !EDITOR_TO_PENDING_INSERTION_MARKS.get(rawEditor) &&
+      EDITOR_TO_PENDING_DIFFS.get(rawEditor)?.length
     ) {
       // Ensure the current pending diffs originating from changes before the addMark
       // are applied with the current formatting
-      EDITOR_TO_PENDING_INSERTION_MARKS.set(getRawEditor(), null);
+      EDITOR_TO_PENDING_INSERTION_MARKS.set(rawEditor, null);
     }
 
-    EDITOR_TO_USER_MARKS.delete(getRawEditor());
+    EDITOR_TO_USER_MARKS.delete(rawEditor);
 
     removeMark(key);
   };
@@ -126,19 +126,19 @@ export const withDOM = <T extends BaseEditor>(
     const matches: [Path, Key][] = [];
     const pathRefMatches: [PathRef, Key][] = [];
 
-    const pendingDiffs = EDITOR_TO_PENDING_DIFFS.get(getRawEditor());
+    const pendingDiffs = EDITOR_TO_PENDING_DIFFS.get(rawEditor);
     if (pendingDiffs?.length) {
       const transformed = pendingDiffs
         .map((textDiff) => transformTextDiff(textDiff, op))
         .filter(Boolean) as TextDiff[];
 
-      EDITOR_TO_PENDING_DIFFS.set(getRawEditor(), transformed);
+      EDITOR_TO_PENDING_DIFFS.set(rawEditor, transformed);
     }
 
-    const pendingSelection = EDITOR_TO_PENDING_SELECTION.get(getRawEditor());
+    const pendingSelection = EDITOR_TO_PENDING_SELECTION.get(rawEditor);
     if (pendingSelection) {
       EDITOR_TO_PENDING_SELECTION.set(
-        getRawEditor(),
+        rawEditor,
         transformPendingRange(e, pendingSelection, op)
       );
     }
@@ -146,10 +146,10 @@ export const withDOM = <T extends BaseEditor>(
     const pendingAction = EDITOR_TO_PENDING_ACTION.get(e);
     if (pendingAction?.at) {
       const at = Point.isPoint(pendingAction?.at)
-        ? transformPendingPoint(getRawEditor(), pendingAction.at, op)
-        : transformPendingRange(getRawEditor(), pendingAction.at, op);
+        ? transformPendingPoint(rawEditor, pendingAction.at, op)
+        : transformPendingRange(rawEditor, pendingAction.at, op);
 
-      EDITOR_TO_PENDING_ACTION.set(getRawEditor(), at ? { ...pendingAction, at } : null);
+      EDITOR_TO_PENDING_ACTION.set(rawEditor, at ? { ...pendingAction, at } : null);
     }
 
     switch (op.type) {
@@ -157,26 +157,26 @@ export const withDOM = <T extends BaseEditor>(
       case "remove_text":
       case "set_node":
       case "split_node": {
-        matches.push(...getMatches(getRawEditor(), op.path));
+        matches.push(...getMatches(rawEditor, op.path));
         break;
       }
 
       case "set_selection": {
         // Selection was manually set, don't restore the user selection after the change.
-        EDITOR_TO_USER_SELECTION.get(getRawEditor())?.unref();
-        EDITOR_TO_USER_SELECTION.delete(getRawEditor());
+        EDITOR_TO_USER_SELECTION.get(rawEditor)?.unref();
+        EDITOR_TO_USER_SELECTION.delete(rawEditor);
         break;
       }
 
       case "insert_node":
       case "remove_node": {
-        matches.push(...getMatches(getRawEditor(), Path.parent(op.path)));
+        matches.push(...getMatches(rawEditor, Path.parent(op.path)));
         break;
       }
 
       case "merge_node": {
         const prevPath = Path.previous(op.path);
-        matches.push(...getMatches(getRawEditor(), prevPath));
+        matches.push(...getMatches(rawEditor, prevPath));
         break;
       }
 
@@ -185,19 +185,19 @@ export const withDOM = <T extends BaseEditor>(
           Path.parent(op.path),
           Path.parent(op.newPath)
         );
-        matches.push(...getMatches(getRawEditor(), commonPath));
+        matches.push(...getMatches(rawEditor, commonPath));
 
         let changedPath: Path;
         if (Path.isBefore(op.path, op.newPath)) {
-          matches.push(...getMatches(getRawEditor(), Path.parent(op.path)));
+          matches.push(...getMatches(rawEditor, Path.parent(op.path)));
           changedPath = op.newPath;
         } else {
-          matches.push(...getMatches(getRawEditor(), Path.parent(op.newPath)));
+          matches.push(...getMatches(rawEditor, Path.parent(op.newPath)));
           changedPath = op.path;
         }
 
         const changedNode = Node.get(editor, Path.parent(changedPath));
-        const changedNodeKey = DOMEditor.findKey(getRawEditor(), changedNode);
+        const changedNodeKey = DOMEditor.findKey(rawEditor, changedNode);
         const changedPathRef = Editor.pathRef(e, Path.parent(changedPath));
         pathRefMatches.push([changedPathRef, changedNodeKey]);
 
@@ -213,7 +213,7 @@ export const withDOM = <T extends BaseEditor>(
       case "merge_node":
       case "move_node":
       case "split_node": {
-        IS_NODE_MAP_DIRTY.set(getRawEditor(), true);
+        IS_NODE_MAP_DIRTY.set(rawEditor, true);
       }
     }
 
@@ -249,7 +249,7 @@ export const withDOM = <T extends BaseEditor>(
 
     // Create a fake selection so that we can add a Base64-encoded copy of the
     // fragment to the HTML, to decode on future pastes.
-    const domRange = DOMEditor.toDOMRange(getRawEditor(), selection);
+    const domRange = DOMEditor.toDOMRange(rawEditor, selection);
     let contents = domRange.cloneContents();
     let attach = contents.childNodes[0] as HTMLElement;
 
@@ -266,7 +266,7 @@ export const withDOM = <T extends BaseEditor>(
     if (endVoid) {
       const [voidNode] = endVoid;
       const r = domRange.cloneRange();
-      const domNode = DOMEditor.toDOMNode(getRawEditor(), voidNode);
+      const domNode = DOMEditor.toDOMNode(rawEditor, voidNode);
       r.setEndAfter(domNode);
       contents = r.cloneContents();
     }
@@ -362,7 +362,7 @@ export const withDOM = <T extends BaseEditor>(
   };
 
   e.onChange = (options) => {
-    const onContextChange = EDITOR_TO_ON_CHANGE.get(getRawEditor());
+    const onContextChange = EDITOR_TO_ON_CHANGE.get(rawEditor);
 
     if (onContextChange) {
       onContextChange(options);

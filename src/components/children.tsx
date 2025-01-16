@@ -27,9 +27,9 @@ export const Children = defineComponent({
       selection,
     } = props
     const decorate = useDecorate()
-    const getRawEditor = () => toRaw(editor)
+    const rawEditor = toRaw(editor)
 
-    IS_NODE_MAP_DIRTY.set(getRawEditor(), false)
+    IS_NODE_MAP_DIRTY.set(rawEditor, false)
 
     const path = DOMEditor.findPath(editor, toRaw(node))
     const isLeafBlock = computed(() => Element.isElement(node) &&
@@ -39,7 +39,7 @@ export const Children = defineComponent({
     return () => node.children.map((child, i) => {
       const n = toRaw(node.children[i])
       const p = path.concat(i)
-      const key = DOMEditor.findKey(getRawEditor(), n)
+      const key = DOMEditor.findKey(rawEditor, n)
       const range = Editor.range(editor, p)
       const sel = selection && Range.intersection(range, selection)
       const ds = decorate([n, p])
