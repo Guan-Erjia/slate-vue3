@@ -1,11 +1,5 @@
 import { direction } from 'direction'
-import {
-  Editor,
-  Element,
-  Node,
-  Range,
-  type DecoratedRange,
-} from 'slate'
+import { Editor, Node, } from 'slate'
 import { Children } from './children'
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -16,7 +10,7 @@ import {
   DOMEditor,
 } from 'slate-dom'
 import { TextComp } from './text'
-import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
+import type { ElementProps, } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
 import { computed, defineComponent, onMounted, onUnmounted, ref, toRaw, } from 'vue'
 import { useReadOnly } from '../hooks/use-read-only'
@@ -27,15 +21,7 @@ import { useReadOnly } from '../hooks/use-read-only'
 export const ElementComp = defineComponent({
   name: 'slate-element',
   props: ['editor', 'decorations', 'element', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'selection'],
-  setup(props: {
-    element: Element
-    decorations: DecoratedRange[]
-    renderElement: (props: RenderElementProps) => JSX.Element
-    renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
-    renderLeaf: (props: RenderLeafProps) => JSX.Element
-    selection: Range | null,
-    editor: DOMEditor
-  }) {
+  setup(props: ElementProps) {
     const {
       element,
       decorations,

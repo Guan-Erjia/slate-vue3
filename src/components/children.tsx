@@ -1,4 +1,3 @@
-import type { Ancestor, DecoratedRange, } from 'slate'
 import {
   Editor,
   Element,
@@ -8,8 +7,7 @@ import { ElementComp } from './element'
 import { TextComp } from './text'
 import { DOMEditor, IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from 'slate-dom'
 import { useDecorate } from '../hooks/use-decorate'
-import type { JSX } from 'vue/jsx-runtime'
-import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from './interface'
+import type { ChildrenProps } from './interface'
 import { computed, defineComponent, toRaw, } from 'vue'
 
 /**
@@ -17,24 +15,8 @@ import { computed, defineComponent, toRaw, } from 'vue'
  */
 export const Children = defineComponent({
   name: 'Children',
-  props: {
-    decorations: {},
-    node: {},
-    renderElement: {},
-    renderPlaceholder: {},
-    renderLeaf: {},
-    selection: {},
-    editor: {}
-  },
-  setup(props: {
-    node: Ancestor
-    renderElement: (props: RenderElementProps) => JSX.Element
-    renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
-    renderLeaf: (props: RenderLeafProps) => JSX.Element
-    selection: Range | null
-    decorations: DecoratedRange[]
-    editor: DOMEditor
-  }) {
+  props: ['node', 'decorations', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'selection', 'editor'],
+  setup(props: ChildrenProps) {
     const {
       editor,
       decorations,

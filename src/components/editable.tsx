@@ -3,7 +3,7 @@ import debounce from 'lodash/debounce'
 import throttle from 'lodash/throttle'
 import {
   createEditor,
-  Editor, Element, Node, Operation, Path, Range, Scrubber, Text, Transforms,
+  Editor, Element, Node, Operation, Path, Range, Text, Transforms,
 } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
 import {
@@ -48,11 +48,12 @@ import {
 } from 'slate-dom'
 
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
-import { computed, defineComponent, getCurrentInstance, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, toRaw, useAttrs, } from 'vue'
+import { computed, defineComponent, getCurrentInstance, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, toRaw, useAttrs, watch, } from 'vue'
 import type { CSSProperties, HTMLAttributes, } from 'vue'
 import { Children } from './children'
 import { useRestoreDOM } from '../hooks/use-restore-dom'
-import { type EditableProps, isDOMEventHandled, isEventHandled, isDOMEventTargetInput, defaultScrollSelectionIntoView } from './interface'
+import type { EditableProps, } from './interface'
+import { defaultScrollSelectionIntoView, isDOMEventHandled, isDOMEventTargetInput, isEventHandled } from './utils'
 
 /**
  * Editable.
@@ -66,19 +67,19 @@ export const Editable = defineComponent({
     },
     scrollSelectionIntoView: {
       type: Function,
-      default: defaultScrollSelectionIntoView,
       required: false,
+      default: () => defaultScrollSelectionIntoView,
     },
     onDOMBeforeInput: {},
-    placeholder: {},
+    placeholder: { type: String },
     readOnly: {
       type: Boolean,
-      default: false,
+      default: () => false,
     },
-    role: {},
+    role: { type: String },
     style: {
       type: Object,
-      default: {}
+      default: () => { }
     },
     renderElement: {
       type: Function,
@@ -94,11 +95,11 @@ export const Editable = defineComponent({
     },
     is: {
       type: String,
-      default: 'div',
+      default: () => 'div',
     },
     initialValue: {
       type: Array,
-      default: [{ type: "paragraph", children: [{ text: "" }] }]
+      default: () => [{ type: "paragraph", children: [{ text: "" }] }]
     }
   },
   setup(props: EditableProps, { emit }) {
@@ -118,35 +119,26 @@ export const Editable = defineComponent({
 
     const attributes: HTMLAttributes = useAttrs()
     const isComposing = ref(false)
-    const editableRef = ref<HTMLElement>()
 
     const deferredOperations = ref<Array<() => void>>([])
     const placeholderHeight = ref<number>()
-    const processing = ref(false)
 
     const proxy = getCurrentInstance()
     EDITOR_TO_FORCE_RENDER.set(getRawEditor(), () => proxy?.update())
 
     // Update internal state on each render.
-    IS_READ_ONLY.set(getRawEditor(), readOnly)
-
-    const editorIsFocus = ref(DOMEditor.isFocused(getRawEditor()));
-    const fn = () => editorIsFocus.value = DOMEditor.isFocused(getRawEditor())
-
-
-
-    onUnmounted(() => {
-      document.removeEventListener("focusin", fn);
-      document.removeEventListener("focusout", fn);
-      EDITOR_TO_ON_CHANGE.delete(getRawEditor());
-    });
-
+    watch(() => readOnly, (current) => IS_READ_ONLY.set(getRawEditor(), current))
 
     // Keep track of some state for the event handler logic.
-    const state = reactive({
+    const state = reactive<{
+      isDraggingInternally: boolean,
+      isUpdatingSelection: boolean,
+      latestElement: DOMElement | null,
+      hasMarkPlaceholder: boolean,
+    }>({
       isDraggingInternally: false,
       isUpdatingSelection: false,
-      latestElement: null as DOMElement | null,
+      latestElement: null,
       hasMarkPlaceholder: false,
     })
 
@@ -162,6 +154,7 @@ export const Editable = defineComponent({
     // released. This causes issues in situations where another change happens
     // while a selection is being dragged.
     const androidInputManagerRef = ref<AndroidInputManager | null>(null)
+    const processing = ref(false)
     const onDOMSelectionChange = throttle(() => {
       if (IS_NODE_MAP_DIRTY.get(getRawEditor())) {
         onDOMSelectionChange()
@@ -241,6 +234,7 @@ export const Editable = defineComponent({
       }
     }, 100)
     const scheduleOnDOMSelectionChange = debounce(onDOMSelectionChange, 0)
+    const editableRef = ref<HTMLElement>()
     androidInputManagerRef.value = useAndroidInputManager({
       node: editableRef,
       onDOMSelectionChange,
@@ -460,35 +454,29 @@ export const Editable = defineComponent({
       }
     })
 
-    const onContextChange = (options?: { operation?: Operation }) => {
-      emit("change", getRawEditor().children);
-      changeEffect()
-      switch (options?.operation?.type) {
-        case "set_selection":
-          emit("selectionchange", getRawEditor().selection);
-          break;
-        default:
-          emit("valuechange", getRawEditor().children);
-      }
-    };
-
+    const editorIsFocus = ref(DOMEditor.isFocused(getRawEditor()));
+    const fn = () => editorIsFocus.value = DOMEditor.isFocused(getRawEditor())
     onMounted(() => {
-      if (!Node.isNodeList(props.initialValue)) {
-        throw new Error(
-          `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
-            props.initialValue
-          )}`
-        );
-      }
-      if (!Editor.isEditor(getRawEditor())) {
-        throw new Error(
-          `[Slate] editor is invalid! You passed: ${Scrubber.stringify(editor)}`
-        );
-      }
       document.addEventListener("focusin", fn);
       document.addEventListener("focusout", fn);
-      EDITOR_TO_ON_CHANGE.set(getRawEditor(), onContextChange);
+      EDITOR_TO_ON_CHANGE.set(getRawEditor(), (options?: { operation?: Operation }) => {
+        emit("change", getRawEditor().children);
+        changeEffect()
+        switch (options?.operation?.type) {
+          case "set_selection":
+            emit("selectionchange", getRawEditor().selection);
+            break;
+          default:
+            emit("valuechange", getRawEditor().children);
+        }
+      });
     });
+    onUnmounted(() => {
+      document.removeEventListener("focusin", fn);
+      document.removeEventListener("focusout", fn);
+      EDITOR_TO_ON_CHANGE.delete(getRawEditor());
+    });
+
 
     // Listen for dragend and drop globally. In Firefox, if a drop handler
     // initiates an operation that causes the originally dragged element to

@@ -8,10 +8,10 @@ import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from
 const initialValue = [
   {
     type: "paragraph",
-    children: [{ text: "A line of text in a paragraph." }],
+    children: [{ text: "1 2 3 4 5 6 7 8  9 0 " }],
   }, {
     type: "paragraph",
-    children: [{ text: "A line of text in a paragraph." }],
+    children: [{ text: "a b c d e f g h i j k l m n o p q r s t u v w x y z" }],
   }
 ];
 

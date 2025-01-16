@@ -1,6 +1,7 @@
-import { Editor, Text, Path, Element, Node } from 'slate'
+import { Editor, Path, Node } from 'slate'
 import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL, } from 'slate-dom'
 import { computed, defineComponent, h, onMounted, ref, toRaw } from 'vue'
+import { StringProps } from './interface'
 
 /**
  * Leaf content strings.
@@ -8,13 +9,7 @@ import { computed, defineComponent, h, onMounted, ref, toRaw } from 'vue'
 export const StringComp = defineComponent({
   name: 'slate-string',
   props: ['isLast', 'leaf', 'parent', 'text', 'editor'],
-  setup(props: {
-    isLast: boolean
-    leaf: Text
-    parent: Element
-    text: Text
-    editor: DOMEditor
-  }) {
+  setup(props: StringProps) {
     const { isLast, leaf, parent, text, editor } = props
 
     const path = DOMEditor.findPath(editor, toRaw(text))

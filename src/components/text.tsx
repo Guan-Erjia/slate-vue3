@@ -1,4 +1,4 @@
-import { Element, type DecoratedRange, Text } from 'slate'
+import { Text } from 'slate'
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -6,8 +6,7 @@ import {
   NODE_TO_ELEMENT,
 } from 'slate-dom'
 import { LeafComp } from './leaf'
-import type { JSX } from 'vue/jsx-runtime'
-import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
+import type { TextProps } from './interface'
 import { defineComponent, h, onMounted, onUnmounted, ref, toRaw } from 'vue'
 
 /**
@@ -15,16 +14,8 @@ import { defineComponent, h, onMounted, onUnmounted, ref, toRaw } from 'vue'
  */
 export const TextComp = defineComponent({
   name: 'slate-text',
-  props: ['editor', 'decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text',],
-  setup(props: {
-    decorations: DecoratedRange[]
-    isLast: boolean
-    parent: Element
-    renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
-    renderLeaf: (props: RenderLeafProps) => JSX.Element
-    text: Text
-    editor: DOMEditor
-  }) {
+  props: ['editor', 'decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text'],
+  setup(props: TextProps) {
     const { editor, decorations, isLast, parent, renderPlaceholder, renderLeaf, text } = props
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
