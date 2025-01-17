@@ -1083,7 +1083,7 @@ export const Editable = defineComponent({
 
     const onCopy = (event: ClipboardEvent) => {
       if (
-        DOMEditor.hasSelectableTarget(editor, event.target) &&
+        DOMEditor.hasSelectableTarget(rawEditor, event.target) &&
         !isEventHandled(event, attributes.onCopy) &&
         !isDOMEventTargetInput(event)
       ) {

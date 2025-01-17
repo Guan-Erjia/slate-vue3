@@ -52,7 +52,7 @@ export const LeafComp = defineComponent({
     const placeholderRef = ref<HTMLElement | null>(null)
     const showPlaceholder = ref(false)
     const showPlaceholderTimeoutRef = ref<number | null>(null)
-    const leafIsPlaceholder = Boolean(leaf[PLACEHOLDER_SYMBOL])
+    const leafIsPlaceholder = computed(() => Boolean(leaf[PLACEHOLDER_SYMBOL]))
 
     onMounted(() => {
       if (placeholderRef.value) {
@@ -63,7 +63,7 @@ export const LeafComp = defineComponent({
         placeholderResizeObserver.value.observe(placeholderRef.value)
       }
 
-      if (leafIsPlaceholder) {
+      if (leafIsPlaceholder.value) {
         showPlaceholderTimeoutRef.value = setTimeout(() => {
           showPlaceholder.value = (true)
           showPlaceholderTimeoutRef.value = null
@@ -81,47 +81,38 @@ export const LeafComp = defineComponent({
       showPlaceholderTimeoutRef.value = null
     })
 
-    const placeholderProps = computed<RenderPlaceholderProps>(() => {
-      return {
-        children: leaf.placeholder,
-        attributes: {
-          'data-slate-placeholder': true,
-          style: {
-            position: 'absolute',
-            top: 0,
-            pointerEvents: 'none',
-            width: '100%',
-            maxWidth: '100%',
-            display: 'block',
-            opacity: '0.333',
-            userSelect: 'none',
-            textDecoration: 'none',
-            // Fixes https://github.com/udecode/plate/issues/2315
-            WebkitUserModify: IS_WEBKIT ? 'inherit' : undefined,
-          },
-          contentEditable: false,
-          ref: placeholderRef,
+    const placeholderProps = computed<RenderPlaceholderProps>(() => ({
+      children: leaf.placeholder,
+      attributes: {
+        'data-slate-placeholder': true,
+        style: {
+          position: 'absolute',
+          top: 0,
+          pointerEvents: 'none',
+          width: '100%',
+          maxWidth: '100%',
+          display: 'block',
+          opacity: '0.333',
+          userSelect: 'none',
+          textDecoration: 'none',
+          // Fixes https://github.com/udecode/plate/issues/2315
+          WebkitUserModify: IS_WEBKIT ? 'inherit' : undefined,
         },
-      }
+        contentEditable: false,
+        ref: placeholderRef,
+      },
     })
-
-    let children = (
-      <>
-        {leafIsPlaceholder && showPlaceholder.value && renderPlaceholder(placeholderProps.value)}
-        <StringComp editor={editor} isLast={isLast} leaf={leaf} parent={parent} text={text} />
-      </>
     )
+
+    const children = computed(() => <>
+      {leafIsPlaceholder.value && showPlaceholder.value && renderPlaceholder(placeholderProps.value)}
+      <StringComp editor={editor} isLast={isLast} leaf={leaf} parent={parent} text={text} />
+    </>)
 
     // COMPAT: Having the `data-` attributes on these leaf elements ensures that
     // in certain misbehaving browsers they aren't weirdly cloned/destroyed by
     // contenteditable behaviors. (2019/05/08)
-    const attributes: {
-      'data-slate-leaf': true
-    } = {
-      'data-slate-leaf': true,
-    }
-
-    return () => renderLeaf({ attributes, children, leaf, text })
+    return () => renderLeaf({ attributes: { 'data-slate-leaf': true }, children: children.value, leaf, text })
   }
 })
 

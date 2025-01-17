@@ -33,11 +33,12 @@ export const ElementComp = defineComponent({
     } = props
     const readOnly = useReadOnly()
     const rawElement = toRaw(element)
+    const rawEditor = toRaw(editor)
 
     const elementRef = ref<HTMLElement | null>(null)
     onMounted(() => {
       const key = DOMEditor.findKey(editor, rawElement)
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
+      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
       if (elementRef.value) {
         KEY_TO_ELEMENT?.set(key, elementRef.value)
         NODE_TO_ELEMENT.set(rawElement, elementRef.value)
