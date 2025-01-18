@@ -1,5 +1,5 @@
 import { defineComponent, onMounted, onUnmounted, provide, ref, renderSlot } from "vue";
-import { SLATE_CHANGE_EFFECT_INJECT, SLATE_INITIAL_VALUE, SLATE_USE_EDITOR } from "../constants";
+import { SLATE_CHANGE_EFFECT_INJECT, SLATE_INITIAL_VALUE, SLATE_STATE_FOCUS, SLATE_USE_EDITOR } from "../constants";
 import { createEditor, Node, Operation, Scrubber } from "slate";
 import { SlateProps } from "./interface";
 import { DOMEditor, EDITOR_TO_ON_CHANGE, withDOM } from "slate-dom";
@@ -23,10 +23,11 @@ export const Slate = defineComponent({
       );
     }
     const editor = withDOM(createEditor(props.initialValue))
+    const editorIsFocus = ref(DOMEditor.isFocused(editor));
+    provide(SLATE_STATE_FOCUS, editorIsFocus)
     provide(SLATE_USE_EDITOR, editor)
     provide(SLATE_INITIAL_VALUE, props.initialValue)
 
-    const editorIsFocus = ref(DOMEditor.isFocused(editor));
     const focusCb = () => editorIsFocus.value = DOMEditor.isFocused(editor)
 
     let changeEffect = () => { }
