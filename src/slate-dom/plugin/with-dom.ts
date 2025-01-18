@@ -37,6 +37,7 @@ import {
   NODE_TO_KEY,
 } from '../utils/weak-maps'
 import { DOMEditor } from './dom-editor'
+import { toRawWeakMap as WeakMap } from '../../weakmap'
 import { toRaw } from "vue";
 
 /**
