@@ -13,14 +13,12 @@
     "is-hotkey": "^0.2.0",
     "is-plain-object": "^5.0.0",
     "lodash": "^4.17.21",
-    "react": "^19.0.0",
     "scroll-into-view-if-needed": "^3.1.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@types/is-hotkey": "^0.1.10",
     "@types/lodash": "^4.17.14",
-    "@types/react": "^19.0.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
