@@ -1,5 +1,5 @@
 // Plugin
-export { DOMEditor } from './plugin/dom-editor'
+export { DOMEditor, type DOMEditorInterface } from './plugin/dom-editor'
 export { withDOM } from './plugin/with-dom'
 
 // Utils
@@ -10,13 +10,16 @@ export {
   mergeStringDiffs,
   normalizePoint,
   normalizeRange,
-  normalizeStringDiff, targetRange, verifyDiffState
+  normalizeStringDiff,
+  targetRange,
+  verifyDiffState,
 } from './utils/diff-text'
 export type { StringDiff, TextDiff } from './utils/diff-text'
 
 export {
   DOMElement,
-  DOMNode, DOMRange,
+  DOMNode,
+  DOMRange,
   DOMSelection,
   DOMStaticRange,
   DOMText,
@@ -31,7 +34,7 @@ export {
   isDOMSelection,
   isPlainTextOnlyPaste,
   isTrackedMutation,
-  normalizeDOMPoint
+  normalizeDOMPoint,
 } from './utils/dom'
 export type { DOMPoint } from './utils/dom'
 
