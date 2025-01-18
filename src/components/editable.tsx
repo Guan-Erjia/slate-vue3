@@ -51,6 +51,8 @@ import type { EditableProps, } from './interface'
 import { defaultScrollSelectionIntoView, isDOMEventHandled, isDOMEventTargetInput, isEventHandled } from './utils'
 import { useEditor } from '../hooks/use-editor'
 import { SLATE_CHANGE_EFFECT_INJECT } from '../constants'
+import { useComposing } from '../hooks/use-composing'
+import { useReadOnly } from '../hooks/use-read-only'
 
 /**
  * Editable.
@@ -113,7 +115,7 @@ export const Editable = defineComponent({
     const editor = useEditor()
 
     const attributes: HTMLAttributes = useAttrs()
-    const isComposing = ref(false)
+    const isComposing = useComposing()
 
     const deferredOperations = ref<Array<() => void>>([])
     const placeholderHeight = ref<number>()
@@ -122,7 +124,11 @@ export const Editable = defineComponent({
     EDITOR_TO_FORCE_RENDER.set(editor, () => proxy?.update())
 
     // Update internal state on each render.
-    watch(() => readOnly, (current) => IS_READ_ONLY.set(editor, current))
+    const isReadOnly = useReadOnly()
+    watch(() => readOnly, (current) => {
+      IS_READ_ONLY.set(editor, current)
+      isReadOnly.value = current
+    })
 
     // Keep track of some state for the event handler logic.
     const state = reactive<{
