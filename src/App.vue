@@ -2,8 +2,9 @@
 import { Slate } from "./components/slate";
 import { Editable } from "./components/editable";
 import { h, } from "vue";
-import { IS_ANDROID } from "slate-dom";
+import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "./components/interface";
+import { createEditor } from "slate";
 
 const initialValue = [
   {
@@ -30,10 +31,11 @@ const renderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => 
   ])
 }
 
+const editor = withDOM(createEditor(initialValue))
 </script>
 
 <template>
-  <Slate :initial-value="initialValue">
+  <Slate :editor="editor">
     <Editable style="border: 1px solid red;padding: 10px;" placeholder="Enter some rich text…" spellCheck autoFocus
       :render-element="renderElement" :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder" />
   </Slate>

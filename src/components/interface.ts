@@ -6,7 +6,6 @@ import type {
   Ancestor,
   Range,
   Path,
-  Descendant,
 } from "slate";
 import type { DOMEditor, DOMRange } from "slate-dom";
 import type { JSX } from "vue/jsx-runtime";
@@ -113,7 +112,7 @@ export interface ElementProps {
 }
 
 export interface SlateProps {
-  initialValue: Descendant[];
+  editor: DOMEditor;
 }
 
 export interface LeafProps {
