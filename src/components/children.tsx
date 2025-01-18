@@ -6,7 +6,7 @@ import { ElementComp } from './element'
 import { TextComp } from './text'
 import { DOMEditor, IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from 'slate-dom'
 import type { ChildrenProps } from './interface'
-import { computed, defineComponent, onUpdated, } from 'vue'
+import { computed, defineComponent, onUpdated } from 'vue'
 
 /**
  * Children.

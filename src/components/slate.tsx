@@ -1,5 +1,5 @@
-import { defineComponent, onMounted, onUnmounted, provide, ref, renderSlot, } from "vue";
-import { SLATE_CHANGE_EFFECT_INJECT, SLATE_STATE_COMPOSING, SLATE_STATE_FOCUS, SLATE_STATE_READ_ONLY, SLATE_USE_EDITOR } from "../constants";
+import { computed, defineComponent, onMounted, onUnmounted, provide, ref, renderSlot, } from "vue";
+import { SLATE_CHANGE_EFFECT_INJECT, SLATE_STATE_COMPOSING, SLATE_STATE_FOCUS, SLATE_STATE_READ_ONLY, SLATE_STATE_SELECTION, SLATE_USE_EDITOR } from "../constants";
 import { Node, Operation, Scrubber } from "slate";
 import { SlateProps } from "./interface";
 import { DOMEditor, EDITOR_TO_ON_CHANGE } from "slate-dom";
@@ -14,7 +14,6 @@ export const Slate = defineComponent({
     }
   },
   setup(props: SlateProps, { slots, emit, }) {
-
     const { editor } = props
     if (!Node.isNodeList(editor.children)) {
       throw new Error(
@@ -25,12 +24,15 @@ export const Slate = defineComponent({
     }
     provide(SLATE_USE_EDITOR, editor)
 
+
     const isFocus = ref(DOMEditor.isFocused(editor));
     const isComposing = ref(false);
     const isReadOnly = ref(false);
+    const selection = computed(() => editor.selection)
     provide(SLATE_STATE_FOCUS, isFocus)
     provide(SLATE_STATE_COMPOSING, isComposing)
     provide(SLATE_STATE_READ_ONLY, isReadOnly)
+    provide(SLATE_STATE_SELECTION, selection)
 
     const focusCb = () => isFocus.value = DOMEditor.isFocused(editor)
     let changeEffect = () => { }
@@ -50,12 +52,12 @@ export const Slate = defineComponent({
         }
       });
     });
-
     onUnmounted(() => {
       document.removeEventListener("focusin", focusCb);
       document.removeEventListener("focusout", focusCb);
       EDITOR_TO_ON_CHANGE.delete(editor);
     });
+
     return () => renderSlot(slots, 'default')
   },
 })
