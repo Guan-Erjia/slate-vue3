@@ -48,7 +48,7 @@ import {
 } from 'slate-dom'
 
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
-import { computed, defineComponent, getCurrentInstance, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, toRaw, useAttrs, watch, } from 'vue'
+import { computed, defineComponent, getCurrentInstance, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, useAttrs, watch, } from 'vue'
 import type { CSSProperties, HTMLAttributes, } from 'vue'
 import { Children } from './children'
 import { useRestoreDOM } from '../hooks/use-restore-dom'
@@ -115,7 +115,6 @@ export const Editable = defineComponent({
     } = props
     // weakMap 需要原始指针
     const editor = withDOM(createEditor(props.initialValue))
-    const rawEditor = toRaw(editor)
 
     const attributes: HTMLAttributes = useAttrs()
     const isComposing = ref(false)
@@ -124,10 +123,10 @@ export const Editable = defineComponent({
     const placeholderHeight = ref<number>()
 
     const proxy = getCurrentInstance()
-    EDITOR_TO_FORCE_RENDER.set(rawEditor, () => proxy?.update())
+    EDITOR_TO_FORCE_RENDER.set(editor, () => proxy?.update())
 
     // Update internal state on each render.
-    watch(() => readOnly, (current) => IS_READ_ONLY.set(rawEditor, current))
+    watch(() => readOnly, (current) => IS_READ_ONLY.set(editor, current))
 
     // Keep track of some state for the event handler logic.
     const state = reactive<{
@@ -156,12 +155,12 @@ export const Editable = defineComponent({
     const androidInputManagerRef = ref<AndroidInputManager | null>(null)
     const processing = ref(false)
     const onDOMSelectionChange = throttle(() => {
-      if (IS_NODE_MAP_DIRTY.get(rawEditor)) {
+      if (IS_NODE_MAP_DIRTY.get(editor)) {
         onDOMSelectionChange()
         return
       }
 
-      const el = DOMEditor.toDOMNode(rawEditor, editor)
+      const el = DOMEditor.toDOMNode(editor, editor)
       const root = el.getRootNode()
 
       if (!processing.value && IS_WEBKIT && root instanceof ShadowRoot) {
@@ -181,20 +180,20 @@ export const Editable = defineComponent({
 
       const androidInputManager = androidInputManagerRef.value
       if (
-        (IS_ANDROID || !DOMEditor.isComposing(rawEditor)) &&
+        (IS_ANDROID || !DOMEditor.isComposing(editor)) &&
         (!state.isUpdatingSelection || androidInputManager?.isFlushing()) &&
         !state.isDraggingInternally
       ) {
-        const root = DOMEditor.findDocumentOrShadowRoot(rawEditor)
+        const root = DOMEditor.findDocumentOrShadowRoot(editor)
         const { activeElement } = root
-        const el = DOMEditor.toDOMNode(rawEditor, rawEditor)
+        const el = DOMEditor.toDOMNode(editor, editor)
         const domSelection = getSelection(root)
 
         if (activeElement === el) {
           state.latestElement = activeElement
-          IS_FOCUSED.set(rawEditor, true)
+          IS_FOCUSED.set(editor, true)
         } else {
-          IS_FOCUSED.delete(rawEditor)
+          IS_FOCUSED.delete(editor)
         }
 
         if (!domSelection) {
@@ -204,19 +203,19 @@ export const Editable = defineComponent({
         const { anchorNode, focusNode } = domSelection
 
         const anchorNodeSelectable =
-          DOMEditor.hasEditableTarget(rawEditor, anchorNode) ||
-          DOMEditor.isTargetInsideNonReadonlyVoid(rawEditor, anchorNode)
+          DOMEditor.hasEditableTarget(editor, anchorNode) ||
+          DOMEditor.isTargetInsideNonReadonlyVoid(editor, anchorNode)
 
-        const focusNodeInEditor = DOMEditor.hasTarget(rawEditor, focusNode)
+        const focusNodeInEditor = DOMEditor.hasTarget(editor, focusNode)
 
         if (anchorNodeSelectable && focusNodeInEditor) {
-          const range = DOMEditor.toSlateRange(rawEditor, domSelection, {
+          const range = DOMEditor.toSlateRange(editor, domSelection, {
             exactMatch: false,
             suppressThrow: true,
           })
           if (range) {
             if (
-              !DOMEditor.isComposing(rawEditor) &&
+              !DOMEditor.isComposing(editor) &&
               !androidInputManager?.hasPendingChanges() &&
               !androidInputManager?.isFlushing()
             ) {
@@ -242,31 +241,31 @@ export const Editable = defineComponent({
     })
 
     const timeoutId = ref<number>()
-    const { onUserInput } = useRestoreDOM(editableRef, rawEditor)
+    const { onUserInput } = useRestoreDOM(editableRef, editor)
 
     // callbackRef
     onMounted(() => {
       // Update element-related weak maps with the DOM element ref.
       let window
       if (editableRef.value && (window = getDefaultView(editableRef.value))) {
-        EDITOR_TO_WINDOW.set(rawEditor, window)
-        EDITOR_TO_ELEMENT.set(rawEditor, editableRef.value)
-        NODE_TO_ELEMENT.set(rawEditor, editableRef.value)
-        ELEMENT_TO_NODE.set(editableRef.value, rawEditor)
+        EDITOR_TO_WINDOW.set(editor, window)
+        EDITOR_TO_ELEMENT.set(editor, editableRef.value)
+        NODE_TO_ELEMENT.set(editor, editableRef.value)
+        ELEMENT_TO_NODE.set(editableRef.value, editor)
       }
     })
 
     onUnmounted(() => {
       onDOMSelectionChange.cancel()
       scheduleOnDOMSelectionChange.cancel()
-      EDITOR_TO_ELEMENT.delete(rawEditor)
-      NODE_TO_ELEMENT.delete(rawEditor)
+      EDITOR_TO_ELEMENT.delete(editor)
+      NODE_TO_ELEMENT.delete(editor)
     })
 
 
 
     const setDomSelection = (forceChange?: boolean) => {
-      const root = DOMEditor.findDocumentOrShadowRoot(rawEditor)
+      const root = DOMEditor.findDocumentOrShadowRoot(editor)
       const domSelection = getSelection(root)
       if (!domSelection) {
         return
@@ -299,7 +298,7 @@ export const Editable = defineComponent({
         anchorNode = domSelection.anchorNode
       }
       // verify that the dom selection is in the editor
-      const editorElement = EDITOR_TO_ELEMENT.get(rawEditor)!
+      const editorElement = EDITOR_TO_ELEMENT.get(editor)!
       let hasDomSelectionInEditor = false
       if (
         editorElement.contains(anchorNode) &&
@@ -315,7 +314,7 @@ export const Editable = defineComponent({
         editor.selection &&
         !forceChange
       ) {
-        const slateRange = DOMEditor.toSlateRange(rawEditor, domSelection, {
+        const slateRange = DOMEditor.toSlateRange(editor, domSelection, {
           exactMatch: true,
 
           // domSelection is not necessarily a valid Slate range
@@ -344,7 +343,7 @@ export const Editable = defineComponent({
       // but Slate's value is not being updated through any operation
       // and thus it doesn't transform selection on its own
       if (editor.selection && !DOMEditor.hasRange(editor, editor.selection)) {
-        editor.selection = DOMEditor.toSlateRange(rawEditor, domSelection, {
+        editor.selection = DOMEditor.toSlateRange(editor, domSelection, {
           exactMatch: false,
           suppressThrow: true,
         })
@@ -357,13 +356,13 @@ export const Editable = defineComponent({
       let newDomRange: DOMRange | null = null
 
       try {
-        newDomRange = editor.selection && DOMEditor.toDOMRange(rawEditor, editor.selection)
+        newDomRange = editor.selection && DOMEditor.toDOMRange(editor, editor.selection)
       } catch (e) {
         // Ignore, dom and state might be out of sync
       }
 
       if (newDomRange) {
-        if (DOMEditor.isComposing(rawEditor) && !IS_ANDROID) {
+        if (DOMEditor.isComposing(editor) && !IS_ANDROID) {
           domSelection.collapseToEnd()
         } else if (Range.isBackward(editor.selection!)) {
           domSelection.setBaseAndExtent(
@@ -390,7 +389,7 @@ export const Editable = defineComponent({
 
     const ensureDomSelection = (forceChange?: boolean) => {
       try {
-        const el = DOMEditor.toDOMNode(rawEditor, rawEditor)
+        const el = DOMEditor.toDOMNode(editor, editor)
         el.focus()
 
         setDomSelection(forceChange)
@@ -402,11 +401,11 @@ export const Editable = defineComponent({
     const animationFrameId = ref<number>()
     const changeEffect = () => {
       // Make sure the DOM selection state is in sync.
-      const root = DOMEditor.findDocumentOrShadowRoot(rawEditor)
+      const root = DOMEditor.findDocumentOrShadowRoot(editor)
       const domSelection = getSelection(root)
       if (
         !domSelection ||
-        !DOMEditor.isFocused(rawEditor) ||
+        !DOMEditor.isFocused(editor) ||
         androidInputManagerRef.value?.hasPendingAction()
       ) {
         return
@@ -454,27 +453,27 @@ export const Editable = defineComponent({
       }
     })
 
-    const editorIsFocus = ref(DOMEditor.isFocused(rawEditor));
-    const fn = () => editorIsFocus.value = DOMEditor.isFocused(rawEditor)
+    const editorIsFocus = ref(DOMEditor.isFocused(editor));
+    const fn = () => editorIsFocus.value = DOMEditor.isFocused(editor)
     onMounted(() => {
       document.addEventListener("focusin", fn);
       document.addEventListener("focusout", fn);
-      EDITOR_TO_ON_CHANGE.set(rawEditor, (options?: { operation?: Operation }) => {
-        emit("change", rawEditor.children);
+      EDITOR_TO_ON_CHANGE.set(editor, (options?: { operation?: Operation }) => {
+        emit("change", editor.children);
         changeEffect()
         switch (options?.operation?.type) {
           case "set_selection":
-            emit("selectionchange", rawEditor.selection);
+            emit("selectionchange", editor.selection);
             break;
           default:
-            emit("valuechange", rawEditor.children);
+            emit("valuechange", editor.children);
         }
       });
     });
     onUnmounted(() => {
       document.removeEventListener("focusin", fn);
       document.removeEventListener("focusout", fn);
-      EDITOR_TO_ON_CHANGE.delete(rawEditor);
+      EDITOR_TO_ON_CHANGE.delete(editor);
     });
 
 
@@ -489,7 +488,7 @@ export const Editable = defineComponent({
       // a leaky polyfill that only fires on keypresses or clicks. Instead, we
       // want to fire for any change to the selection inside the editor.
       // (2019/11/04) https://github.com/facebook/react/issues/5785
-      const window = DOMEditor.getWindow(rawEditor)
+      const window = DOMEditor.getWindow(editor)
       window.document.addEventListener(
         'selectionchange',
         scheduleOnDOMSelectionChange
@@ -499,7 +498,7 @@ export const Editable = defineComponent({
     })
 
     onUnmounted(() => {
-      const window = DOMEditor.getWindow(rawEditor)
+      const window = DOMEditor.getWindow(editor)
       window.document.removeEventListener(
         'selectionchange',
         scheduleOnDOMSelectionChange
@@ -516,7 +515,7 @@ export const Editable = defineComponent({
         return
       }
       if (HAS_BEFORE_INPUT_SUPPORT) {
-        const el = DOMEditor.toDOMNode(rawEditor, rawEditor)
+        const el = DOMEditor.toDOMNode(editor, editor)
         const root = el.getRootNode()
 
         if (processing?.value && IS_WEBKIT && root instanceof ShadowRoot) {
@@ -529,7 +528,7 @@ export const Editable = defineComponent({
           newRange.setEnd(range.endContainer, range.endOffset)
 
           // Translate the DOM Range into a Slate Range
-          const slateRange = DOMEditor.toSlateRange(rawEditor, newRange, {
+          const slateRange = DOMEditor.toSlateRange(editor, newRange, {
             exactMatch: false,
             suppressThrow: false,
           })
@@ -544,7 +543,7 @@ export const Editable = defineComponent({
 
         if (
           !readOnly &&
-          DOMEditor.hasEditableTarget(rawEditor, event.target) &&
+          DOMEditor.hasEditableTarget(editor, event.target) &&
           !isDOMEventHandled(event, props.onDOMBeforeInput)
         ) {
           // COMPAT: BeforeInput events aren't cancelable on android, so we have to handle them differently using the android input manager.
@@ -567,7 +566,7 @@ export const Editable = defineComponent({
 
           // COMPAT: use composition change events as a hint to where we should insert
           // composition text if we aren't composing to work around https://github.com/ianstormtaylor/slate/issues/5038
-          if (isCompositionChange && DOMEditor.isComposing(rawEditor)) {
+          if (isCompositionChange && DOMEditor.isComposing(editor)) {
             return
           }
 
@@ -595,20 +594,20 @@ export const Editable = defineComponent({
             }
 
             // If the NODE_MAP is dirty, we can't trust the selection anchor (eg DOMEditor.toDOMPoint)
-            if (!IS_NODE_MAP_DIRTY.get(rawEditor)) {
+            if (!IS_NODE_MAP_DIRTY.get(editor)) {
               // Chrome also has issues correctly editing the end of anchor elements: https://bugs.chromium.org/p/chromium/issues/detail?id=1259100
               // Therefore we don't allow native events to insert text at the end of anchor nodes.
               const { anchor } = selection
 
-              const [node, offset] = DOMEditor.toDOMPoint(rawEditor, anchor)
+              const [node, offset] = DOMEditor.toDOMPoint(editor, anchor)
               const anchorNode = node.parentElement?.closest('a')
 
-              const window = DOMEditor.getWindow(rawEditor)
+              const window = DOMEditor.getWindow(editor)
 
               if (
                 native &&
                 anchorNode &&
-                DOMEditor.hasDOMNode(rawEditor, toRaw(anchorNode))
+                DOMEditor.hasDOMNode(editor, anchorNode)
               ) {
                 // Find the last text node inside the anchor.
                 const lastText = window?.document
@@ -648,12 +647,12 @@ export const Editable = defineComponent({
           // If the NODE_MAP is dirty, we can't trust the selection anchor (eg DOMEditor.toDOMPoint via DOMEditor.toSlateRange)
           if (
             (!inputType.startsWith('delete') || inputType.startsWith('deleteBy')) &&
-            !IS_NODE_MAP_DIRTY.get(rawEditor)
+            !IS_NODE_MAP_DIRTY.get(editor)
           ) {
             const [targetRange] = event.getTargetRanges()
 
             if (targetRange) {
-              const range = DOMEditor.toSlateRange(rawEditor, targetRange, {
+              const range = DOMEditor.toSlateRange(editor, targetRange, {
                 exactMatch: false,
                 suppressThrow: false,
               })
@@ -669,7 +668,7 @@ export const Editable = defineComponent({
                 Transforms.select(editor, range)
 
                 if (selectionRef) {
-                  EDITOR_TO_USER_SELECTION.set(rawEditor, selectionRef)
+                  EDITOR_TO_USER_SELECTION.set(editor, selectionRef)
                 }
               }
             }
@@ -773,9 +772,9 @@ export const Editable = defineComponent({
                 // then we will abort because we're still composing and the selection
                 // won't be updated properly.
                 // https://www.w3.org/TR/input-events-2/
-                if (DOMEditor.isComposing(rawEditor)) {
+                if (DOMEditor.isComposing(editor)) {
                   isComposing.value = false
-                  IS_COMPOSING.set(rawEditor, false)
+                  IS_COMPOSING.set(editor, false)
                 }
               }
 
@@ -801,8 +800,8 @@ export const Editable = defineComponent({
           }
 
           // Restore the actual user section if nothing manually set it.
-          const toRestore = EDITOR_TO_USER_SELECTION.get(rawEditor)?.unref()
-          EDITOR_TO_USER_SELECTION.delete(rawEditor)
+          const toRestore = EDITOR_TO_USER_SELECTION.get(editor)?.unref()
+          EDITOR_TO_USER_SELECTION.delete(editor)
 
           if (
             toRestore &&
@@ -813,9 +812,9 @@ export const Editable = defineComponent({
         }
       } else if (!readOnly &&
         !isEventHandled(event, attributes.onBeforeinput) &&
-        DOMEditor.hasSelectableTarget(rawEditor, event.target)) {
+        DOMEditor.hasSelectableTarget(editor, event.target)) {
         event.preventDefault()
-        if (!DOMEditor.isComposing(rawEditor)) {
+        if (!DOMEditor.isComposing(editor)) {
           const text = (event as any).data as string
           Editor.insertText(editor, text)
         }
@@ -868,7 +867,7 @@ export const Editable = defineComponent({
       if (
         readOnly ||
         state.isUpdatingSelection ||
-        !DOMEditor.hasSelectableTarget(rawEditor, event.target) ||
+        !DOMEditor.hasSelectableTarget(editor, event.target) ||
         isEventHandled(event, attributes.onBlur)
       ) {
         return
@@ -878,13 +877,13 @@ export const Editable = defineComponent({
       // one, this is due to the window being blurred when the tab
       // itself becomes unfocused, so we want to abort early to allow to
       // editor to stay focused when the tab becomes focused again.
-      const root = DOMEditor.findDocumentOrShadowRoot(rawEditor)
+      const root = DOMEditor.findDocumentOrShadowRoot(editor)
       if (state.latestElement === root.activeElement) {
         return
       }
 
       const { relatedTarget } = event
-      const el = DOMEditor.toDOMNode(rawEditor, rawEditor)
+      const el = DOMEditor.toDOMNode(editor, editor)
 
       // COMPAT: The event should be ignored if the focus is returning
       // to the editor from an embedded editable element (eg. an <input>
@@ -933,7 +932,7 @@ export const Editable = defineComponent({
 
     const onClick = (event: MouseEvent) => {
       if (
-        DOMEditor.hasTarget(rawEditor, event.target) &&
+        DOMEditor.hasTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onClick) &&
         isDOMNode(event.target)
       ) {
@@ -1083,7 +1082,7 @@ export const Editable = defineComponent({
 
     const onCopy = (event: ClipboardEvent) => {
       if (
-        DOMEditor.hasSelectableTarget(rawEditor, event.target) &&
+        DOMEditor.hasSelectableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onCopy) &&
         !isDOMEventTargetInput(event)
       ) {
@@ -1099,7 +1098,7 @@ export const Editable = defineComponent({
     const onCut = (event: ClipboardEvent) => {
       if (
         !readOnly &&
-        DOMEditor.hasSelectableTarget(rawEditor, event.target) &&
+        DOMEditor.hasSelectableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onCut) &&
         !isDOMEventTargetInput(event)
       ) {
@@ -1230,11 +1229,11 @@ export const Editable = defineComponent({
       if (
         !readOnly &&
         !state.isUpdatingSelection &&
-        DOMEditor.hasEditableTarget(rawEditor, event.target) &&
+        DOMEditor.hasEditableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onFocus)
       ) {
-        const el = DOMEditor.toDOMNode(rawEditor, rawEditor)
-        const root = DOMEditor.findDocumentOrShadowRoot(rawEditor)
+        const el = DOMEditor.toDOMNode(editor, editor)
+        const root = DOMEditor.findDocumentOrShadowRoot(editor)
         state.latestElement = root.activeElement
 
         // COMPAT: If the editor has nested editable elements, the focus
@@ -1245,14 +1244,14 @@ export const Editable = defineComponent({
           return
         }
 
-        IS_FOCUSED.set(rawEditor, true)
+        IS_FOCUSED.set(editor, true)
       }
     }
 
     const onKeydown = (event: KeyboardEvent) => {
       if (
         !readOnly &&
-        DOMEditor.hasEditableTarget(rawEditor, event.target)
+        DOMEditor.hasEditableTarget(editor, event.target)
       ) {
         androidInputManagerRef.value?.handleKeyDown(event)
 
@@ -1261,16 +1260,16 @@ export const Editable = defineComponent({
         // so we sometimes might end up stuck in a composition state even though we
         // aren't composing any more.
         if (
-          DOMEditor.isComposing(rawEditor) &&
+          DOMEditor.isComposing(editor) &&
           event.isComposing === false
         ) {
-          IS_COMPOSING.set(rawEditor, false)
+          IS_COMPOSING.set(editor, false)
           isComposing.value = (false)
         }
 
         if (
           isEventHandled(event, attributes.onKeydown) ||
-          DOMEditor.isComposing(rawEditor)
+          DOMEditor.isComposing(editor)
         ) {
           return
         }
@@ -1545,7 +1544,7 @@ export const Editable = defineComponent({
     const onPaste = (event: ClipboardEvent) => {
       if (
         !readOnly &&
-        DOMEditor.hasEditableTarget(rawEditor, event.target) &&
+        DOMEditor.hasEditableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onPaste)
       ) {
         // COMPAT: Certain browsers don't support the `beforeinput` event, so we
@@ -1624,11 +1623,11 @@ export const Editable = defineComponent({
         // While marks isn't a 'complete' text, we can still use loose Text.equals
         // here which only compares marks anyway.
         if (editor.marks && !Text.equals(text, editor.marks as Text, { loose: true })) {
-          EDITOR_TO_PENDING_INSERTION_MARKS.set(rawEditor, editor.marks)
+          EDITOR_TO_PENDING_INSERTION_MARKS.set(editor, editor.marks)
           return
         }
       }
-      EDITOR_TO_PENDING_INSERTION_MARKS.delete(rawEditor)
+      EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor)
     })
 
     const mergedEditableStyle = computed<CSSProperties>(() => ({

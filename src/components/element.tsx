@@ -12,7 +12,7 @@ import {
 import { TextComp } from './text'
 import type { ElementProps, } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { computed, defineComponent, onMounted, onUnmounted, ref, toRaw, } from 'vue'
+import { computed, defineComponent, onMounted, onUnmounted, ref, } from 'vue'
 import { useReadOnly } from '../hooks/use-read-only'
 import { useDecorate } from '../hooks/use-decorate'
 
@@ -53,24 +53,22 @@ export const ElementComp = defineComponent({
     })
 
     const readOnly = useReadOnly()
-    const rawElement = toRaw(element)
-    const rawEditor = toRaw(editor)
 
     const elementRef = ref<HTMLElement | null>(null)
     onMounted(() => {
-      const key = DOMEditor.findKey(editor, rawElement)
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
+      const key = DOMEditor.findKey(editor, element)
+      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
       if (elementRef.value) {
         KEY_TO_ELEMENT?.set(key, elementRef.value)
-        NODE_TO_ELEMENT.set(rawElement, elementRef.value)
-        ELEMENT_TO_NODE.set(elementRef.value, rawElement)
+        NODE_TO_ELEMENT.set(element, elementRef.value)
+        ELEMENT_TO_NODE.set(elementRef.value, element)
       }
     })
     onUnmounted(() => {
-      const key = DOMEditor.findKey(editor, rawElement)
+      const key = DOMEditor.findKey(editor, element)
       const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
       KEY_TO_ELEMENT?.delete(key)
-      NODE_TO_ELEMENT.delete(rawElement)
+      NODE_TO_ELEMENT.delete(element)
     })
     const isInline = computed(() => editor.isInline(element))
     // Attributes that the developer must mix into the element in their
@@ -153,7 +151,7 @@ export const ElementComp = defineComponent({
       )
 
       NODE_TO_INDEX.set(text, 0)
-      NODE_TO_PARENT.set(text, rawElement)
+      NODE_TO_PARENT.set(text, element)
     }
 
     return () => renderElement({ attributes: attributes.value, children, element })

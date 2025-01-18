@@ -1,6 +1,6 @@
 import { Editor, Path, Node } from 'slate'
 import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL, } from 'slate-dom'
-import { computed, defineComponent, h, toRaw } from 'vue'
+import { computed, defineComponent, h, } from 'vue'
 import { StringProps } from './interface'
 
 /**
@@ -21,7 +21,7 @@ export const StringComp = defineComponent({
     // width space that will convert into a line break when copying and pasting
     // to support expected plain text.
     const isInlineBreak = computed(() => {
-      const pathParent = Path.parent(DOMEditor.findPath(editor, toRaw(text)))
+      const pathParent = Path.parent(DOMEditor.findPath(editor, text))
       return leaf.text === '' &&
         parent.children[parent.children.length - 1] === text &&
         !editor.isInline(parent) &&

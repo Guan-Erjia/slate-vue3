@@ -29,6 +29,9 @@ export class toRawWeakMap<K extends WeakKey, V> {
    * @param key Must be an object or symbol.
    */
   set(key: K, value: V) {
-    return this.weak.set(isProxy(key) ? toRaw(key) : key, value);
+    return this.weak.set(
+      isProxy(key) ? toRaw(key) : key,
+      isProxy(value) ? toRaw(value) : value
+    );
   }
 }

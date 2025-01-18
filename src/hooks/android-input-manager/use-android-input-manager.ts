@@ -10,7 +10,6 @@ import {
   onMounted,
   onUnmounted,
   ref,
-  toRaw,
   type Ref,
 } from "vue";
 
@@ -35,14 +34,13 @@ export const useAndroidInputManager = !IS_ANDROID
       }
 
       const editor = inject("editorRef") as DOMEditor;
-      const rawEditor = toRaw(editor);
 
       const isMounted = ref(false);
       onMounted(() => (isMounted.value = true));
       onUnmounted(() => (isMounted.value = false));
 
       const inputManager = createAndroidInputManager({
-        editor: rawEditor,
+        editor,
         ...options,
       });
 

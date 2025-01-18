@@ -7,7 +7,7 @@ import {
 } from 'slate-dom'
 import { LeafComp } from './leaf'
 import type { TextProps } from './interface'
-import { computed, defineComponent, h, onMounted, onUnmounted, ref, toRaw } from 'vue'
+import { computed, defineComponent, h, onMounted, onUnmounted, ref } from 'vue'
 import { useDecorate } from '../hooks/use-decorate'
 
 /**
@@ -18,7 +18,6 @@ export const TextComp = defineComponent({
   props: ['text', 'parent', 'parentPath', 'parentDecorations', 'editor', 'isLast', 'renderLeaf', 'renderPlaceholder', 'index'],
   setup(props: TextProps) {
     const { text, parent, parentPath, parentDecorations, editor, isLast, renderLeaf, renderPlaceholder, index } = props
-    const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
     const decorate = useDecorate()
     const path = computed(() => parentPath.concat(index))
@@ -33,23 +32,23 @@ export const TextComp = defineComponent({
     })
 
     const leaves = Text.decorations(text, decorations.value)
-    const key = DOMEditor.findKey(editor, toRaw(text))
+    const key = DOMEditor.findKey(editor, text)
 
     onMounted(() => {
-      const key = DOMEditor.findKey(editor, toRaw(text))
+      const key = DOMEditor.findKey(editor, text)
       if (spanRef.value) {
-        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
+        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
         KEY_TO_ELEMENT?.set(key, spanRef.value)
-        ELEMENT_TO_NODE.set(spanRef.value, toRaw(text))
-        NODE_TO_ELEMENT.set(toRaw(text), spanRef.value)
+        ELEMENT_TO_NODE.set(spanRef.value, text)
+        NODE_TO_ELEMENT.set(text, spanRef.value)
       }
     })
 
     onUnmounted(() => {
-      const key = DOMEditor.findKey(editor, toRaw(text))
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(rawEditor)
+      const key = DOMEditor.findKey(editor, text)
+      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
       KEY_TO_ELEMENT?.delete(key)
-      NODE_TO_ELEMENT.delete(toRaw(text))
+      NODE_TO_ELEMENT.delete(text)
       if (spanRef.value) {
         ELEMENT_TO_NODE.delete(spanRef.value)
       }

@@ -44,7 +44,6 @@ import {
   NODE_TO_KEY,
   NODE_TO_PARENT,
 } from '../utils/weak-maps'
-import { isProxy, toRaw } from "vue";
 
 /**
  * A DOM-specific version of the `Editor` interface.
@@ -552,10 +551,9 @@ export const DOMEditor: DOMEditorInterface = {
 
   toDOMNode: (editor, node) => {
     const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor)
-    const rawNode = isProxy(node) ? toRaw(node) : node;
     const domNode = Editor.isEditor(node)
       ? EDITOR_TO_ELEMENT.get(editor)
-      : KEY_TO_ELEMENT?.get(DOMEditor.findKey(editor, rawNode))
+      : KEY_TO_ELEMENT?.get(DOMEditor.findKey(editor, node))
 
     if (!domNode) {
       throw new Error(
