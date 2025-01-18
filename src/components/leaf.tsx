@@ -1,14 +1,11 @@
-import { Element, Text } from 'slate'
 import { StringComp } from './string'
 import {
   PLACEHOLDER_SYMBOL,
   EDITOR_TO_PLACEHOLDER_ELEMENT,
-  DOMEditor,
   IS_WEBKIT, IS_ANDROID
 } from 'slate-dom'
-import type { RenderLeafProps, RenderPlaceholderProps } from './interface'
-import type { JSX } from 'vue/jsx-runtime'
-import { computed, defineComponent, onMounted, onUnmounted, ref, type VNode, } from 'vue'
+import type { LeafProps, RenderPlaceholderProps } from './interface'
+import { computed, defineComponent, onMounted, onUnmounted, ref, } from 'vue'
 
 // Delay the placeholder on Android to prevent the keyboard from closing.
 // (https://github.com/ianstormtaylor/slate/pull/5368)
@@ -20,15 +17,7 @@ const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0
 export const LeafComp = defineComponent({
   name: 'slate-leaf',
   props: ['text', 'leaf', 'parent', 'isLast', 'renderLeaf', 'renderPlaceholder', 'editor'],
-  setup(props: {
-    text: Text
-    leaf: Text
-    parent: Element
-    isLast: boolean
-    renderLeaf: (props: RenderLeafProps) => VNode
-    renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
-    editor: DOMEditor
-  }) {
+  setup(props: LeafProps) {
     const {
       text,
       leaf,

@@ -7,7 +7,7 @@ import type { DecoratedRange, NodeEntry } from "slate";
 
 export const DecorateContext = createContext<
   (entry: NodeEntry) => DecoratedRange[]
->(() => []);
+>(() => [])
 
 /**
  * Get the current `decorate` prop of the editable.
@@ -15,4 +15,4 @@ export const DecorateContext = createContext<
 
 export const useDecorate = (): ((entry: NodeEntry) => DecoratedRange[]) => {
   return () => [];
-};
+}
