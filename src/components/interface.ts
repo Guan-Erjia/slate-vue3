@@ -82,13 +82,15 @@ export interface ChildrenProps {
 }
 
 export interface TextProps {
-  decorations: DecoratedRange[];
   isLast: boolean;
   parent: Element;
-  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
-  renderLeaf: (props: RenderLeafProps) => JSX.Element;
   text: Text;
+  parentPath: Path;
+  parentDecorations: DecoratedRange[];
+  renderLeaf: (props: RenderLeafProps) => JSX.Element;
+  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   editor: DOMEditor;
+  index: number;
 }
 
 export interface StringProps {

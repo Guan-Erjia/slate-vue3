@@ -21,7 +21,7 @@ import { useDecorate } from '../hooks/use-decorate'
  */
 export const ElementComp = defineComponent({
   name: 'slate-element',
-  props: ['editor', 'element', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'parentPath', 'parentSelection', 'index', 'parentDecorations'],
+  props: ['editor', 'element', 'renderElement', 'renderLeaf', 'renderPlaceholder', 'parentPath', 'parentSelection', 'parentDecorations', 'index'],
   setup(props: ElementProps) {
     const {
       element,
@@ -36,10 +36,10 @@ export const ElementComp = defineComponent({
     } = props
     const decorate = useDecorate()
 
+    const path = computed(() => parentPath.concat(index))
     const decorations = computed<DecoratedRange[]>(() => {
-      const p = parentPath.concat(index)
-      const range = Editor.range(editor, p)
-      const ds = decorate([element, p])
+      const range = Editor.range(editor, path.value)
+      const ds = decorate([element, path.value])
       parentDecorations.forEach(dec => {
         ds.push(Range.intersection(dec, range)!)
       })
@@ -138,13 +138,16 @@ export const ElementComp = defineComponent({
           }}
         >
           <TextComp
-            renderPlaceholder={renderPlaceholder}
-            renderLeaf={renderLeaf}
-            decorations={decorations.value}
+            parentPath={path.value}
+            parentDecorations={decorations.value}
             isLast={false}
             parent={element}
             text={text}
+            renderLeaf={renderLeaf}
+            renderPlaceholder={renderPlaceholder}
             editor={editor}
+            index={0}
+
           />
         </Tag>
       )

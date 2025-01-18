@@ -1,12 +1,10 @@
 import {
   Editor,
   Element,
-  Range,
 } from 'slate'
 import { ElementComp } from './element'
 import { TextComp } from './text'
 import { DOMEditor, IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from 'slate-dom'
-import { useDecorate } from '../hooks/use-decorate'
 import type { ChildrenProps } from './interface'
 import { computed, defineComponent, onUpdated, toRaw, } from 'vue'
 
@@ -26,7 +24,6 @@ export const Children = defineComponent({
       renderLeaf,
       selection,
     } = props
-    const decorate = useDecorate()
     const rawEditor = toRaw(editor)
 
     // 更新成功后可信任 selection
@@ -35,30 +32,20 @@ export const Children = defineComponent({
     })
 
     const path = computed(() => DOMEditor.findPath(editor, toRaw(node)))
-    const isLeafBlock = computed(() => Element.isElement(node) &&
+    const isLeafBlock = computed(() =>
+      Element.isElement(node) &&
       !editor.isInline(node) &&
       Editor.hasInlines(editor, node))
 
     return () => node.children.map((child, i) => {
+      // 这些逻辑不会触发多余渲染
       const rawChild = toRaw(child)
       const key = DOMEditor.findKey(rawEditor, rawChild)
       NODE_TO_INDEX.set(rawChild, i)
       NODE_TO_PARENT.set(rawChild, toRaw(node))
 
-      const p = path.value.concat(i)
-      const range = Editor.range(editor, p)
-      const ds = decorate([child, p])
-      decorations.forEach(dec => {
-        const d = Range.intersection(dec, range)
-        if (d) {
-          ds.push(d)
-        }
-      })
-
       return Element.isElement(child) ? <ElementComp
         element={child}
-        key={key.id}
-        index={i}
         parentPath={path.value}
         parentSelection={selection}
         parentDecorations={decorations}
@@ -66,15 +53,19 @@ export const Children = defineComponent({
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         renderPlaceholder={renderPlaceholder}
-      /> : <TextComp
-        decorations={ds}
-        text={child}
+        index={i}
         key={key.id}
-        isLast={isLeafBlock.value && i === node.children.length - 1}
+        /> : <TextComp
+        text={child}
         parent={node}
+        isLast={isLeafBlock.value && i === node.children.length - 1}
         editor={editor}
+        parentPath={path.value}
+        parentDecorations={decorations}
         renderLeaf={renderLeaf}
         renderPlaceholder={renderPlaceholder}
+        index={i}
+        key={key.id}
       />
     })
   }

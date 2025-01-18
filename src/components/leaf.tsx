@@ -19,32 +19,23 @@ const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0
  */
 export const LeafComp = defineComponent({
   name: 'slate-leaf',
-  props:
-  {
-    isLast: Boolean,
-    leaf: Object,
-    parent: Object,
-    renderPlaceholder: Function,
-    renderLeaf: Function,
-    text: Object,
-    editor: Object
-  },
+  props: ['text', 'leaf', 'parent', 'isLast', 'renderLeaf', 'renderPlaceholder', 'editor'],
   setup(props: {
-    isLast: boolean
+    text: Text
     leaf: Text
     parent: Element
-    renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
+    isLast: boolean
     renderLeaf: (props: RenderLeafProps) => VNode
-    text: Text
+    renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element
     editor: DOMEditor
   }) {
     const {
+      text,
       leaf,
       isLast,
-      text,
       parent,
-      renderPlaceholder,
       renderLeaf,
+      renderPlaceholder,
       editor
     } = props
 

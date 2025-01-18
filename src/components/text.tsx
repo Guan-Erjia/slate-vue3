@@ -1,4 +1,4 @@
-import { Text } from 'slate'
+import { DecoratedRange, Editor, Text, Range } from 'slate'
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -7,19 +7,32 @@ import {
 } from 'slate-dom'
 import { LeafComp } from './leaf'
 import type { TextProps } from './interface'
-import { defineComponent, h, onMounted, onUnmounted, ref, toRaw } from 'vue'
+import { computed, defineComponent, h, onMounted, onUnmounted, ref, toRaw } from 'vue'
+import { useDecorate } from '../hooks/use-decorate'
 
 /**
  * Text.
  */
 export const TextComp = defineComponent({
   name: 'slate-text',
-  props: ['editor', 'decorations', 'isLast', 'parent', 'renderPlaceholder', 'renderLeaf', 'text'],
+  props: ['text', 'parent', 'parentPath', 'parentDecorations', 'editor', 'isLast', 'renderLeaf', 'renderPlaceholder', 'index'],
   setup(props: TextProps) {
-    const { editor, decorations, isLast, parent, renderPlaceholder, renderLeaf, text } = props
+    const { text, parent, parentPath, parentDecorations, editor, isLast, renderLeaf, renderPlaceholder, index } = props
     const rawEditor = toRaw(editor)
     const spanRef = ref<HTMLSpanElement>()
-    const leaves = Text.decorations(text, decorations)
+    const decorate = useDecorate()
+    const path = computed(() => parentPath.concat(index))
+
+    const decorations = computed<DecoratedRange[]>(() => {
+      const range = Editor.range(editor, path.value)
+      const ds = decorate([text, path.value])
+      parentDecorations.forEach(dec => {
+        ds.push(Range.intersection(dec, range)!)
+      })
+      return ds
+    })
+
+    const leaves = Text.decorations(text, decorations.value)
     const key = DOMEditor.findKey(editor, toRaw(text))
 
     onMounted(() => {
@@ -46,14 +59,14 @@ export const TextComp = defineComponent({
       'data-slate-node': 'text',
       ref: spanRef
     }, leaves.map((leaf, i) => h(LeafComp, {
+      text,
+      leaf,
+      parent,
+      editor,
       isLast: isLast && i === leaves.length - 1,
       key: `${key.id}-${i}`,
-      renderPlaceholder,
       renderLeaf,
-      leaf,
-      text,
-      parent,
-      editor
+      renderPlaceholder,
     })))
   }
 })
