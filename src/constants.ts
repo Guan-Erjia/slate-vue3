@@ -1,5 +1,11 @@
 export const SLATE_USE_EDITOR = Symbol("SLATE_USE_EDITOR");
 
+export const SLATE_USE_DECORATE = Symbol("SLATE_USE_DECORATE");
+
+export const SLATE_USE_SELECTED = Symbol("SLATE_USE_SELECTED");
+
+export const SLATE_USE_SELECTION = Symbol("SLATE_USE_SELECTION");
+
 export const SLATE_CHANGE_EFFECT_INJECT = Symbol("SLATE_CHANGE_EFFECT_INJECT");
 
 export const SLATE_STATE_FOCUS = Symbol("SLATE_STATE_FOCUS");

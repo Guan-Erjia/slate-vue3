@@ -43,14 +43,14 @@ import {
 } from 'slate-dom'
 
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
-import { computed, defineComponent, getCurrentInstance, inject, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, useAttrs, watch, } from 'vue'
+import { computed, defineComponent, getCurrentInstance, inject, onBeforeUpdate, onMounted, onUnmounted, provide, reactive, ref, useAttrs, watch, } from 'vue'
 import type { CSSProperties, HTMLAttributes, } from 'vue'
 import { Children } from './children'
 import { useRestoreDOM } from '../hooks/use-restore-dom'
 import type { EditableProps, } from './interface'
 import { defaultScrollSelectionIntoView, isDOMEventHandled, isDOMEventTargetInput, isEventHandled } from './utils'
 import { useEditor } from '../hooks/use-editor'
-import { SLATE_CHANGE_EFFECT_INJECT } from '../constants'
+import { SLATE_CHANGE_EFFECT_INJECT, SLATE_USE_DECORATE } from '../constants'
 import { useComposing } from '../hooks/use-composing'
 import { useReadOnly } from '../hooks/use-read-only'
 
@@ -111,14 +111,11 @@ export const Editable = defineComponent({
       is,
     } = props
 
-    // weakMap 需要原始指针
     const editor = useEditor()
-
     const attributes: HTMLAttributes = useAttrs()
     const isComposing = useComposing()
 
     const deferredOperations = ref<Array<() => void>>([])
-    const placeholderHeight = ref<number>()
 
     const proxy = getCurrentInstance()
     EDITOR_TO_FORCE_RENDER.set(editor, () => proxy?.update())
@@ -142,6 +139,58 @@ export const Editable = defineComponent({
       latestElement: null,
       hasMarkPlaceholder: false,
     })
+
+
+    provide(SLATE_USE_DECORATE, decorate)
+    const placeholderHeight = ref<number>()
+    const decorations = computed(() => {
+      const showPlaceholder = placeholder &&
+        editor.children?.length === 1 &&
+        Array.from(Node.texts(editor)).length === 1 &&
+        Node.string(editor) === '' &&
+        !isComposing.value
+      const dec = decorate([editor, []])
+
+      if (showPlaceholder) {
+        const start = Editor.start(editor, [])
+        dec.push({
+          [PLACEHOLDER_SYMBOL]: true,
+          placeholder,
+          onPlaceholderResize: (placeholderEl) => {
+            if (placeholderEl && showPlaceholder) {
+              placeholderHeight.value = placeholderEl.getBoundingClientRect()?.height
+            } else {
+              placeholderHeight.value = undefined
+            }
+          },
+          anchor: start,
+          focus: start,
+        })
+      }
+      if (editor.selection && Range.isCollapsed(editor.selection) && editor.marks) {
+        const anchor = editor.selection.anchor
+        const leaf = Node.leaf(editor, anchor.path)
+        const { text, ...rest } = leaf
+        // While marks isn't a 'complete' text, we can still use loose Text.equals
+        // here which only compares marks anyway.
+        if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
+          state.hasMarkPlaceholder = true
+          const unset = Object.fromEntries(
+            Object.keys(rest).map(mark => [mark, null])
+          )
+          dec.push({
+            [MARK_PLACEHOLDER_SYMBOL]: true,
+            ...unset,
+            ...editor.marks,
+
+            anchor,
+            focus: anchor,
+          })
+        }
+      }
+      return dec
+    })
+
 
     /**
      * The AndroidInputManager object has a cyclical dependency on onDOMSelectionChange
@@ -256,14 +305,12 @@ export const Editable = defineComponent({
         ELEMENT_TO_NODE.set(editableRef.value, editor)
       }
     })
-
     onUnmounted(() => {
       onDOMSelectionChange.cancel()
       scheduleOnDOMSelectionChange.cancel()
       EDITOR_TO_ELEMENT.delete(editor)
       NODE_TO_ELEMENT.delete(editor)
     })
-
 
 
     const setDomSelection = (forceChange?: boolean) => {
@@ -388,7 +435,6 @@ export const Editable = defineComponent({
 
       return newDomRange
     }
-
     const ensureDomSelection = (forceChange?: boolean) => {
       try {
         const el = DOMEditor.toDOMNode(editor, editor)
@@ -399,7 +445,6 @@ export const Editable = defineComponent({
         // Ignore, dom and state might be out of sync
       }
     }
-
     const animationFrameId = ref<number>()
     const changeEffect = () => {
       // Make sure the DOM selection state is in sync.
@@ -448,7 +493,6 @@ export const Editable = defineComponent({
       })
     }
     inject<(fn: () => void) => void>(SLATE_CHANGE_EFFECT_INJECT)?.(changeEffect)
-
     onUnmounted(() => {
       animationFrameId.value && cancelAnimationFrame(animationFrameId.value)
       if (timeoutId) {
@@ -457,13 +501,10 @@ export const Editable = defineComponent({
     })
 
 
-
-
     // Listen for dragend and drop globally. In Firefox, if a drop handler
     // initiates an operation that causes the originally dragged element to
     // unmount, that element will not emit a dragend event. (2024/06/21)
     const stoppedDragging = () => state.isDraggingInternally = false
-
     onMounted(() => {
       // Attach a native DOM event handler for `selectionchange`, because React's
       // built-in `onSelect` handler doesn't fire for all selection changes. It's
@@ -478,7 +519,6 @@ export const Editable = defineComponent({
       window.document.addEventListener('dragend', stoppedDragging)
       window.document.addEventListener('drop', stoppedDragging)
     })
-
     onUnmounted(() => {
       const window = DOMEditor.getWindow(editor)
       window.document.removeEventListener(
@@ -488,7 +528,6 @@ export const Editable = defineComponent({
       window.document.removeEventListener('dragend', stoppedDragging)
       window.document.removeEventListener('drop', stoppedDragging)
     })
-
 
 
     const onBeforeinput = (event: Event) => {
@@ -1547,56 +1586,6 @@ export const Editable = defineComponent({
       }
     }
 
-    const decorations = decorate([editor, []])
-    const showPlaceholder = computed(() => placeholder && editor.children?.length === 1 &&
-      Array.from(Node.texts(editor)).length === 1 &&
-      Node.string(editor) === '' &&
-      !isComposing.value)
-
-    const placeHolderResizeHandler = (placeholderEl: HTMLElement | null) => {
-      if (placeholderEl && showPlaceholder.value) {
-        placeholderHeight.value = (placeholderEl.getBoundingClientRect()?.height)
-      } else {
-        placeholderHeight.value = (undefined)
-      }
-    }
-
-    if (showPlaceholder.value) {
-      const start = Editor.start(editor, [])
-      decorations.push({
-        [PLACEHOLDER_SYMBOL]: true,
-        placeholder,
-        onPlaceholderResize: placeHolderResizeHandler,
-        anchor: start,
-        focus: start,
-      })
-    }
-
-    if (editor.selection && Range.isCollapsed(editor.selection) && editor.marks) {
-      const anchor = editor.selection.anchor
-      const leaf = Node.leaf(editor, anchor.path)
-      const { text, ...rest } = leaf
-
-      // While marks isn't a 'complete' text, we can still use loose Text.equals
-      // here which only compares marks anyway.
-      if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
-        state.hasMarkPlaceholder = true
-
-        const unset = Object.fromEntries(
-          Object.keys(rest).map(mark => [mark, null])
-        )
-
-        decorations.push({
-          [MARK_PLACEHOLDER_SYMBOL]: true,
-          ...unset,
-          ...editor.marks,
-
-          anchor,
-          focus: anchor,
-        })
-      }
-    }
-
     // Update EDITOR_TO_MARK_PLACEHOLDER_MARKS in setTimeout useEffect to ensure we don't set it
     // before we receive the composition end event.
     onBeforeUpdate(() => {
@@ -1661,7 +1650,7 @@ export const Editable = defineComponent({
         onPaste={onPaste}
       >
         <Children
-          decorations={decorations}
+          decorations={decorations.value}
           node={editor}
           editor={editor}
           renderElement={renderElement}

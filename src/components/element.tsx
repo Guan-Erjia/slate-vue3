@@ -12,9 +12,10 @@ import {
 import { TextComp } from './text'
 import type { ElementProps, } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
-import { computed, defineComponent, onMounted, onUnmounted, ref, } from 'vue'
+import { computed, defineComponent, onMounted, onUnmounted, provide, ref, } from 'vue'
 import { useReadOnly } from '../hooks/use-read-only'
 import { useDecorate } from '../hooks/use-decorate'
+import { SLATE_USE_SELECTED, } from '../constants'
 
 /**
  * Element.
@@ -51,6 +52,9 @@ export const ElementComp = defineComponent({
       const range = Editor.range(editor, p)
       return parentSelection && Range.intersection(range, parentSelection)
     })
+
+    const selected = computed(() => !!selection.value)
+    provide(SLATE_USE_SELECTED, selected)
 
     const readOnly = useReadOnly()
 

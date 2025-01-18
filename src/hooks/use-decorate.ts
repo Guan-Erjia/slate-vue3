@@ -1,18 +1,17 @@
-import { createContext } from "react";
 import type { DecoratedRange, NodeEntry } from "slate";
-
-/**
- * A React context for sharing the `decorate` prop of the editable.
- */
-
-export const DecorateContext = createContext<
-  (entry: NodeEntry) => DecoratedRange[]
->(() => [])
+import { inject } from "vue";
+import { SLATE_USE_DECORATE } from "../constants";
 
 /**
  * Get the current `decorate` prop of the editable.
  */
-
 export const useDecorate = (): ((entry: NodeEntry) => DecoratedRange[]) => {
-  return () => [];
-}
+  const decorate =
+    inject<(entry: NodeEntry) => DecoratedRange[]>(SLATE_USE_DECORATE);
+  if (decorate === undefined) {
+    throw new Error(
+      `The \`useDecorate\` hook must be used inside the <Slate> component's context.`
+    );
+  }
+  return decorate;
+};
