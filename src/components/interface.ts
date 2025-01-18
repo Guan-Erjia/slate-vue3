@@ -3,10 +3,10 @@ import type {
   NodeEntry,
   Text,
   Element,
-  Descendant,
   Ancestor,
   Range,
   Path,
+  Descendant,
 } from "slate";
 import type { DOMEditor, DOMRange } from "slate-dom";
 import type { JSX } from "vue/jsx-runtime";
@@ -68,7 +68,6 @@ export interface EditableProps extends HTMLAttributes {
   renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   scrollSelectionIntoView: (editor: DOMEditor, domRange: DOMRange) => void;
   is: string;
-  initialValue: Descendant[];
 }
 
 export interface ChildrenProps {
@@ -111,4 +110,18 @@ export interface ElementProps {
   parentSelection: Range | null;
   parentDecorations: DecoratedRange[];
   index: number;
+}
+
+export interface SlateProps {
+  initialValue: Descendant[];
+}
+
+export interface LeafProps {
+  text: Text;
+  leaf: Text;
+  parent: Element;
+  isLast: boolean;
+  renderLeaf: (props: RenderLeafProps) => VNode;
+  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
+  editor: DOMEditor;
 }

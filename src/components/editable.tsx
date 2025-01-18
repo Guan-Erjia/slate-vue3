@@ -1,10 +1,7 @@
 import { direction } from 'direction'
 import debounce from 'lodash/debounce'
 import throttle from 'lodash/throttle'
-import {
-  createEditor,
-  Editor, Element, Node, Operation, Path, Range, Text, Transforms,
-} from 'slate'
+import { Editor, Element, Node, Path, Range, Text, Transforms } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
 import {
   DOMEditor, TRIPLE_CLICK, DOMElement,
@@ -43,17 +40,17 @@ import {
   MARK_PLACEHOLDER_SYMBOL,
   NODE_TO_ELEMENT,
   PLACEHOLDER_SYMBOL,
-  withDOM,
-  EDITOR_TO_ON_CHANGE,
 } from 'slate-dom'
 
 import type { AndroidInputManager } from '../hooks/android-input-manager/android-input-manager'
-import { computed, defineComponent, getCurrentInstance, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, useAttrs, watch, } from 'vue'
+import { computed, defineComponent, getCurrentInstance, inject, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, useAttrs, watch, } from 'vue'
 import type { CSSProperties, HTMLAttributes, } from 'vue'
 import { Children } from './children'
 import { useRestoreDOM } from '../hooks/use-restore-dom'
 import type { EditableProps, } from './interface'
 import { defaultScrollSelectionIntoView, isDOMEventHandled, isDOMEventTargetInput, isEventHandled } from './utils'
+import { useEditor } from '../hooks/use-editor'
+import { SLATE_CHANGE_EFFECT_INJECT } from '../constants'
 
 /**
  * Editable.
@@ -70,7 +67,9 @@ export const Editable = defineComponent({
       required: false,
       default: () => defaultScrollSelectionIntoView,
     },
-    onDOMBeforeInput: {},
+    onDOMBeforeInput: {
+      type: Function
+    },
     placeholder: { type: String },
     readOnly: {
       type: Boolean,
@@ -97,12 +96,8 @@ export const Editable = defineComponent({
       type: String,
       default: () => 'div',
     },
-    initialValue: {
-      type: Array,
-      default: () => [{ type: "paragraph", children: [{ text: "" }] }]
-    }
   },
-  setup(props: EditableProps, { emit }) {
+  setup(props: EditableProps) {
     const {
       decorate,
       placeholder,
@@ -113,8 +108,9 @@ export const Editable = defineComponent({
       scrollSelectionIntoView,
       is,
     } = props
+
     // weakMap 需要原始指针
-    const editor = withDOM(createEditor(props.initialValue))
+    const editor = useEditor()
 
     const attributes: HTMLAttributes = useAttrs()
     const isComposing = ref(false)
@@ -445,6 +441,7 @@ export const Editable = defineComponent({
         }
       })
     }
+    inject<(fn: () => void) => void>(SLATE_CHANGE_EFFECT_INJECT)?.(changeEffect)
 
     onUnmounted(() => {
       animationFrameId.value && cancelAnimationFrame(animationFrameId.value)
@@ -453,28 +450,7 @@ export const Editable = defineComponent({
       }
     })
 
-    const editorIsFocus = ref(DOMEditor.isFocused(editor));
-    const fn = () => editorIsFocus.value = DOMEditor.isFocused(editor)
-    onMounted(() => {
-      document.addEventListener("focusin", fn);
-      document.addEventListener("focusout", fn);
-      EDITOR_TO_ON_CHANGE.set(editor, (options?: { operation?: Operation }) => {
-        emit("change", editor.children);
-        changeEffect()
-        switch (options?.operation?.type) {
-          case "set_selection":
-            emit("selectionchange", editor.selection);
-            break;
-          default:
-            emit("valuechange", editor.children);
-        }
-      });
-    });
-    onUnmounted(() => {
-      document.removeEventListener("focusin", fn);
-      document.removeEventListener("focusout", fn);
-      EDITOR_TO_ON_CHANGE.delete(editor);
-    });
+
 
 
     // Listen for dragend and drop globally. In Firefox, if a drop handler
