@@ -1,6 +1,9 @@
 import { inject, Ref } from "vue";
 import { SLATE_STATE_COMPOSING } from "../constants";
 
+/**
+ * Get the current `composing` state of the editor.
+ */
 export const useComposing = (): Ref<boolean, boolean> => {
   const isComposing = inject<Ref<boolean, boolean>>(SLATE_STATE_COMPOSING);
   if (isComposing === undefined) {
