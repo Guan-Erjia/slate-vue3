@@ -8,7 +8,7 @@ import { TextComp } from './text'
 import { DOMEditor, IS_NODE_MAP_DIRTY, NODE_TO_INDEX, NODE_TO_PARENT } from 'slate-dom'
 import { useDecorate } from '../hooks/use-decorate'
 import type { ChildrenProps } from './interface'
-import { computed, defineComponent, onMounted, toRaw, } from 'vue'
+import { computed, defineComponent, onUpdated, toRaw, } from 'vue'
 
 /**
  * Children.
@@ -28,9 +28,9 @@ export const Children = defineComponent({
     } = props
     const decorate = useDecorate()
     const rawEditor = toRaw(editor)
-    
-    // 挂载成功后可信任 selection
-    onMounted(() => {
+
+    // 更新成功后可信任 selection
+    onUpdated(() => {
       IS_NODE_MAP_DIRTY.set(rawEditor, false)
     })
 
@@ -47,7 +47,6 @@ export const Children = defineComponent({
 
       const p = path.value.concat(i)
       const range = Editor.range(editor, p)
-      const sel = selection && Range.intersection(range, selection)
       const ds = decorate([child, p])
       decorations.forEach(dec => {
         const d = Range.intersection(dec, range)
@@ -57,10 +56,12 @@ export const Children = defineComponent({
       })
 
       return Element.isElement(child) ? <ElementComp
-        decorations={ds}
         element={child}
         key={key.id}
-        selection={sel}
+        index={i}
+        parentPath={path.value}
+        parentSelection={selection}
+        parentDecorations={decorations}
         editor={editor}
         renderElement={renderElement}
         renderLeaf={renderLeaf}

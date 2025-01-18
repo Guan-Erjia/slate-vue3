@@ -1,5 +1,5 @@
 import { direction } from 'direction'
-import { Editor, Node, } from 'slate'
+import { DecoratedRange, Editor, Node, Range } from 'slate'
 import { Children } from './children'
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -14,23 +14,44 @@ import type { ElementProps, } from './interface'
 import type { JSX } from 'vue/jsx-runtime'
 import { computed, defineComponent, onMounted, onUnmounted, ref, toRaw, } from 'vue'
 import { useReadOnly } from '../hooks/use-read-only'
+import { useDecorate } from '../hooks/use-decorate'
 
 /**
  * Element.
  */
 export const ElementComp = defineComponent({
   name: 'slate-element',
-  props: ['editor', 'decorations', 'element', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'selection'],
+  props: ['editor', 'element', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'parentPath', 'parentSelection', 'index', 'parentDecorations'],
   setup(props: ElementProps) {
     const {
       element,
-      decorations,
       renderElement,
       renderPlaceholder,
       renderLeaf,
-      selection,
-      editor
+      editor,
+      parentPath,
+      parentSelection,
+      parentDecorations,
+      index
     } = props
+    const decorate = useDecorate()
+
+    const decorations = computed<DecoratedRange[]>(() => {
+      const p = parentPath.concat(index)
+      const range = Editor.range(editor, p)
+      const ds = decorate([element, p])
+      parentDecorations.forEach(dec => {
+        ds.push(Range.intersection(dec, range)!)
+      })
+      return ds
+    })
+
+    const selection = computed(() => {
+      const p = parentPath.concat(index)
+      const range = Editor.range(editor, p)
+      return parentSelection && Range.intersection(range, parentSelection)
+    })
+
     const readOnly = useReadOnly()
     const rawElement = toRaw(element)
     const rawEditor = toRaw(editor)
@@ -92,13 +113,13 @@ export const ElementComp = defineComponent({
       return attr
     })
     let children: JSX.Element = <Children
-      decorations={decorations}
+      decorations={decorations.value}
       node={element}
       editor={editor}
       renderElement={renderElement}
       renderPlaceholder={renderPlaceholder}
       renderLeaf={renderLeaf}
-      selection={selection} />
+      selection={selection.value} />
 
     // If it's a void node, wrap the children in extra void-specific elements.
     if (Editor.isVoid(editor, element)) {
@@ -119,7 +140,7 @@ export const ElementComp = defineComponent({
           <TextComp
             renderPlaceholder={renderPlaceholder}
             renderLeaf={renderLeaf}
-            decorations={decorations}
+            decorations={decorations.value}
             isLast={false}
             parent={element}
             text={text}

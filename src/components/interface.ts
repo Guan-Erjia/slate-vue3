@@ -6,6 +6,7 @@ import type {
   Descendant,
   Ancestor,
   Range,
+  Path,
 } from "slate";
 import type { DOMEditor, DOMRange } from "slate-dom";
 import type { JSX } from "vue/jsx-runtime";
@@ -100,10 +101,12 @@ export interface StringProps {
 
 export interface ElementProps {
   element: Element;
-  decorations: DecoratedRange[];
   renderElement: (props: RenderElementProps) => JSX.Element;
   renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   renderLeaf: (props: RenderLeafProps) => JSX.Element;
-  selection: Range | null;
   editor: DOMEditor;
+  parentPath: Path;
+  parentSelection: Range | null;
+  parentDecorations: DecoratedRange[];
+  index: number;
 }

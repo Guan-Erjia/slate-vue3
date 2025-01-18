@@ -650,7 +650,7 @@ export const Editable = defineComponent({
             (!inputType.startsWith('delete') || inputType.startsWith('deleteBy')) &&
             !IS_NODE_MAP_DIRTY.get(rawEditor)
           ) {
-            const [targetRange] = (event as any).getTargetRanges()
+            const [targetRange] = event.getTargetRanges()
 
             if (targetRange) {
               const range = DOMEditor.toSlateRange(rawEditor, targetRange, {
