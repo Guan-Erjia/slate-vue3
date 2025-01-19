@@ -4,23 +4,87 @@ import { Editable } from "../index"
 import { h } from "vue";
 import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "../components/interface";
-import { createEditor } from "slate";
+import { createEditor, Descendant } from "slate";
 
-const initialValue = [
+const initialValue: Descendant[] = [
   {
-    type: "paragraph",
-    children: [{ text: "1 2 3 4 5 6 7 8  9 0 " }],
-  }, {
-    type: "paragraph",
-    children: [{ text: "a b c d e f g h i j k l m n o p q r s t u v w x y z" }],
-  }
-];
+    type: 'paragraph',
+    children: [
+      { text: 'This is editable ' },
+      { text: 'rich', bold: true },
+      { text: ' text, ' },
+      { text: 'much', italic: true },
+      { text: ' better than a ' },
+      { text: '<textarea>', code: true },
+      { text: '!' },
+    ],
+  },
+  {
+    type: 'paragraph',
+    children: [
+      {
+        text: "Since it's rich text, you can do things like turn a selection of text ",
+      },
+      { text: 'bold', bold: true },
+      {
+        text: ', or add a semantically rendered block quote in the middle of the page, like this:',
+      },
+    ],
+  },
+  {
+    type: 'block-quote',
+    children: [{ text: 'A wise quote.' }],
+  },
+  {
+    type: 'paragraph',
+    align: 'center',
+    children: [{ text: 'Try it out for yourself!' }],
+  },
+]
 
-const renderElement = ({ attributes, children, }: RenderElementProps) => {
-  return h('p', attributes, children)
+
+const renderElement = ({ attributes, children, element }: RenderElementProps) => {
+  switch (element.type) {
+    case 'block-quote':
+      return h('blockquote', attributes, children)
+
+    case 'bulleted-list':
+      return h('ul', attributes, children)
+
+    case 'heading-one':
+      return h('h1', attributes, children)
+
+    case 'heading-two':
+      return h('h2', attributes, children)
+
+    case 'list-item':
+      return h('li', attributes, children)
+
+    case 'numbered-list':
+      return h('ol', attributes, children)
+
+    default:
+      return h('ol', attributes, children)
+  }
 }
 
-const renderLeaf = ({ attributes, children, }: RenderLeafProps) => {
+const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
+  if (leaf.bold) {
+    return h('strong', attributes, children)
+  }
+
+  if (leaf.code) {
+    return h('code', attributes, children)
+  }
+
+  if (leaf.italic) {
+    return h('em', attributes, children)
+  }
+
+  if (leaf.underline) {
+    return h('u', attributes, children)
+  }
+
   return h('span', attributes, children)
 }
 
