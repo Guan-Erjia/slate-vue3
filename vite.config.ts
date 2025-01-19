@@ -6,6 +6,7 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [vue(), vueJsx()],
+  base: "/slate-vue3/",
   resolve: {
     alias: {
       slate: path.resolve(__dirname, "./src/slate"),
