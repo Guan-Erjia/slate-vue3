@@ -14,7 +14,17 @@
       "slate-dom": ["./src/slate-dom/index.ts"],
       "is-plain-object": ["./src/is-plain-object/index.ts"]
     },
-    "verbatimModuleSyntax": false
+    "verbatimModuleSyntax": false,
+    "declaration": true,
+    "declarationMap": true,
+    "declarationDir": "dist",
+    "sourceMap": true,
+    "emitDeclarationOnly": true,
+    "typeRoots": ["./node_modules/@types"],
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": [
+    "src/components/*.ts",
+    "src/components/*.tsx",
+    "src/hooks/**/*.ts"
+  ]
 }
