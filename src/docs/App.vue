@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Slate } from "./"
-import { Editable } from "./";
+import { Slate } from "../index"
+import { Editable } from "../index"
 import { h } from "vue";
 import { IS_ANDROID, withDOM } from "slate-dom";
-import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "./components/interface";
+import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "../components/interface";
 import { createEditor } from "slate";
 
 const initialValue = [
