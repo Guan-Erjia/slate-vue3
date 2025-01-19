@@ -10,6 +10,7 @@ export default defineConfig({
     alias: {
       slate: path.resolve(__dirname, "./src/slate"),
       "slate-dom": path.resolve(__dirname, "./src/slate-dom"),
+      "is-plain-object": path.resolve(__dirname, "./src/is-plain-object"),
     },
   },
 });
