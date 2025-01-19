@@ -1,6 +1,6 @@
 import { BaseSelection, } from 'slate'
 import { ComputedRef, inject } from 'vue';
-import { SLATE_STATE_SELECTION } from '../constants';
+import { SLATE_STATE_SELECTION } from '../utils/constants';
 
 /**
  * Get the current slate selection.

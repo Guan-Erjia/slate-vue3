@@ -1,5 +1,5 @@
 import { ComputedRef, inject } from "vue";
-import { SLATE_USE_SELECTED } from "../constants";
+import { SLATE_USE_SELECTED } from "../utils/constants";
 
 /**
  * Get the current `selected` state of an element.

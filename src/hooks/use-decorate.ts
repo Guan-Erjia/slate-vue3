@@ -1,6 +1,6 @@
 import type { DecoratedRange, NodeEntry } from "slate";
 import { inject } from "vue";
-import { SLATE_USE_DECORATE } from "../constants";
+import { SLATE_USE_DECORATE } from "../utils/constants";
 
 /**
  * Get the current `decorate` prop of the editable.

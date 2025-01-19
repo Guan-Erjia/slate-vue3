@@ -50,7 +50,7 @@ import { useRestoreDOM } from '../hooks/use-restore-dom'
 import type { EditableProps, } from './interface'
 import { defaultScrollSelectionIntoView, isDOMEventHandled, isDOMEventTargetInput, isEventHandled } from './utils'
 import { useEditor } from '../hooks/use-editor'
-import { SLATE_CHANGE_EFFECT_INJECT, SLATE_USE_DECORATE } from '../constants'
+import { SLATE_CHANGE_EFFECT_INJECT, SLATE_USE_DECORATE } from '../utils/constants'
 import { useComposing } from '../hooks/use-composing'
 import { useReadOnly } from '../hooks/use-read-only'
 

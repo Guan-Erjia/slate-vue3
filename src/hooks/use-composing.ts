@@ -1,5 +1,5 @@
 import { inject, Ref } from "vue";
-import { SLATE_STATE_COMPOSING } from "../constants";
+import { SLATE_STATE_COMPOSING } from "../utils/constants";
 
 /**
  * Get the current `composing` state of the editor.

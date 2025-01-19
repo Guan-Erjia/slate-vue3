@@ -1,6 +1,6 @@
 import { DOMEditor } from "slate-dom";
 import { inject } from "vue";
-import { SLATE_USE_EDITOR } from "../constants";
+import { SLATE_USE_EDITOR } from "../utils/constants";
 
 /**
  * Get the current editor object from the React context.

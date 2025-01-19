@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash'
 import { Editor, Path, Range, Scrubber, Text } from '..'
 import { Element, ElementEntry } from './element'
 import { nextTick } from 'vue'
-import { toRawWeakMap as WeakMap } from '../../weakmap'
+import { toRawWeakMap as WeakMap } from '../../utils/weakmap'
 
 /**
  * The `Node` union type represents all of the different types of nodes that

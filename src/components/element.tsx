@@ -15,7 +15,7 @@ import type { JSX } from 'vue/jsx-runtime'
 import { computed, defineComponent, onMounted, onUnmounted, provide, ref, } from 'vue'
 import { useReadOnly } from '../hooks/use-read-only'
 import { useDecorate } from '../hooks/use-decorate'
-import { SLATE_USE_SELECTED, } from '../constants'
+import { SLATE_USE_SELECTED, } from '../utils/constants'
 
 /**
  * Element.

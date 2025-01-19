@@ -10,7 +10,7 @@ import {
 } from 'slate'
 import { TextDiff } from './diff-text'
 import { Key } from './key'
-import { toRawWeakMap as WeakMap } from '../../weakmap'
+import { toRawWeakMap as WeakMap } from '../../utils/weakmap'
 
 export type Action = { at?: Point | Range; run: () => void }
 

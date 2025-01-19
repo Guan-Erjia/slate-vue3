@@ -1,4 +1,4 @@
-import { SLATE_STATE_FOCUS } from "../constants";
+import { SLATE_STATE_FOCUS } from "../utils/constants";
 import { inject, Ref } from "vue";
 
 /**
