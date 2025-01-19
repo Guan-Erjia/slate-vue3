@@ -1,7 +1,7 @@
 import { isPlainObject } from 'is-plain-object'
 import { ExtendedType, Operation, Path } from '..'
 import { TextDirection } from '../types/types'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 /**
  * `Point` objects refer to a specific location in a text node in a Slate

@@ -1,4 +1,4 @@
-import type { DebouncedFunc } from "lodash";
+import type { DebouncedFunc } from "lodash-es";
 import { Editor, Node, Path, Point, Range, Text, Transforms } from "slate";
 import {
   applyStringDiff,

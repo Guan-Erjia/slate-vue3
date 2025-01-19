@@ -1,6 +1,6 @@
 import { direction } from 'direction'
-import debounce from 'lodash/debounce'
-import throttle from 'lodash/throttle'
+import {debounce} from 'lodash-es'
+import {throttle} from 'lodash-es'
 import { Editor, Element, Node, Path, Range, Text, Transforms } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
 import {

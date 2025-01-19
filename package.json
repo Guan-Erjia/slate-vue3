@@ -11,14 +11,14 @@
   "dependencies": {
     "direction": "^2.0.1",
     "is-hotkey": "^0.2.0",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "scroll-into-view-if-needed": "^3.1.0",
     "vue": "^3.5.13"
   },
   "devDependencies": {
     "@types/is-hotkey": "^0.1.10",
     "@types/is-plain-object": "^2.0.4",
-    "@types/lodash": "^4.17.14",
+    "@types/lodash-es": "^4.17.12",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
