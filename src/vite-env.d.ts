@@ -1,8 +1,4 @@
 /// <reference types="vite/client" />
-
-declare module "is-plain-object" {
-  export const isPlainObject: (value: any) => value is object;
-}
 import { BaseRange, BaseText } from "slate";
 import { DOMEditor } from "./plugin/dom-editor";
 

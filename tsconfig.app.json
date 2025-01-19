@@ -11,7 +11,8 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "slate": ["./src/slate/index.ts"],
-      "slate-dom": ["./src/slate-dom/index.ts"]
+      "slate-dom": ["./src/slate-dom/index.ts"],
+      "is-plain-object": ["./src/is-plain-object/index.ts"]
     },
     "verbatimModuleSyntax": false
   },

@@ -373,7 +373,7 @@ export const withDOM = <T extends BaseEditor>(
   return e
 }
 
-const getMatches = (e: Editor, path: Path) => {
+const getMatches = (e: DOMEditor, path: Path) => {
   const matches: [Path, Key][] = []
   for (const [n, p] of Editor.levels(e, { at: path })) {
     const key = DOMEditor.findKey(e, n)
