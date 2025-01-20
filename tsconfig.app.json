@@ -21,9 +21,4 @@
     "sourceMap": true,
     "typeRoots": ["./node_modules/@types"],
   },
-  "include": [
-    "src/components/*.ts",
-    "src/components/*.tsx",
-    "src/hooks/**/*.ts"
-  ]
 }

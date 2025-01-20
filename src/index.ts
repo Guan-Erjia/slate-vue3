@@ -15,6 +15,3 @@ export { useReadOnly } from "./hooks/use-read-only";
 export { useSelected } from "./hooks/use-selected";
 export { useEditor } from "./hooks/use-editor";
 export { useSlateSelection } from "./hooks/use-slate-selection";
-
-// Utils
-export { NODE_TO_INDEX, NODE_TO_PARENT } from "slate-dom";
