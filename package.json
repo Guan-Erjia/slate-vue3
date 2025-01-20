@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "build-lib": "vite build --mode=lib",
-    "build-type": "tsc -b",
+    "build-lib": "vite build --mode=lib && tsc -b tsconfig.lib.json",
     "preview": "vite preview"
   },
   "dependencies": {

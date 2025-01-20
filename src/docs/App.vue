@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Slate } from "../index"
-import { Editable } from "../index"
+import { Editable } from "slate-vue"
 import { h } from "vue";
 import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "../components/interface";

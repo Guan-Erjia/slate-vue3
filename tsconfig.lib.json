@@ -1,5 +1,4 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
 
@@ -12,13 +11,20 @@
     "paths": {
       "slate": ["./src/slate/index.ts"],
       "slate-dom": ["./src/slate-dom/index.ts"],
-      "is-plain-object": ["./src/is-plain-object/index.ts"]
+      "is-plain-object": ["./src/is-plain-object/index.ts"],
+      "slate-vue": ["./src/index.ts"],
     },
     "verbatimModuleSyntax": false,
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "declarationDir": "dist",
-    "sourceMap": true,
+    "emitDeclarationOnly": true,
     "typeRoots": ["./node_modules/@types"],
+    "outDir": "dist",
+    "noCheck": true,
+    "noEmit": false,
+    "sourceMap": false,
+    "allowImportingTsExtensions": false,
   },
+  "include": ["./src/index.ts"]
 }

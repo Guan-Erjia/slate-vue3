@@ -2,7 +2,6 @@ import { defineConfig, UserConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import path from "path";
-import typescript from "rollup-plugin-typescript2";
 
 export default defineConfig(({ command, mode }) => {
   console.log(command, mode);
@@ -14,6 +13,7 @@ export default defineConfig(({ command, mode }) => {
         slate: path.resolve(__dirname, "./src/slate"),
         "slate-dom": path.resolve(__dirname, "./src/slate-dom"),
         "is-plain-object": path.resolve(__dirname, "./src/is-plain-object"),
+        "slate-vue": path.resolve(__dirname, "./src"),
       },
     },
   };
@@ -26,16 +26,6 @@ export default defineConfig(({ command, mode }) => {
         entry: "./src/index.ts",
         name: "slate-vue3",
         fileName: "index",
-      },
-      rollupOptions: {
-        plugins: [
-          typescript({
-            abortOnError: false,
-            tsconfig: `./tsconfig.app.json`,
-            clean: true,
-            check: false
-          }),
-        ],
       },
     };
   }
