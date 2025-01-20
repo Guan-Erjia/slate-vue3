@@ -19,7 +19,6 @@
     "declarationMap": true,
     "declarationDir": "dist",
     "sourceMap": true,
-    "emitDeclarationOnly": true,
     "typeRoots": ["./node_modules/@types"],
   },
   "include": [

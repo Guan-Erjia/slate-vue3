@@ -25,7 +25,7 @@ export default defineConfig(({ command, mode }) => {
       lib: {
         entry: "./src/index.ts",
         name: "slate-vue3",
-        fileName: "slate-vue3",
+        fileName: "index",
       },
       rollupOptions: {
         plugins: [
@@ -33,6 +33,7 @@ export default defineConfig(({ command, mode }) => {
             abortOnError: false,
             tsconfig: `./tsconfig.app.json`,
             clean: true,
+            check: false
           }),
         ],
       },
