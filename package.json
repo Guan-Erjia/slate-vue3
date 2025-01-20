@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
-    "build-lib": "vite build --mode=lib && tsc -b",
+    "build-lib": "vite build --mode=lib",
     "build-type": "tsc -b",
     "preview": "vite preview"
   },
@@ -25,7 +25,8 @@
     "typescript": "~5.7.2",
     "vite": "^6.0.5",
     "vite-plugin-dts": "^4.5.0",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.2.0",
+    "rollup-plugin-typescript2": "^0.36.0"
   },
   "peerDependencies": {
     "vue": ">=3.0.0"
