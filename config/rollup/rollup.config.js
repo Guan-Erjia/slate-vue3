@@ -1,6 +1,5 @@
 import babel from "rollup-plugin-babel";
 import builtins from "rollup-plugin-node-builtins";
-import commonjs from "rollup-plugin-commonjs";
 import globals from "rollup-plugin-node-globals";
 import json from "rollup-plugin-json";
 import replace from "rollup-plugin-replace";
@@ -44,19 +43,6 @@ function factory(pkg) {
       clean: true,
     }),
 
-    // Allow Rollup to resolve CommonJS modules, since it only resolves ES2015
-    // modules by default.
-    commonjs({
-      exclude: [`packages/${pkg.name}/src/**`],
-      // HACK: Sometimes the CommonJS plugin can't identify named exports, so
-      // we have to manually specify named exports here for them to work.
-      // https://github.com/rollup/rollup-plugin-commonjs#custom-named-exports
-      namedExports: {
-        "react-dom": ["findDOMNode"],
-        "react-dom/server": ["renderToStaticMarkup"],
-      },
-    }),
-
     // Convert JSON imports to ES6 modules.
     json(),
 
@@ -75,7 +61,6 @@ function factory(pkg) {
       include: [`packages/${pkg.name}/src/**`],
       extensions: [".js", ".ts", ".tsx"],
       presets: [
-        "@babel/preset-typescript",
         [
           "@babel/preset-env",
           {
@@ -89,9 +74,10 @@ function factory(pkg) {
             },
           },
         ],
-        "@babel/preset-react",
+        "@vue/babel-preset-jsx",
       ],
       plugins: [
+        "@vue/babel-plugin-jsx",
         [
           "@babel/plugin-transform-runtime",
           {

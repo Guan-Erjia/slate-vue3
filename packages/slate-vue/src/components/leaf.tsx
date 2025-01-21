@@ -5,7 +5,7 @@ import {
   IS_WEBKIT, IS_ANDROID
 } from 'slate-dom'
 import type { LeafProps, RenderPlaceholderProps } from './interface'
-import { computed, defineComponent, onMounted, onUnmounted, ref, } from 'vue'
+import { computed, defineComponent, Fragment, h, onMounted, onUnmounted, ref, } from 'vue'
 
 // Delay the placeholder on Android to prevent the keyboard from closing.
 // (https://github.com/ianstormtaylor/slate/pull/5368)
@@ -84,10 +84,20 @@ export const LeafComp = defineComponent({
     })
     )
 
-    const children = computed(() => <>
-      {leafIsPlaceholder.value && showPlaceholder.value && renderPlaceholder(placeholderProps.value)}
-      <StringComp editor={editor} isLast={isLast} leaf={leaf} parent={parent} text={text} />
-    </>)
+    const children = computed(() =>
+      h(Fragment, null, [
+        leafIsPlaceholder.value &&
+          showPlaceholder.value &&
+          renderPlaceholder(placeholderProps.value),
+        h(StringComp, {
+          editor: editor,
+          isLast: isLast,
+          leaf: leaf,
+          parent: parent,
+          text: text,
+        }),
+      ])
+    )
 
     // COMPAT: Having the `data-` attributes on these leaf elements ensures that
     // in certain misbehaving browsers they aren't weirdly cloned/destroyed by

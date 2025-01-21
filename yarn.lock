@@ -6296,6 +6296,7 @@ __metadata:
     "@types/lodash-es": "npm:^4.17.12"
     "@vitejs/plugin-vue": "npm:^5.2.1"
     "@vitejs/plugin-vue-jsx": "npm:^4.1.1"
+    "@vue/babel-helper-vue-jsx-merge-props": "npm:^1.4.0"
     "@vue/babel-plugin-jsx": "npm:^1.2.5"
     "@vue/babel-preset-jsx": "npm:^1.4.0"
     "@vue/tsconfig": "npm:^0.7.0"
