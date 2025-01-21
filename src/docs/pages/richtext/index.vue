@@ -5,6 +5,9 @@ import { h } from "vue";
 import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "../../../components/interface";
 import { createEditor, Descendant } from "slate";
+import Toolbar from '../../components/Toolbar.vue'
+import MarkButton from "./MarkButton.vue";
+import BlockButton from "./BlockButton.vue";
 
 const initialValue: Descendant[] = [
   {
@@ -100,6 +103,21 @@ const editor = withDOM(createEditor(initialValue))
 
 <template>
   <Slate :editor="editor">
+    <Toolbar>
+      <MarkButton format="bold" icon="format_bold" />
+      <!-- <MarkButton format="italic" icon="format_italic" />
+      <MarkButton format="underline" icon="format_underlined" />
+      <MarkButton format="code" icon="code" /> -->
+      <!-- <BlockButton format="heading-one" icon="looks_one" />
+      <BlockButton format="heading-two" icon="looks_two" />
+      <BlockButton format="block-quote" icon="format_quote" />
+      <BlockButton format="numbered-list" icon="format_list_numbered" />
+      <BlockButton format="bulleted-list" icon="format_list_bulleted" />
+      <BlockButton format="left" icon="format_align_left" />
+      <BlockButton format="center" icon="format_align_center" />
+      <BlockButton format="right" icon="format_align_right" />
+      <BlockButton format="justify" icon="format_align_justify" /> -->
+    </Toolbar>
     <Editable style="border: 1px solid red;padding: 10px;" placeholder="Enter some rich text…" spellCheck autoFocus
       :render-element="renderElement" :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder" />
   </Slate>

@@ -1,11 +1,10 @@
 <template>
-  <Menu v-bind="attrs" class="menu">
+  <div v-bind="attrs" data-test-id="menu">
     <slot></slot>
-  </Menu>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import Menu from './Menu.vue'
 import { useAttrs } from 'vue';
 
 const attrs = useAttrs()

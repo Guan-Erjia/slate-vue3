@@ -1,15 +1,14 @@
 <template>
   <Button :active="isMarkActive" @mousedown="onMouseDown">
-    <Icon>{{ props.icon }}</Icon>
+    {{ props.icon }}
   </Button>
 </template>
 
 <script setup lang="ts">
 import { Editor } from 'slate';
 import { useEditor } from '../../../hooks/use-editor'
-import Icon from '../../components/Icon.vue';
 import Button from '../../components/Button.vue';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 const editor = useEditor()
 const props = defineProps<{
   icon: string,
@@ -29,4 +28,5 @@ const onMouseDown = (event: MouseEvent) => {
     Editor.addMark(editor, props.format, true)
   }
 }
+watch(() => editor.selection, (val) => console.log(val?.anchor.offset, val?.focus.offset), { deep: true })
 </script>

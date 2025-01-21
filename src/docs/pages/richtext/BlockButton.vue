@@ -1,6 +1,6 @@
 <template>
   <Button :active="isBlockActive" @mousedown="onMouseDown">
-    <Icon>{{ props.icon }}</Icon>
+    {{ props.icon }}
   </Button>
 </template>
 
@@ -11,7 +11,6 @@ import {
   Transforms,
 } from 'slate';
 import { useEditor } from '../../../hooks/use-editor'
-import Icon from '../../components/Icon.vue';
 import Button from '../../components/Button.vue';
 import { computed } from 'vue';
 const editor = useEditor()
