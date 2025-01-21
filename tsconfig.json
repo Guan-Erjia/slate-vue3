@@ -1,29 +1,7 @@
 {
-  "compilerOptions": {
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "paths": {
-      "slate": ["./src/slate/index.ts"],
-      "slate-dom": ["./src/slate-dom/index.ts"],
-      "is-plain-object": ["./src/is-plain-object/index.ts"],
-      "slate-vue": ["./src/index.ts"],
-    },
-    "verbatimModuleSyntax": false,
-    "declaration": true,
-    "declarationMap": true,
-    "declarationDir": "dist",
-    "emitDeclarationOnly": true,
-    "typeRoots": ["./node_modules/@types"],
-    "outDir": "dist",
-    "sourceMap": true,
-    "esModuleInterop": true,
-    "jsx": "preserve",
-    "noImplicitAny": false,
-  },
-  "root":["../../src/index.ts", "../../src/docs/main.ts"]
+  "files": [],
+  "references": [
+    { "path": "./packages/slate" },
+    { "path": "./packages/slate-vue" }
+  ]
 }

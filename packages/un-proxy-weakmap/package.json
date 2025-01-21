@@ -1,0 +1,19 @@
+{
+  "name": "un-proxy-weakmap",
+  "description": "Tools for building completely customizable richtext editors with Vue.",
+  "version": "0.112.1",
+  "license": "MIT",
+  "repository": "git://github.com/ianstormtaylor/slate.git",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "umd": "dist/un-proxy-weakmap.js",
+  "umdMin": "dist/un-proxy-weakmap.min.js",
+  "sideEffects": false,
+  "files": [
+    "dist/"
+  ],
+  "devDependencies": {
+    "@babel/runtime": "^7.23.2"
+  }
+}
