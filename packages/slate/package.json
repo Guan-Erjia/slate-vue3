@@ -12,9 +12,5 @@
   "sideEffects": false,
   "files": [
     "dist/"
-  ],
-  "devDependencies": {
-    "@babel/runtime": "^7.23.2",
-    "source-map-loader": "^4.0.1"
-  }
+  ]
 }

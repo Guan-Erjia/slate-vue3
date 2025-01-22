@@ -1,7 +1,7 @@
 import { Editor, Path, Node } from 'slate'
 import { IS_ANDROID, IS_IOS, DOMEditor, MARK_PLACEHOLDER_SYMBOL, } from 'slate-dom'
 import { computed, defineComponent, h, } from 'vue'
-import { StringProps } from './interface'
+import type { StringProps } from './interface'
 
 /**
  * Leaf content strings.

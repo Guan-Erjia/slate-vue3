@@ -1,7 +1,7 @@
 import { computed, defineComponent, onMounted, onUnmounted, provide, ref, renderSlot, } from "vue";
 import { SLATE_CHANGE_EFFECT_INJECT, SLATE_STATE_COMPOSING, SLATE_STATE_FOCUS, SLATE_STATE_READ_ONLY, SLATE_STATE_SELECTION, SLATE_USE_EDITOR } from "../utils/constants";
 import { Node, Operation, Scrubber } from "slate";
-import { SlateProps } from "./interface";
+import type { SlateProps } from "./interface";
 import { DOMEditor, EDITOR_TO_ON_CHANGE } from "slate-dom";
 
 

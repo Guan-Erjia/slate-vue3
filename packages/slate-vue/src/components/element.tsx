@@ -1,5 +1,5 @@
 import { direction } from 'direction'
-import { DecoratedRange, Editor, Node, Range } from 'slate'
+import { type DecoratedRange, Editor, Node, Range } from 'slate'
 import { Children } from './children'
 import {
   EDITOR_TO_KEY_TO_ELEMENT,

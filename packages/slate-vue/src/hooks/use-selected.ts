@@ -1,4 +1,4 @@
-import { ComputedRef, inject } from "vue";
+import { type ComputedRef, inject } from "vue";
 import { SLATE_USE_SELECTED } from "../utils/constants";
 
 /**

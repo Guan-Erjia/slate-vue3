@@ -31,7 +31,7 @@ export const LeafComp = defineComponent({
     const placeholderResizeObserver = ref<ResizeObserver | null>(null)
     const placeholderRef = ref<HTMLElement | null>(null)
     const showPlaceholder = ref(false)
-    const showPlaceholderTimeoutRef = ref<number | null>(null)
+    const showPlaceholderTimeoutRef = ref<NodeJS.Timeout>()
     const leafIsPlaceholder = computed(() => Boolean(leaf[PLACEHOLDER_SYMBOL]))
 
     onMounted(() => {
@@ -46,7 +46,7 @@ export const LeafComp = defineComponent({
       if (leafIsPlaceholder.value) {
         showPlaceholderTimeoutRef.value = setTimeout(() => {
           showPlaceholder.value = (true)
-          showPlaceholderTimeoutRef.value = null
+          showPlaceholderTimeoutRef.value = undefined
         }, PLACEHOLDER_DELAY)
       }
     })
@@ -58,7 +58,7 @@ export const LeafComp = defineComponent({
       leaf.onPlaceholderResize?.(null)
 
       clearTimeout(showPlaceholderTimeoutRef.value!)
-      showPlaceholderTimeoutRef.value = null
+      showPlaceholderTimeoutRef.value = undefined
     })
 
     const placeholderProps = computed<RenderPlaceholderProps>(() => ({

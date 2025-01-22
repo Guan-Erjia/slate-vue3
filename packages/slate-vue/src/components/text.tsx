@@ -1,4 +1,4 @@
-import { DecoratedRange, Editor, Text, Range } from 'slate'
+import { type DecoratedRange, Editor, Text, Range } from 'slate'
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,

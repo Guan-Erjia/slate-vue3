@@ -1,5 +1,5 @@
 import { SLATE_STATE_FOCUS } from "../utils/constants";
-import { inject, Ref } from "vue";
+import { inject, type Ref } from "vue";
 
 /**
  * Get the current `focused` state of the editor.

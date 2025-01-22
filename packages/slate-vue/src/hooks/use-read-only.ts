@@ -1,5 +1,5 @@
 import { SLATE_STATE_READ_ONLY } from "../utils/constants";
-import { inject, Ref } from "vue";
+import { inject, type Ref } from "vue";
 
 /**
  * Get the current `readOnly` state of the editor.

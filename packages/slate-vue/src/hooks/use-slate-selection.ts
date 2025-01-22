@@ -1,6 +1,6 @@
-import { BaseSelection, } from 'slate'
-import { ComputedRef, inject } from 'vue';
-import { SLATE_STATE_SELECTION } from '../utils/constants';
+import type { BaseSelection } from "slate";
+import { type ComputedRef, inject } from "vue";
+import { SLATE_STATE_SELECTION } from "../utils/constants";
 
 /**
  * Get the current slate selection.
@@ -13,6 +13,5 @@ export const useSlateSelection = (): ComputedRef<BaseSelection> => {
       `The \`useSlateSelection\` hook must be used inside the <Slate> component's context.`
     );
   }
-  return selection
-}
-
+  return selection;
+};

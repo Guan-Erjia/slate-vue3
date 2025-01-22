@@ -1,4 +1,4 @@
-import { inject, Ref } from "vue";
+import { inject, type Ref } from "vue";
 import { SLATE_STATE_COMPOSING } from "../utils/constants";
 
 /**

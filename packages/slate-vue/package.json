@@ -3,6 +3,7 @@
   "description": "Tools for building completely customizable richtext editors with Vue.",
   "version": "0.112.1",
   "license": "MIT",
+  "type": "module",
   "repository": "git://github.com/ianstormtaylor/slate.git",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
