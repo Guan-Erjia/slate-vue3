@@ -28,5 +28,4 @@ const onMouseDown = (event: MouseEvent) => {
     Editor.addMark(editor, props.format, true)
   }
 }
-watch(() => editor.selection, (val) => console.log(val?.anchor.offset, val?.focus.offset), { deep: true })
 </script>
