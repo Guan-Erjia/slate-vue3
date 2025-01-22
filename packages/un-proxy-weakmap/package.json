@@ -12,8 +12,5 @@
   "sideEffects": false,
   "files": [
     "dist/"
-  ],
-  "devDependencies": {
-    "@babel/runtime": "^7.23.2"
-  }
+  ]
 }
