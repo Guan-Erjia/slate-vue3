@@ -61,6 +61,5 @@
     "vite": "^6.0.5",
     "vite-plugin-dts": "^4.5.0",
     "vue-tsc": "^2.2.0"
-  },
-  "packageManager": "yarn@4.0.2"
+  }
 }
