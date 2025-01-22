@@ -5,6 +5,7 @@ import path from "path";
 
 export default defineConfig({
   plugins: [vue(), vueJsx()],
+  base: "/slate-vue3/",
   resolve: {
     alias: {
       slate: path.resolve(__dirname, "./packages/slate/src/index.ts"),
