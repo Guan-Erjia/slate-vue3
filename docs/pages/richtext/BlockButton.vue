@@ -10,7 +10,7 @@ import {
   Element as SlateElement,
   Transforms,
 } from 'slate';
-import { useEditor } from '../../../hooks/use-editor'
+import { useEditor } from 'slate-vue'
 import Button from '../../components/Button.vue';
 import { computed } from 'vue';
 const editor = useEditor()
