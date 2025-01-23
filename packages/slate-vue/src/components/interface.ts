@@ -32,7 +32,7 @@ export interface RenderLeafProps {
   children: VNode;
   leaf: Text;
   text: Text;
-  attributes: {
+  attributes: HTMLAttributes & {
     "data-slate-leaf": true;
   };
 }
@@ -43,7 +43,7 @@ export interface RenderLeafProps {
 export interface RenderElementProps {
   children: VNode;
   element: Element;
-  attributes: {
+  attributes: HTMLAttributes & {
     "data-slate-node": "element";
     "data-slate-inline"?: true;
     "data-slate-void"?: true;
