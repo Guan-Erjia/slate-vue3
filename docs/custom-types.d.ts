@@ -14,6 +14,13 @@ export type BulletedListElement = {
   children: Descendant[]
 }
 
+export type NumberedListElement = {
+  type: 'numbered-list'
+  align?: string
+  children: Descendant[]
+}
+
+
 export type CheckListItemElement = {
   type: 'check-list-item'
   checked: boolean
@@ -25,14 +32,20 @@ export type EditableVoidElement = {
   children: EmptyText[]
 }
 
-export type HeadingElement = {
-  type: 'heading'
+export type HeadingOneElement = {
+  type: 'heading-one'
   align?: string
   children: Descendant[]
 }
 
 export type HeadingTwoElement = {
   type: 'heading-two'
+  align?: string
+  children: Descendant[]
+}
+
+export type HeadingThreeElement = {
+  type: 'heading-three'
   align?: string
   children: Descendant[]
 }
@@ -63,11 +76,11 @@ export type ParagraphElement = {
   children: Descendant[]
 }
 
-export type TableElement = { type: 'table'; children: TableRow[] }
+export type TableElement = { type: 'table'; children: any[] }
 
 export type TableCellElement = { type: 'table-cell'; children: CustomText[] }
 
-export type TableRowElement = { type: 'table-row'; children: TableCell[] }
+export type TableRowElement = { type: 'table-row'; children: any[] }
 
 export type TitleElement = { type: 'title'; children: Descendant[] }
 
@@ -84,13 +97,15 @@ export type CodeLineElement = {
   children: Descendant[]
 }
 
-type CustomElement =
+export type CustomElement =
   | BlockQuoteElement
   | BulletedListElement
+  | NumberedListElement
   | CheckListItemElement
   | EditableVoidElement
-  | HeadingElement
+  | HeadingOneElement
   | HeadingTwoElement
+  | HeadingThreeElement
   | ImageElement
   | LinkElement
   | ButtonElement

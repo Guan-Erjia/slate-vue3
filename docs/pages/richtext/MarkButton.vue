@@ -8,7 +8,7 @@
 import { Editor } from 'slate';
 import { useEditor } from 'slate-vue'
 import Button from '../../components/Button.vue';
-import { computed, watch } from 'vue';
+import { computed, } from 'vue';
 const editor = useEditor()
 const props = defineProps<{
   icon: string,

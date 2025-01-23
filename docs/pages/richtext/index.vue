@@ -3,12 +3,13 @@ import { Slate, Editable } from "slate-vue"
 import { CSSProperties, h } from "vue";
 import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "slate-vue";
-import { createEditor, Descendant } from "slate";
+import { createEditor, } from "slate";
 import Toolbar from '../../components/Toolbar.vue'
 import MarkButton from "./MarkButton.vue";
 import BlockButton from "./BlockButton.vue";
+import { CustomElement } from "../../custom-types";
 
-const initialValue: Descendant[] = [
+const initialValue: CustomElement[] = [
   {
     type: 'paragraph',
     children: [
@@ -59,6 +60,9 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
     case 'heading-two':
       return h('h2', attributes, children)
 
+    case 'heading-three':
+      return h('h3', attributes, children)
+
     case 'list-item':
       return h('li', attributes, children)
 
@@ -72,20 +76,20 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 
 const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
   const style: CSSProperties = {};
-  if (leaf.bold) {
+  if ('bold' in leaf) {
     style.fontWeight = "bold";
   }
-  if (leaf.italic) {
+  if ('italic' in leaf) {
     style.fontStyle = "italic";
   }
-  if (leaf.underline) {
+  if ('underline' in leaf) {
     style.borderBottom = "1px solid black";
   }
-  if (leaf.delete) {
+  if ('delete' in leaf) {
     style.textDecoration = "line-through";
   }
   return h(
-    leaf.code ? "code" : "span",
+    'code' in leaf ? "code" : "span",
     { ...attributes, style },
     children
   )

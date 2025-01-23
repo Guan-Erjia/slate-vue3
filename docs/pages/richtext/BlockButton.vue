@@ -13,6 +13,7 @@ import {
 import { useEditor } from 'slate-vue'
 import Button from '../../components/Button.vue';
 import { computed } from 'vue';
+import { CustomElement } from '../../custom-types';
 const editor = useEditor()
 const props = defineProps<{
   icon: string,
@@ -58,13 +59,13 @@ const onMouseDown = (event: MouseEvent) => {
     }
   } else {
     newProperties = {
-      type: isActive ? 'paragraph' : isList ? 'list-item' : props.format,
+      type: isActive ? 'paragraph' : isList ? 'list-item' : props.format as CustomElement['type'],
     }
   }
   Transforms.setNodes<SlateElement>(editor, newProperties)
 
   if (!isActive && isList) {
-    const block = { type: props.format, children: [] }
+    const block = { type: props.format, children: [] } as CustomElement
     Transforms.wrapNodes(editor, block)
   }
 }
