@@ -83,7 +83,7 @@ iframe {
 }
 
 [data-slate-editor] > * + * {
-  margin-top: 1em;
+  margin-top: 12px;
 }
 
 .fancy {
