@@ -6,7 +6,7 @@ import { SLATE_STATE_SELECTION } from "../utils/constants";
  * Get the current slate selection.
  * Only triggers a rerender when the selection actually changes
  */
-export const useSlateSelection = (): ComputedRef<BaseSelection> => {
+export const useSelection = (): ComputedRef<BaseSelection> => {
   const selection = inject<ComputedRef<BaseSelection>>(SLATE_STATE_SELECTION);
   if (selection === undefined) {
     throw new Error(
