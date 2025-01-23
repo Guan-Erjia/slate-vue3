@@ -12,12 +12,13 @@
 
 # compact files of slate
 ## reactive implement
-  1. src/slate/interfaces/text.ts 115:115
-  2. src/slate/create-editor.ts 94:94
+  1. packages/slate/src/interfaces/text.ts 115:115
+  2. packages/slate/src/create-editor.ts 94:94
+  3. packages/slate/src/transforms-node/set-nodes.ts 18:18
 ## remove immer
-  1. src/slate/interfaces/node.ts 365:365
-  2. src/slate/interfaces/point.ts 103:103
-  3. src/slate/interfaces/range.ts 224:224
-  4. src/slate/interfaces/transforms/general.ts 322:333
+  1. packages/slate/src/interfaces/node.ts 365:365
+  2. packages/slate/src/interfaces/point.ts 103:103
+  3. packages/slate/src/interfaces/range.ts 224:224
+  4. packages/slate/src/interfaces/transforms/general.ts 322:333
 ## rewrite implement for WeakMap
-  1. src\weakmap.ts
+  1. packages/un-proxy-weakmap/src/index.ts
