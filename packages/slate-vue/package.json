@@ -1,15 +1,13 @@
 {
   "name": "slate-vue",
   "description": "Tools for building completely customizable richtext editors with Vue.",
-  "version": "0.112.1",
+  "version": "0.112.0",
   "license": "MIT",
   "type": "module",
-  "repository": "git://github.com/ianstormtaylor/slate.git",
+  "repository": "git://github.com/Guan-Erjia/slate-vue3",
   "main": "dist/index.js",
-  "module": "dist/index.es.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "umd": "dist/slate-vue.js",
-  "umdMin": "dist/slate-vue.min.js",
   "sideEffects": false,
   "files": [
     "dist/"
