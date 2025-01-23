@@ -14,4 +14,4 @@ export { useFocused } from "./hooks/use-focused";
 export { useReadOnly } from "./hooks/use-read-only";
 export { useSelected } from "./hooks/use-selected";
 export { useEditor } from "./hooks/use-editor";
-export { useSlateSelection } from "./hooks/use-slate-selection";
+export { useSelection } from "./hooks/use-selection";
