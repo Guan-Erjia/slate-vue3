@@ -9,7 +9,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build-all": "node scripts/build.js && tsc -b"
   },
   "dependencies": {
     "direction": "^2.0.1",
@@ -27,6 +28,7 @@
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
+    "fs-extra": "^11.3.0",
     "slate": "workspace:*",
     "slate-dom": "workspace:*",
     "slate-vue": "workspace:*",
