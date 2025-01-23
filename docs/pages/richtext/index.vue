@@ -45,8 +45,12 @@ const initialValue: CustomElement[] = [
   },
 ]
 
-
-const renderElement = ({ attributes, children, element }: RenderElementProps) => {
+const renderElement = ({ attributes: attrs, children, element }: RenderElementProps) => {
+  const attributes = {
+    ...attrs, style: {
+      ['text-align']: 'align' in element ? element.align || 'left' : '',
+    }
+  }
   switch (element.type) {
     case 'block-quote':
       return h('blockquote', attributes, children)
@@ -70,7 +74,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
       return h('ol', attributes, children)
 
     default:
-      return h('ol', attributes, children)
+      return h('p', attributes, children)
   }
 }
 
