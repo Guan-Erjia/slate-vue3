@@ -10,7 +10,7 @@ export const useSelection = (): ComputedRef<BaseSelection> => {
   const selection = inject<ComputedRef<BaseSelection>>(SLATE_STATE_SELECTION);
   if (selection === undefined) {
     throw new Error(
-      `The \`useSlateSelection\` hook must be used inside the <Slate> component's context.`
+      `The \`useSelection\` hook must be used inside the <Slate> component's context.`
     );
   }
   return selection;
