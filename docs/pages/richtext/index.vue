@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Slate, Editable } from "slate-vue"
-import { h } from "vue";
+import { CSSProperties, h } from "vue";
 import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "slate-vue";
 import { createEditor, Descendant } from "slate";
@@ -71,23 +71,24 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 }
 
 const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
+  const style: CSSProperties = {};
   if (leaf.bold) {
-    return h('strong', attributes, children)
+    style.fontWeight = "bold";
   }
-
-  if (leaf.code) {
-    return h('code', attributes, children)
-  }
-
   if (leaf.italic) {
-    return h('em', attributes, children)
+    style.fontStyle = "italic";
   }
-
   if (leaf.underline) {
-    return h('u', attributes, children)
+    style.borderBottom = "1px solid black";
   }
-
-  return h('span', attributes, children)
+  if (leaf.delete) {
+    style.textDecoration = "line-through";
+  }
+  return h(
+    leaf.code ? "code" : "span",
+    { ...attributes, style },
+    children
+  )
 }
 
 const renderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => {
