@@ -1,5 +1,5 @@
 <template>
-  <div v-bind="attrs" data-test-id="menu">
+  <div v-bind="attrs" class="menu" data-test-id="menu">
     <slot></slot>
   </div>
 </template>

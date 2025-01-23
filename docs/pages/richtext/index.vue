@@ -126,7 +126,7 @@ const editor = withDOM(createEditor(initialValue))
       <BlockButton format="right" icon="format_align_right" />
       <BlockButton format="justify" icon="format_align_justify" />
     </Toolbar>
-    <Editable style="border: 1px solid red;padding: 10px;" placeholder="Enter some rich text…" spellCheck autoFocus
-      :render-element="renderElement" :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder" />
+    <Editable placeholder="Enter some rich text…" spellCheck autoFocus :render-element="renderElement"
+      :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder" />
   </Slate>
 </template>

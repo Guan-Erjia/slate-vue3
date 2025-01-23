@@ -1,5 +1,5 @@
 <template>
-  <span v-bind="attrs" class="material-icons icon"
+  <span v-bind="attrs" class="material-icons"
     :style="{ color: props.reversed ? props.active ? 'white' : '#aaa' : props.active ? 'black' : '#ccc' }" style="">
     <slot></slot>
   </span>
@@ -14,19 +14,14 @@ const props = defineProps<{
 }>()
 </script>
 <style scoped>
-.icon {
+.material-icons {
   font-size: 18px;
   vertical-align: text-bottom;
   cursor: pointer;
   margin-right: 15px;
-}
-
-.material-icons {
-
   font-family: 'Material Icons';
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;
   line-height: 1;
   letter-spacing: normal;
   text-transform: none;
