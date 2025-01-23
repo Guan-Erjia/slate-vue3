@@ -1,12 +1,11 @@
 import { NodeTransforms } from '../interfaces/transforms/node'
-import { Editor } from '../interfaces/editor'
+import { BaseSelection, Editor } from '../interfaces/editor'
 import { Path } from '../interfaces/path'
 import { matchPath } from '../utils/match-path'
 import { Element } from '../interfaces/element'
 import { Range } from '../interfaces/range'
 import { Transforms } from '../interfaces/transforms'
 import { Node } from '../interfaces/node'
-import { cloneDeep } from 'lodash-es'
 
 export const setNodes: NodeTransforms['setNodes'] = (
   editor,
@@ -14,8 +13,7 @@ export const setNodes: NodeTransforms['setNodes'] = (
   options = {}
 ) => {
   Editor.withoutNormalizing(editor, () => {
-    let { match, compare, merge } = options
-    let at = cloneDeep(options.at || editor.selection)
+    let { match, at = {...editor.selection} as BaseSelection, compare, merge } = options
     const {
       hanging = false,
       mode = 'lowest',
