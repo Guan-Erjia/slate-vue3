@@ -3,7 +3,6 @@ import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import path from "path";
 import { UserConfig } from "vite";
-import { DtsPlugin } from "./scripts/plugin";
 
 export default defineConfig(({ command, mode }) => {
   console.log(command, mode);
@@ -39,7 +38,6 @@ export default defineConfig(({ command, mode }) => {
         fileName: "slate-vue3",
       },
     };
-    config.plugins?.push(DtsPlugin)
   }
   return config;
 });

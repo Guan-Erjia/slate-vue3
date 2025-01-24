@@ -10,8 +10,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build-pre": "node scripts/build.js && tsc -b",
-    "build-all": "node scripts/build.js && tsc -b && vite build --mode=lib"
+    "build-pre": "node scripts/build-pre.js",
+    "build-all": "node scripts/build-all.js"
   },
   "dependencies": {
     "direction": "^2.0.1",
