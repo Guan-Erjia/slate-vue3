@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build-all": "node scripts/build.js && tsc -b"
+    "build-type": "node scripts/build.js && tsc -b",
+    "build-all": "vite build --mode=lib"
   },
   "dependencies": {
     "direction": "^2.0.1",
@@ -20,7 +21,11 @@
     "scroll-into-view-if-needed": "^3.1.0",
     "slate-history": "^0.110.3",
     "slate-hyperscript": "^0.100.0",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "slate": "workspace:*",
+    "slate-dom": "workspace:*",
+    "slate-vue": "workspace:*",
+    "un-proxy-weakmap": "workspace:*"
   },
   "devDependencies": {
     "@types/is-hotkey": "^0.1.10",
@@ -29,13 +34,8 @@
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/tsconfig": "^0.7.0",
     "fs-extra": "^11.3.0",
-    "slate": "workspace:*",
-    "slate-dom": "workspace:*",
-    "slate-vue": "workspace:*",
     "typescript": "~5.7.2",
-    "un-proxy-weakmap": "workspace:*",
-    "vite": "^6.0.5",
-    "vite-plugin-dts": "^4.5.0",
+    "vite": "^6.0.11",
     "vue-tsc": "^2.2.0"
   }
 }
