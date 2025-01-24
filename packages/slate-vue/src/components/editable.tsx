@@ -291,7 +291,7 @@ export const Editable = defineComponent({
       scheduleOnDOMSelectionChange,
     })
 
-    const timeoutId = ref<number>()
+    const timeoutId = ref<NodeJS.Timeout>()
     const { onUserInput } = useRestoreDOM(editableRef, editor)
 
     // callbackRef

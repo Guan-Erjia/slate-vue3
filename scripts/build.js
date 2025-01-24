@@ -10,4 +10,4 @@ const task = async () => {
   await fs.remove("./packages/slate-vue/tsconfig.tsbuildinfo");
   await fs.remove("./packages/un-proxy-weakmap/tsconfig.tsbuildinfo");
 };
-task();
+await task();

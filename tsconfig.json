@@ -10,7 +10,8 @@
     "resolveJsonModule": true,
     "sourceMap": false,
     "strict": true,
-    "target": "esnext"
+    "target": "esnext",
+    "emitDeclarationOnly": true
   },
   "files": [],
   "references": [
