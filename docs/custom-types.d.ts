@@ -1,5 +1,4 @@
 import { Descendant, BaseEditor, BaseRange, Range, Element } from 'slate'
-import { HistoryEditor } from 'slate-history'
 import { DOMEditor } from 'slate-dom'
 
 export type BlockQuoteElement = {
@@ -132,11 +131,7 @@ export type EmptyText = {
   text: string
 }
 
-export type CustomEditor = BaseEditor &
-  DOMEditor &
-  HistoryEditor & {
-    nodeToDecorations?: Map<Element, Range[]>
-  }
+export type CustomEditor = BaseEditor & DOMEditor 
 
 declare module 'slate' {
   interface CustomTypes {

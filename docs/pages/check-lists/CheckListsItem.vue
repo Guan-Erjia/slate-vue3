@@ -15,6 +15,7 @@ import { Element, Transforms } from 'slate';
 import { DOMEditor } from 'slate-dom';
 import { useEditor, useReadOnly } from 'slate-vue';
 import { computed, Events, } from 'vue';
+import { CustomElement } from '../../custom-types';
 const props = defineProps<{
   element: any
 }>()
@@ -23,12 +24,10 @@ const readOnly = useReadOnly()
 const checked = computed<boolean>(() => props.element?.checked)
 
 const onChange = (event: Events['onChange']) => {
-  return
   const path = DOMEditor.findPath(editor, props.element)
-  const newProperties: Partial<Element> = {
+  const newProperties: Partial<CustomElement> = {
     checked: (event.target as HTMLInputElement)?.checked,
   }
   Transforms.setNodes(editor, newProperties, { at: path })
-  console.log(editor.children)
 }
 </script>
