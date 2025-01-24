@@ -56,7 +56,14 @@ const initialValue: CustomElement[] = [
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'check-list-item':
-      return h(CheckListItem, { ...attributes, element }, () => children)
+      return h('div', {
+        ref: attributes.ref, style: {
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center'
+        }
+      }, h(CheckListItem, { element }, () => children)
+      )
     default:
       return h('p', attributes, children)
   }

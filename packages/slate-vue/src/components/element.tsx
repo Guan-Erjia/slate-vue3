@@ -149,7 +149,6 @@ export const ElementComp = defineComponent({
             renderPlaceholder={renderPlaceholder}
             editor={editor}
             index={0}
-
           />
         </Tag>
       )
