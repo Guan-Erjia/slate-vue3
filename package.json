@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "build-pre": "node scripts/build.js && tsc -b",
-    "build-all": "vite build --mode=lib"
+    "build-all": "node scripts/build.js && tsc -b && vite build --mode=lib"
   },
   "dependencies": {
     "direction": "^2.0.1",
