@@ -82,7 +82,7 @@ export const defaultScrollSelectionIntoView = (
   }
 };
 
-export const defaultRenderElement = ({ attributes, children, }: RenderLeafProps) => {
+export const defaultRenderLeaf = ({ attributes, children, }: RenderLeafProps) => {
   return h(
     "span",
     attributes,

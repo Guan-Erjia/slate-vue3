@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Element, Transforms } from 'slate';
+import { Transforms } from 'slate';
 import { DOMEditor } from 'slate-dom';
 import { useEditor, useReadOnly } from 'slate-vue';
 import { computed, Events, } from 'vue';

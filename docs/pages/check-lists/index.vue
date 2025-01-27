@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder } from "slate-vue"
 import { h } from "vue";
 import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "slate-vue";
@@ -69,27 +69,13 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
   }
 }
 
-const renderLeaf = ({ attributes, children, }: RenderLeafProps) => {
-  return h(
-    "span",
-    attributes,
-    children
-  )
-}
-
-const renderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => {
-  return h('span', attributes, [
-    children,
-    IS_ANDROID ? h('br') : undefined
-  ])
-}
 
 const editor = withChecklists(withDOM(createEditor(initialValue)))
 </script>
 
 <template>
   <Slate :editor="editor" :render-element="renderElement"
-  :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder">
+  :render-leaf="defaultRenderLeaf" :render-placeholder="defaultRenderPlaceHolder">
     <Editable placeholder="Enter some rich text…" spellCheck autoFocus  />
   </Slate>
 </template>
