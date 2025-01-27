@@ -61,18 +61,12 @@ export interface EditableProps extends HTMLAttributes {
   readOnly: boolean;
   placeholder?: string;
   style?: CSSProperties;
-  renderElement: (props: RenderElementProps) => VNode;
-  renderLeaf: (props: RenderLeafProps) => VNode;
-  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   scrollSelectionIntoView: (editor: DOMEditor, domRange: DOMRange) => void;
   is: string;
 }
 
 export interface ChildrenProps {
   node: Ancestor;
-  renderElement: (props: RenderElementProps) => JSX.Element;
-  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
-  renderLeaf: (props: RenderLeafProps) => JSX.Element;
   selection: Range | null;
   decorations: DecoratedRange[];
   editor: DOMEditor;
@@ -84,8 +78,6 @@ export interface TextProps {
   text: Text;
   parentPath: Path;
   parentDecorations: DecoratedRange[];
-  renderLeaf: (props: RenderLeafProps) => JSX.Element;
-  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   editor: DOMEditor;
   index: number;
 }
@@ -100,9 +92,6 @@ export interface StringProps {
 
 export interface ElementProps {
   element: Element;
-  renderElement: (props: RenderElementProps) => JSX.Element;
-  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
-  renderLeaf: (props: RenderLeafProps) => JSX.Element;
   editor: DOMEditor;
   parentPath: Path;
   parentSelection: Range | null;
@@ -112,7 +101,10 @@ export interface ElementProps {
 
 export interface SlateProps {
   editor: DOMEditor;
-  decorate: (entry: NodeEntry) => DecoratedRange[]
+  decorate: (entry: NodeEntry) => DecoratedRange[],
+  renderElement: (props: RenderElementProps) => VNode;
+  renderLeaf: (props: RenderLeafProps) => VNode;
+  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
 }
 
 export interface LeafProps {
@@ -120,7 +112,5 @@ export interface LeafProps {
   leaf: Text;
   parent: Element;
   isLast: boolean;
-  renderLeaf: (props: RenderLeafProps) => VNode;
-  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
   editor: DOMEditor;
 }

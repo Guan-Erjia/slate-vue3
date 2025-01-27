@@ -1,6 +1,8 @@
 import { Range } from "slate";
-import { isDOMNode, type DOMEditor, type DOMRange } from "slate-dom";
+import { IS_ANDROID, isDOMNode, type DOMEditor, type DOMRange } from "slate-dom";
 import scrollIntoView from "scroll-into-view-if-needed";
+import type { RenderLeafProps, RenderPlaceholderProps } from "./interface";
+import { h } from "vue";
 /**
  * Check if an event is overrided by a handler.
  */
@@ -79,3 +81,18 @@ export const defaultScrollSelectionIntoView = (
     delete leafEl.getBoundingClientRect;
   }
 };
+
+export const defaultRenderElement = ({ attributes, children, }: RenderLeafProps) => {
+  return h(
+    "span",
+    attributes,
+    children
+  )
+}
+
+export const defaultRenderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => {
+  return h('span', attributes, [
+    children,
+    IS_ANDROID ? h('br') : undefined
+  ])
+}

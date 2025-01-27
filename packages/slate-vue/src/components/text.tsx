@@ -9,15 +9,16 @@ import { LeafComp } from './leaf'
 import type { TextProps } from './interface'
 import { computed, defineComponent, h, onMounted, onUnmounted, ref } from 'vue'
 import { useDecorate } from '../hooks/use-decorate'
+import { useRenderLeaf, useRenderPlaceholder } from '../hooks/use-render'
 
 /**
  * Text.
  */
 export const TextComp = defineComponent({
   name: 'slate-text',
-  props: ['text', 'parent', 'parentPath', 'parentDecorations', 'editor', 'isLast', 'renderLeaf', 'renderPlaceholder', 'index'],
+  props: ['text', 'parent', 'parentPath', 'parentDecorations', 'editor', 'isLast', 'index'],
   setup(props: TextProps) {
-    const { text, parent, parentPath, parentDecorations, editor, isLast, renderLeaf, renderPlaceholder, index } = props
+    const { text, parent, parentPath, parentDecorations, editor, isLast, index } = props
     const spanRef = ref<HTMLSpanElement>()
     const decorate = useDecorate()
     const path = computed(() => parentPath.concat(index))
@@ -53,6 +54,9 @@ export const TextComp = defineComponent({
         ELEMENT_TO_NODE.delete(spanRef.value)
       }
     })
+
+    const renderLeaf = useRenderLeaf()
+    const renderPlaceholder = useRenderPlaceholder()
 
     return () => h('span', {
       'data-slate-node': 'text',

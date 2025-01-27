@@ -16,19 +16,17 @@ import { computed, defineComponent, onMounted, onUnmounted, provide, ref, } from
 import { useReadOnly } from '../hooks/use-read-only'
 import { useDecorate } from '../hooks/use-decorate'
 import { SLATE_USE_SELECTED, } from '../utils/constants'
+import { useRenderElement } from '../hooks/use-render'
 
 /**
  * Element.
  */
 export const ElementComp = defineComponent({
   name: 'slate-element',
-  props: ['editor', 'element', 'renderElement', 'renderLeaf', 'renderPlaceholder', 'parentPath', 'parentSelection', 'parentDecorations', 'index'],
+  props: ['editor', 'element', 'parentPath', 'parentSelection', 'parentDecorations', 'index'],
   setup(props: ElementProps) {
     const {
       element,
-      renderElement,
-      renderPlaceholder,
-      renderLeaf,
       editor,
       parentPath,
       parentSelection,
@@ -118,9 +116,6 @@ export const ElementComp = defineComponent({
       decorations={decorations.value}
       node={element}
       editor={editor}
-      renderElement={renderElement}
-      renderPlaceholder={renderPlaceholder}
-      renderLeaf={renderLeaf}
       selection={selection.value} />
 
     // If it's a void node, wrap the children in extra void-specific elements.
@@ -145,8 +140,6 @@ export const ElementComp = defineComponent({
             isLast={false}
             parent={element}
             text={text}
-            renderLeaf={renderLeaf}
-            renderPlaceholder={renderPlaceholder}
             editor={editor}
             index={0}
           />
@@ -157,6 +150,7 @@ export const ElementComp = defineComponent({
       NODE_TO_PARENT.set(text, element)
     }
 
+    const renderElement = useRenderElement()
     return () => renderElement({ attributes: attributes.value, children, element })
   }
 })

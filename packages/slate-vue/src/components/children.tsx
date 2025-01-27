@@ -13,15 +13,12 @@ import { computed, defineComponent, onUpdated } from 'vue'
  */
 export const Children = defineComponent({
   name: 'Children',
-  props: ['node', 'decorations', 'renderElement', 'renderPlaceholder', 'renderLeaf', 'selection', 'editor'],
+  props: ['node', 'decorations', 'selection', 'editor'],
   setup(props: ChildrenProps) {
     const {
       editor,
       decorations,
       node,
-      renderElement,
-      renderPlaceholder,
-      renderLeaf,
       selection,
     } = props
 
@@ -48,9 +45,6 @@ export const Children = defineComponent({
         parentSelection={selection}
         parentDecorations={decorations}
         editor={editor}
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        renderPlaceholder={renderPlaceholder}
         index={i}
         key={key.id}
       /> : <TextComp
@@ -60,8 +54,6 @@ export const Children = defineComponent({
         editor={editor}
         parentPath={path.value}
         parentDecorations={decorations}
-        renderLeaf={renderLeaf}
-        renderPlaceholder={renderPlaceholder}
         index={i}
         key={key.id}
       />

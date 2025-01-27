@@ -6,6 +6,7 @@ import {
 } from 'slate-dom'
 import type { LeafProps, RenderPlaceholderProps } from './interface'
 import { computed, defineComponent, Fragment, h, onMounted, onUnmounted, ref, } from 'vue'
+import { useRenderLeaf, useRenderPlaceholder } from '../hooks/use-render'
 
 // Delay the placeholder on Android to prevent the keyboard from closing.
 // (https://github.com/ianstormtaylor/slate/pull/5368)
@@ -16,15 +17,13 @@ const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0
  */
 export const LeafComp = defineComponent({
   name: 'slate-leaf',
-  props: ['text', 'leaf', 'parent', 'isLast', 'renderLeaf', 'renderPlaceholder', 'editor'],
+  props: ['text', 'leaf', 'parent', 'isLast', 'editor'],
   setup(props: LeafProps) {
     const {
       text,
       leaf,
       isLast,
       parent,
-      renderLeaf,
-      renderPlaceholder,
       editor
     } = props
 
@@ -84,6 +83,9 @@ export const LeafComp = defineComponent({
     })
     )
 
+    const renderLeaf = useRenderLeaf()
+    const renderPlaceholder = useRenderPlaceholder()
+    
     const children = computed(() =>
       h(Fragment, null, [
         leafIsPlaceholder.value &&

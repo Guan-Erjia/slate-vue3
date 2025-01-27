@@ -79,18 +79,6 @@ export const Editable = defineComponent({
       type: Object,
       default: () => { }
     },
-    renderElement: {
-      type: Function,
-      required: true,
-    },
-    renderLeaf: {
-      type: Function,
-      required: true,
-    },
-    renderPlaceholder: {
-      type: Function,
-      required: true,
-    },
     is: {
       type: String,
       default: () => 'div',
@@ -100,9 +88,6 @@ export const Editable = defineComponent({
     const {
       placeholder,
       readOnly,
-      renderElement,
-      renderLeaf,
-      renderPlaceholder,
       scrollSelectionIntoView,
       is,
     } = props
@@ -1648,9 +1633,6 @@ export const Editable = defineComponent({
           decorations={decorations.value}
           node={editor}
           editor={editor}
-          renderElement={renderElement}
-          renderPlaceholder={renderPlaceholder}
-          renderLeaf={renderLeaf}
           selection={editor.selection}
         />
       </div>

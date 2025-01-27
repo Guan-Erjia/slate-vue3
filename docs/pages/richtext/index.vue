@@ -110,7 +110,8 @@ const editor = withDOM(createEditor(initialValue))
 </script>
 
 <template>
-  <Slate :editor="editor">
+  <Slate :editor="editor" :render-element="renderElement"
+  :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder">
     <Toolbar>
       <MarkButton format="bold" icon="format_bold" />
       <MarkButton format="italic" icon="format_italic" />
@@ -126,7 +127,6 @@ const editor = withDOM(createEditor(initialValue))
       <BlockButton format="right" icon="format_align_right" />
       <BlockButton format="justify" icon="format_align_justify" />
     </Toolbar>
-    <Editable placeholder="Enter some rich text…" spellCheck autoFocus :render-element="renderElement"
-      :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder" />
+    <Editable placeholder="Enter some rich text…" spellCheck autoFocus />
   </Slate>
 </template>
