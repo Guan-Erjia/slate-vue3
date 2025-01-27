@@ -1,0 +1,14 @@
+{
+  "name": "is-plain-object",
+  "description": "Tools for building completely customizable richtext editors with Vue.",
+  "version": "0.112.1",
+  "license": "MIT",
+  "repository": "https://github.com/jonschlinkert/is-plain-object",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "module": "src/index.ts",
+  "sideEffects": false,
+  "files": [
+    "dist/"
+  ]
+}

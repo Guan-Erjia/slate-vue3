@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { Slate, Editable } from "slate-vue"
+import { Slate, Editable, createEditor } from "slate-vue"
 import { CSSProperties, h } from "vue";
 import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "slate-vue";
-import { createEditor, } from "slate";
 import Toolbar from '../../components/Toolbar.vue'
 import MarkButton from "./MarkButton.vue";
 import BlockButton from "./BlockButton.vue";

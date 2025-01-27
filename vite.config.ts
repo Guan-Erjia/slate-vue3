@@ -24,6 +24,10 @@ export default defineConfig(({ command, mode }) => {
           __dirname,
           "./packages/un-proxy-weakmap/src/index.ts"
         ),
+        "is-plain-object": path.resolve(
+          __dirname,
+          "./packages/is-plain-object/src/index.ts"
+        ),
       },
     },
   };

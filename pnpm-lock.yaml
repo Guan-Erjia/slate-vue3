@@ -15,8 +15,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       is-plain-object:
-        specifier: ^5.0.0
-        version: 5.0.0
+        specifier: workspace:*
+        version: link:packages/is-plain-object
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
@@ -81,6 +81,8 @@ importers:
       vue-tsc:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.7.2)
+
+  packages/is-plain-object: {}
 
   packages/slate: {}
 
