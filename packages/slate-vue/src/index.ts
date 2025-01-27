@@ -25,4 +25,6 @@ export { useSelected } from "./hooks/use-selected";
 export { useEditor } from "./hooks/use-editor";
 export { useSelection } from "./hooks/use-selection";
 
+export * from 'slate'
+export * from 'slate-dom'
 
