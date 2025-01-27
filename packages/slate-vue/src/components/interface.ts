@@ -56,7 +56,6 @@ export interface RenderElementProps {
  * `EditableProps` are passed to the `<Editable>` component.
  */
 export interface EditableProps extends HTMLAttributes {
-  decorate: (entry: NodeEntry) => DecoratedRange[];
   onDOMBeforeInput?: (event: InputEvent) => void;
   role?: string;
   readOnly: boolean;
@@ -113,6 +112,7 @@ export interface ElementProps {
 
 export interface SlateProps {
   editor: DOMEditor;
+  decorate: (entry: NodeEntry) => DecoratedRange[]
 }
 
 export interface LeafProps {

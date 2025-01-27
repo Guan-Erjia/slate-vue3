@@ -50,9 +50,10 @@ import { useRestoreDOM } from '../hooks/use-restore-dom'
 import type { EditableProps, } from './interface'
 import { defaultScrollSelectionIntoView, isDOMEventHandled, isDOMEventTargetInput, isEventHandled } from './utils'
 import { useEditor } from '../hooks/use-editor'
-import { SLATE_CHANGE_EFFECT_INJECT, SLATE_USE_DECORATE } from '../utils/constants'
+import { SLATE_CHANGE_EFFECT_INJECT } from '../utils/constants'
 import { useComposing } from '../hooks/use-composing'
 import { useReadOnly } from '../hooks/use-read-only'
+import { useDecorate } from '../hooks/use-decorate'
 
 /**
  * Editable.
@@ -60,10 +61,6 @@ import { useReadOnly } from '../hooks/use-read-only'
 export const Editable = defineComponent({
   name: 'slate-editable',
   props: {
-    decorate: {
-      type: Function,
-      default: () => []
-    },
     scrollSelectionIntoView: {
       type: Function,
       required: false,
@@ -101,7 +98,6 @@ export const Editable = defineComponent({
   },
   setup(props: EditableProps) {
     const {
-      decorate,
       placeholder,
       readOnly,
       renderElement,
@@ -140,9 +136,8 @@ export const Editable = defineComponent({
       hasMarkPlaceholder: false,
     })
 
-
-    provide(SLATE_USE_DECORATE, decorate)
     const placeholderHeight = ref<number>()
+    const decorate = useDecorate()
     const decorations = computed(() => {
       const showPlaceholder = placeholder &&
         editor.children?.length === 1 &&

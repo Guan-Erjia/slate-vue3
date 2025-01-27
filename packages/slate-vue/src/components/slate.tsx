@@ -1,5 +1,5 @@
 import { computed, defineComponent, onMounted, onUnmounted, provide, ref, renderSlot, } from "vue";
-import { SLATE_CHANGE_EFFECT_INJECT, SLATE_STATE_COMPOSING, SLATE_STATE_FOCUS, SLATE_STATE_READ_ONLY, SLATE_STATE_SELECTION, SLATE_USE_EDITOR } from "../utils/constants";
+import { SLATE_CHANGE_EFFECT_INJECT, SLATE_STATE_COMPOSING, SLATE_STATE_FOCUS, SLATE_STATE_READ_ONLY, SLATE_STATE_SELECTION, SLATE_USE_DECORATE, SLATE_USE_EDITOR } from "../utils/constants";
 import { Node, Operation, Scrubber } from "slate";
 import type { SlateProps } from "./interface";
 import { DOMEditor, EDITOR_TO_ON_CHANGE } from "slate-dom";
@@ -11,10 +11,14 @@ export const Slate = defineComponent({
     editor: {
       type: Object,
       require: true
+    },
+    decorate: {
+      type: Function,
+      default: () => []
     }
   },
   setup(props: SlateProps, { slots, emit, }) {
-    const { editor } = props
+    const { editor, decorate} = props
     if (!Node.isNodeList(editor.children)) {
       throw new Error(
         `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
@@ -23,7 +27,7 @@ export const Slate = defineComponent({
       );
     }
     provide(SLATE_USE_EDITOR, editor)
-
+    provide(SLATE_USE_DECORATE, decorate)
 
     const isFocus = ref(DOMEditor.isFocused(editor));
     const isComposing = ref(false);
