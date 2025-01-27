@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "composite": false,
+    "composite": true,
     "declaration": true,
     "declarationMap": false,
     "esModuleInterop": true,

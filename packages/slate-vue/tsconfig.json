@@ -57,7 +57,8 @@
     // See <https://github.com/vuejs/vue-cli/pull/5688>
     "skipLibCheck": true,
     "declaration": true,
-    "declarationDir": "dist"
+    "declarationDir": "dist",
+    "importHelpers": true
   },
   "references": [
     {
