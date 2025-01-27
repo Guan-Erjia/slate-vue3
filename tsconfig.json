@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "composite": true,
+    "composite": false,
     "declaration": true,
     "declarationMap": false,
     "esModuleInterop": true,
@@ -11,11 +11,16 @@
     "sourceMap": false,
     "strict": true,
     "target": "esnext",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "verbatimModuleSyntax": false,
+    "noCheck": true
   },
   "files": [],
   "references": [
     { "path": "./packages/slate" },
-    { "path": "./packages/slate-vue" }
+    { "path": "./packages/slate-dom" },
+    { "path": "./packages/slate-vue" },
+    { "path": "./packages/un-proxy-weakmap" },
+    { "path": "./packages/is-plain-object" },
   ]
 }
