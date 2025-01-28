@@ -20,9 +20,6 @@ importers:
       scroll-into-view-if-needed:
         specifier: ^3.1.0
         version: 3.1.0
-      share-tools:
-        specifier: workspace:*
-        version: link:packages/share-tools
       slate:
         specifier: workspace:*
         version: link:packages/slate
@@ -69,8 +66,6 @@ importers:
       vue-tsc:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.7.2)
-
-  packages/share-tools: {}
 
   packages/slate: {}
 

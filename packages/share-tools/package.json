@@ -1,8 +1,0 @@
-{
-  "name": "share-tools",
-  "description": "Tools for building completely customizable richtext editors with Vue.",
-  "version": "0.112.1",
-  "license": "MIT",
-  "repository": "git://github.com/ianstormtaylor/slate.git",
-  "sideEffects": false
-}

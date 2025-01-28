@@ -23,7 +23,7 @@ export default defineConfig(({ command, mode }) => {
         ),
         "share-tools": path.resolve(
           __dirname,
-          "./packages/share-tools/src/index.ts"
+          "./packages/share-tools/index.ts"
         ),
       },
     },
