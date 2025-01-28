@@ -4,11 +4,5 @@
   "version": "0.112.0",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/slate.git",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "sideEffects": false,
-  "files": [
-    "dist/"
-  ]
+  "sideEffects": false
 }

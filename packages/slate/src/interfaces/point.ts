@@ -1,4 +1,4 @@
-import { isPlainObject } from 'is-plain-object'
+import { isPlainObject } from 'share-tools'
 import { ExtendedType, Operation, Path } from '..'
 import { TextDirection } from '../types/types'
 import { cloneDeep } from 'lodash-es'

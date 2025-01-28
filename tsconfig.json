@@ -24,8 +24,7 @@
       "slate": ["./packages/slate/src/index.ts"],
       "slate-dom": ["./packages/slate-dom/src/index.ts"],
       "slate-vue": ["./packages/slate-vue/src/index.ts"],
-      "un-proxy-weakmap": ["./packages/un-proxy-weakmap/src/index.ts"],
-      "is-plain-object": ["./packages/is-plain-object/src/index.ts"]
+      "share-tools": ["./packages/share-tools/src/index.ts"],
     }
   }
 }

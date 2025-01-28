@@ -1,5 +1,5 @@
 import { Editor, Path, PathRef, PointRef, RangeRef } from '..'
-import { toRawWeakMap as WeakMap } from 'un-proxy-weakmap'
+import { toRawWeakMap as WeakMap } from 'share-tools'
 
 export const DIRTY_PATHS: WeakMap<Editor, Path[]> = new WeakMap()
 export const DIRTY_PATH_KEYS: WeakMap<Editor, Set<string>> = new WeakMap()

@@ -1,9 +1,8 @@
 import { Editor, EditorInterface } from '../interfaces/editor'
-import { isPlainObject } from 'is-plain-object'
 import { Range } from '../interfaces/range'
 import { Node } from '../interfaces/node'
 import { Operation } from '../interfaces/operation'
-import { toRawWeakMap as WeakMap } from 'un-proxy-weakmap'
+import { toRawWeakMap as WeakMap, isPlainObject } from 'share-tools'
 
 const IS_EDITOR_CACHE = new WeakMap<object, boolean>()
 

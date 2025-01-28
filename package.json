@@ -15,7 +15,6 @@
   "dependencies": {
     "direction": "^2.0.1",
     "is-hotkey": "^0.2.0",
-    "is-plain-object": "workspace:*",
     "lodash-es": "^4.17.21",
     "scroll-into-view-if-needed": "^3.1.0",
     "slate": "workspace:*",
@@ -23,7 +22,7 @@
     "slate-history": "^0.110.3",
     "slate-hyperscript": "^0.100.0",
     "slate-vue": "workspace:*",
-    "un-proxy-weakmap": "workspace:*",
+    "share-tools": "workspace:*",
     "vue": "^3.5.13"
   },
   "devDependencies": {
@@ -36,5 +35,27 @@
     "vite": "^6.0.11",
     "vite-plugin-dts": "^4.5.0",
     "vue-tsc": "^2.2.0"
-  }
+  },
+  "keywords": [
+    "canvas",
+    "contenteditable",
+    "docs",
+    "document",
+    "edit",
+    "editor",
+    "editable",
+    "html",
+    "immutable",
+    "markdown",
+    "medium",
+    "paper",
+    "react",
+    "rich",
+    "richtext",
+    "richtext",
+    "slate",
+    "text",
+    "wysiwyg",
+    "wysiwym"
+  ]
 }

@@ -1,4 +1,4 @@
-import { isPlainObject } from 'is-plain-object'
+import { isPlainObject } from 'share-tools'
 import { ExtendedType, Operation, Path, Point, PointEntry } from '..'
 import { RangeDirection } from '../types/types'
 

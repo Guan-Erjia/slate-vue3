@@ -37,7 +37,7 @@ import {
   NODE_TO_KEY,
 } from '../utils/weak-maps'
 import { DOMEditor } from './dom-editor'
-import { toRawWeakMap as WeakMap } from 'un-proxy-weakmap'
+import { toRawWeakMap as WeakMap } from 'share-tools'
 
 /**
  * `withDOM` adds DOM specific behaviors to the editor.

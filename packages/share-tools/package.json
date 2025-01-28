@@ -1,13 +1,8 @@
 {
-  "name": "un-proxy-weakmap",
+  "name": "share-tools",
   "description": "Tools for building completely customizable richtext editors with Vue.",
   "version": "0.112.1",
   "license": "MIT",
   "repository": "git://github.com/ianstormtaylor/slate.git",
-  "main": "src/index.ts",
-  "module": "src/index.ts",
-  "sideEffects": false,
-  "files": [
-    "dist/"
-  ]
+  "sideEffects": false
 }

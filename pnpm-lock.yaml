@@ -14,15 +14,15 @@ importers:
       is-hotkey:
         specifier: ^0.2.0
         version: 0.2.0
-      is-plain-object:
-        specifier: workspace:*
-        version: link:packages/is-plain-object
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
       scroll-into-view-if-needed:
         specifier: ^3.1.0
         version: 3.1.0
+      share-tools:
+        specifier: workspace:*
+        version: link:packages/share-tools
       slate:
         specifier: workspace:*
         version: link:packages/slate
@@ -38,9 +38,6 @@ importers:
       slate-vue:
         specifier: workspace:*
         version: link:packages/slate-vue
-      un-proxy-weakmap:
-        specifier: workspace:*
-        version: link:packages/un-proxy-weakmap
       vue:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.2)
@@ -73,15 +70,13 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0(typescript@5.7.2)
 
-  packages/is-plain-object: {}
+  packages/share-tools: {}
 
   packages/slate: {}
 
   packages/slate-dom: {}
 
   packages/slate-vue: {}
-
-  packages/un-proxy-weakmap: {}
 
 packages:
 

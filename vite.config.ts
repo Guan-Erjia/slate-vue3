@@ -21,13 +21,9 @@ export default defineConfig(({ command, mode }) => {
           __dirname,
           "./packages/slate-vue/src/index.ts"
         ),
-        "un-proxy-weakmap": path.resolve(
+        "share-tools": path.resolve(
           __dirname,
-          "./packages/un-proxy-weakmap/src/index.ts"
-        ),
-        "is-plain-object": path.resolve(
-          __dirname,
-          "./packages/is-plain-object/src/index.ts"
+          "./packages/share-tools/src/index.ts"
         ),
       },
     },

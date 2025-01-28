@@ -1,7 +1,7 @@
 // perf
 
 import { Editor } from '../interfaces/editor'
-import { toRawWeakMap as WeakMap } from 'un-proxy-weakmap'
+import { toRawWeakMap as WeakMap } from 'share-tools'
 
 const BATCHING_DIRTY_PATHS: WeakMap<Editor, boolean> = new WeakMap()
 

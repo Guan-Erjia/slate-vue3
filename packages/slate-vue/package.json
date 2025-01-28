@@ -5,33 +5,5 @@
   "license": "MIT",
   "type": "module",
   "repository": "git://github.com/Guan-Erjia/slate-vue3",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "sideEffects": false,
-  "files": [
-    "dist/"
-  ],
-  "keywords": [
-    "canvas",
-    "contenteditable",
-    "docs",
-    "document",
-    "edit",
-    "editor",
-    "editable",
-    "html",
-    "immutable",
-    "markdown",
-    "medium",
-    "paper",
-    "react",
-    "rich",
-    "richtext",
-    "richtext",
-    "slate",
-    "text",
-    "wysiwyg",
-    "wysiwym"
-  ]
+  "sideEffects": false
 }

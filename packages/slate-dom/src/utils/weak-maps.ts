@@ -10,7 +10,7 @@ import {
 } from 'slate'
 import { TextDiff } from './diff-text'
 import { Key } from './key'
-import { toRawWeakMap as WeakMap } from "un-proxy-weakmap"
+import { toRawWeakMap as WeakMap } from "share-tools"
 
 export type Action = { at?: Point | Range; run: () => void }
 

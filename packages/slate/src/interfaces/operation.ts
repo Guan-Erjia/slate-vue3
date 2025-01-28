@@ -1,5 +1,5 @@
 import { ExtendedType, Node, Path, Range } from '..'
-import { isPlainObject } from 'is-plain-object'
+import { isPlainObject } from 'share-tools'
 
 export type BaseInsertNodeOperation = {
   type: 'insert_node'
