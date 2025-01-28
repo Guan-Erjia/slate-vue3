@@ -42,7 +42,10 @@ export default defineConfig(({ command, mode }) => {
     config.plugins?.push(dts({
       tsconfigPath: "./tsconfig.json",
       rollupTypes: true,
-      exclude: ["./packages/docs/**/*"]
+      exclude: ["./packages/docs/**/*"],
+      compilerOptions: {
+        verbatimModuleSyntax: false
+      }
     }));
   }
   return config;
