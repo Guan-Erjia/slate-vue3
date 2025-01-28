@@ -1,5 +1,5 @@
 import { Range } from "slate";
-import { IS_ANDROID, isDOMNode, type DOMEditor, type DOMRange } from "slate-dom";
+import { IS_ANDROID, isDOMNode, type DOMEditor } from "slate-dom";
 import scrollIntoView from "scroll-into-view-if-needed";
 import type { RenderLeafProps, RenderPlaceholderProps } from "./interface";
 import { h } from "vue";
@@ -62,7 +62,7 @@ export const isDOMEventHandled = <E extends Event>(
  */
 export const defaultScrollSelectionIntoView = (
   editor: DOMEditor,
-  domRange: DOMRange
+  domRange: globalThis.Range
 ) => {
   // This was affecting the selection of multiple blocks and dragging behavior,
   // so enabled only if the selection has been collapsed.
@@ -77,7 +77,6 @@ export const defaultScrollSelectionIntoView = (
     scrollIntoView(leafEl, {
       scrollMode: "if-needed",
     });
-    // @ts-expect-error an unorthodox delete D:
     delete leafEl.getBoundingClientRect;
   }
 };

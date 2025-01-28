@@ -10,12 +10,12 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build-pre": "node scripts/build-pre.js",
-    "build-all": "node scripts/build-all.js"
+    "build-all": "vite build --mode=lib"
   },
   "dependencies": {
     "direction": "^2.0.1",
     "is-hotkey": "^0.2.0",
+    "is-plain-object": "workspace:*",
     "lodash-es": "^4.17.21",
     "scroll-into-view-if-needed": "^3.1.0",
     "slate": "workspace:*",
@@ -24,7 +24,6 @@
     "slate-hyperscript": "^0.100.0",
     "slate-vue": "workspace:*",
     "un-proxy-weakmap": "workspace:*",
-    "is-plain-object": "workspace:*",
     "vue": "^3.5.13"
   },
   "devDependencies": {
@@ -39,6 +38,7 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "~5.7.2",
     "vite": "^6.0.11",
+    "vite-plugin-dts": "^4.5.0",
     "vue-tsc": "^2.2.0"
   }
 }

@@ -4,9 +4,7 @@ import {throttle} from 'lodash-es'
 import { Editor, Element, Node, Path, Range, Text, Transforms } from 'slate'
 import { useAndroidInputManager } from '../hooks/android-input-manager/use-android-input-manager'
 import {
-  DOMEditor, TRIPLE_CLICK, DOMElement,
-  DOMRange,
-  DOMText,
+  DOMEditor, TRIPLE_CLICK,
   getActiveElement,
   getDefaultView,
   getSelection,
@@ -54,6 +52,9 @@ import { SLATE_CHANGE_EFFECT_INJECT } from '../utils/constants'
 import { useComposing } from '../hooks/use-composing'
 import { useReadOnly } from '../hooks/use-read-only'
 import { useDecorate } from '../hooks/use-decorate'
+type DOMElement = globalThis.Element
+type DOMRange = globalThis.Range
+type DOMText = globalThis.Text
 
 /**
  * Editable.
@@ -271,7 +272,7 @@ export const Editable = defineComponent({
       scheduleOnDOMSelectionChange,
     })
 
-    const timeoutId = ref<NodeJS.Timeout>()
+    const timeoutId = ref<number>()
     const { onUserInput } = useRestoreDOM(editableRef, editor)
 
     // callbackRef

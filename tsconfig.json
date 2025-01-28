@@ -1,7 +1,10 @@
 {
+  "include": ["./packages/**/*"],
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowSyntheticDefaultImports": true,
-    "composite": true,
+    "composite": false,
     "declaration": true,
     "declarationMap": false,
     "esModuleInterop": true,
@@ -13,14 +16,16 @@
     "target": "esnext",
     "emitDeclarationOnly": true,
     "verbatimModuleSyntax": false,
-    "noCheck": true
-  },
-  "files": [],
-  "references": [
-    { "path": "./packages/slate" },
-    { "path": "./packages/slate-dom" },
-    { "path": "./packages/slate-vue" },
-    { "path": "./packages/un-proxy-weakmap" },
-    { "path": "./packages/is-plain-object" },
-  ]
+    "noCheck": false,
+    "jsx": "preserve",
+    "jsxImportSource": "vue",
+    "baseUrl": ".",
+    "paths": {
+      "slate": ["./packages/slate/src/index.ts"],
+      "slate-dom": ["./packages/slate-dom/src/index.ts"],
+      "slate-vue": ["./packages/slate-vue/src/index.ts"],
+      "un-proxy-weakmap": ["./packages/un-proxy-weakmap/src/index.ts"],
+      "is-plain-object": ["./packages/is-plain-object/src/index.ts"]
+    }
+  }
 }

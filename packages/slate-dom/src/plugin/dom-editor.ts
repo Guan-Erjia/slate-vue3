@@ -11,13 +11,7 @@ import {
 } from 'slate'
 import { TextDiff } from '../utils/diff-text'
 import {
-  DOMElement,
-  DOMNode,
   DOMPoint,
-  DOMRange,
-  DOMSelection,
-  DOMStaticRange,
-  DOMText,
   getSelection,
   hasShadowRoot,
   isAfter,
@@ -45,6 +39,13 @@ import {
   NODE_TO_PARENT,
 } from '../utils/weak-maps'
 
+
+type DOMElement = globalThis.Element
+type DOMNode = globalThis.Node
+type DOMRange = globalThis.Range
+type DOMSelection = globalThis.Selection
+type DOMStaticRange = globalThis.StaticRange
+type DOMText = globalThis.Text
 /**
  * A DOM-specific version of the `Editor` interface.
  */
@@ -610,7 +611,7 @@ export const DOMEditor: DOMEditorInterface = {
           // text element, causing domRange.getBoundingClientRect() calls on a collapsed
           // selection to return incorrect zero values (https://bugs.chromium.org/p/chromium/issues/detail?id=435438)
           // which will cause issues when scrolling to it.
-          domText instanceof DOMText ? domText : nextText,
+          domText instanceof globalThis.Text ? domText : nextText,
           nextText.textContent?.startsWith('\uFEFF') ? 1 : 0,
         ]
         break

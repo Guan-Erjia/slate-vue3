@@ -17,12 +17,6 @@ export {
 export type { StringDiff, TextDiff } from './utils/diff-text'
 
 export {
-  DOMElement,
-  DOMNode,
-  DOMRange,
-  DOMSelection,
-  DOMStaticRange,
-  DOMText,
   getActiveElement,
   getDefaultView,
   getSelection,

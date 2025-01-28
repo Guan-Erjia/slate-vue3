@@ -7,7 +7,7 @@ import type {
   Range,
   Path,
 } from "slate";
-import type { DOMEditor, DOMRange } from "slate-dom";
+import type { DOMEditor } from "slate-dom";
 import type { JSX } from "vue/jsx-runtime";
 import type { CSSProperties, HTMLAttributes, VNode, VNodeRef } from "vue";
 
@@ -61,7 +61,7 @@ export interface EditableProps extends HTMLAttributes {
   readOnly: boolean;
   placeholder?: string;
   style?: CSSProperties;
-  scrollSelectionIntoView: (editor: DOMEditor, domRange: DOMRange) => void;
+  scrollSelectionIntoView: (editor: DOMEditor, domRange: globalThis.Range) => void;
   is: string;
 }
 
