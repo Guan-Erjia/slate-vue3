@@ -58,6 +58,6 @@
     "skipLibCheck": true,
     "declaration": true,
     "declarationDir": "dist",
-    "importHelpers": true
-  }
+    "importHelpers": true,
+  },
 }

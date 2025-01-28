@@ -45,7 +45,8 @@ export default defineConfig(({ command, mode }) => {
     };
     config.plugins?.push(dts({
       tsconfigPath: "./tsconfig.json",
-      rollupTypes: true
+      rollupTypes: true,
+      exclude: ["./packages/docs/**/*"]
     }));
   }
   return config;
