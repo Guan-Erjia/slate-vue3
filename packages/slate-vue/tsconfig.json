@@ -2,7 +2,6 @@
   "extends": "../../tsconfig.json",
   "include": ["src/**/*"],
   "compilerOptions": {
-    "rootDir": "./src",
     "outDir": "./dist",
     // Most non-library projects don't need to emit declarations.
     // So we add this option by default to make the config more friendly to most users.
