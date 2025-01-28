@@ -31,7 +31,7 @@ const isBlockActive = computed(() => {
       match: n =>
         !Editor.isEditor(n) &&
         SlateElement.isElement(n) &&
-        n[TEXT_ALIGN_TYPES.includes(props.format) ? 'align' : 'type'] === props.format,
+        "align" in n && n[TEXT_ALIGN_TYPES.includes(props.format) ? 'align' : 'type'] === props.format,
     })
   )
 

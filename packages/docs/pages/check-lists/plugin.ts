@@ -1,5 +1,6 @@
 import { Range, Editor, Element, Point, Transforms } from "slate";
-export const withChecklists = (editor) => {
+import { DOMEditor } from "slate-dom";
+export const withChecklists = (editor: DOMEditor) => {
   const { deleteBackward } = editor;
 
   editor.deleteBackward = (...args) => {

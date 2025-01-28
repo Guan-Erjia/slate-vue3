@@ -17,7 +17,7 @@ const props = defineProps<{
 
 const isMarkActive = computed(() => {
   const marks = Editor.marks(editor)
-  return marks ? marks[props.format] === true : false
+  return marks ? marks[props.format as keyof typeof marks] === true : false
 })
 
 const onMouseDown = (event: MouseEvent) => {
