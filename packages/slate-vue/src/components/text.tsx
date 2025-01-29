@@ -9,7 +9,6 @@ import { LeafComp } from './leaf'
 import type { TextProps } from './interface'
 import { computed, defineComponent, h, onMounted, onUnmounted, ref } from 'vue'
 import { useDecorate } from '../hooks/use-decorate'
-import { useRenderLeaf, useRenderPlaceholder } from '../hooks/use-render'
 
 /**
  * Text.
@@ -55,9 +54,6 @@ export const TextComp = defineComponent({
       }
     })
 
-    const renderLeaf = useRenderLeaf()
-    const renderPlaceholder = useRenderPlaceholder()
-
     return () => h('span', {
       'data-slate-node': 'text',
       ref: spanRef
@@ -68,8 +64,6 @@ export const TextComp = defineComponent({
       editor,
       isLast: isLast && i === leaves.length - 1,
       key: `${key.id}-${i}`,
-      renderLeaf,
-      renderPlaceholder,
     })))
   }
 })

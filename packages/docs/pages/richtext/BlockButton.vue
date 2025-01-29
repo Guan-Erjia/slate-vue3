@@ -7,7 +7,7 @@
 <script setup lang="ts">
 import {
   Editor,
-  Element as SlateElement,
+  Element,
   Transforms,
 } from 'slate';
 import { useEditor } from 'slate-vue'
@@ -30,7 +30,7 @@ const isBlockActive = computed(() => {
       at: Editor.unhangRange(editor, selection),
       match: n =>
         !Editor.isEditor(n) &&
-        SlateElement.isElement(n) &&
+        Element.isElement(n) &&
         "align" in n && n[TEXT_ALIGN_TYPES.includes(props.format) ? 'align' : 'type'] === props.format,
     })
   )
@@ -47,12 +47,12 @@ const onMouseDown = (event: MouseEvent) => {
   Transforms.unwrapNodes(editor, {
     match: n =>
       !Editor.isEditor(n) &&
-      SlateElement.isElement(n) &&
+      Element.isElement(n) &&
       LIST_TYPES.includes(n.type) &&
       !TEXT_ALIGN_TYPES.includes(props.format),
     split: true,
   })
-  let newProperties: Partial<SlateElement>
+  let newProperties: Partial<Element>
   if (TEXT_ALIGN_TYPES.includes(props.format)) {
     newProperties = {
       align: isActive ? undefined : props.format,
@@ -62,7 +62,7 @@ const onMouseDown = (event: MouseEvent) => {
       type: isActive ? 'paragraph' : isList ? 'list-item' : props.format as CustomElement['type'],
     }
   }
-  Transforms.setNodes<SlateElement>(editor, newProperties)
+  Transforms.setNodes<Element>(editor, newProperties)
 
   if (!isActive && isList) {
     const block = { type: props.format, children: [] } as CustomElement

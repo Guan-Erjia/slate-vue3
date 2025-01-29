@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import RichTextExample from './pages/richtext/index.vue';
 import Checklists from './pages/check-lists/index.vue';
+import EditableVoids from './pages/editable-voids/index.vue';
+import Embeds from './pages/embeds/index.vue';
 </script>
 
 <template>
@@ -14,6 +16,7 @@ import Checklists from './pages/check-lists/index.vue';
       <a href="#RichText">
         <li class="nav-list-item">Rich Text</li>
         <li class="nav-list-item">Checklists</li>
+        <li class="nav-list-item">EditableVoids</li>
       </a>
     </ol>
     <div class="scroll-container">
@@ -22,6 +25,12 @@ import Checklists from './pages/check-lists/index.vue';
       </div>
       <div class="example-item">
         <Checklists />
+      </div>
+      <div class="example-item">
+        <EditableVoids />
+      </div>
+      <div class="example-item">
+        <Embeds />
       </div>
     </div>
   </div>

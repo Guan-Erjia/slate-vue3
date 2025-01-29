@@ -61,8 +61,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
           flexDirection: 'row',
           alignItems: 'center'
         }
-      }, h(CheckListItem, { element }, () => children)
-      )
+      }, h(CheckListItem, { element }, () => children))
     default:
       return h('p', attributes, children)
   }
@@ -73,8 +72,8 @@ const editor = withChecklists(withDOM(createEditor(initialValue)))
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement"
-  :render-leaf="defaultRenderLeaf" :render-placeholder="defaultRenderPlaceHolder">
-    <Editable placeholder="Enter some rich text…" spellCheck autoFocus  />
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
+    :render-placeholder="defaultRenderPlaceHolder">
+    <Editable placeholder="Enter some rich text…" spellCheck autoFocus />
   </Slate>
 </template>

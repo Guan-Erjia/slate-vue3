@@ -9,7 +9,7 @@ import { useAttrs } from 'vue';
 
 const attrs = useAttrs()
 const props = defineProps<{
-  active: boolean
+  active?: boolean
   reversed?: boolean
 }>()
 </script>

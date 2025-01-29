@@ -41,8 +41,8 @@ export const Slate = defineComponent({
     provide(SLATE_USE_EDITOR, editor)
     provide(SLATE_USE_DECORATE, decorate)
     provide(SLATE_INNER_RENDER_ELEMENT, renderElement)
-    provide(SLATE_INNER_RENDER_LEAF, renderLeaf )
-    provide(SLATE_INNER_RENDER_PLACEHOLDER, renderPlaceholder )
+    provide(SLATE_INNER_RENDER_LEAF, renderLeaf)
+    provide(SLATE_INNER_RENDER_PLACEHOLDER, renderPlaceholder)
 
     const isFocus = ref(DOMEditor.isFocused(editor));
     const isComposing = ref(false);
