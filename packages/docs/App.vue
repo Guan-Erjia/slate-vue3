@@ -3,6 +3,7 @@ import RichText from './pages/richtext/index.vue';
 import CheckLists from './pages/check-lists/index.vue';
 import EditableVoids from './pages/editable-voids/index.vue';
 import Embeds from './pages/embeds/index.vue';
+import Codehighlighting from './pages/code-highlighting/index.vue';
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -21,6 +22,10 @@ const ExampleOptions = computed(() => [
   {
     name: 'embeds',
     component: Embeds,
+  },
+  {
+    name: 'code-hightlighting',
+    component: Codehighlighting,
   }
 ])
 </script>
@@ -32,7 +37,7 @@ const ExampleOptions = computed(() => [
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
   </header>
   <div style="display: flex;height: calc(100% - 50px);">
-    <ol style="width: 160px;flex-shrink: 0;box-sizing: border-box;">
+    <ol style="width: 170px;flex-shrink: 0;box-sizing: border-box;">
       <a :href="`#${item.name}`" v-for="item in ExampleOptions">
         <li style="text-decoration: none;margin-bottom: 10px;">{{ item.name }}</li>
       </a>

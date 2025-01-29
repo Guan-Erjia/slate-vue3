@@ -20,8 +20,7 @@ export const isEventHandled = <EventType extends Event>(
   if (shouldTreatEventAsHandled != null) {
     return shouldTreatEventAsHandled;
   }
-
-  return event.isDefaultPrevented() || event.isPropagationStopped();
+  return event.defaultPrevented || event.cancelBubble;
 };
 
 /**
