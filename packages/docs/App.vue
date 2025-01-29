@@ -24,7 +24,7 @@ const ExampleOptions = computed(() => [
     component: Embeds,
   },
   {
-    name: 'code-hightlighting',
+    name: 'code-highlighting',
     component: Codehighlighting,
   }
 ])
