@@ -18,7 +18,6 @@
 const props = defineProps<{
   value: string
 }>()
-console.log(props.value)
 const emit = defineEmits(['onChange']);
 const onChange = (e: Event) => {
   emit('onChange', e)
