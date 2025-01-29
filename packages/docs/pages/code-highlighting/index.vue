@@ -2,7 +2,7 @@
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
     <ExampleToolbar />
-    <Editable placeholder="Enter some text..." @keydown="onKeydown" />
+    <Editable v-if="editor.children.length" placeholder="Enter some text..." @keydown="onKeydown" />
   </Slate>
 </template>
 <script lang="ts" setup>
@@ -17,13 +17,14 @@ import 'prismjs/components/prism-php'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-java'
 import { createEditor, Element, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, DOMEditor, Transforms, Editor, NodeEntry, Node, Range } from 'slate-vue';
-import { computed, h } from 'vue';
+import { computed, h, nextTick } from 'vue';
 import LanguageSelect from './LanguageSelect.vue'
 import ExampleToolbar from './ExampleToolbar.vue'
 import isHotkey from "is-hotkey";
 import { CodeBlockElement } from "packages/docs/custom-types";
 import { normalizeTokens } from '../../utils/normalize-tokens'
 import Prism from 'prismjs'
+import { cloneDeep } from "lodash-es";
 
 const toChildren = (content: string) => [{ text: content }]
 const toCodeLines = (content: string): Element[] =>
@@ -89,13 +90,6 @@ declare module 'slate' {
 ]
 
 const editor = withDOM(createEditor(initialValue))
-const decorate = computed(() => ([node, path]: any) => {
-  if (Element.isElement(node) && node.type === 'code-line') {
-    const ranges = editor.nodeToDecorations?.get(node) || []
-    return ranges
-  }
-  return []
-})
 
 const renderLeaf = (props: RenderLeafProps) => {
   const { attributes, children, leaf } = props
@@ -107,7 +101,13 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
   if (element.type === 'code-block') {
     const onChange = (e: Event) => {
       const path = DOMEditor.findPath(editor, element)
-      Transforms.setNodes(editor, { language: (e.target as HTMLSelectElement).value }, { at: path })
+      Transforms.removeNodes(editor, { at: path })
+      nextTick(() => {
+        Transforms.insertNodes(editor, {
+          ...element,
+          language: (e.target as HTMLSelectElement).value
+        }, { at: path })
+      });
     }
 
     return h('div', {
@@ -123,11 +123,9 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
       },
       spellCheck: false
     }, [
-      h(LanguageSelect, { value: element.language, onChange }),
-      children
-    ])
-
+      h(LanguageSelect, { value: element.language, onChange }), children])
   }
+
   if (element.type === 'code-line') {
     return h('div', {
       ...attributes, style: {
@@ -209,18 +207,25 @@ const getChildNodeToDecorations = ([
   return nodeToDecorations
 }
 
-const blockEntries = Array.from(
+const blockEntries = computed(() => Array.from(
   Editor.nodes(editor, {
     at: [],
     mode: 'highest',
     match: n => Element.isElement(n) && n.type === 'code-block',
   })
-)
+))
 
-const nodeToDecorations = mergeMaps(
-  ...blockEntries.map(getChildNodeToDecorations)
-)
-editor.nodeToDecorations = nodeToDecorations
+const node2Decorations = computed(() => mergeMaps(
+  ...blockEntries.value.map(getChildNodeToDecorations)
+))
+
+const decorate = computed(() => ([node, path]: any) => {
+  if (Element.isElement(node) && node.type === 'code-line') {
+    const ranges = node2Decorations.value.get(node) || []
+    return ranges
+  }
+  return []
+})
 
 </script>
 <style>
