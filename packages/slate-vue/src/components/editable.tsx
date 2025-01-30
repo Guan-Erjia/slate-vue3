@@ -1278,7 +1278,7 @@ export const Editable = defineComponent({
 
         const element =
           editor.children[
-          editor.selection !== null ? editor.selection.focus.path[1] : 0
+          editor.selection !== null ? editor.selection.focus.path[0] : 0
           ]
         const isRTL = direction(Node.string(element)) === 'rtl'
 
