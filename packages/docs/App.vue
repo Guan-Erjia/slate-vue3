@@ -4,6 +4,8 @@ import CheckLists from './pages/check-lists/index.vue';
 import EditableVoids from './pages/editable-voids/index.vue';
 import Embeds from './pages/embeds/index.vue';
 import Codehighlighting from './pages/code-highlighting/index.vue';
+import ForcedLayout from './pages/forced-layout/index.vue';
+import HoveringToolbar from './pages/hovering-toolbar/index.vue';
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -26,6 +28,14 @@ const ExampleOptions = computed(() => [
   {
     name: 'code-highlighting',
     component: Codehighlighting,
+  },
+  {
+    name: 'forced-layout',
+    component: ForcedLayout,
+  },
+  {
+    name: 'hovering-toolbar',
+    component: HoveringToolbar,
   }
 ])
 </script>
