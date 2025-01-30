@@ -30,8 +30,6 @@ export const LeafComp = defineComponent({
   props: ["text", "leaf", "parent", "isLast"],
   setup(props: LeafProps) {
     const { text, leaf, isLast, parent } = props;
-    console.log(props);
-
     const editor = useEditor();
 
     const placeholderResizeObserver = ref<ResizeObserver | null>(null);
@@ -98,7 +96,6 @@ export const LeafComp = defineComponent({
           showPlaceholder.value &&
           renderPlaceholder(placeholderProps.value),
         h(StringComp, {
-          editor: editor,
           isLast: isLast,
           leaf: leaf,
           parent: parent,

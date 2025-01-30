@@ -16,10 +16,9 @@ import { useEditor } from "../hooks/use-editor";
  */
 export const Children = defineComponent({
   name: "Children",
-  props: ["node", "decorations", "selection", "editor"],
+  props: ["node", "decorations", "selection"],
   setup(props: ChildrenProps) {
     const { decorations, node, selection } = props;
-
     const editor = useEditor();
 
     // 更新成功后可信任 selection

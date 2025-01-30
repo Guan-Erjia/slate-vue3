@@ -32,18 +32,16 @@ export const TextComp = defineComponent({
     const decorate = useDecorate();
     const path = computed(() => parentPath.concat(index));
 
-    const decorations = computed<DecoratedRange[]>(() => {
+    const leaves = computed(() => {
       const range = Editor.range(editor, path.value);
       const ds = decorate([text, path.value]);
       parentDecorations.forEach((dec) => {
         ds.push(Range.intersection(dec, range)!);
       });
-      return ds;
+      return Text.decorations(text, ds);
     });
 
-    const leaves = Text.decorations(text, decorations.value);
     const key = DOMEditor.findKey(editor, text);
-
     onMounted(() => {
       const key = DOMEditor.findKey(editor, text);
       if (spanRef.value) {
@@ -67,17 +65,13 @@ export const TextComp = defineComponent({
     return () =>
       h(
         "span",
-        {
-          "data-slate-node": "text",
-          ref: spanRef,
-        },
-        leaves.map((leaf, i) =>
+        { "data-slate-node": "text", ref: spanRef },
+        leaves.value.map((leaf, i) =>
           h(LeafComp, {
             text,
             leaf,
             parent,
-            editor,
-            isLast: isLast && i === leaves.length - 1,
+            isLast: isLast && i === leaves.value.length - 1,
             key: `${key.id}-${i}`,
           })
         )

@@ -18,6 +18,7 @@ export const StringComp = defineComponent({
   setup(props: StringProps) {
     const { isLast, leaf, parent, text } = props;
     const editor = useEditor();
+
     const isMarkPlaceholder = computed(() =>
       Boolean(leaf[MARK_PLACEHOLDER_SYMBOL])
     );
