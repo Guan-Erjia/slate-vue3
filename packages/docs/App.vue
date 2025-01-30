@@ -96,5 +96,6 @@ a:hover {
   height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 </style>
