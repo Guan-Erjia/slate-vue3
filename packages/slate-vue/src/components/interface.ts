@@ -61,7 +61,10 @@ export interface EditableProps extends HTMLAttributes {
   readOnly: boolean;
   placeholder?: string;
   style?: CSSProperties;
-  scrollSelectionIntoView: (editor: DOMEditor, domRange: globalThis.Range) => void;
+  scrollSelectionIntoView: (
+    editor: DOMEditor,
+    domRange: globalThis.Range
+  ) => void;
   is: string;
 }
 
@@ -69,7 +72,6 @@ export interface ChildrenProps {
   node: Ancestor;
   selection: Range | null;
   decorations: DecoratedRange[];
-  editor: DOMEditor;
 }
 
 export interface TextProps {
@@ -78,7 +80,6 @@ export interface TextProps {
   text: Text;
   parentPath: Path;
   parentDecorations: DecoratedRange[];
-  editor: DOMEditor;
   index: number;
 }
 
@@ -87,12 +88,10 @@ export interface StringProps {
   text: Text;
   leaf: Text;
   parent: Element;
-  editor: DOMEditor;
 }
 
 export interface ElementProps {
   element: Element;
-  editor: DOMEditor;
   parentPath: Path;
   parentSelection: Range | null;
   parentDecorations: DecoratedRange[];
@@ -101,7 +100,7 @@ export interface ElementProps {
 
 export interface SlateProps {
   editor: DOMEditor;
-  decorate: (entry: NodeEntry) => DecoratedRange[],
+  decorate: (entry: NodeEntry) => DecoratedRange[];
   renderElement: (props: RenderElementProps) => VNode;
   renderLeaf: (props: RenderLeafProps) => VNode;
   renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
@@ -112,5 +111,4 @@ export interface LeafProps {
   leaf: Text;
   parent: Element;
   isLast: boolean;
-  editor: DOMEditor;
 }

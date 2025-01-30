@@ -1633,7 +1633,6 @@ export const Editable = defineComponent({
         <Children
           decorations={decorations.value}
           node={editor}
-          editor={editor}
           selection={editor.selection}
         />
       </div>
