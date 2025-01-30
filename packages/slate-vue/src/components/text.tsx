@@ -31,7 +31,7 @@ export const TextComp = defineComponent({
       return ds
     })
 
-    const leaves = Text.decorations(text, decorations.value)
+    const leaves = computed(()=>Text.decorations(text, decorations.value))
     const key = DOMEditor.findKey(editor, text)
 
     onMounted(() => {
@@ -57,12 +57,12 @@ export const TextComp = defineComponent({
     return () => h('span', {
       'data-slate-node': 'text',
       ref: spanRef
-    }, leaves.map((leaf, i) => h(LeafComp, {
+    }, leaves.value.map((leaf, i) => h(LeafComp, {
       text,
       leaf,
       parent,
       editor,
-      isLast: isLast && i === leaves.length - 1,
+      isLast: isLast && i === leaves.value.length - 1,
       key: `${key.id}-${i}`,
     })))
   }
