@@ -44,9 +44,9 @@ export const Children = defineComponent({
         return Element.isElement(child) ? (
           <ElementComp
             element={child}
-            parentPath={path.value}
-            parentSelection={selection}
-            parentDecorations={decorations}
+            childPath={path}
+            childSelection={selection}
+            childDecorations={decorations}
             index={i}
             key={key.id}
           />
@@ -55,7 +55,7 @@ export const Children = defineComponent({
             text={child}
             parent={node}
             isLast={isLeafBlock.value && i === node.children.length - 1}
-            parentPath={path.value}
+            parentPath={path}
             parentDecorations={decorations}
             index={i}
             key={key.id}

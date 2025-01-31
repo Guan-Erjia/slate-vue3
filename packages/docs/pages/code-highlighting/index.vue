@@ -101,13 +101,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
   if (element.type === 'code-block') {
     const onChange = (e: Event) => {
       const path = DOMEditor.findPath(editor, element)
-      Transforms.removeNodes(editor, { at: path })
-      nextTick(() => {
-        Transforms.insertNodes(editor, {
-          ...element,
-          language: (e.target as HTMLSelectElement).value
-        }, { at: path })
-      });
+      Transforms.setNodes(editor, { language: (e.target as HTMLSelectElement).value }, { at: path })
     }
 
     return h('div', {

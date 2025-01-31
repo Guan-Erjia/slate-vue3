@@ -6,10 +6,17 @@ import type {
   Ancestor,
   Range,
   Path,
+  BaseText,
 } from "slate";
 import type { DOMEditor } from "slate-dom";
 import type { JSX } from "vue/jsx-runtime";
-import type { CSSProperties, HTMLAttributes, VNode, VNodeRef } from "vue";
+import type {
+  ComputedRef,
+  CSSProperties,
+  HTMLAttributes,
+  VNode,
+  VNodeRef,
+} from "vue";
 
 /**
  * The props that get passed to renderPlaceholder
@@ -70,31 +77,31 @@ export interface EditableProps extends HTMLAttributes {
 
 export interface ChildrenProps {
   node: Ancestor;
-  selection: Range | null;
-  decorations: DecoratedRange[];
+  selection: ComputedRef<Range | null>;
+  decorations: ComputedRef<DecoratedRange[]>;
 }
 
 export interface TextProps {
   isLast: boolean;
   parent: Element;
   text: Text;
-  parentPath: Path;
-  parentDecorations: DecoratedRange[];
+  parentPath: ComputedRef<Path>;
+  parentDecorations: ComputedRef<DecoratedRange[]>;
   index: number;
 }
 
 export interface StringProps {
   isLast: boolean;
   text: Text;
-  leaf: Text;
+  leaf: ComputedRef<Text>;
   parent: Element;
 }
 
 export interface ElementProps {
   element: Element;
-  parentPath: Path;
-  parentSelection: Range | null;
-  parentDecorations: DecoratedRange[];
+  childPath: ComputedRef<Path>;
+  childSelection: ComputedRef<Range | null>;
+  childDecorations: ComputedRef<DecoratedRange[]>;
   index: number;
 }
 
@@ -108,7 +115,14 @@ export interface SlateProps {
 
 export interface LeafProps {
   text: Text;
-  leaf: Text;
   parent: Element;
   isLast: boolean;
+  index: number;
+  leaves: ComputedRef<
+    (BaseText & {
+      [key: string]: unknown;
+      placeholder?: string;
+      onPlaceholderResize?: (node: HTMLElement | null) => void;
+    })[]
+  >;
 }

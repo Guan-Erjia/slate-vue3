@@ -1598,6 +1598,7 @@ export const Editable = defineComponent({
     const spellcheck = computed(() => HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.spellcheck : false)
     const autocorrect = computed(() => HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.autocorrect : undefined)
     const autocapitalize = computed(() => HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.autocapitalize : undefined)
+    const editorSelection = computed(()=> editor.selection)
 
     return () => (
       <div
@@ -1631,9 +1632,9 @@ export const Editable = defineComponent({
         onPaste={onPaste}
       >
         <Children
-          decorations={decorations.value}
+          decorations={decorations}
           node={editor}
-          selection={editor.selection}
+          selection={editorSelection}
         />
       </div>
     )

@@ -11,6 +11,7 @@ import {
   defineComponent,
   Fragment,
   h,
+  onBeforeUnmount,
   onMounted,
   onUnmounted,
   ref,
@@ -27,22 +28,25 @@ const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0;
  */
 export const LeafComp = defineComponent({
   name: "slate-leaf",
-  props: ["text", "leaf", "parent", "isLast"],
+  props: ["text", "leaf", "parent", "isLast", "leaves", "index"],
   setup(props: LeafProps) {
-    const { text, leaf, isLast, parent } = props;
+    const { text, isLast, parent, leaves, index } = props;
     const editor = useEditor();
+    const leaf = computed(() => leaves.value[index]!);
 
     const placeholderResizeObserver = ref<ResizeObserver | null>(null);
     const placeholderRef = ref<HTMLElement | null>(null);
     const showPlaceholder = ref(false);
     const showPlaceholderTimeoutRef = ref<number>();
-    const leafIsPlaceholder = computed(() => Boolean(leaf[PLACEHOLDER_SYMBOL]));
+    const leafIsPlaceholder = computed(() =>
+      Boolean(leaf.value[PLACEHOLDER_SYMBOL])
+    );
 
     onMounted(() => {
       if (placeholderRef.value) {
         EDITOR_TO_PLACEHOLDER_ELEMENT.set(editor, placeholderRef.value);
         placeholderResizeObserver.value = new ResizeObserver(() => {
-          leaf.onPlaceholderResize?.(placeholderRef.value);
+          leaf.value.onPlaceholderResize?.(placeholderRef.value);
         });
         placeholderResizeObserver.value.observe(placeholderRef.value);
       }
@@ -55,18 +59,19 @@ export const LeafComp = defineComponent({
       }
     });
 
-    onUnmounted(() => {
+    onBeforeUnmount(() => {
       EDITOR_TO_PLACEHOLDER_ELEMENT.delete(editor);
       placeholderResizeObserver.value?.disconnect();
       placeholderResizeObserver.value = null;
-      leaf.onPlaceholderResize?.(null);
-
+      /** fixme 
+        // leaf.value?.onPlaceholderResize?.(null);
+       * this count be not right **/
       clearTimeout(showPlaceholderTimeoutRef.value!);
       showPlaceholderTimeoutRef.value = undefined;
     });
 
     const placeholderProps = computed<RenderPlaceholderProps>(() => ({
-      children: leaf.placeholder,
+      children: leaf.value.placeholder,
       attributes: {
         "data-slate-placeholder": true,
         style: {
@@ -97,7 +102,7 @@ export const LeafComp = defineComponent({
           renderPlaceholder(placeholderProps.value),
         h(StringComp, {
           isLast: isLast,
-          leaf: leaf,
+          leaf,
           parent: parent,
           text: text,
         }),
@@ -111,7 +116,7 @@ export const LeafComp = defineComponent({
       renderLeaf({
         attributes: { "data-slate-leaf": true },
         children: children.value,
-        leaf,
+        leaf: leaf.value,
         text,
       });
   },

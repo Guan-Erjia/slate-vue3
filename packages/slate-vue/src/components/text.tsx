@@ -30,15 +30,15 @@ export const TextComp = defineComponent({
     const editor = useEditor();
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
-    const path = computed(() => parentPath.concat(index));
+    const path = computed(() => parentPath.value.concat(index));
 
     const leaves = computed(() => {
       const range = Editor.range(editor, path.value);
       const ds = decorate([text, path.value]);
-      parentDecorations.forEach((dec) => {
+      parentDecorations.value.forEach((dec) => {
         ds.push(Range.intersection(dec, range)!);
       });
-      return Text.decorations(text, ds);
+      return Text.decorations(text, ds.filter(Boolean).length ? ds : []);
     });
 
     const key = DOMEditor.findKey(editor, text);
@@ -69,8 +69,9 @@ export const TextComp = defineComponent({
         leaves.value.map((leaf, i) =>
           h(LeafComp, {
             text,
-            leaf,
             parent,
+            index: i,
+            leaves,
             isLast: isLast && i === leaves.value.length - 1,
             key: `${key.id}-${i}`,
           })

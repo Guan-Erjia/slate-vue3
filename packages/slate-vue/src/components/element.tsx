@@ -33,31 +33,30 @@ export const ElementComp = defineComponent({
   name: "slate-element",
   props: [
     "element",
-    "parentPath",
-    "parentSelection",
-    "parentDecorations",
+    "childPath",
+    "childSelection",
+    "childDecorations",
     "index",
   ],
   setup(props: ElementProps) {
-    const { element, parentPath, parentSelection, parentDecorations, index } =
+    const { element, childPath, childSelection, childDecorations, index } =
       props;
     const decorate = useDecorate();
     const editor = useEditor();
 
-    const path = computed(() => parentPath.concat(index));
+    const path = computed(() => childPath.value.concat(index));
     const decorations = computed<DecoratedRange[]>(() => {
       const range = Editor.range(editor, path.value);
       const ds = decorate([element, path.value]);
-      parentDecorations.forEach((dec) => {
+      childDecorations.value.forEach((dec) => {
         ds.push(Range.intersection(dec, range)!);
       });
       return ds;
     });
 
     const selection = computed(() => {
-      const p = parentPath.concat(index);
-      const range = Editor.range(editor, p);
-      return parentSelection && Range.intersection(range, parentSelection);
+      const range = Editor.range(editor, path.value);
+      return childSelection.value && Range.intersection(range, childSelection.value);
     });
 
     const selected = computed(() => !!selection.value);
@@ -123,9 +122,9 @@ export const ElementComp = defineComponent({
     });
     let children: JSX.Element = (
       <Children
-        decorations={decorations.value}
+        decorations={decorations}
         node={element}
-        selection={selection.value}
+        selection={selection}
       />
     );
 
@@ -145,8 +144,8 @@ export const ElementComp = defineComponent({
           }}
         >
           <TextComp
-            parentPath={path.value}
-            parentDecorations={decorations.value}
+            parentPath={path}
+            parentDecorations={decorations}
             isLast={false}
             parent={element}
             text={text}

@@ -20,11 +20,12 @@ export const StringComp = defineComponent({
     const editor = useEditor();
 
     const isMarkPlaceholder = computed(() =>
-      Boolean(leaf[MARK_PLACEHOLDER_SYMBOL])
+      Boolean(leaf.value[MARK_PLACEHOLDER_SYMBOL])
     );
     const getTextContent = computed(
       () =>
-        (leaf.text ?? "") + (isLast && leaf.text.slice(-1) === "\n" ? "\n" : "")
+        (leaf.value.text ?? "") +
+        (isLast && leaf.value.text.slice(-1) === "\n" ? "\n" : "")
     );
 
     // COMPAT: Render text inside void nodes with a zero-width space.
@@ -36,7 +37,7 @@ export const StringComp = defineComponent({
     const isInlineBreak = computed(() => {
       const pathParent = Path.parent(DOMEditor.findPath(editor, text));
       return (
-        leaf.text === "" &&
+        leaf.value.text === "" &&
         parent.children[parent.children.length - 1] === text &&
         !editor.isInline(parent) &&
         Editor.string(editor, pathParent) === ""
@@ -54,7 +55,7 @@ export const StringComp = defineComponent({
         : // COMPAT: If the text is empty, it's because it's on the edge of an inline
         // node, so we render a zero-width space so that the selection can be
         // inserted next to it still.
-        leaf.text === ""
+        leaf.value.text === ""
         ? h(ZeroWidthString, { isMarkPlaceholder: isMarkPlaceholder.value })
         : h("span", { "data-slate-string": true }, getTextContent.value);
   },
