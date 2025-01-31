@@ -13,11 +13,11 @@ import {
   h,
   onBeforeUnmount,
   onMounted,
-  onUnmounted,
   ref,
 } from "vue";
 import { useRenderLeaf, useRenderPlaceholder } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
+import { Editor, Element } from "slate";
 
 // Delay the placeholder on Android to prevent the keyboard from closing.
 // (https://github.com/ianstormtaylor/slate/pull/5368)
@@ -28,11 +28,26 @@ const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0;
  */
 export const LeafComp = defineComponent({
   name: "slate-leaf",
-  props: ["text", "leaf", "parent", "isLast", "leaves", "index"],
+  props: ["text", "leaf", "parent", "leaves", "leafIndex", "textIndex"],
   setup(props: LeafProps) {
-    const { text, isLast, parent, leaves, index } = props;
+    const { text, parent, leaves, leafIndex, textIndex } = props;
     const editor = useEditor();
-    const leaf = computed(() => leaves.value[index]!);
+    const leaf = computed(() => leaves.value[leafIndex]!);
+
+    const isLast = computed(() => {
+      const isVoid = Editor.isVoid(editor, parent);
+      const isLeafBlock =
+        Element.isElement(parent) &&
+        !editor.isInline(parent) &&
+        Editor.hasInlines(editor, parent);
+
+      return (
+        !isVoid &&
+        isLeafBlock &&
+        textIndex === parent.children.length - 1 &&
+        leafIndex === leaves.value.length - 1
+      );
+    });
 
     const placeholderResizeObserver = ref<ResizeObserver | null>(null);
     const placeholderRef = ref<HTMLElement | null>(null);
@@ -101,10 +116,10 @@ export const LeafComp = defineComponent({
           showPlaceholder.value &&
           renderPlaceholder(placeholderProps.value),
         h(StringComp, {
-          isLast: isLast,
+          isLast,
           leaf,
-          parent: parent,
-          text: text,
+          parent,
+          text,
         }),
       ])
     );

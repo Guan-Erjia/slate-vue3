@@ -1,4 +1,4 @@
-import { type DecoratedRange, Editor, Text, Range } from "slate";
+import { type DecoratedRange, Editor, Text, Range, Element } from "slate";
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -16,17 +16,9 @@ import { useEditor } from "../hooks/use-editor";
  */
 export const TextComp = defineComponent({
   name: "slate-text",
-  props: [
-    "text",
-    "parent",
-    "parentPath",
-    "parentDecorations",
-    "isLast",
-    "index",
-  ],
+  props: ["text", "parent", "parentPath", "parentDecorations", "index"],
   setup(props: TextProps) {
-    const { text, parent, parentPath, parentDecorations, isLast, index } =
-      props;
+    const { text, parent, parentPath, parentDecorations, index } = props;
     const editor = useEditor();
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
@@ -70,9 +62,9 @@ export const TextComp = defineComponent({
           h(LeafComp, {
             text,
             parent,
-            index: i,
+            leafIndex: i,
+            textIndex: index,
             leaves,
-            isLast: isLast && i === leaves.value.length - 1,
             key: `${key.id}-${i}`,
           })
         )

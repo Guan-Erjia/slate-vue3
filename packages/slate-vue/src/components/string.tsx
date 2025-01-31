@@ -25,7 +25,7 @@ export const StringComp = defineComponent({
     const getTextContent = computed(
       () =>
         (leaf.value.text ?? "") +
-        (isLast && leaf.value.text.slice(-1) === "\n" ? "\n" : "")
+        (isLast.value && leaf.value.text.slice(-1) === "\n" ? "\n" : "")
     );
 
     // COMPAT: Render text inside void nodes with a zero-width space.

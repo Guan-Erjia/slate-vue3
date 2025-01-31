@@ -54,7 +54,6 @@ export const Children = defineComponent({
           <TextComp
             text={child}
             parent={node}
-            isLast={isLeafBlock.value && i === node.children.length - 1}
             parentPath={path}
             parentDecorations={decorations}
             index={i}

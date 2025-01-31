@@ -56,7 +56,9 @@ export const ElementComp = defineComponent({
 
     const selection = computed(() => {
       const range = Editor.range(editor, path.value);
-      return childSelection.value && Range.intersection(range, childSelection.value);
+      return (
+        childSelection.value && Range.intersection(range, childSelection.value)
+      );
     });
 
     const selected = computed(() => !!selection.value);
@@ -146,7 +148,6 @@ export const ElementComp = defineComponent({
           <TextComp
             parentPath={path}
             parentDecorations={decorations}
-            isLast={false}
             parent={element}
             text={text}
             index={0}

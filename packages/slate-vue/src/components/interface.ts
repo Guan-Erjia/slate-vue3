@@ -82,7 +82,6 @@ export interface ChildrenProps {
 }
 
 export interface TextProps {
-  isLast: boolean;
   parent: Element;
   text: Text;
   parentPath: ComputedRef<Path>;
@@ -91,7 +90,7 @@ export interface TextProps {
 }
 
 export interface StringProps {
-  isLast: boolean;
+  isLast: ComputedRef<boolean>;
   text: Text;
   leaf: ComputedRef<Text>;
   parent: Element;
@@ -116,8 +115,8 @@ export interface SlateProps {
 export interface LeafProps {
   text: Text;
   parent: Element;
-  isLast: boolean;
-  index: number;
+  leafIndex: number;
+  textIndex: number;
   leaves: ComputedRef<
     (BaseText & {
       [key: string]: unknown;
