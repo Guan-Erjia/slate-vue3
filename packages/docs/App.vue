@@ -6,6 +6,8 @@ import Embeds from './pages/embeds/index.vue';
 import Codehighlighting from './pages/code-highlighting/index.vue';
 import ForcedLayout from './pages/forced-layout/index.vue';
 import HoveringToolbar from './pages/hovering-toolbar/index.vue';
+import HugeDocument from './pages/huge-document/index.vue';
+import Image from './pages/image/index.vue';
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -36,6 +38,14 @@ const ExampleOptions = computed(() => [
   {
     name: 'hovering-toolbar',
     component: HoveringToolbar,
+  },
+  {
+    name: 'huge-document',
+    component: HugeDocument,
+  },
+  {
+    name: 'image',
+    component: Image,
   }
 ])
 </script>
@@ -55,13 +65,13 @@ const ExampleOptions = computed(() => [
     <div class="scroll-container">
       <template v-for="item in ExampleOptions">
         <header style="display: flex; padding-top: 20px;" :id="item.name">
-          <span style="cursor: default;font-size: 18px;"> {{ item.name }} </span>
+          <span style="cursor: default;font-size: 20px;"> {{ item.name }} </span>
           <div style="flex-grow: 1;"></div>
           <a target="_blank"
             :href="`https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/docs/pages/${item.name}`">
             view code</a>
         </header>
-        <div style="padding: 20px;margin-top: 10px;box-sizing: border-box;background-color: white;">
+        <div style="margin-top: 10px;box-sizing: border-box;background-color: white;position: relative;">
           <component :is="item.component" />
         </div>
       </template>
@@ -69,15 +79,6 @@ const ExampleOptions = computed(() => [
   </div>
 </template>
 <style scoped>
-a {
-  color: gray;
-  text-decoration: none
-}
-
-a:hover {
-  color: #aaaaaa;
-}
-
 .header {
   box-sizing: border-box;
   padding: 0 20px;
@@ -87,6 +88,7 @@ a:hover {
   color: #aaaaaa;
   height: 50px;
   align-items: center;
+  box-sizing: border-box;
 }
 
 .scroll-container {

@@ -39,9 +39,15 @@ importers:
         specifier: ^3.5.13
         version: 3.5.13(typescript@5.7.2)
     devDependencies:
+      '@faker-js/faker':
+        specifier: ^9.4.0
+        version: 9.4.0
       '@types/is-hotkey':
         specifier: ^0.1.10
         version: 0.1.10
+      '@types/is-url':
+        specifier: ^1.2.32
+        version: 1.2.32
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
@@ -57,6 +63,12 @@ importers:
       '@vue/tsconfig':
         specifier: ^0.7.0
         version: 0.7.0(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
+      image-extensions:
+        specifier: ^1.1.0
+        version: 1.1.0
+      is-url:
+        specifier: ^1.2.4
+        version: 1.2.4
       prismjs:
         specifier: ^1.29.0
         version: 1.29.0
@@ -348,6 +360,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@faker-js/faker@9.4.0':
+    resolution: {integrity: sha512-85+k0AxaZSTowL0gXp8zYWDIrWclTbRPg/pm/V0dSFZ6W6D4lhcG3uuZl4zLsEKfEvs69xDbLN2cHQudwp95JA==}
+    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
+
   '@jridgewell/gen-mapping@0.3.8':
     resolution: {integrity: sha512-imAbBGkb+ebQyxKgzv5Hu2nmROxoDOXHh80evxdoXNOrvAnVx7zimzc1Oo5h9RlfV4vPXaE2iM5pOFbvOCClWA==}
     engines: {node: '>=6.0.0'}
@@ -526,6 +542,9 @@ packages:
 
   '@types/is-hotkey@0.1.10':
     resolution: {integrity: sha512-RvC8KMw5BCac1NvRRyaHgMMEtBaZ6wh0pyPTBu7izn4Sj/AX9Y4aXU5c7rX8PnM/knsuUpC1IeoBkANtxBypsQ==}
+
+  '@types/is-url@1.2.32':
+    resolution: {integrity: sha512-46VLdbWI8Sc+hPexQ6NLNR2YpoDyDZIpASHkJQ2Yr+Kf9Giw6LdCTkwOdsnHKPQeh7xTjTmSnxbE8qpxYuCiHA==}
 
   '@types/lodash-es@4.17.12':
     resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
@@ -780,6 +799,10 @@ packages:
     resolution: {integrity: sha512-ztqyC3kLto0e9WbNp0aeP+M3kTt+nbaIveGmUxAtZa+8iFgKLUOD4YKM5j+f3QD89bra7UeumolZHKuOXnTmeQ==}
     engines: {node: '>=8'}
 
+  image-extensions@1.1.0:
+    resolution: {integrity: sha512-P0t7ByhK8Jk9TU05ct/7+f7h8dNuXq5OY4m0IO/T+1aga/qHkpC0Wf472x3FLdq/zFDG17pgapCM3JDTxwZzow==}
+    engines: {node: '>=0.10.0'}
+
   import-lazy@4.0.0:
     resolution: {integrity: sha512-rKtvo6a868b5Hu3heneU+L4yEQ4jYKLtjpnPeUdK7h0yzXGmyBTypknlkCvHFBqfX9YlorEiMM6Dnq/5atfHkw==}
     engines: {node: '>=8'}
@@ -794,6 +817,9 @@ packages:
   is-plain-object@5.0.0:
     resolution: {integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==}
     engines: {node: '>=0.10.0'}
+
+  is-url@1.2.4:
+    resolution: {integrity: sha512-ITvGim8FhRiYe4IQ5uHSkj7pVaPDrCTkNd3yq3cV7iZAcJdHTUMPMEHcqSOy9xZ9qFenQCvi+2wjH9a1nXqHww==}
 
   jju@1.4.0:
     resolution: {integrity: sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA==}
@@ -1312,6 +1338,8 @@ snapshots:
   '@esbuild/win32-x64@0.24.2':
     optional: true
 
+  '@faker-js/faker@9.4.0': {}
+
   '@jridgewell/gen-mapping@0.3.8':
     dependencies:
       '@jridgewell/set-array': 1.2.1
@@ -1474,6 +1502,8 @@ snapshots:
   '@types/estree@1.0.6': {}
 
   '@types/is-hotkey@0.1.10': {}
+
+  '@types/is-url@1.2.32': {}
 
   '@types/lodash-es@4.17.12':
     dependencies:
@@ -1763,6 +1793,8 @@ snapshots:
 
   html-tags@3.3.1: {}
 
+  image-extensions@1.1.0: {}
+
   import-lazy@4.0.0: {}
 
   is-core-module@2.16.1:
@@ -1772,6 +1804,8 @@ snapshots:
   is-hotkey@0.2.0: {}
 
   is-plain-object@5.0.0: {}
+
+  is-url@1.2.4: {}
 
   jju@1.4.0: {}
 

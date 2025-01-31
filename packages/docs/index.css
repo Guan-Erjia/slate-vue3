@@ -1,14 +1,14 @@
 @font-face {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src: url(/1.woff2) format('woff2');
+  src: url(/1.woff2) format("woff2");
 }
 
 html,
 input,
 textarea {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   line-height: 1.4;
   background: #eee;
 }
@@ -47,7 +47,7 @@ blockquote {
   font-style: italic;
 }
 
-blockquote[dir='rtl'] {
+blockquote[dir="rtl"] {
   border-left: none;
   padding-left: 0;
   padding-right: 10px;
@@ -95,4 +95,16 @@ iframe {
   border-radius: 20px;
   outline-offset: -20px;
   white-space: pre-wrap;
+}
+div [data-slate-editor="true"] {
+  padding: 10px;
+}
+
+a {
+  color: gray;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #aaaaaa;
 }

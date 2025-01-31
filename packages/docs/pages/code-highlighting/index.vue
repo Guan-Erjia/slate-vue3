@@ -2,7 +2,7 @@
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
     <ExampleToolbar />
-    <Editable v-if="editor.children.length" placeholder="Enter some text..." @keydown="onKeydown" />
+    <Editable class="code-hightlighting" placeholder="Enter some text..." @keydown="onKeydown" />
   </Slate>
 </template>
 <script lang="ts" setup>
@@ -17,14 +17,13 @@ import 'prismjs/components/prism-php'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-java'
 import { createEditor, Element, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, DOMEditor, Transforms, Editor, NodeEntry, Node, Range } from 'slate-vue';
-import { computed, h, nextTick } from 'vue';
+import { computed, h } from 'vue';
 import LanguageSelect from './LanguageSelect.vue'
 import ExampleToolbar from './ExampleToolbar.vue'
 import isHotkey from "is-hotkey";
 import { CodeBlockElement } from "packages/docs/custom-types";
 import { normalizeTokens } from '../../utils/normalize-tokens'
 import Prism from 'prismjs'
-import { cloneDeep } from "lodash-es";
 
 const toChildren = (content: string) => [{ text: content }]
 const toCodeLines = (content: string): Element[] =>
@@ -116,24 +115,14 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
         position: 'relative'
       },
       spellCheck: false
-    }, [
-      h(LanguageSelect, { value: element.language, onChange }), children])
+    }, [h(LanguageSelect, { value: element.language, onChange }), children])
   }
 
   if (element.type === 'code-line') {
-    return h('div', {
-      ...attributes, style: {
-        position: 'relative'
-      }
-    }, children)
+    return h('div', { ...attributes, style: { position: 'relative' } }, children)
   }
 
-  const Tag = editor.isInline(element) ? 'span' : 'div'
-  return h(Tag, {
-    ...attributes, style: {
-      position: 'relative'
-    }
-  }, children)
+  return h(editor.isInline(element) ? 'span' : 'div', { ...attributes, style: { position: 'relative' } }, children)
 }
 
 const onKeydown = (e: KeyboardEvent) => {
@@ -143,8 +132,6 @@ const onKeydown = (e: KeyboardEvent) => {
     Editor.insertText(editor, '  ')
   }
 }
-
-
 
 const mergeMaps = <K, V>(...maps: Map<K, V>[]) => {
   const map = new Map<K, V>()
@@ -223,144 +210,146 @@ const decorate = computed(() => ([node, path]: any) => {
 
 </script>
 <style>
-code[class*="language-"],
-pre[class*="language-"] {
-  color: black;
-  background: none;
-  text-shadow: 0 1px white;
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  font-size: 1em;
-  text-align: left;
-  white-space: pre;
-  word-spacing: normal;
-  word-break: normal;
-  word-wrap: normal;
-  line-height: 1.5;
-
-  -moz-tab-size: 4;
-  -o-tab-size: 4;
-  tab-size: 4;
-
-  -webkit-hyphens: none;
-  -moz-hyphens: none;
-  -ms-hyphens: none;
-  hyphens: none;
-}
-
-pre[class*="language-"]::-moz-selection,
-pre[class*="language-"] ::-moz-selection,
-code[class*="language-"]::-moz-selection,
-code[class*="language-"] ::-moz-selection {
-  text-shadow: none;
-  background: #b3d4fc;
-}
-
-pre[class*="language-"]::selection,
-pre[class*="language-"] ::selection,
-code[class*="language-"]::selection,
-code[class*="language-"] ::selection {
-  text-shadow: none;
-  background: #b3d4fc;
-}
-
-@media print {
-
+.code-hightlighting {
   code[class*="language-"],
   pre[class*="language-"] {
-    text-shadow: none;
+    color: black;
+    background: none;
+    text-shadow: 0 1px white;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
   }
-}
 
-/* Code blocks */
-pre[class*="language-"] {
-  padding: 1em;
-  margin: .5em 0;
-  overflow: auto;
-}
+  pre[class*="language-"]::-moz-selection,
+  pre[class*="language-"] ::-moz-selection,
+  code[class*="language-"]::-moz-selection,
+  code[class*="language-"] ::-moz-selection {
+    text-shadow: none;
+    background: #b3d4fc;
+  }
 
-:not(pre)>code[class*="language-"],
-pre[class*="language-"] {
-  background: #f5f2f0;
-}
+  pre[class*="language-"]::selection,
+  pre[class*="language-"] ::selection,
+  code[class*="language-"]::selection,
+  code[class*="language-"] ::selection {
+    text-shadow: none;
+    background: #b3d4fc;
+  }
 
-/* Inline code */
-:not(pre)>code[class*="language-"] {
-  padding: .1em;
-  border-radius: .3em;
-  white-space: normal;
-}
+  @media print {
 
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-  color: slategray;
-}
+    code[class*="language-"],
+    pre[class*="language-"] {
+      text-shadow: none;
+    }
+  }
 
-.token.punctuation {
-  color: #999;
-}
+  /* Code blocks */
+  pre[class*="language-"] {
+    padding: 1em;
+    margin: .5em 0;
+    overflow: auto;
+  }
 
-.token.namespace {
-  opacity: .7;
-}
+  :not(pre)>code[class*="language-"],
+  pre[class*="language-"] {
+    background: #f5f2f0;
+  }
 
-.token.property,
-.token.tag,
-.token.boolean,
-.token.number,
-.token.constant,
-.token.symbol,
-.token.deleted {
-  color: #905;
-}
+  /* Inline code */
+  :not(pre)>code[class*="language-"] {
+    padding: .1em;
+    border-radius: .3em;
+    white-space: normal;
+  }
 
-.token.selector,
-.token.attr-name,
-.token.string,
-.token.char,
-.token.builtin,
-.token.inserted {
-  color: #690;
-}
+  .token.comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: slategray;
+  }
 
-.token.operator,
-.token.entity,
-.token.url,
-.language-css .token.string,
-.style .token.string {
-  color: #9a6e3a;
-  /* This background color was intended by the author of this theme. */
-  background: hsla(0, 0%, 100%, .5);
-}
+  .token.punctuation {
+    color: #999;
+  }
 
-.token.atrule,
-.token.attr-value,
-.token.keyword {
-  color: #07a;
-}
+  .token.namespace {
+    opacity: .7;
+  }
 
-.token.function,
-.token.class-name {
-  color: #DD4A68;
-}
+  .token.property,
+  .token.tag,
+  .token.boolean,
+  .token.number,
+  .token.constant,
+  .token.symbol,
+  .token.deleted {
+    color: #905;
+  }
 
-.token.regex,
-.token.important,
-.token.variable {
-  color: #e90;
-}
+  .token.selector,
+  .token.attr-name,
+  .token.string,
+  .token.char,
+  .token.builtin,
+  .token.inserted {
+    color: #690;
+  }
 
-.token.important,
-.token.bold {
-  font-weight: bold;
-}
+  .token.operator,
+  .token.entity,
+  .token.url,
+  .language-css .token.string,
+  .style .token.string {
+    color: #9a6e3a;
+    /* This background color was intended by the author of this theme. */
+    background: hsla(0, 0%, 100%, .5);
+  }
 
-.token.italic {
-  font-style: italic;
-}
+  .token.atrule,
+  .token.attr-value,
+  .token.keyword {
+    color: #07a;
+  }
 
-.token.entity {
-  cursor: help;
+  .token.function,
+  .token.class-name {
+    color: #DD4A68;
+  }
+
+  .token.regex,
+  .token.important,
+  .token.variable {
+    color: #e90;
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.entity {
+    cursor: help;
+  }
 }
 </style>
