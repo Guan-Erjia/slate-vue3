@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Slate, Editable, createEditor } from "slate-vue"
+import { IS_ANDROID, withDOM, Slate, Editable, createEditor } from "slate-vue"
 import { CSSProperties, h } from "vue";
-import { IS_ANDROID, withDOM } from "slate-dom";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "slate-vue";
 import Toolbar from '../../components/Toolbar.vue'
 import MarkButton from "./MarkButton.vue";
@@ -109,8 +108,8 @@ const editor = withDOM(createEditor(initialValue))
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement"
-  :render-leaf="renderLeaf" :render-placeholder="renderPlaceHolder">
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
+    :render-placeholder="renderPlaceHolder">
     <Toolbar>
       <MarkButton format="bold" icon="format_bold" />
       <MarkButton format="italic" icon="format_italic" />

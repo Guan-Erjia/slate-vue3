@@ -5,8 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { Editor } from 'slate';
-import { useEditor } from 'slate-vue'
+import { Editor, useEditor } from 'slate-vue'
 import Button from '../../components/Button.vue';
 import { computed, } from 'vue';
 const editor = useEditor()

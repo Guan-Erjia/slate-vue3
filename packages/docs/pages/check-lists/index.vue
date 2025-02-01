@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM } from "slate-vue"
 import { h } from "vue";
-import { withDOM } from "slate-dom";
 import type { RenderElementProps } from "slate-vue";
 import { CustomElement } from "../../custom-types";
 import CheckListItem from './CheckListsItem.vue'

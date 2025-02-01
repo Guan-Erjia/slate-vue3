@@ -11,9 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Transforms } from 'slate';
-import { DOMEditor } from 'slate-dom';
-import { useEditor, useReadOnly } from 'slate-vue';
+import { DOMEditor, Transforms, useEditor, useReadOnly } from 'slate-vue';
 import { computed, Events, } from 'vue';
 import { CustomElement } from '../../custom-types';
 const props = defineProps<{

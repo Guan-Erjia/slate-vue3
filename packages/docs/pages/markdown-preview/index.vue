@@ -5,7 +5,7 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, DecoratedRange, NodeEntry, Text, RenderLeafProps } from 'slate-vue';
+import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, DecoratedRange, NodeEntry, Text, RenderLeafProps } from 'slate-vue';
 import { CSSProperties, h } from 'vue';
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'

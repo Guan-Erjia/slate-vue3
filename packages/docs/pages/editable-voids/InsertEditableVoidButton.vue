@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import Button from '../../components/Button.vue';
-import { EditableVoidElement } from 'packages/docs/custom-types';
+import { EditableVoidElement } from '../../custom-types';
 import { Transforms, useEditor } from 'slate-vue';
 const editor = useEditor()
 const onMouseDown = (event: MouseEvent) => {
