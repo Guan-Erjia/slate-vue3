@@ -238,6 +238,6 @@ const onSmarkMouseDown = (event: MouseEvent) => {
         smart_button
       </Button>
     </Toolbar>
-    <Editable placeholder="Enter some text..." @keydown="onKeyDown" />
+    <Editable placeholder="Enter some text..." :spellcheck="false" @keydown="onKeyDown" />
   </Slate>
 </template>
