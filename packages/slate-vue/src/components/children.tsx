@@ -8,7 +8,7 @@ import {
   NODE_TO_PARENT,
 } from "slate-dom";
 import type { ChildrenProps } from "./interface";
-import { computed, defineComponent, onUpdated } from "vue";
+import { defineComponent, onUpdated } from "vue";
 import { useEditor } from "../hooks/use-editor";
 
 /**
@@ -26,14 +26,6 @@ export const Children = defineComponent({
       IS_NODE_MAP_DIRTY.set(editor, false);
     });
 
-    const path = computed(() => DOMEditor.findPath(editor, node));
-    const isLeafBlock = computed(
-      () =>
-        Element.isElement(node) &&
-        !editor.isInline(node) &&
-        Editor.hasInlines(editor, node)
-    );
-
     return () =>
       node.children.map((child, i) => {
         // 这些逻辑不会触发多余渲染
@@ -45,7 +37,6 @@ export const Children = defineComponent({
         return Element.isElement(child) ? (
           <ElementComp
             element={child}
-            childPath={path}
             childSelection={selection}
             childDecorations={decorations}
             key={key.id}
@@ -54,7 +45,6 @@ export const Children = defineComponent({
           <TextComp
             text={child}
             parent={node}
-            parentPath={path}
             parentDecorations={decorations}
             key={key.id}
           />

@@ -31,18 +31,16 @@ import { useEditor } from "../hooks/use-editor";
  */
 export const ElementComp = defineComponent({
   name: "slate-element",
-  props: ["element", "childPath", "childSelection", "childDecorations"],
+  props: ["element", "childSelection", "childDecorations"],
   setup(props: ElementProps) {
-    const { element, childPath, childSelection, childDecorations } = props;
+    const { element, childSelection, childDecorations } = props;
     const decorate = useDecorate();
     const editor = useEditor();
 
-    const path = computed(() =>
-      childPath.value.concat(NODE_TO_INDEX.get(element) as number)
-    );
     const decorations = computed<DecoratedRange[]>(() => {
-      const range = Editor.range(editor, path.value);
-      const ds = decorate([element, path.value]);
+      const path = DOMEditor.findPath(editor, element);
+      const range = Editor.range(editor, path);
+      const ds = decorate([element, path]);
       childDecorations.value.forEach((dec) => {
         ds.push(Range.intersection(dec, range)!);
       });
@@ -50,7 +48,7 @@ export const ElementComp = defineComponent({
     });
 
     const selection = computed(() => {
-      const path = childPath.value.concat(NODE_TO_INDEX.get(element) as number);
+      const path = DOMEditor.findPath(editor, element);
       const range = Editor.range(editor, path);
       return (
         childSelection.value && Range.intersection(range, childSelection.value)
@@ -142,7 +140,6 @@ export const ElementComp = defineComponent({
           }}
         >
           <TextComp
-            parentPath={path}
             parentDecorations={decorations}
             parent={element}
             text={text}

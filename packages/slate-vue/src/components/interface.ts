@@ -5,7 +5,6 @@ import type {
   Element,
   Ancestor,
   Range,
-  Path,
   BaseText,
 } from "slate";
 import type { DOMEditor } from "slate-dom";
@@ -84,7 +83,6 @@ export interface ChildrenProps {
 export interface TextProps {
   parent: Element;
   text: Text;
-  parentPath: ComputedRef<Path>;
   parentDecorations: ComputedRef<DecoratedRange[]>;
 }
 
@@ -97,7 +95,6 @@ export interface StringProps {
 
 export interface ElementProps {
   element: Element;
-  childPath: ComputedRef<Path>;
   childSelection: ComputedRef<Range | null>;
   childDecorations: ComputedRef<DecoratedRange[]>;
 }
