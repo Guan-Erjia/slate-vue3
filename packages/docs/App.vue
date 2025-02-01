@@ -8,6 +8,7 @@ import ForcedLayout from './pages/forced-layout/index.vue';
 import HoveringToolbar from './pages/hovering-toolbar/index.vue';
 import HugeDocument from './pages/huge-document/index.vue';
 import Image from './pages/image/index.vue';
+import Inline from './pages/inline/index.vue';
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -46,6 +47,10 @@ const ExampleOptions = computed(() => [
   {
     name: 'image',
     component: Image,
+  },
+  {
+    name: 'inline',
+    component: Inline,
   }
 ])
 </script>
