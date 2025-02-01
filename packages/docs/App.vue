@@ -67,7 +67,7 @@ const ExampleOptions = computed(() => [
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
   </header>
   <div style="display: flex;height: calc(100% - 50px);">
-    <ol style="width: 170px;flex-shrink: 0;box-sizing: border-box;">
+    <ol style="width: 200px;flex-shrink: 0;box-sizing: border-box;">
       <a :href="`#${item.name}`" v-for="item in ExampleOptions">
         <li style="text-decoration: none;margin-bottom: 10px;">{{ item.name }}</li>
       </a>
