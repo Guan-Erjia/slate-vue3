@@ -9,6 +9,7 @@ import HoveringToolbar from './pages/hovering-toolbar/index.vue';
 import HugeDocument from './pages/huge-document/index.vue';
 import Image from './pages/image/index.vue';
 import Inline from './pages/inline/index.vue';
+import MarkdownPreview from './pages/markdown-preview/index.vue';
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -51,6 +52,10 @@ const ExampleOptions = computed(() => [
   {
     name: 'inline',
     component: Inline,
+  },
+  {
+    name: 'markdown-preview',
+    component: MarkdownPreview,
   }
 ])
 </script>
