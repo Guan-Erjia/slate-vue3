@@ -86,7 +86,6 @@ export interface TextProps {
   text: Text;
   parentPath: ComputedRef<Path>;
   parentDecorations: ComputedRef<DecoratedRange[]>;
-  index: number;
 }
 
 export interface StringProps {
@@ -101,7 +100,6 @@ export interface ElementProps {
   childPath: ComputedRef<Path>;
   childSelection: ComputedRef<Range | null>;
   childDecorations: ComputedRef<DecoratedRange[]>;
-  index: number;
 }
 
 export interface SlateProps {
@@ -116,7 +114,6 @@ export interface LeafProps {
   text: Text;
   parent: Element;
   leafIndex: number;
-  textIndex: number;
   leaves: ComputedRef<
     (BaseText & {
       [key: string]: unknown;

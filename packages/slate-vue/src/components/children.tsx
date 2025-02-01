@@ -38,6 +38,7 @@ export const Children = defineComponent({
       node.children.map((child, i) => {
         // 这些逻辑不会触发多余渲染
         const key = DOMEditor.findKey(editor, child);
+        // 组件直接传入索引将不会动态更新，必须通过 NODE_TO_INDEX 手动获取索引
         NODE_TO_INDEX.set(child, i);
         NODE_TO_PARENT.set(child, node);
 
@@ -47,7 +48,6 @@ export const Children = defineComponent({
             childPath={path}
             childSelection={selection}
             childDecorations={decorations}
-            index={i}
             key={key.id}
           />
         ) : (
@@ -56,7 +56,6 @@ export const Children = defineComponent({
             parent={node}
             parentPath={path}
             parentDecorations={decorations}
-            index={i}
             key={key.id}
           />
         );

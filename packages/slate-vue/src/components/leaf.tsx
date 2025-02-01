@@ -4,6 +4,7 @@ import {
   EDITOR_TO_PLACEHOLDER_ELEMENT,
   IS_WEBKIT,
   IS_ANDROID,
+  NODE_TO_INDEX,
 } from "slate-dom";
 import type { LeafProps, RenderPlaceholderProps } from "./interface";
 import {
@@ -28,9 +29,9 @@ const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0;
  */
 export const LeafComp = defineComponent({
   name: "slate-leaf",
-  props: ["text", "leaf", "parent", "leaves", "leafIndex", "textIndex"],
+  props: ["text", "leaf", "parent", "leaves", "leafIndex"],
   setup(props: LeafProps) {
-    const { text, parent, leaves, leafIndex, textIndex } = props;
+    const { text, parent, leaves, leafIndex } = props;
     const editor = useEditor();
     const leaf = computed(() => leaves.value[leafIndex]!);
 
@@ -44,7 +45,7 @@ export const LeafComp = defineComponent({
       return (
         !isVoid &&
         isLeafBlock &&
-        textIndex === parent.children.length - 1 &&
+        NODE_TO_INDEX.get(text) === parent.children.length - 1 &&
         leafIndex === leaves.value.length - 1
       );
     });

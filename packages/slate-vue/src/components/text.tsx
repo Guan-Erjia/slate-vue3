@@ -4,6 +4,7 @@ import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
   NODE_TO_ELEMENT,
+  NODE_TO_INDEX,
 } from "slate-dom";
 import { LeafComp } from "./leaf";
 import type { TextProps } from "./interface";
@@ -16,17 +17,18 @@ import { useEditor } from "../hooks/use-editor";
  */
 export const TextComp = defineComponent({
   name: "slate-text",
-  props: ["text", "parent", "parentPath", "parentDecorations", "index"],
+  props: ["text", "parent", "parentPath", "parentDecorations"],
   setup(props: TextProps) {
-    const { text, parent, parentPath, parentDecorations, index } = props;
+    const { text, parent, parentPath, parentDecorations } = props;
     const editor = useEditor();
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
-    const path = computed(() => parentPath.value.concat(index));
 
     const leaves = computed(() => {
-      const range = Editor.range(editor, path.value);
-      const ds = decorate([text, path.value]);
+      const index = NODE_TO_INDEX.get(text);
+      const path = parentPath.value.concat(index as number);
+      const range = Editor.range(editor, path);
+      const ds = decorate([text, path]);
       parentDecorations.value.forEach((dec) => {
         ds.push(Range.intersection(dec, range)!);
       });
@@ -63,7 +65,6 @@ export const TextComp = defineComponent({
             text,
             parent,
             leafIndex: i,
-            textIndex: index,
             leaves,
             key: `${key.id}-${i}`,
           })
