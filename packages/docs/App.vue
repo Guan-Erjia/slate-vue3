@@ -13,6 +13,7 @@ import MarkdownPreview from './pages/markdown-preview/index.vue';
 import MarkdownShortcuts from './pages/markdown-shortcuts/index.vue';
 import Emotions from './pages/emotions/index.vue';
 import PasteHtml from './pages/paste-html/index.vue'
+import PlainText from './pages/plain-text/index.vue'
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -70,7 +71,11 @@ const ExampleOptions = computed(() => [
   },
   {
     name: 'paste-html',
-    component:PasteHtml
+    component: PasteHtml
+  },
+  {
+    name: 'plain-text',
+    component: PlainText
   }
 ])
 </script>
