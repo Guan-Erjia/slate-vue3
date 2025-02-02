@@ -26,5 +26,5 @@
       "slate-vue": ["./packages/slate-vue/src/index.ts"],
       "share-tools": ["./packages/share-tools/index.ts"],
     }
-  }
+  },
 }

@@ -11,6 +11,7 @@ import Image from './pages/image/index.vue';
 import Inline from './pages/inline/index.vue';
 import MarkdownPreview from './pages/markdown-preview/index.vue';
 import MarkdownShortcuts from './pages/markdown-shortcuts/index.vue';
+import Emotions from './pages/emotions/index.vue';
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -61,6 +62,10 @@ const ExampleOptions = computed(() => [
   {
     name: 'markdown-shortcuts',
     component: MarkdownShortcuts,
+  },
+  {
+    name: 'emotions',
+    component: Emotions,
   }
 ])
 </script>
