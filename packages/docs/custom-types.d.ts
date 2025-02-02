@@ -2,7 +2,7 @@ import { Descendant, BaseEditor, BaseRange, Range, Element } from "slate";
 import { DOMEditor } from "slate-dom";
 
 export type BlockQuoteElement = {
-  type: "block-quote";
+  type: "block-quote" | "block";
   align?: string;
   children: Descendant[];
 };
@@ -107,7 +107,7 @@ export type VideoElement = {
 };
 
 export type CodeBlockElement = {
-  type: "code-block";
+  type: "code-block" | "code";
   language: string;
   children: Descendant[];
 };

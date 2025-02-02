@@ -29,5 +29,4 @@ const safeUrl = computed(() => {
   }
   return 'about:blank'
 })
-console.log(safeUrl.value)
 </script>
