@@ -14,6 +14,8 @@ import MarkdownShortcuts from './pages/markdown-shortcuts/index.vue';
 import Emotions from './pages/emotions/index.vue';
 import PasteHtml from './pages/paste-html/index.vue'
 import PlainText from './pages/plain-text/index.vue'
+import ReadOnly from './pages/read-only/index.vue'
+import SearchHighlighting from './pages/search-highlighting/index.vue'
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -76,6 +78,14 @@ const ExampleOptions = computed(() => [
   {
     name: 'plain-text',
     component: PlainText
+  },
+  {
+    name: 'read-only',
+    component: ReadOnly
+  },
+  {
+    name: 'search-highlighting',
+    component: SearchHighlighting
   }
 ])
 </script>
