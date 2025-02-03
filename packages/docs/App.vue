@@ -19,7 +19,8 @@ import SearchHighlighting from './pages/search-highlighting/index.vue'
 import ShadowDom from './pages/shadow-dom/index.vue'
 import Styling from './pages/styling/index.vue'
 import Tables from './pages/tables/index.vue'
-import { computed } from 'vue';
+import Iframe from './pages/iframe/index.vue'
+import { computed, onMounted } from 'vue';
 
 const ExampleOptions = computed(() => [
   {
@@ -102,7 +103,20 @@ const ExampleOptions = computed(() => [
     name: 'tables',
     component: Tables,
   },
+  {
+    name: 'iframe',
+    component: Iframe,
+  },
 ])
+
+onMounted(() => {
+  const hash = location.hash
+  if (hash) {
+    document.querySelector(hash)?.scrollIntoView({
+      behavior: 'instant'
+    })
+  }
+})
 </script>
 
 <template>
@@ -112,7 +126,7 @@ const ExampleOptions = computed(() => [
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
   </header>
   <div style="display: flex;height: calc(100% - 50px);">
-    <ol style="width: 200px;flex-shrink: 0;box-sizing: border-box;">
+    <ol style="width: 200px;flex-shrink: 0;box-sizing: border-box;height: calc(100%-32px);overflow-y: auto;">
       <a :href="`#${item.name}`" v-for="item in ExampleOptions">
         <li style="text-decoration: none;margin-bottom: 10px;">{{ item.name }}</li>
       </a>
