@@ -18,6 +18,7 @@ import ReadOnly from './pages/read-only/index.vue'
 import SearchHighlighting from './pages/search-highlighting/index.vue'
 import ShadowDom from './pages/shadow-dom/index.vue'
 import Styling from './pages/styling/index.vue'
+import Tables from './pages/tables/index.vue'
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -96,6 +97,10 @@ const ExampleOptions = computed(() => [
   {
     name: 'styling',
     component: Styling,
+  },
+  {
+    name: 'tables',
+    component: Tables,
   },
 ])
 </script>
