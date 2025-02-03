@@ -85,8 +85,8 @@ export const ExampleOptions = [
     component: () => import("./pages/tables/index.vue"),
   },
   {
-    name: "iframe",
-    component: () => import("./pages/iframe/index.vue"),
+    name: "render-in-iframe",
+    component: () => import("./pages/render-in-iframe/index.vue"),
   },
 ];
 
