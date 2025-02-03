@@ -10,6 +10,7 @@ import {
   RenderLeafProps, defaultRenderLeaf, DOMEditor, Editor, Element, Node
 } from 'slate-vue';
 import { CSSProperties, h } from 'vue';
+import "prismjs";
 import 'prismjs/components/prism-markdown'
 import { SHORTCUTS, withShortcuts } from './plugin';
 
