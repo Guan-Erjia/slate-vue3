@@ -88,6 +88,10 @@ export const ExampleOptions = [
     name: "render-in-iframe",
     component: () => import("./pages/render-in-iframe/index.vue"),
   },
+  {
+    name: "custom-placeholder",
+    component: () => import("./pages/custom-placeholder/index.vue"),
+  },
 ];
 
 const routes: RouteRecordRaw[] = ExampleOptions.map((option) => ({

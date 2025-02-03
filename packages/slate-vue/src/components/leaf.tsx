@@ -9,6 +9,7 @@ import {
 import type { LeafProps, RenderPlaceholderProps } from "./interface";
 import {
   computed,
+  CSSProperties,
   defineComponent,
   Fragment,
   h,
@@ -86,23 +87,25 @@ export const LeafComp = defineComponent({
       showPlaceholderTimeoutRef.value = undefined;
     });
 
+    const style: CSSProperties = {
+      position: "absolute",
+      top: 0,
+      pointerEvents: "none",
+      width: "100%",
+      maxWidth: "100%",
+      display: "block",
+      opacity: "0.333",
+      userSelect: "none",
+      textDecoration: "none",
+      // Fixes https://github.com/udecode/plate/issues/2315
+      WebkitUserModify: IS_WEBKIT ? "inherit" : undefined,
+    };
+
     const placeholderProps = computed<RenderPlaceholderProps>(() => ({
       children: leaf.value.placeholder,
       attributes: {
         "data-slate-placeholder": true,
-        style: {
-          position: "absolute",
-          top: 0,
-          pointerEvents: "none",
-          width: "100%",
-          maxWidth: "100%",
-          display: "block",
-          opacity: "0.333",
-          userSelect: "none",
-          textDecoration: "none",
-          // Fixes https://github.com/udecode/plate/issues/2315
-          WebkitUserModify: IS_WEBKIT ? "inherit" : undefined,
-        },
+        style,
         contentEditable: false,
         ref: placeholderRef,
       },
@@ -111,27 +114,23 @@ export const LeafComp = defineComponent({
     const renderLeaf = useRenderLeaf();
     const renderPlaceholder = useRenderPlaceholder();
 
-    const children = computed(() =>
-      h(Fragment, null, [
-        leafIsPlaceholder.value &&
-          showPlaceholder.value &&
-          renderPlaceholder(placeholderProps.value),
-        h(StringComp, {
-          isLast,
-          leaf,
-          parent,
-          text,
-        }),
-      ])
-    );
-
     // COMPAT: Having the `data-` attributes on these leaf elements ensures that
     // in certain misbehaving browsers they aren't weirdly cloned/destroyed by
     // contenteditable behaviors. (2019/05/08)
     return () =>
       renderLeaf({
         attributes: { "data-slate-leaf": true },
-        children: children.value,
+        children: h(Fragment, null, [
+          leafIsPlaceholder.value &&
+            showPlaceholder.value &&
+            renderPlaceholder(placeholderProps.value),
+          h(StringComp, {
+            isLast,
+            leaf,
+            parent,
+            text,
+          }),
+        ]),
         leaf: leaf.value,
         text,
       });
