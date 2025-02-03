@@ -7,7 +7,7 @@ const route = useRoute()
 
 <template>
   <header class="header">
-    <span>Slate Examples</span>
+    <span>SlateVue3 Examples</span>
     <div style="flex-grow: 1;min-width: 0;"></div>
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
   </header>
@@ -15,7 +15,7 @@ const route = useRoute()
     <ol style="width: 200px;flex-shrink: 0;box-sizing: border-box;height: calc(100%-32px);overflow-y: auto;">
       <RouterLink :to="item.name" v-for="item in ExampleOptions">
         <li style="text-decoration: none;margin-bottom: 10px;" :style="{
-          color: item.name === route.name ? 'black' : undefined,
+          color: item.name === route.name ? '#0366d6' : undefined,
           fontWeight: item.name === route.name ? 500 : undefined,
         }">{{ item.name }}</li>
       </RouterLink>
