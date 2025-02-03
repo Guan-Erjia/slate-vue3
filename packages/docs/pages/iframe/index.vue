@@ -126,7 +126,7 @@ const onBlur = () => {
     </Toolbar>
     <iframe srcdoc="<!DOCTYPE html>" @load="handleLoad" @blur="onBlur">
       <Teleport v-if="iframeBody" :to="iframeBody">
-        <Editable placeholder="Enter some rich text…" spellCheck autoFocus @keydown="onKeyDown" />
+        <Editable placeholder="Enter some rich text…" spellCheck @keydown="onKeyDown" />
       </Teleport>
     </iframe>
   </Slate>

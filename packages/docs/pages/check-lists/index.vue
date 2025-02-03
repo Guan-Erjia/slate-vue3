@@ -73,6 +73,6 @@ const editor = withChecklists(withDOM(createEditor(initialValue)))
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
-    <Editable placeholder="Enter some rich text…" spellCheck autoFocus />
+    <Editable placeholder="Enter some rich text…" spellCheck />
   </Slate>
 </template>

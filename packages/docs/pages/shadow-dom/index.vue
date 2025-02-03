@@ -9,7 +9,6 @@ import ShadowEditor from './ShadowEditor.vue'
 const containerRef = ref<HTMLDivElement>()
 
 onMounted(() => {
-  console.log(containerRef)
   if (containerRef.value!.shadowRoot) return
 
   // Create a shadow DOM

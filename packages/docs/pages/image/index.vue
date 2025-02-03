@@ -135,7 +135,7 @@ const onMouseDown = (event: Event) => {
         image
       </Button>
     </Toolbar>
-    <Editable style="padding: 10px;" placeholder="Enter a title…" spellCheck autoFocus />
+    <Editable style="padding: 10px;" placeholder="Enter a title…" spellCheck />
   </Slate>
 </template>
 <style scoped>

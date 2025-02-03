@@ -1,7 +1,7 @@
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
-    <Editable placeholder="Write some markdown..." spellCheck autoFocus @beforeinput="onDomBeforeInput" />
+    <Editable placeholder="Write some markdown..." spellCheck @beforeinput="onDomBeforeInput" />
   </Slate>
 </template>
 <script lang="ts" setup>

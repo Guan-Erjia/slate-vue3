@@ -85,6 +85,6 @@ const editor = withLayout(withDOM(createEditor(initialValue)))
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
-    <Editable placeholder="Enter a title…" spellCheck autoFocus />
+    <Editable placeholder="Enter a title…" spellCheck />
   </Slate>
 </template>

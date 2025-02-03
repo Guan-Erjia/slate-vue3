@@ -125,6 +125,6 @@ const editor = withDOM(createEditor(initialValue))
       <BlockButton format="right" icon="format_align_right" />
       <BlockButton format="justify" icon="format_align_justify" />
     </Toolbar>
-    <Editable placeholder="Enter some rich text…" spellCheck autoFocus />
+    <Editable placeholder="Enter some rich text…" spellCheck />
   </Slate>
 </template>
