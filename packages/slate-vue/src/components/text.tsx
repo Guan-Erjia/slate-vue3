@@ -54,7 +54,6 @@ export const TextComp = defineComponent({
     });
 
     return () => {
-      console.log(leaves.value);
       const key = DOMEditor.findKey(editor, text);
       return h(
         "span",
