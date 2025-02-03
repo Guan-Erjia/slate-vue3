@@ -4,7 +4,6 @@ import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
   NODE_TO_ELEMENT,
-  NODE_TO_INDEX,
 } from "slate-dom";
 import { LeafComp } from "./leaf";
 import type { TextProps } from "./interface";
@@ -66,7 +65,7 @@ export const TextComp = defineComponent({
             parent,
             leafIndex: i,
             leaves,
-            key: `${key.id}-${i}`,
+            key: `${key.id}-${i}-${text.text}`,
           })
         )
       );
