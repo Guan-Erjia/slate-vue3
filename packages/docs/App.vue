@@ -17,6 +17,7 @@ import PlainText from './pages/plain-text/index.vue'
 import ReadOnly from './pages/read-only/index.vue'
 import SearchHighlighting from './pages/search-highlighting/index.vue'
 import ShadowDom from './pages/shadow-dom/index.vue'
+import Styling from './pages/styling/index.vue'
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -91,6 +92,10 @@ const ExampleOptions = computed(() => [
   {
     name: 'shadow-dom',
     component: ShadowDom,
+  },
+  {
+    name: 'styling',
+    component: Styling,
   },
 ])
 </script>
