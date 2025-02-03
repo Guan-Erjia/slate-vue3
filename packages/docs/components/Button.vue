@@ -1,21 +1,5 @@
 <template>
-  <span v-bind="attrs" class="material-icons"
-    :style="{ color: props.reversed ? props.active ? 'white' : '#aaa' : props.active ? 'black' : '#ccc' }" style="">
-    <slot></slot>
-  </span>
-</template>
-<script lang="ts" setup>
-import { useAttrs } from 'vue';
-
-const attrs = useAttrs()
-const props = defineProps<{
-  active?: boolean
-  reversed?: boolean
-}>()
-</script>
-<style scoped>
-.material-icons {
-  font-size: 18px;
+  <span v-bind="attrs" class="material-icons" style="font-size: 18px;
   vertical-align: text-bottom;
   cursor: pointer;
   margin-right: 15px;
@@ -30,6 +14,17 @@ const props = defineProps<{
   word-wrap: normal;
   direction: ltr;
   font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
-}
-</style>
+  -webkit-font-smoothing: antialiased;"
+    :style="{ color: props.reversed ? props.active ? 'white' : '#aaa' : props.active ? 'black' : '#ccc' }">
+    <slot></slot>
+  </span>
+</template>
+<script lang="ts" setup>
+import { useAttrs } from 'vue';
+
+const attrs = useAttrs()
+const props = defineProps<{
+  active?: boolean
+  reversed?: boolean
+}>()
+</script>
