@@ -16,6 +16,7 @@ import PasteHtml from './pages/paste-html/index.vue'
 import PlainText from './pages/plain-text/index.vue'
 import ReadOnly from './pages/read-only/index.vue'
 import SearchHighlighting from './pages/search-highlighting/index.vue'
+import ShadowDom from './pages/shadow-dom/index.vue'
 import { computed } from 'vue';
 
 const ExampleOptions = computed(() => [
@@ -86,7 +87,11 @@ const ExampleOptions = computed(() => [
   {
     name: 'search-highlighting',
     component: SearchHighlighting
-  }
+  },
+  {
+    name: 'shadow-dom',
+    component: ShadowDom,
+  },
 ])
 </script>
 
