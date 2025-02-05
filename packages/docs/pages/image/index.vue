@@ -138,13 +138,3 @@ const onMouseDown = (event: Event) => {
     <Editable style="padding: 10px;" placeholder="Enter a title…" spellCheck />
   </Slate>
 </template>
-<style scoped>
-a {
-  color: gray;
-  text-decoration: none
-}
-
-a:hover {
-  color: #aaaaaa;
-}
-</style>

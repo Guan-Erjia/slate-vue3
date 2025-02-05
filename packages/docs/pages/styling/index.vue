@@ -46,19 +46,14 @@ const editor2 = withDOM(createEditor([{
     </Slate>
     <Slate :editor="editor2" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
       :render-placeholder="defaultRenderPlaceHolder">
-      <Editable className="fancy" disableDefaultStyles />
+      <Editable style="background-color: rgb(218, 225, 255);
+          padding: 40px;
+          font-size: 20px;
+          min-height: 150px;
+          outline: 3px dashed rgb(0, 94, 128);
+          border-radius: 20px;
+          outline-offset: -10px;
+          white-space: pre-wrap;" />
     </Slate>
   </div>
 </template>
-<style scoped>
-.fancy {
-  background-color: rgb(218, 225, 255);
-  padding: 40px;
-  font-size: 20px;
-  min-height: 150px;
-  outline: 3px dashed rgb(0, 94, 128);
-  border-radius: 20px;
-  outline-offset: -10px;
-  white-space: pre-wrap;
-}
-</style>

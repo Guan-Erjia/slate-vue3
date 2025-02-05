@@ -38,14 +38,3 @@ const editor = withDOM(createEditor(initialValue))
     <Editable placeholder="Enter a title…" spellCheck />
   </Slate>
 </template>
-
-<style scoped>
-a {
-  color: gray;
-  text-decoration: none
-}
-
-a:hover {
-  color: #aaaaaa;
-}
-</style>
