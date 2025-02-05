@@ -129,12 +129,10 @@ export const Editable = defineComponent({
       isDraggingInternally: boolean;
       isUpdatingSelection: boolean;
       latestElement: DOMElement | null;
-      hasMarkPlaceholder: boolean;
     }>({
       isDraggingInternally: false,
       isUpdatingSelection: false,
       latestElement: null,
-      hasMarkPlaceholder: false,
     });
 
     const placeholderHeight = ref<number>();
@@ -165,51 +163,6 @@ export const Editable = defineComponent({
     });
 
     provide(SLATE_INNER_PLACEHOLDER_CONTEXT, placeholderContext);
-
-    const decorations = computed(() => {
-      const showPlaceholder =
-        placeholder &&
-        editor.children?.length === 1 &&
-        Array.from(Node.texts(editor)).length === 1 &&
-        Node.string(editor) === "" &&
-        !isComposing.value;
-      const dec = decorate([editor, []]);
-
-      if (showPlaceholder) {
-        const start = Editor.start(editor, []);
-        dec.push({
-          [PLACEHOLDER_SYMBOL]: true,
-          anchor: start,
-          focus: start,
-        });
-      }
-      if (
-        editor.selection &&
-        Range.isCollapsed(editor.selection) &&
-        editor.marks
-      ) {
-        const anchor = editor.selection.anchor;
-        const leaf = Node.leaf(editor, anchor.path);
-        const { text, ...rest } = leaf;
-        // While marks isn't a 'complete' text, we can still use loose Text.equals
-        // here which only compares marks anyway.
-        if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
-          state.hasMarkPlaceholder = true;
-          const unset = Object.fromEntries(
-            Object.keys(rest).map((mark) => [mark, null])
-          );
-          dec.push({
-            [MARK_PLACEHOLDER_SYMBOL]: true,
-            ...unset,
-            ...editor.marks,
-
-            anchor,
-            focus: anchor,
-          });
-        }
-      }
-      return dec;
-    });
 
     /**
      * The AndroidInputManager object has a cyclical dependency on onDOMSelectionChange
@@ -331,6 +284,23 @@ export const Editable = defineComponent({
       NODE_TO_ELEMENT.delete(editor);
     });
 
+    const hasMarkPlaceholder = computed(() => {
+      if (
+        editor.selection &&
+        Range.isCollapsed(editor.selection) &&
+        editor.marks
+      ) {
+        const anchor = editor.selection.anchor;
+        const leaf = Node.leaf(editor, anchor.path);
+        // While marks isn't a 'complete' text, we can still use loose Text.equals
+        // here which only compares marks anyway.
+        if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    });
     const setDomSelection = (forceChange?: boolean) => {
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
       const domSelection = getSelection(root);
@@ -390,7 +360,7 @@ export const Editable = defineComponent({
         });
 
         if (slateRange && Range.equals(slateRange, editor.selection)) {
-          if (!state.hasMarkPlaceholder) {
+          if (!hasMarkPlaceholder.value) {
             return;
           }
 

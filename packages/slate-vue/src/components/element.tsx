@@ -21,7 +21,6 @@ import {
   ref,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
-import { useDecorate } from "../hooks/use-decorate";
 import { SLATE_USE_SELECTED } from "../utils/constants";
 import { useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";

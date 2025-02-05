@@ -1,8 +1,9 @@
-import { type DecoratedRange, Editor, Text, Range, Element } from "slate";
+import { type DecoratedRange, Editor, Text, Range, Element, Node } from "slate";
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
+  MARK_PLACEHOLDER_SYMBOL,
   NODE_TO_ELEMENT,
 } from "slate-dom";
 import { LeafComp } from "./leaf";
@@ -34,6 +35,31 @@ export const TextComp = defineComponent({
           ds.push(Range.intersection(dec, range)!);
         });
         parent = Editor.parent(editor, parent[1]);
+      }
+
+      if (
+        editor.selection &&
+        Range.isCollapsed(editor.selection) &&
+        editor.marks
+      ) {
+        const anchor = editor.selection.anchor;
+        const leaf = Node.leaf(editor, anchor.path);
+        const { text, ...rest } = leaf;
+        // While marks isn't a 'complete' text, we can still use loose Text.equals
+        // here which only compares marks anyway.
+        if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
+          const unset = Object.fromEntries(
+            Object.keys(rest).map((mark) => [mark, null])
+          );
+          ds.push({
+            [MARK_PLACEHOLDER_SYMBOL]: true,
+            ...unset,
+            ...editor.marks,
+
+            anchor,
+            focus: anchor,
+          });
+        }
       }
       return ds;
     });
