@@ -37,6 +37,7 @@ export default defineConfig(({ command, mode }) => {
         entry: "./packages/slate-vue/src/index.ts",
         name: "slate-vue3",
         fileName: "slate-vue3",
+        formats: ["es"],
       },
     };
     config.plugins?.push(dts({
