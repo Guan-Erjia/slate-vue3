@@ -38,16 +38,10 @@ export const Children = defineComponent({
           <ElementComp
             element={child}
             childSelection={selection}
-            childDecorations={decorations}
             key={key.id}
           />
         ) : (
-          <TextComp
-            text={child}
-            parent={node}
-            parentDecorations={decorations}
-            key={key.id}
-          />
+          <TextComp text={child} parent={node} key={key.id} />
         );
       });
   },

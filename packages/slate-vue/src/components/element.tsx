@@ -31,9 +31,9 @@ import { useEditor } from "../hooks/use-editor";
  */
 export const ElementComp = defineComponent({
   name: "slate-element",
-  props: ["element", "childSelection", "childDecorations"],
+  props: ["element", "childSelection"],
   setup(props: ElementProps) {
-    const { element, childSelection, childDecorations } = props;
+    const { element, childSelection } = props;
     const decorate = useDecorate();
     const editor = useEditor();
 
@@ -41,9 +41,14 @@ export const ElementComp = defineComponent({
       const path = DOMEditor.findPath(editor, element);
       const range = Editor.range(editor, path);
       const ds = decorate([element, path]);
-      childDecorations.value.forEach((dec) => {
-        ds.push(Range.intersection(dec, range)!);
-      });
+      let parent = Editor.parent(editor, path);
+      while (parent[1].length) {
+        const parentDs = decorate(parent);
+        parentDs.forEach((dec) => {
+          ds.push(Range.intersection(dec, range)!);
+        });
+        parent = Editor.parent(editor, parent[1]);
+      }
       return ds;
     });
 
@@ -139,11 +144,7 @@ export const ElementComp = defineComponent({
             position: "absolute",
           }}
         >
-          <TextComp
-            parentDecorations={decorations}
-            parent={element}
-            text={text}
-          />
+          <TextComp parent={element} text={text} />
         </Tag>
       );
 

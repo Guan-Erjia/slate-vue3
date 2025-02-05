@@ -16,12 +16,27 @@ import { useEditor } from "../hooks/use-editor";
  */
 export const TextComp = defineComponent({
   name: "slate-text",
-  props: ["text", "parent", "parentDecorations"],
+  props: ["text", "parent"],
   setup(props: TextProps) {
-    const { text, parent, parentDecorations } = props;
+    const { text, parent } = props;
     const editor = useEditor();
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
+
+    const parentDecorations = computed<DecoratedRange[]>(() => {
+      const path = DOMEditor.findPath(editor, props.parent);
+      const range = Editor.range(editor, path);
+      const ds = decorate([props.parent, path]);
+      let parent = Editor.parent(editor, path);
+      while (parent[1].length) {
+        const parentDs = decorate(parent);
+        parentDs.forEach((dec) => {
+          ds.push(Range.intersection(dec, range)!);
+        });
+        parent = Editor.parent(editor, parent[1]);
+      }
+      return ds;
+    });
 
     const leaves = computed(() => {
       const path = DOMEditor.findPath(editor, text);

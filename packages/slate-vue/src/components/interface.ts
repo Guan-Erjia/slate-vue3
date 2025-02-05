@@ -82,7 +82,6 @@ export interface ChildrenProps {
 export interface TextProps {
   parent: Element;
   text: Text;
-  parentDecorations: ComputedRef<DecoratedRange[]>;
 }
 
 export interface StringProps {
@@ -95,7 +94,6 @@ export interface StringProps {
 export interface ElementProps {
   element: Element;
   childSelection: ComputedRef<Range | null>;
-  childDecorations: ComputedRef<DecoratedRange[]>;
 }
 
 export interface SlateProps {
@@ -110,11 +108,5 @@ export interface LeafProps {
   text: Text;
   parent: Element;
   leafIndex: number;
-  leaves: ComputedRef<
-    (BaseText & {
-      [key: string]: unknown;
-      placeholder?: string;
-      onPlaceholderResize?: (node: HTMLElement | null) => void;
-    })[]
-  >;
+  leaves: ComputedRef<Text[]>;
 }
