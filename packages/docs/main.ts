@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import "./index.css";
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from "vue-router";
 
 export const ExampleOptions = [
   {
@@ -109,7 +109,7 @@ routes.push({
 });
 
 export const router = createRouter({
-  history: createWebHistory("/slate-vue3"),
+  history: createWebHashHistory("/slate-vue3"),
   routes,
 });
 
