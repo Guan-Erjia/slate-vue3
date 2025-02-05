@@ -22,16 +22,14 @@ const props = defineProps<{
 
 const TEXT_ALIGN_TYPES = ['left', 'center', 'right', 'justify']
 const isBlockActive = computed(() => {
-  const { selection } = editor
-  if (!selection) return false
-
+  if (!editor.selection) return false
   const [match] = Array.from(
     Editor.nodes(editor, {
-      at: Editor.unhangRange(editor, selection),
+      at: Editor.unhangRange(editor, editor.selection),
       match: n =>
         !Editor.isEditor(n) &&
         Element.isElement(n) &&
-        "align" in n && n[TEXT_ALIGN_TYPES.includes(props.format) ? 'align' : 'type'] === props.format,
+        n[TEXT_ALIGN_TYPES.includes(props.format) ? 'align' : 'type'] === props.format,
     })
   )
 
