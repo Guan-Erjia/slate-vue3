@@ -34,9 +34,7 @@ import {
   IS_COMPOSING,
   IS_FOCUSED,
   IS_READ_ONLY,
-  MARK_PLACEHOLDER_SYMBOL,
   NODE_TO_ELEMENT,
-  PLACEHOLDER_SYMBOL,
 } from "slate-dom";
 
 import type { AndroidInputManager } from "../hooks/android-input-manager/android-input-manager";
