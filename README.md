@@ -78,8 +78,8 @@ Get the current editor selection from the React context.
   Implementation of slate on dom, update synchronously with slate-dom
 - [slate-vue](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate-vue)
   Vue components for rendering slate editors
-- [un-proxy-weakmap](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/un-proxy-weakmap)
-  for special processing of proxy type data, obtain the raw pointer
+- [share-tools](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/share-tools)
+  for special processing of proxy type data, obtain the raw pointer, isPlainObject declare
 
 # compact files of slate
 
