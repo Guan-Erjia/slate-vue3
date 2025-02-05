@@ -151,7 +151,6 @@ export const Editable = defineComponent({
         placeholderHeight.value = undefined;
         return null;
       }
-      const start = Editor.start(editor, []);
       return {
         placeholder,
         onPlaceholderResize: (placeholderEl: HTMLElement) => {
@@ -162,8 +161,6 @@ export const Editable = defineComponent({
             placeholderHeight.value = undefined;
           }
         },
-        anchor: start,
-        focus: start,
       };
     });
 

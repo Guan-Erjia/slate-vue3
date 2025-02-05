@@ -53,8 +53,6 @@ export const usePlaceholderContext = () => {
     ComputedRef<{
       placeholder: string;
       onPlaceholderResize: (placeholderEl: HTMLElement) => void;
-      anchor: Point;
-      focus: Point;
     } | null>
   >(SLATE_INNER_PLACEHOLDER_CONTEXT);
   if (PLACEHOLDER_CONTEXT === undefined) {
