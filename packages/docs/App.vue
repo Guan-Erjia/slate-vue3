@@ -22,7 +22,7 @@ const route = useRoute()
       </RouterLink>
     </ol>
     <div class="scroll-container">
-      <header style="display: flex; padding-top: 20px;" :id="route.path">
+      <header style="display: flex; padding-top: 20px;">
         <span style="cursor: default;font-size: 20px;"> {{ route.name }} </span>
         <div style="flex-grow: 1;"></div>
         <a target="_blank"
