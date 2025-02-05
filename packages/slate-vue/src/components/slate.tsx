@@ -7,6 +7,7 @@ import { DOMEditor, EDITOR_TO_ON_CHANGE } from "slate-dom";
 
 export const Slate = defineComponent({
   name: 'slate-editor',
+  emits: ['change', 'selectionchange', 'valuechange'],
   props: {
     editor: {
       type: Object,
