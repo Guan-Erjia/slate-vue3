@@ -1,12 +1,11 @@
 import { StringComp } from "./string";
 import {
-  PLACEHOLDER_SYMBOL,
   EDITOR_TO_PLACEHOLDER_ELEMENT,
   IS_WEBKIT,
   IS_ANDROID,
   NODE_TO_INDEX,
 } from "slate-dom";
-import type { LeafProps, RenderPlaceholderProps } from "./interface";
+import type { LeafProps } from "./interface";
 import {
   computed,
   CSSProperties,
@@ -17,14 +16,28 @@ import {
   onMounted,
   ref,
 } from "vue";
-import { useRenderLeaf, useRenderPlaceholder } from "../hooks/use-render";
+import {
+  usePlaceholderContext,
+  useRenderLeaf,
+  useRenderPlaceholder,
+} from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
 import { Editor, Element } from "slate";
 
-// Delay the placeholder on Android to prevent the keyboard from closing.
-// (https://github.com/ianstormtaylor/slate/pull/5368)
-const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0;
 
+const style: CSSProperties = {
+  position: "absolute",
+  top: 0,
+  pointerEvents: "none",
+  width: "100%",
+  maxWidth: "100%",
+  display: "block",
+  opacity: "0.333",
+  userSelect: "none",
+  textDecoration: "none",
+  // Fixes https://github.com/udecode/plate/issues/2315
+  WebkitUserModify: IS_WEBKIT ? "inherit" : undefined,
+};
 /**
  * Individual leaves in a text node with unique formatting.
  */
@@ -53,15 +66,16 @@ export const LeafComp = defineComponent({
 
     const placeholderResizeObserver = ref<ResizeObserver | null>(null);
     const placeholderRef = ref<HTMLElement | null>(null);
-    const leafIsPlaceholder = computed(() =>
-      Boolean(leaf.value[PLACEHOLDER_SYMBOL])
-    );
+    const placeholderContext = usePlaceholderContext();
 
     onMounted(() => {
       if (placeholderRef.value) {
         EDITOR_TO_PLACEHOLDER_ELEMENT.set(editor, placeholderRef.value);
         placeholderResizeObserver.value = new ResizeObserver(() => {
-          leaf.value.onPlaceholderResize?.(placeholderRef.value);
+          placeholderRef.value &&
+            placeholderContext.value?.onPlaceholderResize?.(
+              placeholderRef.value
+            );
         });
         placeholderResizeObserver.value.observe(placeholderRef.value);
       }
@@ -73,30 +87,6 @@ export const LeafComp = defineComponent({
       placeholderResizeObserver.value = null;
     });
 
-    const style: CSSProperties = {
-      position: "absolute",
-      top: 0,
-      pointerEvents: "none",
-      width: "100%",
-      maxWidth: "100%",
-      display: "block",
-      opacity: "0.333",
-      userSelect: "none",
-      textDecoration: "none",
-      // Fixes https://github.com/udecode/plate/issues/2315
-      WebkitUserModify: IS_WEBKIT ? "inherit" : undefined,
-    };
-
-    const placeholderProps = computed<RenderPlaceholderProps>(() => ({
-      children: leaf.value.placeholder,
-      attributes: {
-        "data-slate-placeholder": true,
-        style,
-        contentEditable: false,
-        ref: placeholderRef,
-      },
-    }));
-
     const renderLeaf = useRenderLeaf();
     const renderPlaceholder = useRenderPlaceholder();
 
@@ -107,7 +97,16 @@ export const LeafComp = defineComponent({
       renderLeaf({
         attributes: { "data-slate-leaf": true },
         children: h(Fragment, null, [
-          leafIsPlaceholder.value && renderPlaceholder(placeholderProps.value),
+          placeholderContext.value &&
+            renderPlaceholder({
+              children: placeholderContext.value.placeholder,
+              attributes: {
+                "data-slate-placeholder": true,
+                style,
+                contentEditable: false,
+                ref: placeholderRef,
+              },
+            }),
           h(StringComp, {
             isLast,
             leaf,

@@ -1,5 +1,6 @@
-import { inject, type VNode } from "vue";
+import { ComputedRef, inject, type VNode } from "vue";
 import {
+  SLATE_INNER_PLACEHOLDER_CONTEXT,
   SLATE_INNER_RENDER_ELEMENT,
   SLATE_INNER_RENDER_LEAF,
   SLATE_INNER_RENDER_PLACEHOLDER,
@@ -9,6 +10,7 @@ import type {
   RenderPlaceholderProps,
   RenderLeafProps,
 } from "../components/interface";
+import { Point } from "slate";
 
 export const useRenderElement = () => {
   const ELEMENT_RENDER = inject<(props: RenderElementProps) => VNode>(
@@ -44,4 +46,21 @@ export const useRenderPlaceholder = () => {
     );
   }
   return PLACEHOLDER_RENDER;
+};
+
+export const usePlaceholderContext = () => {
+  const PLACEHOLDER_CONTEXT = inject<
+    ComputedRef<{
+      placeholder: string;
+      onPlaceholderResize: (placeholderEl: HTMLElement) => void;
+      anchor: Point;
+      focus: Point;
+    } | null>
+  >(SLATE_INNER_PLACEHOLDER_CONTEXT);
+  if (PLACEHOLDER_CONTEXT === undefined) {
+    throw new Error(
+      `The \`usePlaceholderContext\` hook must be used inside the <Slate> component's context.`
+    );
+  }
+  return PLACEHOLDER_CONTEXT;
 };

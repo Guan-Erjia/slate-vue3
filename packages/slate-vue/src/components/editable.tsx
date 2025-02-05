@@ -65,7 +65,10 @@ import {
   isEventHandled,
 } from "./utils";
 import { useEditor } from "../hooks/use-editor";
-import { SLATE_CHANGE_EFFECT_INJECT } from "../utils/constants";
+import {
+  SLATE_CHANGE_EFFECT_INJECT,
+  SLATE_INNER_PLACEHOLDER_CONTEXT,
+} from "../utils/constants";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
 import { useDecorate } from "../hooks/use-decorate";
@@ -136,6 +139,36 @@ export const Editable = defineComponent({
 
     const placeholderHeight = ref<number>();
     const decorate = useDecorate();
+
+    const placeholderContext = computed(() => {
+      const showPlaceholder =
+        placeholder &&
+        editor.children?.length === 1 &&
+        Array.from(Node.texts(editor)).length === 1 &&
+        Node.string(editor) === "" &&
+        !isComposing.value;
+      if (!showPlaceholder) {
+        placeholderHeight.value = undefined;
+        return null;
+      }
+      const start = Editor.start(editor, []);
+      return {
+        placeholder,
+        onPlaceholderResize: (placeholderEl: HTMLElement) => {
+          if (placeholderEl && showPlaceholder) {
+            placeholderHeight.value =
+              placeholderEl.getBoundingClientRect()?.height;
+          } else {
+            placeholderHeight.value = undefined;
+          }
+        },
+        anchor: start,
+        focus: start,
+      };
+    });
+
+    provide(SLATE_INNER_PLACEHOLDER_CONTEXT, placeholderContext);
+
     const decorations = computed(() => {
       const showPlaceholder =
         placeholder &&
@@ -149,15 +182,6 @@ export const Editable = defineComponent({
         const start = Editor.start(editor, []);
         dec.push({
           [PLACEHOLDER_SYMBOL]: true,
-          placeholder,
-          onPlaceholderResize: (placeholderEl) => {
-            if (placeholderEl && showPlaceholder) {
-              placeholderHeight.value =
-                placeholderEl.getBoundingClientRect()?.height;
-            } else {
-              placeholderHeight.value = undefined;
-            }
-          },
           anchor: start,
           focus: start,
         });
