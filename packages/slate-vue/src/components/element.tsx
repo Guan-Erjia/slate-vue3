@@ -34,24 +34,7 @@ export const ElementComp = defineComponent({
   props: ["element", "childSelection"],
   setup(props: ElementProps) {
     const { element, childSelection } = props;
-    const decorate = useDecorate();
     const editor = useEditor();
-
-    const decorations = computed<DecoratedRange[]>(() => {
-      const path = DOMEditor.findPath(editor, element);
-      const range = Editor.range(editor, path);
-      const ds = decorate([element, path]);
-      let parent = Editor.parent(editor, path);
-      while (parent[1].length) {
-        const parentDs = decorate(parent);
-        parentDs.forEach((dec) => {
-          ds.push(Range.intersection(dec, range)!);
-        });
-        parent = Editor.parent(editor, parent[1]);
-      }
-      return ds;
-    });
-
     const selection = computed(() => {
       const path = DOMEditor.findPath(editor, element);
       const range = Editor.range(editor, path);
@@ -122,11 +105,7 @@ export const ElementComp = defineComponent({
       return attr;
     });
     let children: JSX.Element = (
-      <Children
-        decorations={decorations}
-        node={element}
-        selection={selection}
-      />
+      <Children node={element} selection={selection} />
     );
 
     // If it's a void node, wrap the children in extra void-specific elements.

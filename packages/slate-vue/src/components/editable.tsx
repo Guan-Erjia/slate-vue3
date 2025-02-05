@@ -1647,11 +1647,7 @@ export const Editable = defineComponent({
         onKeydown={onKeydown}
         onPaste={onPaste}
       >
-        <Children
-          decorations={decorations}
-          node={editor}
-          selection={editorSelection}
-        />
+        <Children node={editor} selection={editorSelection} />
       </div>
     );
   },

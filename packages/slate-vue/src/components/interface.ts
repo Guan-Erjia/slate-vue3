@@ -76,7 +76,6 @@ export interface EditableProps extends HTMLAttributes {
 export interface ChildrenProps {
   node: Ancestor;
   selection: ComputedRef<Range | null>;
-  decorations: ComputedRef<DecoratedRange[]>;
 }
 
 export interface TextProps {
