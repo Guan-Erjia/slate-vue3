@@ -5,7 +5,6 @@ import type {
   Element,
   Ancestor,
   Range,
-  BaseText,
 } from "slate";
 import type { DOMEditor } from "slate-dom";
 import type { JSX } from "vue/jsx-runtime";
@@ -84,9 +83,9 @@ export interface TextProps {
 }
 
 export interface StringProps {
-  isLast: ComputedRef<boolean>;
+  isLastIndex: boolean;
   text: Text;
-  leaf: ComputedRef<Text>;
+  leaf: Text;
   parent: Element;
 }
 
@@ -106,6 +105,6 @@ export interface SlateProps {
 export interface LeafProps {
   text: Text;
   parent: Element;
-  leafIndex: number;
-  leaves: ComputedRef<Text[]>;
+  leaf: Text;
+  isLastIndex: boolean;
 }

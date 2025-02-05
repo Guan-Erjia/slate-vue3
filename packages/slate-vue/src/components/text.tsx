@@ -103,8 +103,8 @@ export const TextComp = defineComponent({
           h(LeafComp, {
             text,
             parent,
-            leafIndex: i,
-            leaves,
+            leaf,
+            isLastIndex: i === leaves.value.length - 1,
             key: `${key.id}-${i}-${text.text}`,
           })
         )

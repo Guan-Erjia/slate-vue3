@@ -1,13 +1,7 @@
 import { StringComp } from "./string";
-import {
-  EDITOR_TO_PLACEHOLDER_ELEMENT,
-  IS_WEBKIT,
-  IS_ANDROID,
-  NODE_TO_INDEX,
-} from "slate-dom";
+import { EDITOR_TO_PLACEHOLDER_ELEMENT, IS_WEBKIT } from "slate-dom";
 import type { LeafProps } from "./interface";
 import {
-  computed,
   CSSProperties,
   defineComponent,
   Fragment,
@@ -23,7 +17,6 @@ import {
 } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
 import { Editor, Element } from "slate";
-
 
 const style: CSSProperties = {
   position: "absolute",
@@ -43,26 +36,10 @@ const style: CSSProperties = {
  */
 export const LeafComp = defineComponent({
   name: "slate-leaf",
-  props: ["text", "parent", "leaves", "leafIndex"],
+  props: ["text", "parent", "leaf", "isLastIndex"],
   setup(props: LeafProps) {
-    const { text, parent, leaves, leafIndex } = props;
+    const { text, parent, leaf, isLastIndex } = props;
     const editor = useEditor();
-    const leaf = computed(() => leaves.value[leafIndex]!);
-
-    const isLast = computed(() => {
-      const isVoid = Editor.isVoid(editor, parent);
-      const isLeafBlock =
-        Element.isElement(parent) &&
-        !editor.isInline(parent) &&
-        Editor.hasInlines(editor, parent);
-
-      return (
-        !isVoid &&
-        isLeafBlock &&
-        NODE_TO_INDEX.get(text) === parent.children.length - 1 &&
-        leafIndex === leaves.value.length - 1
-      );
-    });
 
     const placeholderResizeObserver = ref<ResizeObserver | null>(null);
     const placeholderRef = ref<HTMLElement | null>(null);
@@ -108,13 +85,13 @@ export const LeafComp = defineComponent({
               },
             }),
           h(StringComp, {
-            isLast,
             leaf,
             parent,
             text,
+            isLastIndex,
           }),
         ]),
-        leaf: leaf.value,
+        leaf,
         text,
       });
   },
