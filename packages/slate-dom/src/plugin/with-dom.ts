@@ -211,7 +211,12 @@ export const withDOM = <T extends BaseEditor>(
       case 'remove_node':
       case 'merge_node':
       case 'move_node':
-      case 'split_node': {
+      case 'split_node':
+      case 'insert_text':
+      case 'remove_text':
+      case 'set_selection': {
+        // FIXME: Rename to something like IS_DOM_EDITOR_DESYNCED
+        // to better reflect reality, see #5792
         IS_NODE_MAP_DIRTY.set(e, true)
       }
     }
@@ -373,7 +378,7 @@ export const withDOM = <T extends BaseEditor>(
   return e
 }
 
-const getMatches = (e: DOMEditor, path: Path) => {
+const getMatches = (e: Editor, path: Path) => {
   const matches: [Path, Key][] = []
   for (const [n, p] of Editor.levels(e, { at: path })) {
     const key = DOMEditor.findKey(e, n)
