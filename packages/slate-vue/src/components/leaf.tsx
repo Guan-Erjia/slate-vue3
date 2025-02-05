@@ -6,8 +6,8 @@ import {
   defineComponent,
   Fragment,
   h,
-  onBeforeUnmount,
   onMounted,
+  onUnmounted,
   ref,
 } from "vue";
 import {
@@ -16,7 +16,7 @@ import {
   useRenderPlaceholder,
 } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
-import { Editor, Element } from "slate";
+import { Element } from "slate";
 
 const style: CSSProperties = {
   position: "absolute",
@@ -58,7 +58,7 @@ export const LeafComp = defineComponent({
       }
     });
 
-    onBeforeUnmount(() => {
+    onUnmounted(() => {
       EDITOR_TO_PLACEHOLDER_ELEMENT.delete(editor);
       placeholderResizeObserver.value?.disconnect();
       placeholderResizeObserver.value = null;

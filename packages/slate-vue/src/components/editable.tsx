@@ -69,7 +69,6 @@ import {
 } from "../utils/constants";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
-import { useDecorate } from "../hooks/use-decorate";
 type DOMElement = globalThis.Element;
 type DOMRange = globalThis.Range;
 type DOMText = globalThis.Text;
@@ -134,7 +133,6 @@ export const Editable = defineComponent({
     });
 
     const placeholderHeight = ref<number>();
-    const decorate = useDecorate();
 
     const placeholderContext = computed(() => {
       const showPlaceholder =

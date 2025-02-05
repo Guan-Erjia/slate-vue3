@@ -1,4 +1,4 @@
-import { Editor, Element } from "slate";
+import { Element } from "slate";
 import { ElementComp } from "./element";
 import { TextComp } from "./text";
 import {
