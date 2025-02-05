@@ -67,9 +67,6 @@ export const Editable = defineComponent({
       required: false,
       default: () => defaultScrollSelectionIntoView,
     },
-    onDOMBeforeInput: {
-      type: Function
-    },
     placeholder: { type: String },
     readOnly: {
       type: Boolean,
@@ -546,7 +543,7 @@ export const Editable = defineComponent({
         if (
           !readOnly &&
           DOMEditor.hasEditableTarget(editor, event.target) &&
-          !isDOMEventHandled(event, props.onDOMBeforeInput)
+          !isDOMEventHandled(event, attributes.onBeforeinput)
         ) {
           // COMPAT: BeforeInput events aren't cancelable on android, so we have to handle them differently using the android input manager.
           if (androidInputManagerRef.value) {
@@ -1590,9 +1587,9 @@ export const Editable = defineComponent({
       // Allow words to break if they are too long.
       wordWrap: 'break-word',
       // Make the minimum height that of the placeholder.
-      minHeight: placeholderHeight.value ? placeholderHeight.value : undefined,
+      minHeight: placeholderHeight.value ? placeholderHeight.value + 'px' : undefined,
       // Allow for passed-in styles to override anything.
-      ...(props.style as CSSProperties),
+      ...props.style,
     }))
 
     const spellcheck = computed(() => HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.spellcheck : false)

@@ -62,7 +62,6 @@ export interface RenderElementProps {
  * `EditableProps` are passed to the `<Editable>` component.
  */
 export interface EditableProps extends HTMLAttributes {
-  onDOMBeforeInput?: (event: InputEvent) => void;
   role?: string;
   readOnly: boolean;
   placeholder?: string;

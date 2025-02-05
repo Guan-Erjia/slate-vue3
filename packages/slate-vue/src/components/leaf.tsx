@@ -30,7 +30,7 @@ const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0;
  */
 export const LeafComp = defineComponent({
   name: "slate-leaf",
-  props: ["text", "leaf", "parent", "leaves", "leafIndex"],
+  props: ["text", "parent", "leaves", "leafIndex"],
   setup(props: LeafProps) {
     const { text, parent, leaves, leafIndex } = props;
     const editor = useEditor();
@@ -53,8 +53,6 @@ export const LeafComp = defineComponent({
 
     const placeholderResizeObserver = ref<ResizeObserver | null>(null);
     const placeholderRef = ref<HTMLElement | null>(null);
-    const showPlaceholder = ref(false);
-    const showPlaceholderTimeoutRef = ref<number>();
     const leafIsPlaceholder = computed(() =>
       Boolean(leaf.value[PLACEHOLDER_SYMBOL])
     );
@@ -67,24 +65,12 @@ export const LeafComp = defineComponent({
         });
         placeholderResizeObserver.value.observe(placeholderRef.value);
       }
-
-      if (leafIsPlaceholder.value) {
-        showPlaceholderTimeoutRef.value = setTimeout(() => {
-          showPlaceholder.value = true;
-          showPlaceholderTimeoutRef.value = undefined;
-        }, PLACEHOLDER_DELAY);
-      }
     });
 
     onBeforeUnmount(() => {
       EDITOR_TO_PLACEHOLDER_ELEMENT.delete(editor);
       placeholderResizeObserver.value?.disconnect();
       placeholderResizeObserver.value = null;
-      /** fixme 
-        // leaf.value?.onPlaceholderResize?.(null);
-       * this count be not right **/
-      clearTimeout(showPlaceholderTimeoutRef.value!);
-      showPlaceholderTimeoutRef.value = undefined;
     });
 
     const style: CSSProperties = {
@@ -121,9 +107,7 @@ export const LeafComp = defineComponent({
       renderLeaf({
         attributes: { "data-slate-leaf": true },
         children: h(Fragment, null, [
-          leafIsPlaceholder.value &&
-            showPlaceholder.value &&
-            renderPlaceholder(placeholderProps.value),
+          leafIsPlaceholder.value && renderPlaceholder(placeholderProps.value),
           h(StringComp, {
             isLast,
             leaf,

@@ -19,9 +19,6 @@ export const StringComp = defineComponent({
     const { isLast, leaf, parent, text } = props;
     const editor = useEditor();
 
-    const isMarkPlaceholder = computed(() =>
-      Boolean(leaf.value[MARK_PLACEHOLDER_SYMBOL])
-    );
     const getTextContent = computed(
       () =>
         (leaf.value.text ?? "") +
@@ -50,13 +47,15 @@ export const StringComp = defineComponent({
         : isInlineBreak.value
         ? h(ZeroWidthString, {
             isLineBreak: true,
-            isMarkPlaceholder: isMarkPlaceholder.value,
+            isMarkPlaceholder: Boolean(leaf.value[MARK_PLACEHOLDER_SYMBOL]),
           })
         : // COMPAT: If the text is empty, it's because it's on the edge of an inline
         // node, so we render a zero-width space so that the selection can be
         // inserted next to it still.
         leaf.value.text === ""
-        ? h(ZeroWidthString, { isMarkPlaceholder: isMarkPlaceholder.value })
+        ? h(ZeroWidthString, {
+            isMarkPlaceholder: Boolean(leaf.value[MARK_PLACEHOLDER_SYMBOL]),
+          })
         : h("span", { "data-slate-string": true }, getTextContent.value);
   },
 });
@@ -66,11 +65,7 @@ export const StringComp = defineComponent({
  */
 
 export const ZeroWidthString = defineComponent({
-  props: {
-    length: {},
-    isLineBreak: {},
-    isMarkPlaceholder: {},
-  },
+  props: ["length", "isLineBreak", "isMarkPlaceholder"],
   setup(props: {
     length?: number;
     isLineBreak?: boolean;
