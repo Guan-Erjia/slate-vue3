@@ -22,10 +22,8 @@ const editor = withDOM(createEditor(initialValue))
 </script>
 
 <template>
-  <div style="padding: 10px;">
-    <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
-      :render-placeholder="renderPlaceholder">
-      <Editable style="padding: 0;" placeholder="Type something" />
-    </Slate>
-  </div>
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
+    :render-placeholder="renderPlaceholder">
+    <Editable style="padding: 0;" placeholder="Type something" />
+  </Slate>
 </template>

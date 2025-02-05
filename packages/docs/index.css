@@ -86,10 +86,6 @@ iframe {
   margin-top: 12px;
 }
 
-div [data-slate-editor="true"] {
-  padding: 10px;
-}
-
 a {
   color: gray;
   text-decoration: none;
