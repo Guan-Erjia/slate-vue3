@@ -12,9 +12,9 @@ const route = useRoute()
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
   </header>
   <div style="display: flex;height: calc(100% - 50px);">
-    <ol style="width: 200px;flex-shrink: 0;box-sizing: border-box;height: calc(100%-32px);overflow-y: auto;">
+    <ol style="width: 200px;flex-shrink: 0;box-sizing: border-box;height: calc(100%-32px);overflow-y: auto;margin-top: 0;">
       <RouterLink :to="item.name" v-for="item in ExampleOptions">
-        <li style="text-decoration: none;margin-bottom: 10px;" :style="{
+        <li style="text-decoration: none;margin: 10px 0;" :style="{
           color: item.name === route.name ? '#0366d6' : undefined,
           fontWeight: item.name === route.name ? 500 : undefined,
         }">{{ item.name }}</li>
