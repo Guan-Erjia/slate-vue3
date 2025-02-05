@@ -1,7 +1,11 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import "./index.css";
-import { createRouter, createWebHashHistory, createWebHistory, RouteRecordRaw } from "vue-router";
+import {
+  createRouter,
+  createWebHashHistory,
+  RouteRecordRaw,
+} from "vue-router";
 
 export const ExampleOptions = [
   {
@@ -50,7 +54,7 @@ export const ExampleOptions = [
   },
   {
     name: "markdown-shortcuts",
-    component: import("./pages/markdown-shortcuts/index.vue"),
+    component: () => import("./pages/markdown-shortcuts/index.vue"),
   },
   {
     name: "emotions",
@@ -62,7 +66,7 @@ export const ExampleOptions = [
   },
   {
     name: "plain-text",
-    component: import("./pages/plain-text/index.vue"),
+    component: () => import("./pages/plain-text/index.vue"),
   },
   {
     name: "read-only",
