@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { Editor, Node, Range } from "slate";
+import { BaseElement, Editor, Node, Path, Range } from "slate";
 import { Children } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -39,16 +39,32 @@ type AttrType = {
  */
 export const ElementComp = defineComponent({
   name: "slate-element",
-  props: ["element", "childSelection"],
+  props: ["element"],
   setup(props: ElementProps) {
-    const { element, childSelection } = props;
+    const { element } = props;
     const editor = useEditor();
+
     const selection = computed(() => {
       const path = DOMEditor.findPath(editor, element);
-      const range = Editor.range(editor, path);
-      return (
-        childSelection.value && Range.intersection(range, childSelection.value)
-      );
+      const elemList: Array<[BaseElement, Path]> = [[element, path]];
+      let parent = Editor.parent(editor, path);
+      // 递归收集父节点数据
+      while (parent[1].length) {
+        elemList.unshift(parent);
+        parent = Editor.parent(editor, parent[1]);
+      }
+
+      let sel = editor.selection;
+      // 遍历节点，获取选中范围
+      for (const item of elemList) {
+        if (sel) {
+          sel = Range.intersection(Editor.range(editor, item[1]), sel);
+        } else {
+          // selection1为空直接退出循环
+          break;
+        }
+      }
+      return sel;
     });
 
     const selected = computed(() => !!selection.value);
@@ -128,7 +144,7 @@ export const ElementComp = defineComponent({
           h(TextComp, { parent: element, text })
         );
       }
-      return h(Children, { node: element, selection });
+      return h(Children, { node: element });
     });
 
     const renderElement = useRenderElement();

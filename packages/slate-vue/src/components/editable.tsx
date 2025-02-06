@@ -42,7 +42,6 @@ import {
   computed,
   defineComponent,
   getCurrentInstance,
-  inject,
   onBeforeUpdate,
   onMounted,
   onUnmounted,
@@ -1578,7 +1577,6 @@ export const Editable = defineComponent({
         ? attributes.autocapitalize
         : undefined
     );
-    const editorSelection = computed(() => editor.selection);
 
     return () => (
       <div
@@ -1611,7 +1609,7 @@ export const Editable = defineComponent({
         onKeydown={onKeydown}
         onPaste={onPaste}
       >
-        <Children node={editor} selection={editorSelection} />
+        <Children node={editor} />
       </div>
     );
   },

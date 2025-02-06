@@ -24,7 +24,7 @@ export const TextComp = defineComponent({
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
 
-    const parentDecorations = computed<DecoratedRange[]>(() => {
+    const decorations = computed<DecoratedRange[]>(() => {
       const path = DOMEditor.findPath(editor, props.parent);
       const range = Editor.range(editor, path);
       const ds = decorate([props.parent, path]);
@@ -68,7 +68,7 @@ export const TextComp = defineComponent({
       const path = DOMEditor.findPath(editor, text);
       const range = Editor.range(editor, path);
       const ds = decorate([text, path]);
-      parentDecorations.value.forEach((dec) => {
+      decorations.value.forEach((dec) => {
         ds.push(Range.intersection(dec, range)!);
       });
       return Text.decorations(text, ds.filter(Boolean).length ? ds : []);

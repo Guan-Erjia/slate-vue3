@@ -1,19 +1,6 @@
-import type {
-  DecoratedRange,
-  NodeEntry,
-  Text,
-  Element,
-  Ancestor,
-  Range,
-} from "slate";
+import type { DecoratedRange, NodeEntry, Text, Element, Ancestor } from "slate";
 import type { DOMEditor } from "slate-dom";
-import type {
-  ComputedRef,
-  CSSProperties,
-  HTMLAttributes,
-  VNode,
-  VNodeRef,
-} from "vue";
+import type { CSSProperties, HTMLAttributes, VNode, VNodeRef } from "vue";
 
 /**
  * The props that get passed to renderPlaceholder
@@ -73,7 +60,6 @@ export interface EditableProps extends HTMLAttributes {
 
 export interface ChildrenProps {
   node: Ancestor;
-  selection: ComputedRef<Range | null>;
 }
 
 export interface TextProps {
@@ -90,7 +76,6 @@ export interface StringProps {
 
 export interface ElementProps {
   element: Element;
-  childSelection: ComputedRef<Range | null>;
 }
 
 export interface SlateProps {
