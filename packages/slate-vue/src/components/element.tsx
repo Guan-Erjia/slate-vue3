@@ -11,10 +11,10 @@ import {
 } from "slate-dom";
 import { TextComp } from "./text";
 import type { ElementProps } from "./interface";
-import type { JSX } from "vue/jsx-runtime";
 import {
   computed,
   defineComponent,
+  h,
   onMounted,
   onUnmounted,
   provide,
@@ -24,6 +24,15 @@ import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_SELECTED } from "../utils/constants";
 import { useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
+
+type AttrType = {
+  "data-slate-node": "element";
+  "data-slate-void"?: true;
+  "data-slate-inline"?: true;
+  contentEditable?: false;
+  dir?: "rtl";
+  ref: any;
+};
 
 /**
  * Element.
@@ -45,8 +54,6 @@ export const ElementComp = defineComponent({
     const selected = computed(() => !!selection.value);
     provide(SLATE_USE_SELECTED, selected);
 
-    const readOnly = useReadOnly();
-
     const elementRef = ref<HTMLElement | null>(null);
     onMounted(() => {
       const key = DOMEditor.findKey(editor, element);
@@ -63,18 +70,13 @@ export const ElementComp = defineComponent({
       KEY_TO_ELEMENT?.delete(key);
       NODE_TO_ELEMENT.delete(element);
     });
+
     const isInline = computed(() => editor.isInline(element));
+    const readOnly = useReadOnly();
     // Attributes that the developer must mix into the element in their
     // custom node renderer component.
     const attributes = computed(() => {
-      const attr: {
-        "data-slate-node": "element";
-        "data-slate-void"?: true;
-        "data-slate-inline"?: true;
-        contentEditable?: false;
-        dir?: "rtl";
-        ref: any;
-      } = {
+      const attr: AttrType = {
         "data-slate-node": "element",
         ref: elementRef,
       };
@@ -103,35 +105,38 @@ export const ElementComp = defineComponent({
       }
       return attr;
     });
-    let children: JSX.Element = (
-      <Children node={element} selection={selection} />
-    );
 
-    // If it's a void node, wrap the children in extra void-specific elements.
-    if (Editor.isVoid(editor, element)) {
-      const Tag = isInline.value ? "span" : "div";
-      const [[text]] = Node.texts(element);
+    const children = computed(() => {
+      // If it's a void node, wrap the children in extra void-specific elements.
+      if (Editor.isVoid(editor, element)) {
+        const [[text]] = Node.texts(element);
 
-      children = (
-        <Tag
-          data-slate-spacer
-          style={{
-            height: "0",
-            color: "transparent",
-            outline: "none",
-            position: "absolute",
-          }}
-        >
-          <TextComp parent={element} text={text} />
-        </Tag>
-      );
+        NODE_TO_INDEX.set(text, 0);
+        NODE_TO_PARENT.set(text, element);
 
-      NODE_TO_INDEX.set(text, 0);
-      NODE_TO_PARENT.set(text, element);
-    }
+        return h(
+          isInline.value ? "span" : "div",
+          {
+            "data-slate-spacer": true,
+            style: {
+              height: "0",
+              color: "transparent",
+              outline: "none",
+              position: "absolute",
+            },
+          },
+          h(TextComp, { parent: element, text })
+        );
+      }
+      return h(Children, { node: element, selection });
+    });
 
     const renderElement = useRenderElement();
     return () =>
-      renderElement({ attributes: attributes.value, children, element });
+      renderElement({
+        attributes: attributes.value,
+        children: children.value,
+        element,
+      });
   },
 });

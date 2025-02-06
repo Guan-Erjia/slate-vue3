@@ -7,7 +7,6 @@ import type {
   Range,
 } from "slate";
 import type { DOMEditor } from "slate-dom";
-import type { JSX } from "vue/jsx-runtime";
 import type {
   ComputedRef,
   CSSProperties,
@@ -99,7 +98,7 @@ export interface SlateProps {
   decorate: (entry: NodeEntry) => DecoratedRange[];
   renderElement: (props: RenderElementProps) => VNode;
   renderLeaf: (props: RenderLeafProps) => VNode;
-  renderPlaceholder: (props: RenderPlaceholderProps) => JSX.Element;
+  renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
 }
 
 export interface LeafProps {
