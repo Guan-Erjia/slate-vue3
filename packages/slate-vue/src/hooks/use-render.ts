@@ -10,7 +10,6 @@ import type {
   RenderPlaceholderProps,
   RenderLeafProps,
 } from "../components/interface";
-import { Point } from "slate";
 
 export const useRenderElement = () => {
   const ELEMENT_RENDER = inject<(props: RenderElementProps) => VNode>(
