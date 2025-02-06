@@ -63,12 +63,10 @@ import {
   isEventHandled,
 } from "./utils";
 import { useEditor } from "../hooks/use-editor";
-import {
-  SLATE_CHANGE_EFFECT_INJECT,
-  SLATE_INNER_PLACEHOLDER_CONTEXT,
-} from "../utils/constants";
+import { SLATE_INNER_PLACEHOLDER_CONTEXT } from "../utils/constants";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
+import { useChangeEffect } from "../hooks/use-render";
 type DOMElement = globalThis.Element;
 type DOMRange = globalThis.Range;
 type DOMText = globalThis.Text;
@@ -476,9 +474,9 @@ export const Editable = defineComponent({
         }
       });
     };
-    inject<(fn: () => void) => void>(SLATE_CHANGE_EFFECT_INJECT)?.(
-      changeEffect
-    );
+
+    useChangeEffect(changeEffect);
+
     onUnmounted(() => {
       animationFrameId.value && cancelAnimationFrame(animationFrameId.value);
       if (timeoutId) {
