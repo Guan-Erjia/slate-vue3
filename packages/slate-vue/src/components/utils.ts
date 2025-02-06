@@ -76,6 +76,7 @@ export const defaultScrollSelectionIntoView = (
     scrollIntoView(leafEl, {
       scrollMode: "if-needed",
     });
+    // @ts-expect-error an unorthodox delete D:
     delete leafEl.getBoundingClientRect;
   }
 };
