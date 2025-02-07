@@ -16,7 +16,6 @@ jobs:
      uses: actions/setup-node@v4
      with:
       node-version: 'latest'
-      cache: 'pnpm'
    - name: 安装 PNPM
      run: npm i -g pnpm
    - name: 安装依赖
