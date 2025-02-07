@@ -1,8 +1,0 @@
-{
-  "name": "slate-dom",
-  "description": "Tools for building completely customizable richtext editors with React.",
-  "version": "0.112.0",
-  "license": "MIT",
-  "repository": "git://github.com/ianstormtaylor/slate.git",
-  "sideEffects": false
-}

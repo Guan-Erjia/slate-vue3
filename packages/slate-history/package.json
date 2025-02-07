@@ -1,9 +1,0 @@
-{
-  "name": "slate-history",
-  "description": "An operation-based history implementation for Slate editors.",
-  "version": "0.110.3",
-  "license": "MIT",
-  "repository": "git://github.com/ianstormtaylor/slate.git",
-  "sideEffects": false,
-  "type": "module"
-}

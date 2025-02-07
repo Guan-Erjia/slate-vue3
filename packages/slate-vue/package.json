@@ -1,9 +1,0 @@
-{
-  "name": "slate-vue",
-  "description": "Tools for building completely customizable richtext editors with Vue.",
-  "version": "0.112.0",
-  "license": "MIT",
-  "type": "module",
-  "repository": "git://github.com/Guan-Erjia/slate-vue3",
-  "sideEffects": false
-}
