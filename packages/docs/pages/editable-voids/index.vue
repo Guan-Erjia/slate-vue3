@@ -8,7 +8,7 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder } from 'slate-vue';
+import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, withHistory } from 'slate-vue';
 import Toolbar from '../../components/Toolbar.vue';
 import EditableVoid from './EditableVoid.vue';
 import InsertEditableVoidButton from './InsertEditableVoidButton.vue';
@@ -37,7 +37,7 @@ const initialValue: Descendant[] = [
   },
 ]
 
-const editor = withDOM(createEditor(initialValue))
+const editor = withHistory(withDOM(createEditor(initialValue)))
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'editable-void':

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { withDOM, Node, Element, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Editor } from "slate-vue"
+import { withDOM, Node, Element, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Editor, withHistory } from "slate-vue"
 import { h } from "vue";
 import type { Descendant, DOMEditor, RenderElementProps, RenderLeafProps, } from "slate-vue";
 import { TitleElement, ParagraphElement } from "../../custom-types";
@@ -101,7 +101,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h('span', attributes, children)
 }
 
-const editor = withLayout(withDOM(createEditor(initialValue)))
+const editor = withHistory(withLayout(withDOM(createEditor(initialValue))))
 
 
 const onBeforeInput = (event: Event) => {

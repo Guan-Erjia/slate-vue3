@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue"
 import { h } from "vue";
 import type { Descendant, RenderElementProps } from "slate-vue";
 
@@ -21,7 +21,7 @@ const initialValue: Descendant[] = [
 const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)
 }
-const editor = withDOM(createEditor(initialValue))
+const editor = withHistory(withDOM(createEditor(initialValue))) 
 </script>
 
 <template>

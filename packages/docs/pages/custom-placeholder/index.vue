@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderLeaf, createEditor } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderLeaf, createEditor, withHistory } from "slate-vue"
 import { h } from "vue";
 import type { Descendant, RenderElementProps, RenderPlaceholderProps } from "slate-vue";
 
@@ -18,7 +18,7 @@ const renderPlaceholder = ({ children, attributes }: RenderPlaceholderProps) => 
       h('pre', null, 'Use the renderPlaceholder prop to customize rendering of the placeholder')
     ])
 }
-const editor = withDOM(createEditor(initialValue))
+const editor = withHistory(withDOM(createEditor(initialValue))) 
 </script>
 
 <template>

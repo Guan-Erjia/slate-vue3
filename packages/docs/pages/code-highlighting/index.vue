@@ -16,7 +16,7 @@ import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-php'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-java'
-import { createEditor, Element, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, DOMEditor, Transforms, Editor, NodeEntry, Node, Range } from 'slate-vue';
+import { createEditor, Element, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, DOMEditor, Transforms, Editor, NodeEntry, Node, Range, withHistory } from 'slate-vue';
 import { computed, h } from 'vue';
 import LanguageSelect from './LanguageSelect.vue'
 import ExampleToolbar from './ExampleToolbar.vue'
@@ -88,7 +88,7 @@ declare module 'slate' {
   },
 ]
 
-const editor = withDOM(createEditor(initialValue))
+const editor = withHistory(withDOM(createEditor(initialValue)))
 
 const renderLeaf = (props: RenderLeafProps) => {
   const { attributes, children, leaf } = props

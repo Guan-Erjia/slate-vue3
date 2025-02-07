@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, withHistory } from "slate-vue"
 import { h } from "vue";
 import type { Descendant, RenderElementProps, } from "slate-vue";
 import { faker } from '@faker-js/faker'
@@ -33,7 +33,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
       return h('p', attributes, children)
   }
 }
-const editor = withDOM(createEditor(initialValue))
+const editor = withHistory(withDOM(createEditor(initialValue))) 
 </script>
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"

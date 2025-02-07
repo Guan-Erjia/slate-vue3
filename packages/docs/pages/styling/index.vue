@@ -1,41 +1,21 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue"
 import { h } from "vue";
-import type { Descendant, RenderElementProps } from "slate-vue";
-
-const initialValue: Descendant[] = [
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'This is editable plain text, just like a <textarea>!' },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'This is editable plain text, just like a <textarea>!' },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'This is editable plain text, just like a <textarea>!' },
-    ],
-  },
-]
-
+import type { RenderElementProps } from "slate-vue";
 
 const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)
 }
-const editor1 = withDOM(createEditor([{
+
+const editor1 = withHistory(withDOM(createEditor([{
   type: 'paragraph',
   children: [{ text: 'This editor is styled using the style prop.' }],
-}]))
-const editor2 = withDOM(createEditor([{
+}])))
+
+const editor2 = withHistory(withDOM(createEditor([{
   type: 'paragraph',
   children: [{ text: 'This editor is styled using the className prop.' }],
-}]))
+}])))
 </script>
 
 <template>

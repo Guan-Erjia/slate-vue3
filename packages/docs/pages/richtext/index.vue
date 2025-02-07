@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IS_ANDROID, withDOM, Slate, Editable, createEditor } from "slate-vue"
+import { IS_ANDROID, withDOM, Slate, Editable, createEditor, withHistory } from "slate-vue"
 import { CSSProperties, h } from "vue";
 import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "slate-vue";
 import Toolbar from '../../components/Toolbar.vue'
@@ -104,7 +104,7 @@ const renderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => 
   ])
 }
 
-const editor = withDOM(createEditor(initialValue))
+const editor = withHistory(withDOM(createEditor(initialValue))) 
 </script>
 
 <template>

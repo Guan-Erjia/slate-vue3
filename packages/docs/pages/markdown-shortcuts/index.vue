@@ -7,7 +7,8 @@
 <script lang="ts" setup>
 import {
   createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder,
-  RenderLeafProps, defaultRenderLeaf, DOMEditor, Editor, Element, Node
+  RenderLeafProps, defaultRenderLeaf, DOMEditor, Editor, Element, Node,
+  withHistory
 } from 'slate-vue';
 import { CSSProperties, h } from 'vue';
 import "prismjs";
@@ -50,7 +51,7 @@ const initialValue: Descendant[] = [
 ]
 
 
-const editor = withShortcuts(withDOM(createEditor(initialValue)))
+const editor = withHistory(withShortcuts(withDOM(createEditor(initialValue))))
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   return h(element.type === 'block-quote' ? 'blockquote' :
     element.type === "bulleted-list" ? 'ul' :

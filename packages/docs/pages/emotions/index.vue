@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Range, Editor, DOMEditor } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Range, Editor, DOMEditor, withHistory } from "slate-vue"
 import { computed, CSSProperties, h, ref } from "vue";
 import type { Descendant, RenderElementProps, RenderLeafProps } from "slate-vue";
 import Mention from "./Mention.vue";
@@ -110,7 +110,7 @@ const renderLeaf = (props: RenderLeafProps) => {
   return h('span', attributes, children)
 }
 
-const editor = withMentions(withDOM(createEditor(initialValue)))
+const editor = withHistory(withMentions(withDOM(createEditor(initialValue))))
 const target = ref<Range>()
 const index = ref(0)
 const search = ref('')

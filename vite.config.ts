@@ -17,6 +17,10 @@ export default defineConfig(({ command, mode }) => {
           __dirname,
           "./packages/slate-dom/src/index.ts"
         ),
+        "slate-history": path.resolve(
+          __dirname,
+          "./packages/slate-history/src/index.ts"
+        ),
         "slate-vue": path.resolve(
           __dirname,
           "./packages/slate-vue/src/index.ts"
@@ -40,14 +44,16 @@ export default defineConfig(({ command, mode }) => {
         formats: ["es"],
       },
     };
-    config.plugins?.push(dts({
-      tsconfigPath: "./tsconfig.json",
-      rollupTypes: true,
-      exclude: ["./packages/docs/**/*"],
-      compilerOptions: {
-        verbatimModuleSyntax: false
-      }
-    }));
+    config.plugins?.push(
+      dts({
+        tsconfigPath: "./tsconfig.json",
+        rollupTypes: true,
+        exclude: ["./packages/docs/**/*"],
+        compilerOptions: {
+          verbatimModuleSyntax: false,
+        },
+      })
+    );
   }
   return config;
 });

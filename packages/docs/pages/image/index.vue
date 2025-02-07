@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, Transforms } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, Transforms, withHistory } from "slate-vue"
 import { h } from "vue";
 import imageExtensions from 'image-extensions'
 import isUrl from 'is-url'
@@ -116,7 +116,7 @@ const withImages = (editor: DOMEditor) => {
   return editor
 }
 
-const editor = withImages(withDOM(createEditor(initialValue)))
+const editor = withHistory(withImages(withDOM(createEditor(initialValue))))
 const onMouseDown = (event: Event) => {
   event.preventDefault()
   const url = window.prompt('Enter the URL of the image:')

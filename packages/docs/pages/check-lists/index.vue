@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, withHistory } from "slate-vue"
 import { h } from "vue";
 import type { RenderElementProps } from "slate-vue";
 import { CustomElement } from "../../custom-types";
@@ -67,7 +67,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 }
 
 
-const editor = withChecklists(withDOM(createEditor(initialValue)))
+const editor = withHistory(withChecklists(withDOM(createEditor(initialValue)))) 
 </script>
 
 <template>

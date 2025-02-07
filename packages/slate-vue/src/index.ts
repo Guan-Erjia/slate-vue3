@@ -27,4 +27,5 @@ export { useSelection } from "./hooks/use-selection";
 
 export * from 'slate'
 export * from 'slate-dom'
+export * from 'slate-history'
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Text } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Text, withHistory } from "slate-vue"
 import { h, ref } from "vue";
 import type { DecoratedRange, Descendant, NodeEntry, RenderElementProps, RenderLeafProps } from "slate-vue";
 import Toolbar from "../../components/Toolbar.vue";
@@ -85,7 +85,7 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   return ranges
 }
 
-const editor = withDOM(createEditor(initialValue))
+const editor = withHistory(withDOM(createEditor(initialValue)))
 const search = ref('')
 </script>
 

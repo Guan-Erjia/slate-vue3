@@ -5,7 +5,7 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, DecoratedRange, NodeEntry, Text, RenderLeafProps } from 'slate-vue';
+import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, DecoratedRange, NodeEntry, Text, RenderLeafProps, withHistory } from 'slate-vue';
 import { CSSProperties, h } from 'vue';
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'
@@ -68,7 +68,7 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
 }
 
 
-const editor = withDOM(createEditor(initialValue))
+const editor = withHistory(withDOM(createEditor(initialValue)))
 const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)
 }

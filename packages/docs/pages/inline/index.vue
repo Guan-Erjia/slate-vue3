@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Range, Editor, Element } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Range, Editor, Element, withHistory } from "slate-vue"
 import { computed, h } from "vue";
 import type { Descendant, DOMEditor, RenderElementProps, RenderLeafProps, } from "slate-vue";
 import { ButtonElement, LinkElement } from "../../custom-types";
@@ -157,7 +157,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
     }
   }, children)
 }
-const editor = withInlines(withDOM(createEditor(initialValue)))
+const editor = withHistory(withInlines(withDOM(createEditor(initialValue))))
 const onKeyDown = (event: KeyboardEvent) => {
   // Default left/right behavior is unit:'character'.
   // This fails to distinguish between two cursor positions, such as

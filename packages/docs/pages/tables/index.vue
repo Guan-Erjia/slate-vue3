@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Range, Editor, Element, Point } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Range, Editor, Element, Point, withHistory } from "slate-vue"
 import { h } from "vue";
 import type { Descendant, DOMEditor, RenderElementProps, RenderLeafProps } from "slate-vue";
 
@@ -165,7 +165,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h('bold' in leaf ? 'strong' : 'span', attributes, children)
 }
 
-const editor = withTables(withDOM(createEditor(initialValue))) 
+const editor = withHistory(withTables(withDOM(createEditor(initialValue)))) 
 </script>
 
 <template>
