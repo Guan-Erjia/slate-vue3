@@ -1,6 +1,12 @@
 import type { DecoratedRange, NodeEntry, Text, Element, Ancestor } from "slate";
 import type { DOMEditor } from "slate-dom";
-import type { CSSProperties, HTMLAttributes, VNode, VNodeRef } from "vue";
+import type {
+  ComputedRef,
+  CSSProperties,
+  HTMLAttributes,
+  VNode,
+  VNodeRef,
+} from "vue";
 
 /**
  * The props that get passed to renderPlaceholder
@@ -68,9 +74,9 @@ export interface TextProps {
 }
 
 export interface StringProps {
-  isLastIndex: boolean;
+  isLast: ComputedRef<boolean>;
   text: Text;
-  leaf: Text;
+  leaf: ComputedRef<Text>;
   parent: Element;
 }
 
@@ -89,6 +95,6 @@ export interface SlateProps {
 export interface LeafProps {
   text: Text;
   parent: Element;
-  leaf: Text;
-  isLastIndex: boolean;
+  leafIndex: number;
+  leaves: ComputedRef<Text[]>;
 }

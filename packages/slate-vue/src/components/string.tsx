@@ -1,10 +1,9 @@
-import { Editor, Path, Node, Element } from "slate";
+import { Editor, Path, Node } from "slate";
 import {
   IS_ANDROID,
   IS_IOS,
   DOMEditor,
   MARK_PLACEHOLDER_SYMBOL,
-  NODE_TO_INDEX,
 } from "slate-dom";
 import { computed, defineComponent, h } from "vue";
 import type { StringProps } from "./interface";
@@ -15,23 +14,16 @@ import { useEditor } from "../hooks/use-editor";
  */
 export const StringComp = defineComponent({
   name: "slate-string",
-  props: ["leaf", "parent", "text", "isLastIndex"],
+  props: ["isLast", "leaf", "parent", "text"],
   setup(props: StringProps) {
-    const { text, leaf, parent, isLastIndex } = props;
+    const { isLast, leaf, parent, text } = props;
     const editor = useEditor();
 
-    const getTextContent = computed(() => {
-      const isLast =
-        !Editor.isVoid(editor, parent) &&
-        Element.isElement(parent) &&
-        !editor.isInline(parent) &&
-        Editor.hasInlines(editor, parent) &&
-        NODE_TO_INDEX.get(text) === parent.children.length - 1 &&
-        isLastIndex;
-      return (
-        (leaf.text ?? "") + (isLast && leaf.text.slice(-1) === "\n" ? "\n" : "")
-      );
-    });
+    const getTextContent = computed(
+      () =>
+        (leaf.value.text ?? "") +
+        (isLast.value && leaf.value.text.slice(-1) === "\n" ? "\n" : "")
+    );
 
     // COMPAT: Render text inside void nodes with a zero-width space.
     // So the node can contain selection but the text is not visible.
@@ -42,7 +34,7 @@ export const StringComp = defineComponent({
     const isInlineBreak = computed(() => {
       const pathParent = Path.parent(DOMEditor.findPath(editor, text));
       return (
-        leaf.text === "" &&
+        leaf.value.text === "" &&
         parent.children[parent.children.length - 1] === text &&
         !editor.isInline(parent) &&
         Editor.string(editor, pathParent) === ""
@@ -55,14 +47,14 @@ export const StringComp = defineComponent({
         : isInlineBreak.value
         ? h(ZeroWidthString, {
             isLineBreak: true,
-            isMarkPlaceholder: Boolean(leaf[MARK_PLACEHOLDER_SYMBOL]),
+            isMarkPlaceholder: Boolean(leaf.value[MARK_PLACEHOLDER_SYMBOL]),
           })
-        : leaf.text === ""
+        : // COMPAT: If the text is empty, it's because it's on the edge of an inline
+        // node, so we render a zero-width space so that the selection can be
+        // inserted next to it still.
+        leaf.value.text === ""
         ? h(ZeroWidthString, {
-            // COMPAT: If the text is empty, it's because it's on the edge of an inline
-            // node, so we render a zero-width space so that the selection can be
-            // inserted next to it still.
-            isMarkPlaceholder: Boolean(leaf[MARK_PLACEHOLDER_SYMBOL]),
+            isMarkPlaceholder: Boolean(leaf.value[MARK_PLACEHOLDER_SYMBOL]),
           })
         : h("span", { "data-slate-string": true }, getTextContent.value);
   },
