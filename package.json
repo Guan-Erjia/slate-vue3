@@ -20,9 +20,7 @@
     "lodash-es": "^4.17.21",
     "scroll-into-view-if-needed": "^3.1.0",
     "slate-history": "^0.110.3",
-    "slate-hyperscript": "^0.100.0",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue": "^3.5.13"
   },
   "devDependencies": {
     "@faker-js/faker": "^9.4.0",
@@ -39,7 +37,9 @@
     "typescript": "~5.7.2",
     "vite": "^6.0.11",
     "vite-plugin-dts": "^4.5.0",
-    "vue-tsc": "^2.2.0"
+    "vue-tsc": "^2.2.0",
+    "slate-hyperscript": "^0.100.0",
+    "vue-router": "^4.5.0"
   },
   "keywords": [
     "canvas",
