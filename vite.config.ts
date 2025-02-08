@@ -43,6 +43,7 @@ export default defineConfig(({ command, mode }) => {
         fileName: "slate-vue3",
         formats: ["es"],
       },
+      copyPublicDir: false
     };
     config.plugins?.push(
       dts({
