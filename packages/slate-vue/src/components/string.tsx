@@ -19,19 +19,16 @@ export const StringComp = defineComponent({
     const { isLast, leaf, parent, text } = props;
     const editor = useEditor();
 
-    const getTextContent = computed(
-      () =>
-        (leaf.value.text ?? "") +
-        (isLast.value && leaf.value.text.slice(-1) === "\n" ? "\n" : "")
-    );
+    const getTextContent = computed(() => {
+      const text = leaf.value.text
+      return (text ?? "") + (isLast.value && text.at(-1) === "\n" ? "\n" : "")
+    });
 
-    // COMPAT: Render text inside void nodes with a zero-width space.
-    // So the node can contain selection but the text is not visible.
-    const isVoidParent = computed(() => editor.isVoid(parent));
+
     // COMPAT: If this is the last text node in an empty block, render a zero-
     // width space that will convert into a line break when copying and pasting
     // to support expected plain text.
-    const isInlineBreak = computed(() => {
+    const isLineBreak = computed(() => {
       const pathParent = Path.parent(DOMEditor.findPath(editor, text));
       return (
         leaf.value.text === "" &&
@@ -41,57 +38,28 @@ export const StringComp = defineComponent({
       );
     });
 
-    return () =>
-      isVoidParent.value
-        ? h(ZeroWidthString, { length: Node.string(parent).length })
-        : isInlineBreak.value
-        ? h(ZeroWidthString, {
-            isLineBreak: true,
-            isMarkPlaceholder: Boolean(leaf.value[MARK_PLACEHOLDER_SYMBOL]),
-          })
-        : // COMPAT: If the text is empty, it's because it's on the edge of an inline
-        // node, so we render a zero-width space so that the selection can be
-        // inserted next to it still.
-        leaf.value.text === ""
-        ? h(ZeroWidthString, {
-            isMarkPlaceholder: Boolean(leaf.value[MARK_PLACEHOLDER_SYMBOL]),
-          })
-        : h("span", { "data-slate-string": true }, getTextContent.value);
+    const zeroStringAttrs = computed(() => {
+      const length = Node.string(parent).length || 0
+      const isMarkPlaceholder = Boolean((leaf.value as any)[MARK_PLACEHOLDER_SYMBOL]) || false
+      // COMPAT: Render text inside void nodes with a zero-width space.
+      // So the node can contain selection but the text is not visible.
+      const isVoidParent = editor.isVoid(parent)
+      if (isVoidParent || isLineBreak.value || leaf.value.text === '') {
+        return {
+          "data-slate-zero-width": isLineBreak.value ? "n" : "z",
+          "data-slate-length": length,
+          "data-slate-mark-placeholder": isMarkPlaceholder ? true : undefined,
+        }
+      }
+      return null
+    })
+
+    return () => zeroStringAttrs.value ?
+      h('span', zeroStringAttrs.value, [
+        !(IS_ANDROID || IS_IOS) || !isLineBreak.value ? "\uFEFF" : null,
+        isLineBreak.value ? h('br') : null
+      ])
+      : h("span", { "data-slate-string": true }, getTextContent.value);
   },
 });
 
-/**
- * Leaf strings without text, render as zero-width strings.
- */
-
-export const ZeroWidthString = defineComponent({
-  props: ["length", "isLineBreak", "isMarkPlaceholder"],
-  setup(props: {
-    length?: number;
-    isLineBreak?: boolean;
-    isMarkPlaceholder?: boolean;
-  }) {
-    const {
-      length = 0,
-      isLineBreak = false,
-      isMarkPlaceholder = false,
-    } = props;
-
-    const attributes = computed<{
-      "data-slate-zero-width": string;
-      "data-slate-length": number;
-      "data-slate-mark-placeholder"?: boolean;
-    }>(() => ({
-      "data-slate-zero-width": isLineBreak ? "n" : "z",
-      "data-slate-length": length,
-      "data-slate-mark-placeholder": isMarkPlaceholder ? true : undefined,
-    }));
-
-    return () => (
-      <span {...attributes.value}>
-        {!(IS_ANDROID || IS_IOS) || !isLineBreak ? "\uFEFF" : null}
-        {isLineBreak ? <br /> : null}
-      </span>
-    );
-  },
-});
