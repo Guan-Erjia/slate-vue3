@@ -98,7 +98,7 @@ Get the current editor selection from the React context.
 
 **rewrite implement for WeakMap**
 
-1. packages/un-proxy-weakmap/src/index.ts
+1. packages/share-tools/index.ts
 2. packages/slate-dom/src/utils/weak-maps.ts
 
 **import types from globalThis in slate-dom**
