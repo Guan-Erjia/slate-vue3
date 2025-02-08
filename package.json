@@ -18,8 +18,7 @@
     "direction": "^2.0.1",
     "is-hotkey": "^0.2.0",
     "lodash-es": "^4.17.21",
-    "scroll-into-view-if-needed": "^3.1.0",
-    "slate-history": "^0.110.3"
+    "scroll-into-view-if-needed": "^3.1.0"
   },
   "peerDependencies": {
     "vue": "^3.5.13"
