@@ -8,7 +8,7 @@ import {
 } from "slate-dom";
 import { LeafComp } from "./leaf";
 import type { TextProps } from "./interface";
-import { computed, defineComponent, h, onMounted, onUnmounted, ref } from "vue";
+import { computed, defineComponent, h, onMounted, onUnmounted, ref, renderList } from "vue";
 import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";
 
@@ -99,15 +99,14 @@ export const TextComp = defineComponent({
       return h(
         "span",
         { "data-slate-node": "text", ref: spanRef },
-        leaves.value.map((leaf, i) =>
+        renderList(leaves.value, (leaf, i) =>
           h(LeafComp, {
             text,
             parent,
             leafIndex: i,
             leaves,
             key: `${key.id}-${i}-${text.text}`,
-          })
-        )
+          }))
       );
     };
   },
