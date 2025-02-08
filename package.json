@@ -1,6 +1,6 @@
 {
   "name": "slate-vue3",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -44,15 +44,15 @@
   },
   "keywords": [
     "slate-vue3",
-    "richtext",
+    "slate-vue",
+    "slate",
     "editor",
     "contenteditable",
-    "slate",
+    "richtext",
     "rich",
     "editable",
     "markdown",
-    "html",
-    "paper"
+    "html"
   ],
   "repository": {
     "type": "git",
