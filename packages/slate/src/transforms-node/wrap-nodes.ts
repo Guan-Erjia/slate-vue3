@@ -6,7 +6,7 @@ import { Element } from '../interfaces/element'
 import { Text } from '../interfaces/text'
 import { Range } from '../interfaces/range'
 import { Transforms } from '../interfaces/transforms'
-import { cloneDeep } from 'lodash-es'
+import { clone } from 'lodash-es'
 
 export const wrapNodes: NodeTransforms['wrapNodes'] = (
   editor,
@@ -15,7 +15,7 @@ export const wrapNodes: NodeTransforms['wrapNodes'] = (
 ) => {
   Editor.withoutNormalizing(editor, () => {
     const { mode = 'lowest', split = false, voids = false } = options
-    let { match, at = cloneDeep(editor.selection) } = options
+    let { match, at = clone(editor.selection) } = options
 
     if (!at) {
       return

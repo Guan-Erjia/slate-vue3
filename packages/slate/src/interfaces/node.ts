@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash-es'
+import { clone } from 'lodash-es'
 import { Editor, Path, Range, Scrubber, Text } from '..'
 import { Element, ElementEntry } from './element'
 import { nextTick } from 'vue'
@@ -362,7 +362,7 @@ export const Node: NodeInterface = {
       )
     }
       // 这里不能影响现有节点数据，必须深拷贝
-      let r = { children: cloneDeep(root.children) }
+      let r = { children: clone(root.children) }
       const [start, end] = Range.edges(range)
       const nodeEntries = Node.nodes(root, {
         reverse: true,
