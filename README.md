@@ -1,9 +1,7 @@
-[<img src="https://raw.githubusercontent.com/ianstormtaylor/slate/main/docs/images/banner.png" />](https://github.com/ianstormtaylor/slate/raw/main/docs/images/banner.png)
+![https://github.com/ianstormtaylor/slate/raw/main/docs/images/banner.png](https://github.com/ianstormtaylor/slate/raw/main/docs/images/banner.png)
 
-<p align="center">
-  slate-<a style="color: #087ea4" href="https://react.dev/">react</a> library implemented with <a style="color: #42b883" href="https://vuejs.org/">vue</a>
-</p>
-<br/>
+
+# slate-[react](https://react.dev/) library implemented with [vue3](https://vuejs.org/)
 
 # Why use it?
 
@@ -78,6 +76,8 @@ Get the current editor selection from the React context.
   Implementation of slate on dom, update synchronously with slate-dom
 - [slate-vue](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate-vue)
   Vue components for rendering slate editors
+- [slate-history](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate-history)
+  Provide undo redo functions, replace Weakmap to UnProxyWeakmap
 - [share-tools](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/share-tools)
   for special processing of proxy type data, obtain the raw pointer, isPlainObject declare
 
