@@ -1,6 +1,5 @@
 {
   "include": ["./packages/**/*"],
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowSyntheticDefaultImports": true,
@@ -17,8 +16,6 @@
     "emitDeclarationOnly": true,
     "verbatimModuleSyntax": false,
     "noCheck": false,
-    "jsx": "preserve",
-    "jsxImportSource": "vue",
     "baseUrl": ".",
     "paths": {
       "slate": ["./packages/slate/src/index.ts"],

@@ -42,6 +42,7 @@ import {
   computed,
   defineComponent,
   getCurrentInstance,
+  h,
   onBeforeUpdate,
   onMounted,
   onUnmounted,
@@ -89,7 +90,7 @@ export const Editable = defineComponent({
     role: { type: String },
     style: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     is: {
       type: String,
@@ -631,7 +632,7 @@ export const Editable = defineComponent({
                 native &&
                 node.parentElement &&
                 window?.getComputedStyle(node.parentElement)?.whiteSpace ===
-                  "pre"
+                "pre"
               ) {
                 const block = Editor.above(editor, {
                   at: anchor.path,
@@ -1241,7 +1242,7 @@ export const Editable = defineComponent({
 
         const element =
           editor.children[
-            editor.selection !== null ? editor.selection.focus.path[0] : 0
+          editor.selection !== null ? editor.selection.focus.path[0] : 0
           ];
         const isRTL = direction(Node.string(element)) === "rtl";
 
@@ -1578,39 +1579,37 @@ export const Editable = defineComponent({
         : undefined
     );
 
-    return () => (
-      <div
-        is={is}
-        role={readOnly ? undefined : "textbox"}
-        aria-multiline={readOnly ? undefined : true}
-        {...attributes}
-        data-slate-editor
-        data-slate-node="value"
-        spellcheck={spellcheck.value}
-        autocorrect={autocorrect.value}
-        autocapitalize={autocapitalize.value}
-        contenteditable={!readOnly}
-        ref={editableRef}
-        style={mergedEditableStyle.value}
-        onBeforeinput={onBeforeinput}
-        onInput={onInput}
-        onBlur={onBlur}
-        onClick={onClick}
-        onCompositionend={onCompositionend}
-        onCompositionupdate={onCompositionupdate}
-        onCompositionstart={onCompositionstart}
-        onCopy={onCopy}
-        onCut={onCut}
-        onDragover={onDragover}
-        onDragstart={onDragstart}
-        onDrop={onDrop}
-        onDragend={onDragend}
-        onFocus={onFocus}
-        onKeydown={onKeydown}
-        onPaste={onPaste}
-      >
-        <Children node={editor} />
-      </div>
+    return () => h(is,
+      {
+        role: readOnly ? undefined : "textbox",
+        'aria-multiline': readOnly ? undefined : true,
+        'data-slate-editor': true,
+        'data-slate-node': "value",
+        ...attributes,
+        spellcheck: spellcheck.value,
+        autocorrect: autocorrect.value,
+        autocapitalize: autocapitalize.value,
+        contenteditable: !readOnly,
+        ref: editableRef,
+        style: mergedEditableStyle.value,
+        onBeforeinput,
+        onInput,
+        onBlur,
+        onClick,
+        onCompositionend,
+        onCompositionupdate,
+        onCompositionstart,
+        onCopy,
+        onCut,
+        onDragover,
+        onDragstart,
+        onDrop,
+        onDragend,
+        onFocus,
+        onKeydown,
+        onPaste
+      },
+      [h(Children, { node: editor })]
     );
   },
 });

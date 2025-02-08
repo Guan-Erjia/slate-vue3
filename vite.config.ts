@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import vueJsx from "@vitejs/plugin-vue-jsx";
 import path from "path";
 import { UserConfig } from "vite";
 import dts from "vite-plugin-dts";
@@ -8,7 +7,7 @@ import dts from "vite-plugin-dts";
 export default defineConfig(({ command, mode }) => {
   console.log(command, mode);
   const config: UserConfig = {
-    plugins: [vue(), vueJsx()],
+    plugins: [vue()],
     base: "/slate-vue3/",
     resolve: {
       alias: {
