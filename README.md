@@ -70,8 +70,6 @@ Get the current editor selection from the React context.
 
 # Packages
 
-**slate's codebase is monorepo managed with pnpm workspace**
-
 - [slate](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate)
   slate core logic, update synchronously with slate
 - [slate-dom](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate-dom)
@@ -90,6 +88,7 @@ Get the current editor selection from the React context.
 1. packages/slate/src/interfaces/text.ts 115:115
 2. packages/slate/src/create-editor.ts 94:94
 3. packages/slate/src/transforms-node/set-nodes.ts 18:18
+4. packages/slate/src/interfaces/text.ts 116:116
 
 **remove immer**
 
