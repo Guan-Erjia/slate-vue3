@@ -94,8 +94,7 @@ const search = ref('')
     :render-placeholder="defaultRenderPlaceHolder">
     <Toolbar>
       <div style="position: relative;">
-        <span class="material-icons"
-          style="position: absolute; top: 0.5em; left: 0.6em; color: #ccc;font-family: 'Material Icons'">search</span>
+        <span style="position: absolute; top: 0.5em; left: 0.6em; color: #ccc;font-family: 'Material Icons'">search</span>
         <input type="search" placeholder="Search the text..." v-model="search" style="  padding-left: 2.5em;
         width: 100%;" />
       </div>

@@ -1,7 +1,11 @@
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
-    <ExampleToolbar />
+    <Toolbar>
+      <Button data-test-id="code-block-button" active @mousedown="onMouseDown">
+        code
+      </Button>
+    </Toolbar>
     <Editable class="code-hightlighting" placeholder="Enter some text..." @keydown="onKeydown" />
   </Slate>
 </template>
@@ -19,7 +23,8 @@ import 'prismjs/components/prism-java'
 import { createEditor, Element, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, DOMEditor, Transforms, Editor, NodeEntry, Node, Range, withHistory } from 'slate-vue';
 import { computed, h } from 'vue';
 import LanguageSelect from './LanguageSelect.vue'
-import ExampleToolbar from './ExampleToolbar.vue'
+import Toolbar from '../../components/Toolbar.vue';
+import Button from '../../components/Button.vue';
 import isHotkey from "is-hotkey";
 import { CodeBlockElement } from "packages/docs/custom-types";
 import { normalizeTokens } from '../../utils/normalize-tokens'
@@ -208,6 +213,25 @@ const decorate = computed(() => ([node, path]: any) => {
   return []
 })
 
+const ParagraphType = 'paragraph'
+const CodeBlockType = 'code-block'
+const CodeLineType = 'code-line'
+const onMouseDown = (event: MouseEvent) => {
+  event.preventDefault()
+  Transforms.wrapNodes(
+    editor,
+    { type: CodeBlockType, language: 'html', children: [] },
+    {
+      match: n => Element.isElement(n) && n.type === ParagraphType,
+      split: true,
+    }
+  )
+  Transforms.setNodes(
+    editor,
+    { type: CodeLineType as any },
+    { match: n => Element.isElement(n) && n.type === ParagraphType }
+  )
+}
 </script>
 <style>
 .code-hightlighting {

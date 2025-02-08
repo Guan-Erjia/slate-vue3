@@ -1,11 +1,6 @@
 <template>
-  <div v-bind="attrs" style="position: relative;padding-bottom: 8px;margin-bottom: 10px;
+  <div style="position: relative;padding-bottom: 8px;margin-bottom: 10px;
   border-bottom: 2px solid #eee;" data-test-id="menu">
     <slot></slot>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { useAttrs } from 'vue';
-const attrs = useAttrs()
-</script>
