@@ -93,6 +93,8 @@ export const LeafComp = defineComponent({
     // contenteditable behaviors. (2019/05/08)
     return () =>
       renderLeaf({
+        text,
+        leaf: leaf.value,
         attributes: { "data-slate-leaf": true },
         children: h(Fragment, null, [
           placeholderContext.value &&
@@ -112,8 +114,6 @@ export const LeafComp = defineComponent({
             text,
           }),
         ]),
-        leaf: leaf.value,
-        text,
       });
   },
 });
