@@ -5,6 +5,7 @@ import { matchPath } from '../utils/match-path'
 import { Element } from '../interfaces/element'
 import { Range } from '../interfaces/range'
 import { Transforms } from '../interfaces/transforms'
+import { cloneDeep } from 'lodash-es'
 
 export const unwrapNodes: NodeTransforms['unwrapNodes'] = (
   editor,
@@ -12,7 +13,7 @@ export const unwrapNodes: NodeTransforms['unwrapNodes'] = (
 ) => {
   Editor.withoutNormalizing(editor, () => {
     const { mode = 'lowest', split = false, voids = false } = options
-    let { at = editor.selection, match } = options
+    let { at = cloneDeep(editor.selection), match } = options
 
     if (!at) {
       return

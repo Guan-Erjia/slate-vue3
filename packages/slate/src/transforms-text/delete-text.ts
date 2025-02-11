@@ -6,6 +6,7 @@ import { Path } from '../interfaces/path'
 import { Transforms } from '../interfaces/transforms'
 import { Element } from '../interfaces/element'
 import { NodeEntry } from '../interfaces/node'
+import { cloneDeep } from 'lodash-es'
 
 export const deleteText: TextTransforms['delete'] = (editor, options = {}) => {
   Editor.withoutNormalizing(editor, () => {
@@ -15,7 +16,7 @@ export const deleteText: TextTransforms['delete'] = (editor, options = {}) => {
       distance = 1,
       voids = false,
     } = options
-    let { at = editor.selection, hanging = false } = options
+    let { at = cloneDeep(editor.selection), hanging = false } = options
 
     if (!at) {
       return

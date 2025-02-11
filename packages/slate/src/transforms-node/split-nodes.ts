@@ -7,6 +7,7 @@ import { PointRef } from '../interfaces/point-ref'
 import { Transforms } from '../interfaces/transforms'
 import { Node } from '../interfaces/node'
 import { Point } from '../interfaces/point'
+import { cloneDeep } from 'lodash-es'
 
 /**
  * Convert a range into a point by deleting it's content.
@@ -28,7 +29,7 @@ export const splitNodes: NodeTransforms['splitNodes'] = (
 ) => {
   Editor.withoutNormalizing(editor, () => {
     const { mode = 'lowest', voids = false } = options
-    let { match, at = editor.selection, height = 0, always = false } = options
+    let { match, at = cloneDeep(editor.selection), height = 0, always = false } = options
 
     if (match == null) {
       match = n => Element.isElement(n) && Editor.isBlock(editor, n)
