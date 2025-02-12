@@ -2,7 +2,7 @@
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
     <Toolbar>
-      <Button class="material-icons" @mousedown="onMouseDown">add</Button>
+      <Button @mousedown="onMouseDown">add</Button>
     </Toolbar>
     <Editable placeholder="Enter some text..." />
   </Slate>

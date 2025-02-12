@@ -1,5 +1,5 @@
 <template>
-  <span v-bind="attrs" style="font-size: 18px;
+  <span v-bind="attrs" class="material-icons" style="font-size: 18px;
   vertical-align: text-bottom;
   cursor: pointer;
   margin-right: 15px;

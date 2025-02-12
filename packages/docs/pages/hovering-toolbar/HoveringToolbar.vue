@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div ref="menuRef" :style="menuStyle" @mousedown="onMouseDown">
+    <div ref="menuRef" data-testid="menu" :style="menuStyle" @mousedown="onMouseDown">
       <Button :reversed="true" @click="toggleMark('bold')" :active="isMarkActive('bold')">format_bold</Button>
       <Button :reversed="true" @click="toggleMark('italic')" :active="isMarkActive('italic')">format_italic</Button>
       <Button :reversed="true" @click="toggleMark('underlined')"
