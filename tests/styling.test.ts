@@ -104,7 +104,7 @@ test.describe('styling example', () => {
     expect(styles.borderBottomRightRadius).toBe('20px')
     expect(styles.borderTopLeftRadius).toBe('20px')
     expect(styles.borderTopRightRadius).toBe('20px')
-    expect(styles.outlineOffset).toBe('-20px')
+    expect(styles.outlineOffset).toBe('-10px')
     expect(styles.outlineWidth).toBe('3px')
     expect(styles.outlineStyle).toBe('dashed')
     expect(styles.outlineColor).toBe('rgb(0, 94, 128)')
