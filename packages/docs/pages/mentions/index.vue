@@ -86,7 +86,7 @@ const renderElement = (props: RenderElementProps) => {
       }
       return h('span', {
         ...attributes, style, contentEditable: false,
-        'data-cy': `mention-${element.character.replace(' ', ' -')}`
+        'data-cy': `mention-${element.character.replace(' ', '-')}`
       }, h(Mention, { element }, () => children))
     default:
       return h('p', attributes, children)

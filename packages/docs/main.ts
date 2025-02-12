@@ -57,8 +57,8 @@ export const ExampleOptions = [
     component: () => import("./pages/markdown-shortcuts/index.vue"),
   },
   {
-    name: "emotions",
-    component: () => import("./pages/emotions/index.vue"),
+    name: "mentions",
+    component: () => import("./pages/mentions/index.vue"),
   },
   {
     name: "paste-html",

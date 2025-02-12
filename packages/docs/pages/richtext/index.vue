@@ -91,7 +91,7 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
     style.textDecoration = "line-through";
   }
   return h(
-    'code' in leaf ? "code" : "span",
+    'code' in leaf ? "code" : 'bold' in leaf ? "strong" : "span",
     { ...attributes, style },
     children
   )
