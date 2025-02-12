@@ -10,7 +10,7 @@ import {
 export const ExampleOptions = [
   {
     name: "rich-text",
-    component: () => import("./pages/richtext/index.vue"),
+    component: () => import("./pages/rich-text/index.vue"),
   },
   {
     name: "check-lists",
