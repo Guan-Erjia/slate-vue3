@@ -15,7 +15,7 @@ test.describe('selection', () => {
     await page.pause()
 
     // .css-1vdn1ty is the gray, unselected button
-    expect(await page.locator('.css-1vdn1ty').nth(6).textContent()).toBe(
+    expect(await page.locator('.material-icons').nth(6).textContent()).toBe(
       'format_quote'
     )
   })
