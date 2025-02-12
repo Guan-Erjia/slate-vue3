@@ -2,7 +2,7 @@
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
     <Toolbar>
-      <Button data-test-id="code-block-button" active @mousedown="onMouseDown">
+      <Button data-testid="code-block-button" active @mousedown="onMouseDown">
         code
       </Button>
     </Toolbar>

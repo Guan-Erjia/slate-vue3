@@ -1,5 +1,5 @@
 <template>
-  <select data-test-id="language-select" :value="props.value" :contentEditable="false" style="position: absolute; right: 5px; top:
+  <select data-testid="language-select" :value="props.value" :contentEditable="false" style="position: absolute; right: 5px; top:
     5px; z-index: 1;" @change="onChange">
     <option value="css">CSS</option>
     <option value="html">HTML</option>

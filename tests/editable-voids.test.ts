@@ -21,7 +21,7 @@ test.describe('editable voids', () => {
 
   test('should double the elements', async ({ page }) => {
     // click the `+` sign to duplicate the editable void
-    await page.locator('span.material-icons').nth(1).click()
+    await page.locator('.material-icons').nth(0).click()
 
     for (const elem of elements) {
       const { tag, count } = elem

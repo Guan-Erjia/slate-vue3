@@ -2,16 +2,17 @@
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
     <Toolbar>
-      <InsertEditableVoidButton />
+      <Button class="material-icons" @mousedown="onMouseDown">add</Button>
     </Toolbar>
     <Editable placeholder="Enter some text..." />
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, withHistory } from 'slate-vue';
+import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, withHistory, Transforms } from 'slate-vue';
 import Toolbar from '../../components/Toolbar.vue';
 import EditableVoid from './EditableVoid.vue';
-import InsertEditableVoidButton from './InsertEditableVoidButton.vue';
+import Button from '../../components/Button.vue';
+import { EditableVoidElement } from '../../custom-types';
 import { h } from 'vue';
 
 const initialValue: Descendant[] = [
@@ -42,11 +43,21 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
   switch (element.type) {
     case 'editable-void':
       return h('div', {
-        ref: attributes.ref,
+        ...attributes,
         contentEditable: false,
       }, h(EditableVoid, () => children))
     default:
       return h('p', attributes, children)
   }
+}
+
+const onMouseDown = (event: MouseEvent) => {
+  event.preventDefault()
+  const text = { text: '' }
+  const voidNode: EditableVoidElement = {
+    type: 'editable-void',
+    children: [text],
+  }
+  Transforms.insertNodes(editor, voidNode)
 }
 </script>
