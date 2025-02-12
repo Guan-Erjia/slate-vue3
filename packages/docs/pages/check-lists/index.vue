@@ -55,11 +55,12 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
   switch (element.type) {
     case 'check-list-item':
       return h('div', {
-        ref: attributes.ref, style: {
+        style: {
           display: 'flex',
           flexDirection: 'row',
           alignItems: 'center'
-        }
+        },
+        ...attributes
       }, h(CheckListItem, { element }, () => children))
     default:
       return h('p', attributes, children)

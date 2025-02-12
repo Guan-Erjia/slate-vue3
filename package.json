@@ -13,7 +13,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build-all": "vite build --mode=lib"
+    "build-all": "vite build --mode=lib",
+    "test": "playwright test",
+    "test-ui": "playwright test --ui"
   },
   "dependencies": {
     "direction": "^2.0.1",
@@ -26,9 +28,11 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^9.4.0",
+    "@playwright/test": "^1.50.1",
     "@types/is-hotkey": "^0.1.10",
     "@types/is-url": "^1.2.32",
     "@types/lodash-es": "^4.17.12",
+    "@types/node": "^22.13.1",
     "@types/prismjs": "^1.26.5",
     "@vitejs/plugin-vue": "^5.2.1",
     "image-extensions": "^1.1.0",
@@ -37,6 +41,7 @@
     "typescript": "~5.7.2",
     "vite": "^6.0.11",
     "vite-plugin-dts": "^4.5.0",
+    "vitest": "^3.0.5",
     "slate-hyperscript": "^0.100.0",
     "vue-router": "^4.5.0"
   },
