@@ -41,12 +41,12 @@ export const ExampleOptions = [
     component: () => import("./pages/huge-document/index.vue"),
   },
   {
-    name: "image",
-    component: () => import("./pages/image/index.vue"),
+    name: "images",
+    component: () => import("./pages/images/index.vue"),
   },
   {
-    name: "inline",
-    component: () => import("./pages/inline/index.vue"),
+    name: "inlines",
+    component: () => import("./pages/inlines/index.vue"),
   },
   {
     name: "markdown-preview",

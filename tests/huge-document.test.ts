@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test'
 
 test.describe('huge document example', () => {
   const elements = [
-    { tag: '#__next h1', count: 100 },
-    { tag: '#__next p', count: 700 },
+    { tag: '[data-slate-editor] h1', count: 100 },
+    { tag: '[data-slate-editor] p', count: 700 },
   ]
 
   test.beforeEach(async ({ page }) => {
