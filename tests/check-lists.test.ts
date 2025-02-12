@@ -1,6 +1,5 @@
 import { test, expect } from '@playwright/test'
 
-test.setTimeout(600 * 1000)
 test.describe('Check-lists example', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5173/slate-vue3/#/check-lists')
