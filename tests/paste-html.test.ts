@@ -7,11 +7,10 @@ test.describe('paste html example', () => {
   )
 
   const pasteHtml = async (page: Page, htmlContent: string) => {
-    await page.getByRole('textbox').click()
-    await page.getByRole('textbox').selectText()
-    await page.keyboard.press('Backspace')
-    await page
-      .getByRole('textbox')
+    await page.locator('[data-slate-editor]').fill('') // clear editor
+    await page.keyboard.type(' ') // type text
+    await page.keyboard.press("Backspace") // remove the space
+    await page.locator('[data-slate-editor]')
       .evaluate((el: HTMLElement, htmlContent: string) => {
         const clipboardEvent = Object.assign(
           new Event('paste', { bubbles: true, cancelable: true }),

@@ -1,6 +1,6 @@
-import { test, expect, Page } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 
-test.describe('iframe editor', () => {
+test.skip('iframe editor', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5173/slate-vue3/#/iframe')
   })

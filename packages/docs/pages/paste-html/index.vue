@@ -59,7 +59,7 @@ const deserialize = (el: any): any => {
   }
 
   if (el.nodeName === 'BODY') {
-    return h('fragment', {}, children)
+    return jsx('fragment', {}, children)
   }
 
   if (nodeName in ELEMENT_TAGS) {
