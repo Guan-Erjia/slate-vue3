@@ -14,8 +14,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "build-all": "vite build --mode=lib",
-    "test": "playwright test",
-    "test-ui": "playwright test --ui"
+    "test-e2e": "playwright test",
+    "test-e2e-ui": "playwright test --ui"
   },
   "dependencies": {
     "direction": "^2.0.1",
