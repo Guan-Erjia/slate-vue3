@@ -17,6 +17,6 @@
 </template>
 <script lang="ts" setup>
 import { ref, } from 'vue';
-import RichTextEditor from '../richtext/index.vue'
+import RichTextEditor from '../rich-text/index.vue'
 const inputValue = ref('')
 </script>
