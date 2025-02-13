@@ -20,10 +20,10 @@ test.describe('mentions example', () => {
   })
 
   test('inserts on enter from list', async ({ page }) => {
-    await page.getByRole('textbox').click()
-    await page.getByRole('textbox').selectText()
-    await page.getByRole('textbox').press('Backspace')
-    await page.getByRole('textbox').pressSequentially(' @Ja')
+    await page.locator('[data-slate-editor]').fill('') // clear editor
+    await page.keyboard.type(' ') // type text
+    await page.keyboard.press("Backspace") // remove the space
+    await page.keyboard.type(' @Ja')
     await page.getByRole('textbox').press('Enter')
     await expect(page.locator('[data-cy="mention-Jabba"]')).toHaveCount(1)
   })
