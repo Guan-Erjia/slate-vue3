@@ -43,6 +43,8 @@ export const normalizeNode: WithEditorFirstArg<Editor['normalizeNode']> = (
     const currentNode = Node.get(editor, path)
     if (Text.isText(currentNode)) continue
     const child = currentNode.children[n] as Descendant
+    /* FIXME: 这里不知道什么原因，n 的索引超出了边界 */
+    if (child === undefined) continue
     const prev = currentNode.children[n - 1] as Descendant
     const isLast = i === node.children.length - 1
     const isInlineOrText =

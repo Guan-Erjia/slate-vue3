@@ -103,7 +103,11 @@ Get the current editor selection from the React context.
 2. packages/slate-dom/src/utils/weak-maps.ts
 
 **import types from globalThis in slate-dom**
+
 1. packages/slate-dom/src/index.ts
 2. packages/slate-dom/src/plugin/dom-editor.ts
 3. packages/slate-dom/src/utils/dom.ts
 
+**other compace**
+
+1. packages/slate/src/core/normalize-node.ts
