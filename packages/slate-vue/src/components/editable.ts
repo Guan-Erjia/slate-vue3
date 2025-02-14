@@ -257,7 +257,7 @@ export const Editable = defineComponent({
       scheduleOnDOMSelectionChange,
     });
 
-    const timeoutId = ref<number>();
+    const timeoutId = ref<NodeJS.Timeout>();
     const { onUserInput } = useRestoreDOM(editableRef, editor);
 
     // callbackRef
@@ -1586,6 +1586,7 @@ export const Editable = defineComponent({
         'data-slate-editor': true,
         'data-slate-node': "value",
         ...attributes,
+        zindex: -1,
         spellcheck: spellcheck.value,
         autocorrect: autocorrect.value,
         autocapitalize: autocapitalize.value,
