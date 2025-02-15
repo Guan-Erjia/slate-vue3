@@ -990,6 +990,20 @@ export const DOMEditor: DOMEditorInterface = {
           anchorOffset = domRange.anchorOffset
           focusNode = domRange.focusNode
           focusOffset = domRange.focusOffset
+          // @ts-ignore role in Firefox
+          if (IS_FIREFOX && domRange.anchorNode?.role === 'textbox' && domRange.focusNode?.role === 'textbox') {
+            while (anchorNode?.firstElementChild) {
+            // @ts-ignore firstElementChild in Firefox
+              anchorNode = anchorNode.firstElementChild
+            }
+            while (focusNode?.lastElementChild) {
+            // @ts-ignore lastElementChild in Firefox
+              focusNode = focusNode.lastElementChild
+            }
+            anchorNode = anchorNode.firstChild
+            focusNode = focusNode.lastChild
+            focusOffset = focusNode.length
+          }
         }
 
         // COMPAT: There's a bug in chrome that always returns `true` for
