@@ -1,10 +1,9 @@
 /** @jsx jsx */
-import { Transforms } from "slate-vue";
 import { withHistory, History } from "slate-history";
 import { test, expect } from "vitest";
 import { withTest, jsx } from "../utils";
 
-test("after-edit", () => {
+test("before-edit", () => {
   const editor = withTest(
     withHistory(
       <editor>
@@ -14,8 +13,6 @@ test("after-edit", () => {
       </editor>
     )
   );
-
   const result = History.isHistory(editor.history);
-  Transforms.insertText(editor, "additional text");
   expect(result).toBe(true);
 });

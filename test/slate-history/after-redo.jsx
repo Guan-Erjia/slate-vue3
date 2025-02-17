@@ -4,7 +4,7 @@ import { withHistory, History } from "slate-history";
 import { test, expect } from "vitest";
 import { withTest, jsx } from "../utils";
 
-test("after-edit", () => {
+test("after-redo", () => {
   const editor = withTest(
     withHistory(
       <editor>
@@ -15,7 +15,9 @@ test("after-edit", () => {
     )
   );
 
-  const result = History.isHistory(editor.history);
   Transforms.insertText(editor, "additional text");
+  editor.undo();
+  editor.redo();
+  const result = History.isHistory(editor.history);
   expect(result).toBe(true);
 });
