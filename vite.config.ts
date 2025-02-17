@@ -36,7 +36,7 @@ export default defineConfig(({ command, mode }) => {
         lib: {
           entry: "./packages/slate-vue/src/index.ts",
           name: "slate-vue3",
-          fileName: "slate-vue3",
+          fileName: "index",
           formats: ["es"],
         },
         copyPublicDir: false,

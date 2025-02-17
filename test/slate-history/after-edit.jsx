@@ -1,6 +1,5 @@
 /** @jsx jsx */
-import { Transforms } from "../../packages/slate/src/interfaces/transforms/index";
-import { Transforms as Transform1 } from "slate-vue";
+import { Transforms } from "../../dist";
 import { withHistory, History } from "slate-history";
 import { test, expect } from "vitest";
 import { withTest, jsx } from "../utils";
@@ -14,7 +13,6 @@ const editor = withTest(
     </editor>
   )
 );
-console.log(Transform1);
 
 test("after-edit", () => {
   const result = History.isHistory(editor.history);
