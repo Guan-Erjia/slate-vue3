@@ -1,5 +1,5 @@
 {
-  "include": ["./packages/**/*"],
+  "include": ["./packages/**/*", "./test/**/*"],
   "compilerOptions": {
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowSyntheticDefaultImports": true,
