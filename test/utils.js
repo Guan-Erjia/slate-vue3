@@ -1,4 +1,3 @@
-import { DOMEditor } from "slate-vue";
 import { createHyperscript } from "slate-hyperscript";
 /**
  * 给编辑器对象添加测试相关的扩展方法
@@ -6,7 +5,7 @@ import { createHyperscript } from "slate-hyperscript";
  * @param editor 编辑器对象
  * @returns 扩展后的编辑器对象
  */
-export const withTest = (editor: DOMEditor) => {
+export const withTest = (editor) => {
   const { isInline, isVoid, isElementReadOnly, isSelectable } = editor;
 
   editor.isInline = (element) => {

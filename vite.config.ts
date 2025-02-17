@@ -45,7 +45,7 @@ export default defineConfig(({ command, mode }) => {
         dts({
           tsconfigPath: "./tsconfig.json",
           rollupTypes: true,
-          exclude: ["./packages/docs/**/*"],
+          exclude: ["./packages/docs/**/*", "./test/**/*"],
           compilerOptions: {
             verbatimModuleSyntax: false,
           },
