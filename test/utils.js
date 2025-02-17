@@ -1,4 +1,5 @@
 import { createHyperscript } from "slate-hyperscript";
+export { withHistory, History } from "slate-history";
 /**
  * 给编辑器对象添加测试相关的扩展方法
  *

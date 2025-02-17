@@ -1,8 +1,7 @@
 /** @jsx jsx */
 import { Transforms } from "slate-vue";
-import { withHistory, History } from "slate-history";
 import { test, expect } from "vitest";
-import { withTest, jsx } from "../utils";
+import { withTest, jsx, withHistory, History } from "../utils";
 
 test("after-edit", () => {
   const editor = withTest(

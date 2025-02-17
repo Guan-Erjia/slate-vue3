@@ -1,7 +1,6 @@
 /** @jsx jsx */
-import { withHistory, History } from "slate-history";
 import { test, expect } from "vitest";
-import { withTest, jsx } from "../utils";
+import { withTest, jsx, withHistory, History } from "../utils";
 
 test("before-edit", () => {
   const editor = withTest(
