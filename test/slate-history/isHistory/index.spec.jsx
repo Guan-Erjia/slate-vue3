@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { withTest, withHistory, History } from "../../utils";
-import { test, expect } from "vitest";
+import { test, expect, describe } from "vitest";
 import { jsx } from "../../utils";
 
 const modules = import.meta.glob("./*.js");
@@ -13,12 +13,16 @@ const input = (
   </editor>
 );
 
-test("isHistory", () => {
+describe("isHistory", () => {
   Object.keys(modules).forEach(async (path) => {
-    const { run } = await modules[path]();
-    const editor = withTest(withHistory(input));
-    run(editor);
-    const result = History.isHistory(editor.history);
-    expect(result).toBe(true);
+    test(path, async () => {
+      const { run } = await modules[path]();
+      const editor = withTest(withHistory(input));
+
+      run(editor);
+
+      const result = History.isHistory(editor.history);
+      expect(result).toBe(true);
+    });
   });
 });
