@@ -1,4 +1,4 @@
-import { withTest } from "../../utils.js";
+import { withTest } from "@test-utils";
 import { test, expect, describe } from "vitest";
 
 const modules = import.meta.glob("./**/*.(j|t)s?(x)");

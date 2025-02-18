@@ -1,4 +1,4 @@
-import { withTest } from "../../utils.js";
+import { withTest } from "@test-utils";
 import { test, expect, describe } from "vitest";
 import { createEditor } from "slate";
 import { cloneDeep } from "lodash-es";
