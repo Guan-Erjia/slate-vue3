@@ -1,14 +1,17 @@
 /** @jsx jsx */
-import { jsx } from '../..'
+import { jsx } from '@test-utils'
 
 export const input = (
   <editor>
-    <block void />
+    <block>
+      <text />
+      <text />
+    </block>
   </editor>
 )
 export const output = (
   <editor>
-    <block void>
+    <block>
       <text />
     </block>
   </editor>

@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { Transforms, Text } from 'slate'
-import { jsx } from '../..'
+import { jsx } from '@test-utils'
 
 export const run = editor => {
   Transforms.unsetNodes(editor, 'someKey', { match: Text.isText })

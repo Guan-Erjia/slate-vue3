@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import assert from 'assert'
 import { Transforms, Text, Editor } from 'slate'
-import { jsx } from '../..'
+import { jsx } from '@test-utils'
 
 export const run = (editor: Editor) => {
   Transforms.unsetNodes(editor, 'someKey', { at: [0] })

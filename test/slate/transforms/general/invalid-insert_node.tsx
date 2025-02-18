@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import assert from 'assert'
 import { Transforms } from 'slate'
-import { jsx } from '../..'
+import { jsx } from '@test-utils'
 
 export const input = (
   <editor>

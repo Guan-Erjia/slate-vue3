@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { Editor, Element, Transforms } from 'slate'
-import { jsx } from '../..'
+import { jsx } from '@test-utils'
 import _ from 'lodash'
 
 export const input = (

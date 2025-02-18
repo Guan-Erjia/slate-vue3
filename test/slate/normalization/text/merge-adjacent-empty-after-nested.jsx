@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '../..'
+import { jsx } from '@test-utils'
 
 export const input = (
   <editor>
@@ -7,8 +7,10 @@ export const input = (
       <text />
     </block>
     <block>
-      <cursor />
-      <text />
+      <block>
+        <cursor />
+        <text />
+      </block>
     </block>
   </editor>
 )
@@ -18,7 +20,9 @@ export const output = (
       <text />
     </block>
     <block>
-      <cursor />
+      <block>
+        <cursor />
+      </block>
     </block>
   </editor>
 )

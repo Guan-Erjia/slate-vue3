@@ -1,11 +1,12 @@
 /** @jsx jsx */
-import { jsx } from '../..'
+import { jsx } from '@test-utils'
 
 export const input = (
   <editor>
     <block>
-      <text />
-      <inline void />
+      <text>not empty</text>
+      <text a />
+      <inline>inline</inline>
       <text />
     </block>
   </editor>
@@ -13,10 +14,8 @@ export const input = (
 export const output = (
   <editor>
     <block>
-      <text />
-      <inline void>
-        <text />
-      </inline>
+      <text>not empty</text>
+      <inline>inline</inline>
       <text />
     </block>
   </editor>

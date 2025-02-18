@@ -1,18 +1,18 @@
 /** @jsx jsx */
-import { jsx } from '../..'
+import { jsx } from '@test-utils'
 
 export const input = (
   <editor>
     <block>
-      <text />
-      <text />
+      <text>one</text>
+      <block>two</block>
     </block>
   </editor>
 )
 export const output = (
   <editor>
     <block>
-      <text />
+      <text>onetwo</text>
     </block>
   </editor>
 )
