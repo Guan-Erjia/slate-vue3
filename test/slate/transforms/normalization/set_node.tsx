@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { Editor, Element, Transforms } from 'slate'
 import { jsx } from '@test-utils'
-import _ from 'lodash'
+import _ from 'lodash-es'
 
 export const input = (
   <editor>

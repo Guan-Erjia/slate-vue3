@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from "../../utils";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>

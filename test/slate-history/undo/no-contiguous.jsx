@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from "../../utils";
+import { jsx } from "@test-utils";
 import { Transforms } from "slate";
 import { cloneDeep } from "lodash-es";
 

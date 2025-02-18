@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { Transforms } from 'slate'
 import { jsx } from '@test-utils'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 export const run = editor => {
   Transforms.delete(editor, { unit: 'line' })

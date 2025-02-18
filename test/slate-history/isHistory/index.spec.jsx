@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { withTest, withHistory, History } from "../../utils";
 import { test, expect, describe } from "vitest";
-import { jsx } from "../../utils";
+import { jsx } from "@test-utils";
 import { reactive } from "vue";
 
 const modules = import.meta.glob("./*.js");

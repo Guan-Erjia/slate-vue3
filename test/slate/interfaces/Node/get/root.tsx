@@ -1,7 +1,7 @@
 /** @jsx jsx  */
 import { Node } from 'slate'
 import { jsx } from 'slate-hyperscript'
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash-es'
 
 export const input = (
   <editor>

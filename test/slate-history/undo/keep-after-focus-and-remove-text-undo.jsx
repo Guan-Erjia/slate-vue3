@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from "../../utils";
+import { jsx } from "@test-utils";
 import { Editor, Transforms } from "slate";
 
 export const input = (
