@@ -5,13 +5,17 @@ import { Editor } from "slate";
 
 const modules = import.meta.glob("./**/*.js?(x)");
 
-describe("slate-normalization", () => {
+describe("slate-operations", () => {
   Object.keys(modules).forEach(async (path) => {
     test(path, async () => {
-      const { input, output } = await modules[path]();
+      const { input, operations, output } = await modules[path]();
 
       const editor = withTest(reactive(input));
-      Editor.normalize(editor, { force: true });
+      Editor.withoutNormalizing(editor, () => {
+        for (const op of operations) {
+          editor.apply(op);
+        }
+      });
 
       expect(editor.children).toStrictEqual(output.children);
       expect(editor.selection).toStrictEqual(output.selection);
