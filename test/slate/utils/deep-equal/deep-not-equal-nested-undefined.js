@@ -1,4 +1,4 @@
-import { isDeepEqual } from '../../../src/utils/deep-equal'
+import { isDeepEqual } from '@test-utils'
 
 export const input = {
   objectA: {

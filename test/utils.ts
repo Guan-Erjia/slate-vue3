@@ -1,6 +1,13 @@
 import { DOMEditor } from "slate-dom";
 import { createHyperscript } from "slate-hyperscript";
 export { withHistory, History } from "slate-history";
+export {
+  codepointsIteratorRTL,
+  getCharacterDistance,
+  getWordDistance,
+} from "../packages/slate/src/utils/string";
+export { isDeepEqual } from "../packages/slate/src/utils/deep-equal";
+
 /**
  * 给编辑器对象添加测试相关的扩展方法
  *
