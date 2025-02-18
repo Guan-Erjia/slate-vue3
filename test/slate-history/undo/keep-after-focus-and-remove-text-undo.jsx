@@ -1,15 +1,14 @@
 /** @jsx jsx */
-import { jsx, withTest, withHistory } from "../utils";
-import { test, expect } from "vitest";
+import { jsx } from "../../utils";
 import { Editor, Transforms } from "slate";
 
-const input = (
+export const input = (
   <editor>
     <block>Hello</block>
   </editor>
 );
 
-const output = {
+export const output = {
   children: [
     {
       children: [
@@ -25,9 +24,7 @@ const output = {
   },
 };
 
-test("keep-after-focus-and-remove-text-undo", () => {
-  const editor = withTest(withHistory(input));
-
+export const run = (editor) => {
   // focus at the end
   Transforms.select(editor, {
     anchor: { path: [0, 0], offset: 5 },
@@ -47,8 +44,4 @@ test("keep-after-focus-and-remove-text-undo", () => {
     anchor: { path: [0, 0], offset: 0 },
     focus: { path: [0, 0], offset: 0 },
   });
-
-  editor.undo();
-  expect(editor.children).toStrictEqual(output.children);
-  expect(editor.selection).toStrictEqual(output.selection);
-});
+};

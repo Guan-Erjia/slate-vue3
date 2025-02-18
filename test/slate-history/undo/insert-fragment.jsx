@@ -1,9 +1,8 @@
 /** @jsx jsx */
-import { jsx, withTest, withHistory } from "../utils";
-import { test, expect } from "vitest";
+import { jsx } from "../../utils";
 import { cloneDeep } from "lodash-es";
 
-const input = (
+export const input = (
   <editor>
     <block type="d">
       <block>
@@ -15,10 +14,9 @@ const input = (
   </editor>
 );
 
-const output = cloneDeep(input);
+export const output = cloneDeep(input);
 
-test("insert-fragment", () => {
-  const editor = withTest(withHistory(input));
+export const run = (editor) => {
   const fragment = (
     <block type="d">
       <block>A</block>
@@ -38,8 +36,4 @@ test("insert-fragment", () => {
     </block>
   );
   editor.insertFragment(fragment);
-
-  editor.undo();
-  expect(editor.children).toStrictEqual(output.children);
-  expect(editor.selection).toStrictEqual(output.selection);
-});
+};

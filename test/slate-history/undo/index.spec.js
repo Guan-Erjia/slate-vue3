@@ -1,13 +1,15 @@
-import { withTest, withHistory, History } from "../../utils";
+import { withTest, withHistory } from "../../utils";
 import { test, expect } from "vitest";
 const modules = import.meta.glob("./*.jsx");
 
 test("undo", () => {
   Object.keys(modules).forEach(async (path) => {
-    const { input, run } = await modules[path]();
+    const { input, run, output } = await modules[path]();
     const editor = withTest(withHistory(input));
     run(editor);
-    const result = History.isHistory(editor.history);
-    expect(result).toBe(true);
+    editor.undo();
+
+    expect(editor.children).toStrictEqual(output.children);
+    expect(editor.selection).toStrictEqual(output.selection);
   });
 });

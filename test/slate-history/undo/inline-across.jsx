@@ -1,10 +1,9 @@
 /** @jsx jsx */
-import { jsx, withTest, withHistory } from "../utils";
-import { test, expect } from "vitest";
+import { jsx } from "../../utils";
 import { Transforms } from "slate";
 import { cloneDeep } from "lodash-es";
 
-const input = (
+export const input = (
   <editor>
     <block>
       <text />
@@ -25,13 +24,8 @@ const input = (
   </editor>
 );
 
-const output = cloneDeep(input);
+export const output = cloneDeep(input);
 
-test("inline-across", () => {
-  const editor = withTest(withHistory(input));
+export const run = (editor) => {
   Transforms.delete(editor);
-
-  editor.undo();
-  expect(editor.children).toStrictEqual(output.children);
-  expect(editor.selection).toStrictEqual(output.selection);
-});
+};

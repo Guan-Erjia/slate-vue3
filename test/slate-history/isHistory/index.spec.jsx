@@ -3,7 +3,7 @@ import { withTest, withHistory, History } from "../../utils";
 import { test, expect } from "vitest";
 import { jsx } from "../../utils";
 
-const modules = import.meta.glob("./*.jsx");
+const modules = import.meta.glob("./*.js");
 
 const input = (
   <editor>
