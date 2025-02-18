@@ -2,6 +2,7 @@
 import { withTest, withHistory, History } from "../../utils";
 import { test, expect, describe } from "vitest";
 import { jsx } from "../../utils";
+import { reactive } from "vue";
 
 const modules = import.meta.glob("./*.js");
 
@@ -17,7 +18,7 @@ describe("isHistory", () => {
   Object.keys(modules).forEach(async (path) => {
     test(path, async () => {
       const { run } = await modules[path]();
-      const editor = withTest(withHistory(input));
+      const editor = withTest(withHistory(reactive(input)));
 
       run(editor);
 
