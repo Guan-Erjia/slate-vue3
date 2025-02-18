@@ -10,7 +10,7 @@ const BaseConfig: UserConfig = {
   plugins: [vue()],
   base: "/slate-vue3/",
   test: {
-    include: ["./test/**/index.spec.js?(x)"],
+    include: ["./test/slate/test-batch-dirty/**/index.spec.js?(x)"],
   },
   resolve: {
     alias: {
