@@ -10,7 +10,7 @@ const BaseConfig: UserConfig = {
   plugins: [vue()],
   base: "/slate-vue3/",
   test: {
-    include: ["./test/slate-history/**/index.spec.js"],
+    include: ["./test/slate-history/**/index.spec.js?(x)"],
   },
   resolve: {
     alias: {
