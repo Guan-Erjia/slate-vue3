@@ -108,31 +108,31 @@ dirs.forEach((dir) => {
     codepoints.forEach(([str, ltrDist, rtlDist]) => {
       const dist = isRTL && rtlDist != null ? rtlDist : ltrDist;
 
-      test(str, () => {
+      test(str + "", () => {
         expect(getCharacterDistance(str + str, isRTL)).toBe(dist);
       });
     });
 
     zwjSequences.forEach(([str, dist]) => {
-      test(str, () => {
+      test(str + "", () => {
         expect(getCharacterDistance(str + str, isRTL)).toStrictEqual(dist);
       });
     });
 
     regionalIndicatorSequences.forEach((str) => {
-      test(str, () => {
+      test(str + "", () => {
         expect(getCharacterDistance(str + str, isRTL)).toBe(4);
       });
     });
 
     keycapSequences.forEach((str) => {
-      test(str, () => {
+      test(str + "", () => {
         expect(getCharacterDistance(str + str, isRTL)).toBe(3);
       });
     });
 
     tagSequences.forEach(([str, dist]) => {
-      test(str, () => {
+      test(str + "", () => {
         expect(getCharacterDistance(str + str, isRTL)).toBe(dist);
       });
     });
@@ -171,7 +171,7 @@ const rtlCases = [
 
 describe(`getWordDistance - ltr`, () => {
   ltrCases.forEach(([str, dist]) => {
-    test(str, () => {
+    test(str + "", () => {
       expect(getWordDistance(str)).toBe(dist);
     });
   });
@@ -179,7 +179,7 @@ describe(`getWordDistance - ltr`, () => {
 
 describe(`getWordDistance - rtl`, () => {
   rtlCases.forEach(([str, dist]) => {
-    test(str, () => {
+    test(str + "", () => {
       expect(getWordDistance(str, true)).toBe(dist);
     });
   });
@@ -195,7 +195,7 @@ const cases = [
 
 describe("codepointsIteratorRTL", () => {
   cases.forEach((str) => {
-    test(str, () => {
+    test(str + "", () => {
       const arr1 = [...codepointsIteratorRTL(str)];
       const arr2 = Array.from(str).reverse();
 
