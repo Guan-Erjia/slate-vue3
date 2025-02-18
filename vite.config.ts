@@ -10,7 +10,7 @@ const BaseConfig: UserConfig = {
   plugins: [vue()],
   base: "/slate-vue3/",
   test: {
-    include: ["./test/slate-history/**/index.spec.js?(x)"],
+    include: ["./test/**/index.spec.js?(x)"],
   },
   resolve: {
     alias: {
@@ -22,6 +22,7 @@ const BaseConfig: UserConfig = {
       ),
       "slate-vue": path.resolve(__dirname, "./packages/slate-vue/src/index.ts"),
       "share-tools": path.resolve(__dirname, "./packages/share-tools/index.ts"),
+      "@test-utils": path.resolve(__dirname, "./test/utils.ts"),
     },
   },
 };

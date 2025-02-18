@@ -24,6 +24,7 @@
       "slate-history": ["./packages/slate-history/src/index.ts"],
       "slate-vue": ["./packages/slate-vue/src/index.ts"],
       "share-tools": ["./packages/share-tools/index.ts"],
+      "@test-utils": ["./test/utils.ts"],
     }
   },
 }
