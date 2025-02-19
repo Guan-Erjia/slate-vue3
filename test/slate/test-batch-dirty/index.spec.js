@@ -44,13 +44,15 @@ describe("slate-transforms-insert-fragment", () => {
     test(path, async () => {
       const { input, run } = await modules2[path]();
 
+      const input1 = createEditor(cloneDeep(input.children));
       const input2 = createEditor(cloneDeep(input.children));
+      input1.selection = cloneDeep(input.selection);
       input2.selection = cloneDeep(input.selection);
 
       const dirties1 = [];
       const dirties2 = [];
 
-      const editor1 = withBatchTest(withTest(input), dirties1);
+      const editor1 = withBatchTest(withTest(input1), dirties1);
       const editor2 = withBatchTest(withTest(input2), dirties2);
 
       run(editor1, { batchDirty: true });
