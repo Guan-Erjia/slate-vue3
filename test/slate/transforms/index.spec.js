@@ -3,11 +3,18 @@ import { test, expect, describe } from "vitest";
 
 const modules = import.meta.glob("./**/*.(j|t)s?(x)");
 
-describe("slate-transforms", () => {
-  Object.keys(modules).forEach(async (path) => {
-    test(path, async () => {
-      const { input, run, output } = await modules[path]();
+const resolveModules = await Promise.all(
+  Object.keys(modules).map(async (path) => {
+    const module = await modules[path]();
+    module.path = path;
+    return module;
+  })
+);
 
+describe("slate-transforms", () => {
+  resolveModules.forEach((module) => {
+    const { input, run, output, path, skip } = module;
+    test.skipIf(skip)(path, async () => {
       const editor = withTest(input);
       run(editor);
 
