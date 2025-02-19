@@ -13,7 +13,7 @@ describe("slate-interface", () => {
       if (Editor.isEditor(input)) {
         input = withTest(reactive(input));
       } else {
-        input = reactive(input);
+        input = input;
       }
       const result = test(input);
       expect(result).toStrictEqual(output);
