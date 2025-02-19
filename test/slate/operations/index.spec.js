@@ -1,4 +1,4 @@
-import { withTest } from "@test-utilss";
+import { withTest } from "@test-utils";
 import { test, expect, describe } from "vitest";
 import { reactive } from "vue";
 import { Editor } from "slate";
