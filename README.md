@@ -58,7 +58,7 @@ Get the current selected state of an element.
 const useSlate: () => Editor;
 ```
 
-Get the current editor object from the React context. Re-renders the context whenever changes occur in the editor.
+Get the current editor object from the context. Context whenever changes occur in the editor.
 
 ## [useSelection](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-selection.ts)
 
@@ -66,7 +66,7 @@ Get the current editor object from the React context. Re-renders the context whe
 const useSelection: () => ComputedRef<boolean>
 ```
 
-Get the current editor selection from the React context.
+Get the current editor selection from the context.
 
 # Packages
 
@@ -108,6 +108,6 @@ Get the current editor selection from the React context.
 2. packages/slate-dom/src/plugin/dom-editor.ts
 3. packages/slate-dom/src/utils/dom.ts
 
-**other compace**
+**other compact**
 
 1. packages/slate/src/core/normalize-node.ts
