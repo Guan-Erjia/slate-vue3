@@ -9,11 +9,11 @@
 <script setup lang="ts">
 import { LinkElement } from '../../custom-types';
 import { useSelected } from 'slate-vue';
-import { computed, useAttrs } from 'vue';
+import { computed, HTMLAttributes, useAttrs } from 'vue';
 import InlineChromiumBugfix from './InlineChromiumBugfix.vue';
 const allowedSchemes = ['http:', 'https:', 'mailto:', 'tel:']
 
-const attrs = useAttrs()
+const attrs: HTMLAttributes = useAttrs()
 const selected = useSelected()
 const props = defineProps<{
   element: LinkElement

@@ -20,8 +20,8 @@
   </span>
 </template>
 <script lang="ts" setup>
-import { useAttrs } from 'vue';
-const attrs = useAttrs()
+import { HTMLAttributes, useAttrs } from 'vue';
+const attrs: HTMLAttributes = useAttrs()
 const props = defineProps<{
   active?: boolean
   reversed?: boolean
