@@ -79,7 +79,7 @@ Get the current editor selection from the context.
 - [slate-history](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate-history)
   Provide undo redo functions, replace Weakmap to UnProxyWeakmap
 - [share-tools](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/share-tools)
-  for special processing of proxy type data, obtain the raw pointer, isPlainObject declare
+  for special processing of Proxy data, obtain the raw pointer, isPlainObject declare
 
 # compact files of slate
 
