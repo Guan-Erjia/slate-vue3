@@ -20,7 +20,7 @@ import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-php'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-java'
-import { createEditor, Element, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, DOMEditor, Transforms, Editor, NodeEntry, Node, Range, withHistory } from 'slate-vue';
+import { createEditor, Element, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, DOMEditor, Transforms, Editor, NodeEntry, Node, Range, withHistory, useInheritRefAttrs } from 'slate-vue';
 import { computed, h } from 'vue';
 import LanguageSelect from './LanguageSelect.vue'
 import Toolbar from '../../components/Toolbar.vue';
@@ -107,20 +107,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
       const path = DOMEditor.findPath(editor, element)
       Transforms.setNodes(editor, { language: (e.target as HTMLSelectElement).value }, { at: path })
     }
-
-    return h('div', {
-      ...attributes,
-      style: {
-        fontFamily: 'monospace',
-        fontSize: '16px',
-        lineHeight: '20px',
-        marginTop: 0,
-        background: 'rgba(0, 20, 60, .03)',
-        padding: '5px 13px',
-        position: 'relative'
-      },
-      spellCheck: false
-    }, [h(LanguageSelect, { value: element.language, onChange }), children])
+    return h(LanguageSelect, { value: element.language, onChange, ...useInheritRefAttrs(attributes) }, () => children)
   }
 
   if (element.type === 'code-line') {
