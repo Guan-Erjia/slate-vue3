@@ -1,18 +1,10 @@
-import { withTest } from "@test-utils";
+import { withTest, resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
 
-const modules = import.meta.glob("./**/*.(j|t)s?(x)");
-
-const resolveModules = await Promise.all(
-  Object.keys(modules).map(async (path) => {
-    const module = await modules[path]();
-    module.path = path;
-    return module;
-  })
-);
+const modules = await resolveModules(import.meta.glob("./**/*.(j|t)s?(x)"));
 
 describe("slate-transforms", () => {
-  resolveModules.forEach((module) => {
+  modules.forEach((module) => {
     const { input, run, output, path, skip } = module;
     test.skipIf(skip)(path, async () => {
       const editor = withTest(input);

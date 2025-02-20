@@ -1,4 +1,4 @@
-import { withTest } from "@test-utils";
+import { withTest, resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
 import { createEditor } from "slate";
 import { cloneDeep } from "lodash-es";
@@ -12,16 +12,17 @@ const withBatchTest = (editor, dirties) => {
   return editor;
 };
 
-const modules1 = import.meta.glob("../transforms/insertNodes/**/*.(j|t)s?(x)");
-const modules2 = import.meta.glob(
-  "../transforms/insertFragment/**/*.(j|t)s?(x)"
+const modules1 = await resolveModules(
+  import.meta.glob("../transforms/insertNodes/**/*.(j|t)s?(x)")
+);
+const modules2 = await resolveModules(
+  import.meta.glob("../transforms/insertFragment/**/*.(j|t)s?(x)")
 );
 
 describe("slate-transforms-insert-nodes", () => {
-  Object.keys(modules1).forEach(async (path) => {
+  modules1.forEach((module) => {
+    const { input, run, path } = module;
     test(path, async () => {
-      const { input, run } = await modules1[path]();
-
       const input2 = createEditor(cloneDeep(input.children));
       input2.selection = cloneDeep(input.selection);
 
@@ -40,10 +41,10 @@ describe("slate-transforms-insert-nodes", () => {
 });
 
 describe("slate-transforms-insert-fragment", () => {
-  Object.keys(modules2).forEach(async (path) => {
-    test(path, async () => {
-      const { input, run } = await modules2[path]();
+  modules2.forEach((module) => {
+    const { input, run, path } = module;
 
+    test(path, async () => {
       const input1 = createEditor(cloneDeep(input.children));
       const input2 = createEditor(cloneDeep(input.children));
       input1.selection = cloneDeep(input.selection);

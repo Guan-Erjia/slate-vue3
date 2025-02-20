@@ -1,15 +1,14 @@
-import { withTest } from "@test-utils";
+import { withTest, resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
 import { reactive } from "vue";
 import { Editor } from "slate";
 
-const modules = import.meta.glob("./**/*.js?(x)");
+const modules = await resolveModules(import.meta.glob("./**/*.js?(x)"));
 
 describe("slate-normalization", () => {
-  Object.keys(modules).forEach(async (path) => {
+  modules.forEach((module) => {
+    const { input, output, path } = module;
     test(path, async () => {
-      const { input, output } = await modules[path]();
-
       const editor = withTest(reactive(input));
       Editor.normalize(editor, { force: true });
 

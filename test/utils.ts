@@ -42,3 +42,14 @@ export const jsx = createHyperscript({
     inline: { inline: true },
   },
 });
+
+export const resolveModules = async (
+  modules: Record<string, () => Promise<any>>
+) =>
+  await Promise.all(
+    Object.keys(modules).map(async (path) => {
+      const module = await modules[path]();
+      module.path = path;
+      return module;
+    })
+  );
