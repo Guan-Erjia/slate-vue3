@@ -1,0 +1,1 @@
+import{A as o}from"./with-history-Y4Y7sDCs.js";import{x as s}from"./index-DxvFkW4C.js";const r=()=>{const e=s(o);if(e===void 0)throw new Error("The `useFocused` hook must be used inside the <Slate> component's context.");return e};export{r as u};
