@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, Transforms, withHistory, useInheritRefAttrs } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, Transforms, withHistory, useInheritRef } from "slate-vue"
 import { h } from "vue";
 import imageExtensions from 'image-extensions'
 import isUrl from 'is-url'
@@ -58,7 +58,7 @@ const renderElement = (props: RenderElementProps) => {
   const { attributes, children, element } = props
   switch (element.type) {
     case 'image':
-      return h(ImageComp, { element, ...useInheritRefAttrs(attributes) }, () => children)
+      return h(ImageComp, { element, ...useInheritRef(attributes) }, () => children)
     default:
       return h('p', attributes, children)
   }

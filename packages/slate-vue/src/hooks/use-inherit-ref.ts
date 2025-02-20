@@ -1,7 +1,7 @@
 import { omit } from "lodash-es";
 import { Ref, VNode, VNodeProps, VNodeRef } from "vue";
 
-export const useInheritRefAttrs = (
+export const useInheritRef = (
   attribute: VNodeProps
 ): VNodeProps & {
   inheritRef?: VNodeRef;

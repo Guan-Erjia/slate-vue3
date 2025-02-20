@@ -5,7 +5,7 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, useInheritRefAttrs, DOMEditor, withHistory } from 'slate-vue';
+import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, useInheritRef, DOMEditor, withHistory } from 'slate-vue';
 import { h } from 'vue';
 import VideoElement from './VideoElement.vue'
 
@@ -44,7 +44,7 @@ const editor = withHistory(withEmbeds(withDOM(createEditor(initialValue))))
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'video':
-      return h(VideoElement, { element, ...useInheritRefAttrs(attributes) }, () => children)
+      return h(VideoElement, { element, ...useInheritRef(attributes) }, () => children)
     default:
       return h('p', attributes, children)
   }

@@ -68,6 +68,23 @@ const useSelection: () => ComputedRef<boolean>
 
 Get the current editor selection from the context.
 
+
+## [useInheritRef](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-inherit-ref.ts)
+
+```
+const renderElement = (props: RenderElementProps) => {
+  const { attributes, children, element } = props
+  switch (element.type) {
+    case 'image':
+      return h(ImageComp, { element, ...useInheritRef(attributes) }, () => children)
+    default:
+      return h('p', attributes, children)
+  }
+}
+```
+
+Automatically bind ref to the real node when the component is mounted，This is important when rendering element nodes directly
+
 # Packages
 
 - [slate](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate)

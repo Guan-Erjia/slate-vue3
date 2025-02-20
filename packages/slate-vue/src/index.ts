@@ -24,7 +24,7 @@ export { useReadOnly } from "./hooks/use-read-only";
 export { useSelected } from "./hooks/use-selected";
 export { useEditor } from "./hooks/use-editor";
 export { useSelection } from "./hooks/use-selection";
-export { useInheritRefAttrs } from "./hooks/use-inherit-ref";
+export { useInheritRef } from "./hooks/use-inherit-ref";
 
 export * from "slate";
 export * from "slate-dom";

@@ -10,7 +10,7 @@ import Button from "../../components/Button.vue";
 import LinkComponent from "./LinkComponent.vue";
 import BadgeComponent from "./BadgeComponent.vue";
 import ButtonComponent from "./ButtonComponent.vue";
-import { useInheritRefAttrs } from 'slate-vue'
+import { useInheritRef } from 'slate-vue'
 
 const isLinkActive = computed(() => {
   const [link] = Editor.nodes(editor, {
@@ -136,7 +136,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
     case 'button':
       return h(ButtonComponent, { ...attributes, element }, () => children)
     case "badge":
-      return h(BadgeComponent, useInheritRefAttrs(attributes), () => children)
+      return h(BadgeComponent, useInheritRef(attributes), () => children)
     default:
       return h('p', attributes, children)
   }

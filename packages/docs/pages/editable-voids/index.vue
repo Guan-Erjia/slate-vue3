@@ -8,7 +8,7 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, withHistory, Transforms, useInheritRefAttrs } from 'slate-vue';
+import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, withHistory, Transforms, useInheritRef } from 'slate-vue';
 import Toolbar from '../../components/Toolbar.vue';
 import EditableVoid from './EditableVoid.vue';
 import Button from '../../components/Button.vue';
@@ -42,7 +42,7 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'editable-void':
-      return h(EditableVoid, useInheritRefAttrs(attributes), () => children)
+      return h(EditableVoid, useInheritRef(attributes), () => children)
     default:
       return h('p', attributes, children)
   }
