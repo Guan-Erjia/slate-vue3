@@ -14,8 +14,8 @@ export type {
 export { Slate } from "./components/slate";
 export { Editable } from "./components/editable";
 
-export { defaultRenderLeaf } from "./components/utils"
-export { defaultRenderPlaceHolder } from "./components/utils"
+export { defaultRenderLeaf } from "./components/utils";
+export { defaultRenderPlaceHolder } from "./components/utils";
 
 // Hooks
 export { useComposing } from "./hooks/use-composing";
@@ -24,8 +24,8 @@ export { useReadOnly } from "./hooks/use-read-only";
 export { useSelected } from "./hooks/use-selected";
 export { useEditor } from "./hooks/use-editor";
 export { useSelection } from "./hooks/use-selection";
+export { useInheritRefAttrs } from "./hooks/use-inherit-ref";
 
-export * from 'slate'
-export * from 'slate-dom'
-export * from 'slate-history'
-
+export * from "slate";
+export * from "slate-dom";
+export * from "slate-history";

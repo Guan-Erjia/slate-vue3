@@ -9,7 +9,8 @@ import Toolbar from "../../components/Toolbar.vue";
 import Button from "../../components/Button.vue";
 import LinkComponent from "./LinkComponent.vue";
 import BadgeComponent from "./BadgeComponent.vue";
-import InlineChromiumBugfix from "./InlineChromiumBugfix.vue";
+import ButtonComponent from "./ButtonComponent.vue";
+import { useInheritRefAttrs } from 'slate-vue'
 
 const isLinkActive = computed(() => {
   const [link] = Editor.nodes(editor, {
@@ -133,19 +134,9 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
     case 'link':
       return h(LinkComponent, { ...attributes, element }, () => children)
     case 'button':
-      return h('span', {
-        ...attributes,
-        onClick: e => e.preventDefault(),
-        style: {
-          margin: '0 0.1em',
-          backgroundColor: '#efefef',
-          padding: '2px 6px',
-          border: '1px solid #767676',
-          borderRadius: '2px'
-        }
-      }, [h(InlineChromiumBugfix), children, h(InlineChromiumBugfix)])
+      return h(ButtonComponent, { ...attributes, element }, () => children)
     case "badge":
-      return h(BadgeComponent, attributes, () => children)
+      return h(BadgeComponent, useInheritRefAttrs(attributes), () => children)
     default:
       return h('p', attributes, children)
   }
