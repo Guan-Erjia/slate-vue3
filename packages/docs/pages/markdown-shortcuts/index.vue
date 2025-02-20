@@ -7,10 +7,10 @@
 <script lang="ts" setup>
 import {
   createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder,
-  RenderLeafProps, defaultRenderLeaf, DOMEditor, Editor, Element, Node,
+  defaultRenderLeaf, DOMEditor, Editor, Element, Node,
   withHistory
 } from 'slate-vue';
-import { CSSProperties, h } from 'vue';
+import { h } from 'vue';
 import "prismjs";
 import 'prismjs/components/prism-markdown'
 import { SHORTCUTS, withShortcuts } from './plugin';
@@ -63,47 +63,6 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
                 element.type === "heading-six" ? 'h6' :
                   element.type === "list-item" ? 'li' :
                     'p', attributes, children)
-}
-
-const renderLeaf = (props: RenderLeafProps & {
-  leaf: any
-}) => {
-  const { attributes, children, leaf } = props
-  const style: CSSProperties = {
-    fontWeight: leaf.bold ? 'bold' : '',
-    fontStyle: leaf.italic ? 'italic' : '',
-    textDecoration: leaf.underlined ? 'underline' : ''
-  }
-  if (leaf.title) {
-    style.display = 'inline-block'
-    style.fontWeight = 'bold'
-    style.fontSize = '20px'
-    style.margin = '20px 0 10px 0'
-  }
-  if (leaf.list) {
-    style.paddingLeft = '10px'
-    style.fontSize = '20px'
-    style.lineHeight = '10px'
-  }
-  if (leaf.hr) {
-    style.display = 'block'
-    style.textAlign = 'center'
-    style.borderBottom = '2px solid #ddd'
-  }
-  if (leaf.blockquote) {
-    style.display = 'inline-block'
-    style.borderLeft = '2px solid #ddd'
-    style.paddingLeft = '10px'
-    style.color = '#aaa'
-    style.fontStyle = 'italic'
-  }
-  if (leaf.code) {
-    style.fontFamily = 'monospace'
-    style.backgroundColor = '#eee'
-    style.padding = '3px'
-  }
-
-  return h('span', { ...attributes, style }, children)
 }
 
 const onDomBeforeInput = (e: Event) => {
