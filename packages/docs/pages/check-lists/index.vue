@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, withHistory } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, withHistory, useInheritRefAttrs } from "slate-vue"
 import { h } from "vue";
 import type { RenderElementProps } from "slate-vue";
 import { CustomElement } from "../../custom-types";
@@ -54,14 +54,7 @@ const initialValue: CustomElement[] = [
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'check-list-item':
-      return h('div', {
-        style: {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center'
-        },
-        ...attributes
-      }, h(CheckListItem, { element }, () => children))
+      return h(CheckListItem, { element, ...useInheritRefAttrs(attributes) }, () => children)
     default:
       return h('p', attributes, children)
   }

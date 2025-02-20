@@ -1,13 +1,15 @@
 <template>
-  <span :contentEditable="false" style="margin-right:12px;">
-    <input type="checkbox" :checked="checked" @change="onChange" />
-  </span>
-  <span :contentEditable="!readOnly" suppressContentEditableWarning style="flex: 1" :style="{
-    opacity: checked ? 0.666 : 1,
-    textDecoration: !checked ? 'none' : 'line-through'
-  }">
-    <slot></slot>
-  </span>
+  <div style="display: flex; flex-direction: row; align-items: center">
+    <span :contentEditable="false" style="margin-right:12px;">
+      <input type="checkbox" :checked="checked" @change="onChange" />
+    </span>
+    <span :contentEditable="!readOnly" suppressContentEditableWarning style="flex: 1" :style="{
+      opacity: checked ? 0.666 : 1,
+      textDecoration: !checked ? 'none' : 'line-through'
+    }">
+      <slot></slot>
+    </span>
+  </div>
 </template>
 
 <script lang="ts" setup>
