@@ -14,6 +14,11 @@ export const useInheritRefAttrs = (
           (attribute.ref as Ref).value = vNode.el;
         }
       },
+      onVnodeUnmounted: (vNode: VNode) => {
+        if (attribute.ref) {
+          (attribute.ref as Ref).value = null;
+        }
+      },
     },
     ["ref"]
   );
