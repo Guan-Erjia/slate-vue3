@@ -74,14 +74,14 @@ const App = () => {
     language: 'typescript',
     children: toCodeLines(`// TypeScript users only add this code
 import { BaseEditor, Descendant } from 'slate'
-import { ReactEditor } from 'slate-react'
+import { DOMEditor } from 'slate-dom'
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] }
 type CustomText = { text: string }
 
 declare module 'slate' {
   interface CustomTypes {
-    Editor: BaseEditor & ReactEditor
+    Editor: BaseEditor & DOMEditor
     Element: CustomElement
     Text: CustomText
   }
