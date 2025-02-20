@@ -6,22 +6,17 @@ export const useInheritRef = (
 ): VNodeProps & {
   inheritRef?: VNodeRef;
 } => {
-  const inheritAttrs = omit(
-    {
-      ...attribute,
-      onVnodeMounted: (vNode: VNode) => {
-        if (attribute.ref) {
-          (attribute.ref as Ref).value = vNode.el;
-        }
-      },
-      onVnodeUnmounted: (vNode: VNode) => {
-        if (attribute.ref) {
-          (attribute.ref as Ref).value = null;
-        }
-      },
-    },
-    ["ref"]
-  );
+  const inheritAttrs = omit(attribute, ["ref"]);
+  inheritAttrs.onVnodeMounted = (vNode: VNode) => {
+    if (attribute.ref) {
+      (attribute.ref as Ref).value = vNode.el;
+    }
+  };
+  inheritAttrs.onVnodeUnmounted = (vNode: VNode) => {
+    if (attribute.ref) {
+      (attribute.ref as Ref).value = null;
+    }
+  };
 
   return inheritAttrs;
 };
