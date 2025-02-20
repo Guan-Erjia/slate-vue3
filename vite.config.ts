@@ -11,6 +11,7 @@ const BaseConfig: UserConfig = {
   base: "/slate-vue3/",
   test: {
     include: ["./test/**/index.spec.js?(x)"],
+    environment: "jsdom",
   },
   resolve: {
     alias: {
