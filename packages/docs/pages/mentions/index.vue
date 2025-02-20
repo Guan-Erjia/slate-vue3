@@ -73,21 +73,7 @@ const renderElement = (props: RenderElementProps) => {
   const { attributes, children, element } = props
   switch (element.type) {
     case 'mention':
-      const style: CSSProperties = {
-        padding: '3px 3px 2px',
-        margin: '0 1px',
-        verticalAlign: 'baseline',
-        display: 'inline-block',
-        borderRadius: '4px',
-        backgroundColor: '#eee',
-        fontSize: '0.9em',
-        fontWeight: element.children[0].bold ? 'bold' : undefined,
-        fontStyle: element.children[0].italic ? 'italic' : undefined,
-      }
-      return h('span', {
-        ...attributes, style, contentEditable: false,
-        'data-cy': `mention-${element.character.replace(' ', '-')}`
-      }, h(Mention, { element }, () => children))
+      return h(Mention, { element }, () => children)
     default:
       return h('p', attributes, children)
   }
