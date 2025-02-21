@@ -94,9 +94,8 @@ export const TextComp = defineComponent({
       }
     });
 
-    return () => {
-      const key = DOMEditor.findKey(editor, text);
-      return h(
+    return () =>
+      h(
         "span",
         { "data-slate-node": "text", ref: spanRef },
         renderList(leaves.value, (leaf, i) =>
@@ -105,9 +104,9 @@ export const TextComp = defineComponent({
             parent,
             leafIndex: i,
             leaves,
-            key: `${key.id}-${i}-${text.text}`,
-          }))
+            key: `${i}-${text.text}`,
+          })
+        )
       );
-    };
   },
 });
