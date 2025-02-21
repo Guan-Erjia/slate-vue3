@@ -362,39 +362,39 @@ export const Node: NodeInterface = {
       )
     }
       // 这里不能影响现有节点数据，必须深拷贝
-      let r = { children: cloneDeep(root.children) }
+      let newRoot = { children: cloneDeep(root.children) }
       const [start, end] = Range.edges(range)
-      const nodeEntries = Node.nodes(root, {
+      const nodeEntries = Node.nodes(newRoot, {
         reverse: true,
         pass: ([, path]) => !Range.includes(range, path),
       })
 
       for (const [, path] of nodeEntries) {
         if (!Range.includes(range, path)) {
-          const parent = Node.parent(r, path)
+          const parent = Node.parent(newRoot, path)
           const index = path[path.length - 1]
           parent.children.splice(index, 1)
         }
 
         if (Path.equals(path, end.path)) {
-          const leaf = Node.leaf(r, path)
+          const leaf = Node.leaf(newRoot, path)
           leaf.text = leaf.text.slice(0, end.offset)
         }
 
         if (Path.equals(path, start.path)) {
-          const leaf = Node.leaf(r, path)
+          const leaf = Node.leaf(newRoot, path)
           leaf.text = leaf.text.slice(start.offset)
         }
       }
 
-      if (Editor.isEditor(root)) {
+      if (Editor.isEditor(newRoot)) {
       // 修改完毕后才能设置 selection
         nextTick(() => {
-          root.selection = null
+          newRoot.selection = null
         });
       }
 
-    return r.children
+    return newRoot.children
   },
 
   get(root: Node, path: Path): Node {
