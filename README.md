@@ -14,7 +14,7 @@ npm install slate-vue3
 ## 2. now, you can use it in vue-sfc
 ```
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue3"
 import { h } from "vue";
 
 const initialValue: Descendant[] = [{
@@ -36,69 +36,76 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
 ![example](https://guan-erjia.github.io/slate-vue3/example.png)
 
 # Why use it?
-1. The most comprehensive rich text feature customization, following slate-react
-2. Use vue internal response implementation to reduce the number of re-renderings
-3. You can easily use vue-devtools to debug in a vue project
-4. This library provides the same usage as slate-react
+1. :sparkles: Highly customizable features, use slate core at the bottom level  
+2. :zap: The latest version of the core, use vue internal response implementation to reduce the number of re-renderings  
+3. :coffee: This library provides the same usage as slate-react, design tends to be stable
 
 # Hooks
 ## [useComposing](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-composing.ts)
+> Get the current composing state of the editor. It deals with compositionstart, compositionupdate, compositionend events.
+
 const useComposing : ( ) => Ref<boolean>
 ```
-import { useComposing } from 'slate-vue'
+import { useComposing } from 'slate-vue3'
 
 const composing = useComposing()
 ```
-> Get the current composing state of the editor. It deals with compositionstart, compositionupdate, compositionend events.
 
 ## [useFocused](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-focus.ts)
+> Get the current focused state of the editor.
+
 const useFocused : ( ) => Ref<boolean>
 ```
-import { useFocused } from 'slate-vue'
+import { useFocused } from 'slate-vue3'
 
 const focused = useFocused()
 ```
-> Get the current focused state of the editor.  
 
 ## [useReadOnly](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-read-only.ts)
+> Get the current readOnly state of the editor.
+
 const useReadOnly : ( ) => Ref<boolean>
 ```
-import { useReadOnly } from 'slate-vue'
+import { useReadOnly } from 'slate-vue3'
 
 const readonly = useReadOnly()
 ```
-> Get the current readOnly state of the editor.
 
 ## [useSelected](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-selected.ts)
+> Get the current selected state of an element.
+
 const useSelected : ( ) => ComputedRef<boolean>
 ```
-import { useSelected } from 'slate-vue'
+import { useSelected } from 'slate-vue3'
 
 const selected = useSelected()
 ```
-> Get the current selected state of an element.
 
 ## [useEditor](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-editor.ts)
+> Get the current editor object from the context. Context whenever changes occur in the editor.
+
 const useEditor : ( ) => Editor
 ```
-import { useEditor } from 'slate-vue'
+import { useEditor } from 'slate-vue3'
 
 const editor = useEditor()
 ```
-> Get the current editor object from the context. Context whenever changes occur in the editor.
 
 ## [useSelection](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-selection.ts)
+> Get the current editor selection from the context.
+
 const useSelection : ( ) => ComputedRef<Selection>
 ```
-import { useSelection } from 'slate-vue'
+import { useSelection } from 'slate-vue3'
 
 const selection = useSelection()
 ```
-> Get the current editor selection from the context.
 
 
 ## [useInheritRef](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-inherit-ref.ts)
-const useInheritRef : ( attr: HTMLAttribute ) => HTMLAttribute
+> Automatically bind ref to the real node when the component is mounted，This is important when rendering element nodes directly
+
+const useInheritRef : ( attribute: HTMLAttributes ) => HTMLAttributes
 ```
 const renderElement = (props: RenderElementProps) => {
   const { attributes, children, element } = props
@@ -110,9 +117,18 @@ const renderElement = (props: RenderElementProps) => {
   }
 }
 ```
-> Automatically bind ref to the real node when the component is mounted，This is important when rendering element nodes directly
 
-# Packages
+# FAQ
+## 1. Why do I have to pass renderFunction into <Slate /> component ?
+This ensures that your rich text is as expected, and slave-vue3 provides some default rendering functions, you can directly use the default rendering behavior
+
+## 2. Can i use jsx in slate-vue3 ?
+Of coures yes, but we do not recommend it unless you have already configured jsx in the project, as a branch, using the h function directly is already simple enough
+
+## 3. Why do rendering functions not use Vue components ?
+Vue uses lazy updates, rendering with components generates additional state, which can cause unexpected results during updates, it would be better to use functions as branches directly
+
+# Directory Structure
 
 - [slate](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate)
   slate core logic, update synchronously with slate
@@ -125,7 +141,7 @@ const renderElement = (props: RenderElementProps) => {
 - [share-tools](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/share-tools)
   for special processing of Proxy data, obtain the raw pointer, isPlainObject declare
 
-# compact files of slate
+# Compact Slate
 
 **reactive implement**
 
