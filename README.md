@@ -32,7 +32,7 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
   </Slate>
 </template>
 ```
-## 3. check out the [**live demo**](https://guan-erjia.github.io/slate-vue3/) of all of the examples
+## 3. check out the :point_right:[**live demo**](https://guan-erjia.github.io/slate-vue3/) of all of the examples
 ![example](https://guan-erjia.github.io/slate-vue3/example.png)
 
 # Why use it?
