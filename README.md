@@ -32,12 +32,12 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
   </Slate>
 </template>
 ```
-## 3. check out the [**live demo**](https://guan-erjia.github.io/slate-vue3/) of all of the examples
+## 3. check out the :point_right:[**live demo**](https://guan-erjia.github.io/slate-vue3/) of all of the examples
 ![example](https://guan-erjia.github.io/slate-vue3/example.png)
 
 # Why use it?
 1. :sparkles: Highly customizable features, use slate core at the bottom level  
-2. :zap: The latest version of the core, use vue internal response implementation to reduce the number of re-renderings  
+2. :zap: The latest version of the core, use vue to reduce the number of re-renderings  
 3. :coffee: This library provides the same usage as slate-react, design tends to be stable
 
 # Hooks
