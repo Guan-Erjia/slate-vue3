@@ -38,6 +38,7 @@ import {
   NODE_TO_KEY,
   NODE_TO_PARENT,
 } from '../utils/weak-maps'
+import { nextTick } from 'vue'
 
 
 type DOMElement = globalThis.Element
@@ -121,7 +122,7 @@ export interface DOMEditorInterface {
   /**
    * Focus the editor.
    */
-  focus: (editor: DOMEditor, options?: { retries: number }) => void
+  focus: (editor: DOMEditor) => Promise<void>
 
   /**
    * Return the host window of the current editor.
@@ -417,26 +418,27 @@ export const DOMEditor: DOMEditorInterface = {
     )
   },
 
-  focus: (editor, options = { retries: 5 }) => {
+  focus: async editor => {
     // Return if already focused
     if (IS_FOCUSED.get(editor)) {
       return
     }
-
+    // 使用 Vue 的 nextTick，无需检查是否渲染完成
+    await nextTick()
     // Retry setting focus if the editor has pending operations.
     // The DOM (selection) is unstable while changes are applied.
     // Retry until retries are exhausted or editor is focused.
-    if (options.retries <= 0) {
-      throw new Error(
-        'Could not set focus, editor seems stuck with pending operations'
-      )
-    }
-    if (editor.operations.length > 0) {
-      setTimeout(() => {
-        DOMEditor.focus(editor, { retries: options.retries - 1 })
-      }, 10)
-      return
-    }
+    // if (options.retries <= 0) {
+    //   throw new Error(
+    //     'Could not set focus, editor seems stuck with pending operations'
+    //   )
+    // }
+    // if (editor.operations.length > 0) {
+    //   setTimeout(() => {
+    //     DOMEditor.focus(editor, { retries: options.retries - 1 })
+    //   }, 10)
+    //   return
+    // }
 
     const el = DOMEditor.toDOMNode(editor, editor)
     const root = DOMEditor.findDocumentOrShadowRoot(editor)

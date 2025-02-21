@@ -5,72 +5,100 @@
 </p>
 <br/>
 
+# How to use?
+
+## 1. install slate-vue3
+```
+npm install slate-vue3
+```
+## 2. now, you can use it in vue-sfc
+```
+<script setup lang="ts">
+import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue"
+import { h } from "vue";
+
+const initialValue: Descendant[] = [{
+  type: 'paragraph',
+  children: [{ text: 'Let's start' }],
+}]
+const renderElement = ({ attributes, children }) => h('p', attributes, children)
+const editor = withHistory(withDOM(createEditor(initialValue)))
+</script>
+
+<template>
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
+    :render-placeholder="defaultRenderPlaceHolder">
+    <Editable />
+  </Slate>
+</template>
+```
+## 3. check out the [**live demo**](https://guan-erjia.github.io/slate-vue3/) of all of the examples
+![example](https://guan-erjia.github.io/slate-vue3/example.png)
+
 # Why use it?
-
-1. Use vue internal response implementation to reduce the number of re-renderings
-2. You can easily use vue-devtools to debug in a vue project
-3. This library provides the same usage as slate-react
-
-# Demo
-
-Check out the [**live demo**](https://guan-erjia.github.io/slate-vue3/) of all of the examples
+1. The most comprehensive rich text feature customization, following slate-react
+2. Use vue internal response implementation to reduce the number of re-renderings
+3. You can easily use vue-devtools to debug in a vue project
+4. This library provides the same usage as slate-react
 
 # Hooks
-
 ## [useComposing](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-composing.ts)
-
+const useComposing : ( ) => Ref<boolean>
 ```
-const useFocused: () => Ref<boolean, boolean>
+import { useComposing } from 'slate-vue'
+
+const composing = useComposing()
 ```
-
-Get the current composing state of the editor. It deals with compositionstart, compositionupdate, compositionend events.
-
-Composition events are triggered by typing (composing) with a language that uses a composition character (e.g. Chinese, Japanese, Korean, etc.) example.
-Some basic Git commands are:
+> Get the current composing state of the editor. It deals with compositionstart, compositionupdate, compositionend events.
 
 ## [useFocused](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-focus.ts)
-
+const useFocused : ( ) => Ref<boolean>
 ```
-const useFocused: () => Ref<boolean, boolean>
-```
+import { useFocused } from 'slate-vue'
 
-Get the current focused state of the editor.
+const focused = useFocused()
+```
+> Get the current focused state of the editor.  
 
 ## [useReadOnly](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-read-only.ts)
-
+const useReadOnly : ( ) => Ref<boolean>
 ```
-const useReadOnly: () => Ref<boolean, boolean>
-```
+import { useReadOnly } from 'slate-vue'
 
-Get the current readOnly state of the editor.
+const readonly = useReadOnly()
+```
+> Get the current readOnly state of the editor.
 
 ## [useSelected](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-selected.ts)
-
+const useSelected : ( ) => ComputedRef<boolean>
 ```
-const useSelected: () => ComputedRef<boolean>
-```
+import { useSelected } from 'slate-vue'
 
-Get the current selected state of an element.
+const selected = useSelected()
+```
+> Get the current selected state of an element.
 
 ## [useEditor](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-editor.ts)
-
+const useEditor : ( ) => Editor
 ```
-const useSlate: () => Editor;
-```
+import { useEditor } from 'slate-vue'
 
-Get the current editor object from the context. Context whenever changes occur in the editor.
+const editor = useEditor()
+```
+> Get the current editor object from the context. Context whenever changes occur in the editor.
 
 ## [useSelection](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-selection.ts)
-
+const useSelection : ( ) => ComputedRef<Selection>
 ```
-const useSelection: () => ComputedRef<boolean>
-```
+import { useSelection } from 'slate-vue'
 
-Get the current editor selection from the context.
+const selection = useSelection()
+```
+> Get the current editor selection from the context.
 
 
 ## [useInheritRef](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-inherit-ref.ts)
-
+const useInheritRef : ( attr: HTMLAttribute ) => HTMLAttribute
 ```
 const renderElement = (props: RenderElementProps) => {
   const { attributes, children, element } = props
@@ -82,8 +110,7 @@ const renderElement = (props: RenderElementProps) => {
   }
 }
 ```
-
-Automatically bind ref to the real node when the component is mounted，This is important when rendering element nodes directly
+> Automatically bind ref to the real node when the component is mounted，This is important when rendering element nodes directly
 
 # Packages
 
@@ -128,3 +155,4 @@ Automatically bind ref to the real node when the component is mounted，This is 
 **other compact**
 
 1. packages/slate/src/core/normalize-node.ts
+2. packages/slate-dom/src/plugin/dom-editor.ts 421:441

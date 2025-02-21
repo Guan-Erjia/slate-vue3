@@ -22,7 +22,7 @@ describe("slate-react", () => {
 
         expect(editor.selection).toBe(null);
 
-        DOMEditor.focus(editor);
+        await DOMEditor.focus(editor);
         expect(editor.selection).toEqual(testSelection);
 
         const windowSelection = DOMEditor.getWindow(editor).getSelection();
@@ -51,12 +51,12 @@ describe("slate-react", () => {
 
         Transforms.removeNodes(editor, { at: [0] });
         Transforms.insertNodes(editor, propagatedValue);
-        DOMEditor.focus(editor); // Note: calling focus in the middle of these transformations.
+        await DOMEditor.focus(editor); // Note: calling focus in the middle of these transformations.
         Transforms.select(editor, testSelection);
 
         expect(editor.selection).toEqual(testSelection);
 
-        DOMEditor.focus(editor);
+        await DOMEditor.focus(editor);
 
         const windowSelection = DOMEditor.getWindow(editor).getSelection();
         // expect(windowSelection?.focusNode?.textContent).toBe("bar");
@@ -79,7 +79,7 @@ describe("slate-react", () => {
 
         expect(editor.selection).toBe(null);
 
-        DOMEditor.focus(editor);
+       await DOMEditor.focus(editor);
 
         expect(editor.selection).toEqual({
           anchor: { path: [0, 0], offset: 0 },
