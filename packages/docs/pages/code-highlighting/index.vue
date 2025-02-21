@@ -26,7 +26,7 @@ import LanguageSelect from './LanguageSelect.vue'
 import Toolbar from '../../components/Toolbar.vue';
 import Button from '../../components/Button.vue';
 import isHotkey from "is-hotkey";
-import { CodeBlockElement } from "packages/docs/custom-types";
+import { CodeBlockElement } from "../../custom-types";
 import { normalizeTokens } from '../../utils/normalize-tokens'
 import Prism from 'prismjs'
 
