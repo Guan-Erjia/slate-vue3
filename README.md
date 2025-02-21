@@ -119,13 +119,13 @@ const renderElement = (props: RenderElementProps) => {
 ```
 
 # FAQ
-## 1. Why do I have to pass renderFunction into <Slate /> component ?
+### 1. Why do I have to pass renderFunction into <Slate /> component ?
 This ensures that your rich text is as expected, and slave-vue3 provides some default rendering functions, you can directly use the default rendering behavior
 
-## 2. Can i use jsx in slate-vue3 ?
+### 2. Can I use jsx in slate-vue3 ?
 Of coures yes, but we do not recommend it unless you have already configured jsx in the project, as a branch, using the h function directly is already simple enough
 
-## 3. Why do rendering functions not use Vue components ?
+### 3. Why do rendering functions not use Vue components ?
 Vue uses lazy updates, rendering with components generates additional state, which can cause unexpected results during updates, it would be better to use functions as branches directly
 
 # Directory Structure
