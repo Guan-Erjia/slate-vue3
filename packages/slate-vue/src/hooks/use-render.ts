@@ -1,4 +1,4 @@
-import { ComputedRef, inject, Ref, watch, type VNode } from "vue";
+import { ComputedRef, inject, Ref, RendererNode, watch, type VNode } from "vue";
 import {
   SLATE_INNER_CHANGE_EFFECT_INJECT,
   SLATE_INNER_PLACEHOLDER_CONTEXT,
@@ -52,7 +52,7 @@ export const usePlaceholderContext = () => {
   const PLACEHOLDER_CONTEXT = inject<
     ComputedRef<{
       placeholder: string;
-      onPlaceholderResize: (placeholderEl: HTMLElement) => void;
+      onPlaceholderResize: (placeholderEl: RendererNode) => void;
     } | null>
   >(SLATE_INNER_PLACEHOLDER_CONTEXT);
   if (PLACEHOLDER_CONTEXT === undefined) {

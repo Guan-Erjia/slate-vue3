@@ -5,7 +5,7 @@ import type {
   CSSProperties,
   HTMLAttributes,
   VNode,
-  VNodeRef,
+  VNodeProps,
 } from "vue";
 
 /**
@@ -13,12 +13,9 @@ import type {
  */
 export interface RenderPlaceholderProps {
   children?: string;
-  attributes: {
+  attributes: HTMLAttributes & VNodeProps & {
     "data-slate-placeholder": boolean;
     dir?: "rtl";
-    contentEditable: boolean;
-    ref: VNodeRef;
-    style: CSSProperties;
   };
 }
 

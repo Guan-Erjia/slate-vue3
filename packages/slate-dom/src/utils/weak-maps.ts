@@ -11,6 +11,7 @@ import {
 import { TextDiff } from './diff-text'
 import { Key } from './key'
 import { toRawWeakMap as WeakMap } from "share-tools"
+import { RendererNode } from 'vue'
 
 export type Action = { at?: Point | Range; run: () => void }
 
@@ -29,7 +30,7 @@ export const NODE_TO_PARENT: WeakMap<Node, Ancestor> = new WeakMap()
 export const EDITOR_TO_WINDOW: WeakMap<Editor, Window> = new WeakMap()
 export const EDITOR_TO_ELEMENT: WeakMap<Editor, HTMLElement> = new WeakMap()
 export const EDITOR_TO_PLACEHOLDER: WeakMap<Editor, string> = new WeakMap()
-export const EDITOR_TO_PLACEHOLDER_ELEMENT: WeakMap<Editor, HTMLElement> =
+export const EDITOR_TO_PLACEHOLDER_ELEMENT: WeakMap<Editor, RendererNode> =
   new WeakMap()
 export const ELEMENT_TO_NODE: WeakMap<HTMLElement, Node> = new WeakMap()
 export const NODE_TO_ELEMENT: WeakMap<Node, HTMLElement> = new WeakMap()
