@@ -7,7 +7,7 @@ import {
   NODE_TO_ELEMENT,
 } from "slate-dom";
 import { LeafComp } from "./leaf";
-import type { TextProps } from "./interface";
+import type { TextProps } from "../utils/interface";
 import { computed, defineComponent, h, onMounted, onUnmounted, ref, renderList } from "vue";
 import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";

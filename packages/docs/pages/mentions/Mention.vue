@@ -28,11 +28,4 @@ const focused = useFocused()
 const props = defineProps<{
   element: any
 }>()
-
-console.log(props.element)
-// const style: CSSProperties = {
-//       ,
-//   fontWeight: element.children[0].bold ? 'bold' : undefined,
-//     fontStyle: element.children[0].italic ? 'italic' : undefined,
-//       }
 </script>

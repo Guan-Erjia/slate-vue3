@@ -46,7 +46,6 @@ import {
   onBeforeUpdate,
   onMounted,
   onUnmounted,
-  provide,
   reactive,
   ref,
   useAttrs,
@@ -55,7 +54,7 @@ import {
 import type { CSSProperties, HTMLAttributes } from "vue";
 import { Children } from "./children";
 import { useRestoreDOM } from "../hooks/use-restore-dom";
-import type { EditableProps } from "./interface";
+import type { EditableProps } from "../utils/interface";
 import {
   defaultScrollSelectionIntoView,
   isDOMEventHandled,
@@ -63,10 +62,10 @@ import {
   isEventHandled,
 } from "./utils";
 import { useEditor } from "../hooks/use-editor";
-import { SLATE_INNER_PLACEHOLDER_CONTEXT } from "../utils/constants";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
 import { useChangeEffect } from "../hooks/use-render";
+import { PlaceholderComp } from "./placeholder";
 type DOMElement = globalThis.Element;
 type DOMRange = globalThis.Range;
 type DOMText = globalThis.Text;
@@ -90,7 +89,7 @@ export const Editable = defineComponent({
     role: { type: String },
     style: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     is: {
       type: String,
@@ -131,32 +130,7 @@ export const Editable = defineComponent({
     });
 
     const placeholderHeight = ref<number>();
-
-    const placeholderContext = computed(() => {
-      const showPlaceholder =
-        placeholder &&
-        editor.children?.length === 1 &&
-        Array.from(Node.texts(editor)).length === 1 &&
-        Node.string(editor) === "" &&
-        !isComposing.value;
-      if (!showPlaceholder) {
-        placeholderHeight.value = undefined;
-        return null;
-      }
-      return {
-        placeholder,
-        onPlaceholderResize: (placeholderEl: HTMLElement) => {
-          if (placeholderEl && showPlaceholder) {
-            placeholderHeight.value =
-              placeholderEl.getBoundingClientRect()?.height;
-          } else {
-            placeholderHeight.value = undefined;
-          }
-        },
-      };
-    });
-
-    provide(SLATE_INNER_PLACEHOLDER_CONTEXT, placeholderContext);
+    const onPlaceholderResize = (h?: number) => (placeholderHeight.value = h);
 
     /**
      * The AndroidInputManager object has a cyclical dependency on onDOMSelectionChange
@@ -632,7 +606,7 @@ export const Editable = defineComponent({
                 native &&
                 node.parentElement &&
                 window?.getComputedStyle(node.parentElement)?.whiteSpace ===
-                "pre"
+                  "pre"
               ) {
                 const block = Editor.above(editor, {
                   at: anchor.path,
@@ -1242,7 +1216,7 @@ export const Editable = defineComponent({
 
         const element =
           editor.children[
-          editor.selection !== null ? editor.selection.focus.path[0] : 0
+            editor.selection !== null ? editor.selection.focus.path[0] : 0
           ];
         const isRTL = direction(Node.string(element)) === "rtl";
 
@@ -1610,7 +1584,12 @@ export const Editable = defineComponent({
         onKeydown,
         onPaste
       },
-      [h(Children, { node: editor })]
+      [h(Children, { node: editor }),
+       h(PlaceholderComp, {
+          placeholder,
+          onPlaceholderResize,
+        }),
+      ]
     );
   },
 });

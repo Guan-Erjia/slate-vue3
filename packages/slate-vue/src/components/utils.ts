@@ -1,7 +1,7 @@
 import { Range } from "slate";
 import { IS_ANDROID, isDOMNode, type DOMEditor } from "slate-dom";
 import scrollIntoView from "scroll-into-view-if-needed";
-import type { RenderLeafProps, RenderPlaceholderProps } from "./interface";
+import type { RenderLeafProps, RenderPlaceholderProps } from "../utils/interface";
 import { h } from "vue";
 /**
  * Check if an event is overrided by a handler.

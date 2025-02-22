@@ -9,7 +9,7 @@ export type {
   RenderElementProps,
   RenderLeafProps,
   RenderPlaceholderProps,
-} from "./components/interface";
+} from "./utils/interface";
 
 export { Slate } from "./components/slate";
 export { Editable } from "./components/editable";

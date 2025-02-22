@@ -1,7 +1,6 @@
-import { ComputedRef, inject, Ref, RendererNode, watch, type VNode } from "vue";
+import { inject, Ref,  watch, type VNode } from "vue";
 import {
   SLATE_INNER_CHANGE_EFFECT_INJECT,
-  SLATE_INNER_PLACEHOLDER_CONTEXT,
   SLATE_INNER_RENDER_ELEMENT,
   SLATE_INNER_RENDER_LEAF,
   SLATE_INNER_RENDER_PLACEHOLDER,
@@ -10,7 +9,7 @@ import type {
   RenderElementProps,
   RenderPlaceholderProps,
   RenderLeafProps,
-} from "../components/interface";
+} from "../utils/interface";
 
 export const useRenderElement = () => {
   const ELEMENT_RENDER = inject<(props: RenderElementProps) => VNode>(
@@ -46,21 +45,6 @@ export const useRenderPlaceholder = () => {
     );
   }
   return PLACEHOLDER_RENDER;
-};
-
-export const usePlaceholderContext = () => {
-  const PLACEHOLDER_CONTEXT = inject<
-    ComputedRef<{
-      placeholder: string;
-      onPlaceholderResize: (placeholderEl: RendererNode) => void;
-    } | null>
-  >(SLATE_INNER_PLACEHOLDER_CONTEXT);
-  if (PLACEHOLDER_CONTEXT === undefined) {
-    throw new Error(
-      `The \`usePlaceholderContext\` hook must be used inside the <Slate> component's context.`
-    );
-  }
-  return PLACEHOLDER_CONTEXT;
 };
 
 export const useChangeEffect = (fn: () => void) => {

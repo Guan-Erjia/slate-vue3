@@ -6,7 +6,7 @@ import {
   MARK_PLACEHOLDER_SYMBOL,
 } from "slate-dom";
 import { computed, defineComponent, h } from "vue";
-import type { StringProps } from "./interface";
+import type { StringProps } from "../utils/interface";
 import { useEditor } from "../hooks/use-editor";
 
 /**

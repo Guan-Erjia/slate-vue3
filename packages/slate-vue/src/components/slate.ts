@@ -20,7 +20,7 @@ import {
   SLATE_USE_EDITOR,
 } from "../utils/constants";
 import { Node, Operation, Scrubber } from "slate";
-import type { SlateProps } from "./interface";
+import type { SlateProps } from "../utils/interface";
 import { DOMEditor, EDITOR_TO_ON_CHANGE } from "slate-dom";
 
 export const Slate = defineComponent({

@@ -10,7 +10,7 @@ import {
   DOMEditor,
 } from "slate-dom";
 import { TextComp } from "./text";
-import type { ElementProps } from "./interface";
+import type { ElementProps } from "../utils/interface";
 import {
   computed,
   defineComponent,

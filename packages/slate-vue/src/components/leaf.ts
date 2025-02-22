@@ -1,11 +1,10 @@
 import { StringComp } from "./string";
 import { NODE_TO_INDEX } from "slate-dom";
-import type { LeafProps } from "./interface";
-import { computed, defineComponent, Fragment, h } from "vue";
-import { usePlaceholderContext, useRenderLeaf } from "../hooks/use-render";
+import type { LeafProps } from "../utils/interface";
+import { computed, defineComponent, h } from "vue";
+import { useRenderLeaf } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
 import { Editor, Element } from "slate";
-import { PlaceholderComp } from "./placeholder";
 
 /**
  * Individual leaves in a text node with unique formatting.
@@ -38,21 +37,17 @@ export const LeafComp = defineComponent({
     // COMPAT: Having the `data-` attributes on these leaf elements ensures that
     // in certain misbehaving browsers they aren't weirdly cloned/destroyed by
     // contenteditable behaviors. (2019/05/08)
-    const placeholderContext = usePlaceholderContext();
     return () =>
       renderLeaf({
         text,
         leaf: leaf.value,
         attributes: { "data-slate-leaf": true },
-        children: h(Fragment, [
-          placeholderContext.value && h(PlaceholderComp),
-          h(StringComp, {
-            isLast,
-            leaf,
-            parent,
-            text,
-          }),
-        ]),
+        children: h(StringComp, {
+          isLast,
+          leaf,
+          parent,
+          text,
+        }),
       });
   },
 });

@@ -86,6 +86,10 @@ iframe {
   margin-top: 12px;
 }
 
+[data-slate-placeholder] {
+  margin-top: 0;
+}
+
 a {
   color: gray;
   text-decoration: none;
