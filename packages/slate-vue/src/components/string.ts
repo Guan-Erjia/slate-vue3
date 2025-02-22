@@ -20,8 +20,8 @@ export const StringComp = defineComponent({
     const editor = useEditor();
 
     const getTextContent = computed(() => {
-      const text = leaf.value.text
-      return (text ?? "") + (isLast.value && text.at(-1) === "\n" ? "\n" : "")
+      const text = leaf.text
+      return (text ?? "") + (isLast && text.at(-1) === "\n" ? "\n" : "")
     });
 
 
@@ -31,7 +31,7 @@ export const StringComp = defineComponent({
     const isLineBreak = computed(() => {
       const pathParent = Path.parent(DOMEditor.findPath(editor, text));
       return (
-        leaf.value.text === "" &&
+        leaf.text === "" &&
         parent.children[parent.children.length - 1] === text &&
         !editor.isInline(parent) &&
         Editor.string(editor, pathParent) === ""
@@ -40,11 +40,11 @@ export const StringComp = defineComponent({
 
     const zeroStringAttrs = computed(() => {
       const length = Node.string(parent).length || 0
-      const isMarkPlaceholder = Boolean((leaf.value as any)[MARK_PLACEHOLDER_SYMBOL]) || false
+      const isMarkPlaceholder = Boolean((leaf as any)[MARK_PLACEHOLDER_SYMBOL]) || false
       // COMPAT: Render text inside void nodes with a zero-width space.
       // So the node can contain selection but the text is not visible.
       const isVoidParent = editor.isVoid(parent)
-      if (isVoidParent || isLineBreak.value || leaf.value.text === '') {
+      if (isVoidParent || isLineBreak.value || leaf.text === '') {
         return {
           "data-slate-zero-width": isLineBreak.value ? "n" : "z",
           "data-slate-length": length,

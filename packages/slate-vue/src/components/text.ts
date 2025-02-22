@@ -5,12 +5,22 @@ import {
   ELEMENT_TO_NODE,
   MARK_PLACEHOLDER_SYMBOL,
   NODE_TO_ELEMENT,
+  NODE_TO_INDEX,
 } from "slate-dom";
-import { LeafComp } from "./leaf";
 import type { TextProps } from "../utils/interface";
-import { computed, defineComponent, h, onMounted, onUnmounted, ref, renderList } from "vue";
+import {
+  computed,
+  defineComponent,
+  h,
+  onMounted,
+  onUnmounted,
+  ref,
+  renderList,
+} from "vue";
 import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";
+import { StringComp } from "./string";
+import { useRenderLeaf } from "../hooks/use-render";
 
 /**
  * Text.
@@ -95,17 +105,38 @@ export const TextComp = defineComponent({
       }
     });
 
+    const isLastText = computed(() => {
+      const isVoid = Editor.isVoid(editor, parent);
+      const isLeafBlock =
+        Element.isElement(parent) &&
+        !editor.isInline(parent) &&
+        Editor.hasInlines(editor, parent);
+
+      return (
+        !isVoid &&
+        isLeafBlock &&
+        NODE_TO_INDEX.get(text) === parent.children.length - 1
+      );
+    });
+
+    const renderLeaf = useRenderLeaf();
+
     return () =>
       h(
         "span",
         { "data-slate-node": "text", ref: spanRef },
         renderList(leaves.value, (leaf, i) =>
-          h(LeafComp, {
+          renderLeaf({
             text,
-            parent,
-            leafIndex: i,
-            leaves,
-            key: `${i}-${text.text}`,
+            leaf,
+            attributes: { "data-slate-leaf": true },
+            children: h(StringComp, {
+              isLast: isLastText.value && i === leaves.value.length - 1,
+              leaf,
+              parent,
+              text,
+              key: `${text.text}-${leaf.text}-${i}`,
+            }),
           })
         )
       );
