@@ -24,6 +24,7 @@ export const TextComp = defineComponent({
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
 
+    // fixme 这里有性能问题，待排查
     const decorations = computed<DecoratedRange[]>(() => {
       const path = DOMEditor.findPath(editor, props.parent);
       const range = Editor.range(editor, path);
