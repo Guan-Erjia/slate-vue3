@@ -1,4 +1,4 @@
-[<img src="https://raw.githubusercontent.com/ianstormtaylor/slate/main/docs/images/banner.png" />](https://github.com/ianstormtaylor/slate/raw/main/docs/images/banner.png)
+[<img src="https://github.com/Guan-Erjia/slate-vue3/blob/master/public/banner.png" />](https://github.com/Guan-Erjia/slate-vue3/blob/master/public/banner.png)
 
 <p align="center">
   slate-<a style="color: #087ea4" href="https://react.dev/">react</a> library implemented with <a style="color: #42b883" href="https://vuejs.org/">vue3</a>
