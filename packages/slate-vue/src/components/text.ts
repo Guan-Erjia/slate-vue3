@@ -20,7 +20,7 @@ import {
 import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
-import { useRenderLeaf } from "../hooks/use-render";
+import { useParentDescoration, useRenderLeaf } from "../hooks/use-render";
 
 /**
  * Text.
@@ -34,20 +34,9 @@ export const TextComp = defineComponent({
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
 
-    // fixme 这里有性能问题，待排查
+    const parentDs = useParentDescoration();
     const decorations = computed<DecoratedRange[]>(() => {
-      const path = DOMEditor.findPath(editor, props.parent);
-      const range = Editor.range(editor, path);
-      const ds = decorate([props.parent, path]);
-      let parent = Editor.parent(editor, path);
-      while (parent[1].length) {
-        const parentDs = decorate(parent);
-        parentDs.forEach((dec) => {
-          ds.push(Range.intersection(dec, range)!);
-        });
-        parent = Editor.parent(editor, parent[1]);
-      }
-
+      const ds = [...parentDs.value];
       if (
         editor.selection &&
         Range.isCollapsed(editor.selection) &&

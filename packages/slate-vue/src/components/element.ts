@@ -21,9 +21,13 @@ import {
   ref,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
-import { SLATE_USE_SELECTED } from "../utils/constants";
-import { useRenderElement } from "../hooks/use-render";
+import {
+  SLATE_INNER_DESCORATION,
+  SLATE_USE_SELECTED,
+} from "../utils/constants";
+import { useParentDescoration, useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
+import { useDecorate } from "../hooks/use-decorate";
 
 type AttrType = {
   "data-slate-node": "element";
@@ -146,6 +150,19 @@ export const ElementComp = defineComponent({
       }
       return h(Children, { node: element });
     });
+
+    const decorate = useDecorate();
+    const parentDs = useParentDescoration();
+    const provideDs = computed(() => {
+      const path = DOMEditor.findPath(editor, element);
+      const ds = decorate([props.element, path]);
+      const range = Editor.range(editor, path);
+      parentDs.value.forEach((dec) => {
+        ds.push(Range.intersection(dec, range)!);
+      });
+      return ds;
+    });
+    provide(SLATE_INNER_DESCORATION, provideDs);
 
     const renderElement = useRenderElement();
     return () =>
