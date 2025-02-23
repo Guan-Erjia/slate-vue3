@@ -36,7 +36,7 @@ export const TextComp = defineComponent({
 
     const parentDs = useParentDescoration();
     const decorations = computed<DecoratedRange[]>(() => {
-      const ds = [...parentDs.value];
+      const ds = parentDs.value;
       if (
         editor.selection &&
         Range.isCollapsed(editor.selection) &&
