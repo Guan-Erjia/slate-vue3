@@ -42,6 +42,9 @@ export default defineConfig(({ command, mode }) => {
           formats: ["es"],
         },
         copyPublicDir: false,
+        rollupOptions: {
+          external: ["vue"],
+        },
       },
       plugins: [
         dts({
