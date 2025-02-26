@@ -43,6 +43,7 @@ import {
   defineComponent,
   getCurrentInstance,
   h,
+  nextTick,
   onBeforeUpdate,
   onMounted,
   onUnmounted,
@@ -148,11 +149,8 @@ export const Editable = defineComponent({
     // while a selection is being dragged.
     const androidInputManagerRef = ref<AndroidInputManager | null>(null);
     const processing = ref(false);
-    const onDOMSelectionChange = throttle(() => {
-      if (IS_NODE_MAP_DIRTY.get(editor)) {
-        onDOMSelectionChange();
-        return;
-      }
+    const onDOMSelectionChange = async () => {
+      await nextTick();
 
       const el = DOMEditor.toDOMNode(editor, editor);
       const root = el.getRootNode();
@@ -225,7 +223,7 @@ export const Editable = defineComponent({
           Transforms.deselect(editor);
         }
       }
-    }, 100);
+    };
     const scheduleOnDOMSelectionChange = debounce(onDOMSelectionChange, 0);
     const editableRef = ref<HTMLElement>();
     androidInputManagerRef.value = useAndroidInputManager({
@@ -249,7 +247,6 @@ export const Editable = defineComponent({
       }
     });
     onUnmounted(() => {
-      onDOMSelectionChange.cancel();
       scheduleOnDOMSelectionChange.cancel();
       EDITOR_TO_ELEMENT.delete(editor);
       NODE_TO_ELEMENT.delete(editor);
@@ -489,7 +486,7 @@ export const Editable = defineComponent({
       window.document.removeEventListener("drop", stoppedDragging);
     });
 
-    const onBeforeinput = (event: Event) => {
+    const onBeforeinput = async (event: Event) => {
       const isInputEvent = event instanceof InputEvent;
       if (!isInputEvent) {
         return;
@@ -535,7 +532,7 @@ export const Editable = defineComponent({
           // triggering a `beforeinput` expecting the change to be applied to the immediately before
           // set selection.
           scheduleOnDOMSelectionChange.flush();
-          onDOMSelectionChange.flush();
+          await onDOMSelectionChange();
 
           const { selection } = editor;
           const { inputType } = event;
@@ -1557,46 +1554,49 @@ export const Editable = defineComponent({
     );
 
     const decorate = useDecorate();
-    const descProvide = computed(() =>  decorate([editor, []]));
+    const descProvide = computed(() => decorate([editor, []]));
     provide(SLATE_INNER_DESCORATION, descProvide);
 
-    return () => h(is,
-      {
-        role: readOnly ? undefined : "textbox",
-        'aria-multiline': readOnly ? undefined : true,
-        'data-slate-editor': true,
-        'data-slate-node': "value",
-        ...attributes,
-        zindex: -1,
-        spellcheck: spellcheck.value,
-        autocorrect: autocorrect.value,
-        autocapitalize: autocapitalize.value,
-        contenteditable: !readOnly,
-        ref: editableRef,
-        style: mergedEditableStyle.value,
-        onBeforeinput,
-        onInput,
-        onBlur,
-        onClick,
-        onCompositionend,
-        onCompositionupdate,
-        onCompositionstart,
-        onCopy,
-        onCut,
-        onDragover,
-        onDragstart,
-        onDrop,
-        onDragend,
-        onFocus,
-        onKeydown,
-        onPaste
-      },
-      [h(Children, { node: editor }),
-       h(PlaceholderComp, {
-          placeholder,
-          onPlaceholderResize,
-        }),
-      ]
-    );
+    return () =>
+      h(
+        is,
+        {
+          role: readOnly ? undefined : "textbox",
+          "aria-multiline": readOnly ? undefined : true,
+          "data-slate-editor": true,
+          "data-slate-node": "value",
+          ...attributes,
+          zindex: -1,
+          spellcheck: spellcheck.value,
+          autocorrect: autocorrect.value,
+          autocapitalize: autocapitalize.value,
+          contenteditable: !readOnly,
+          ref: editableRef,
+          style: mergedEditableStyle.value,
+          onBeforeinput,
+          onInput,
+          onBlur,
+          onClick,
+          onCompositionend,
+          onCompositionupdate,
+          onCompositionstart,
+          onCopy,
+          onCut,
+          onDragover,
+          onDragstart,
+          onDrop,
+          onDragend,
+          onFocus,
+          onKeydown,
+          onPaste,
+        },
+        [
+          h(Children, { node: editor }),
+          h(PlaceholderComp, {
+            placeholder,
+            onPlaceholderResize,
+          }),
+        ]
+      );
   },
 });

@@ -45,7 +45,7 @@ export type CreateAndroidInputManagerOptions = {
   editor: DOMEditor;
 
   scheduleOnDOMSelectionChange: DebouncedFunc<() => void>;
-  onDOMSelectionChange: DebouncedFunc<() => void>;
+  onDOMSelectionChange: () => Promise<void>;
 };
 
 export type AndroidInputManager = {
@@ -204,7 +204,6 @@ export function createAndroidInputManager({
         // since the document and dom state do not match.
         EDITOR_TO_PENDING_SELECTION.delete(editor);
         scheduleOnDOMSelectionChange.cancel();
-        onDOMSelectionChange.cancel();
         selectionRef?.unref();
       }
     }
@@ -232,7 +231,7 @@ export function createAndroidInputManager({
     }
 
     scheduleOnDOMSelectionChange.flush();
-    onDOMSelectionChange.flush();
+    onDOMSelectionChange();
 
     applyPendingSelection();
 
@@ -322,7 +321,6 @@ export function createAndroidInputManager({
 
     EDITOR_TO_PENDING_SELECTION.delete(editor);
     scheduleOnDOMSelectionChange.cancel();
-    onDOMSelectionChange.cancel();
 
     if (hasPendingAction()) {
       flush();
