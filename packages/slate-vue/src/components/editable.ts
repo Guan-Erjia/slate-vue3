@@ -224,12 +224,10 @@ export const Editable = defineComponent({
         }
       }
     };
-    const scheduleOnDOMSelectionChange = debounce(onDOMSelectionChange, 0);
     const editableRef = ref<HTMLElement>();
     androidInputManagerRef.value = useAndroidInputManager({
       node: editableRef,
       onDOMSelectionChange,
-      scheduleOnDOMSelectionChange,
     });
 
     const timeoutId = ref<NodeJS.Timeout>();
@@ -247,7 +245,6 @@ export const Editable = defineComponent({
       }
     });
     onUnmounted(() => {
-      scheduleOnDOMSelectionChange.cancel();
       EDITOR_TO_ELEMENT.delete(editor);
       NODE_TO_ELEMENT.delete(editor);
     });
@@ -469,10 +466,7 @@ export const Editable = defineComponent({
       // want to fire for any change to the selection inside the editor.
       // (2019/11/04) https://github.com/facebook/react/issues/5785
       const window = DOMEditor.getWindow(editor);
-      window.document.addEventListener(
-        "selectionchange",
-        scheduleOnDOMSelectionChange
-      );
+      window.document.addEventListener("selectionchange", onDOMSelectionChange);
       window.document.addEventListener("dragend", stoppedDragging);
       window.document.addEventListener("drop", stoppedDragging);
     });
@@ -480,7 +474,7 @@ export const Editable = defineComponent({
       const window = DOMEditor.getWindow(editor);
       window.document.removeEventListener(
         "selectionchange",
-        scheduleOnDOMSelectionChange
+        onDOMSelectionChange
       );
       window.document.removeEventListener("dragend", stoppedDragging);
       window.document.removeEventListener("drop", stoppedDragging);
@@ -531,7 +525,6 @@ export const Editable = defineComponent({
           // Some IMEs/Chrome extensions like e.g. Grammarly set the selection immediately before
           // triggering a `beforeinput` expecting the change to be applied to the immediately before
           // set selection.
-          scheduleOnDOMSelectionChange.flush();
           await onDOMSelectionChange();
 
           const { selection } = editor;

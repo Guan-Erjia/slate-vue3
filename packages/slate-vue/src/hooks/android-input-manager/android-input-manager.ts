@@ -43,8 +43,6 @@ const isDataTransfer = (value: any): value is DataTransfer =>
 
 export type CreateAndroidInputManagerOptions = {
   editor: DOMEditor;
-
-  scheduleOnDOMSelectionChange: DebouncedFunc<() => void>;
   onDOMSelectionChange: () => Promise<void>;
 };
 
@@ -69,7 +67,6 @@ export type AndroidInputManager = {
 
 export function createAndroidInputManager({
   editor,
-  scheduleOnDOMSelectionChange,
   onDOMSelectionChange,
 }: CreateAndroidInputManagerOptions): AndroidInputManager {
   let flushing: "action" | boolean = false;
@@ -121,7 +118,7 @@ export function createAndroidInputManager({
     action.run();
   };
 
-  const flush = () => {
+  const flush = async () => {
     if (flushTimeoutId) {
       clearTimeout(flushTimeoutId);
       flushTimeoutId = null;
@@ -203,7 +200,6 @@ export function createAndroidInputManager({
         // Ensure we don't restore the pending user (dom) selection
         // since the document and dom state do not match.
         EDITOR_TO_PENDING_SELECTION.delete(editor);
-        scheduleOnDOMSelectionChange.cancel();
         selectionRef?.unref();
       }
     }
@@ -227,11 +223,9 @@ export function createAndroidInputManager({
     // while rendering if we have pending changes.
     if (scheduleSelectionChange) {
       debug("scheduleOnDOMSelectionChange pending changes");
-      scheduleOnDOMSelectionChange();
     }
 
-    scheduleOnDOMSelectionChange.flush();
-    onDOMSelectionChange();
+    await onDOMSelectionChange();
 
     applyPendingSelection();
 
@@ -312,18 +306,17 @@ export function createAndroidInputManager({
     };
   };
 
-  const scheduleAction = (
+  const scheduleAction = async (
     run: () => void,
     { at }: { at?: Point | Range } = {}
-  ): void => {
+  ): Promise<void> => {
     insertPositionHint = false;
     debug("scheduleAction", { at, run });
 
     EDITOR_TO_PENDING_SELECTION.delete(editor);
-    scheduleOnDOMSelectionChange.cancel();
 
     if (hasPendingAction()) {
-      flush();
+      await flush();
     }
 
     EDITOR_TO_PENDING_ACTION.set(editor, { at, run });
@@ -334,7 +327,7 @@ export function createAndroidInputManager({
     actionTimeoutId = setTimeout(flush);
   };
 
-  const handleDOMBeforeInput = (event: InputEvent): void => {
+  const handleDOMBeforeInput = async (event: InputEvent): Promise<void> => {
     if (flushTimeoutId) {
       clearTimeout(flushTimeoutId);
       flushTimeoutId = null;
