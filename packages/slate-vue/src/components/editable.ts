@@ -144,7 +144,6 @@ export const Editable = defineComponent({
     // released. This causes issues in situations where another change happens
     // while a selection is being dragged.
     const androidInputManagerRef = ref<AndroidInputManager | null>(null);
-    const processing = ref(false);
     const onDOMSelectionChange = (event?: Event) => {
       const target = event?.target;
       const targetElement = target instanceof HTMLElement ? target : null;
@@ -156,9 +155,7 @@ export const Editable = defineComponent({
       const el = DOMEditor.toDOMNode(editor, editor);
       const root = el.getRootNode();
 
-      if (!processing.value && IS_WEBKIT && root instanceof ShadowRoot) {
-        processing.value = true;
-
+      if (IS_WEBKIT && root instanceof ShadowRoot) {
         const active = getActiveElement();
 
         if (active) {
@@ -167,7 +164,6 @@ export const Editable = defineComponent({
           Transforms.deselect(editor);
         }
 
-        processing.value = false;
         return;
       }
 
@@ -441,7 +437,7 @@ export const Editable = defineComponent({
         const el = DOMEditor.toDOMNode(editor, editor);
         const root = el.getRootNode();
 
-        if (processing?.value && IS_WEBKIT && root instanceof ShadowRoot) {
+        if (IS_WEBKIT && root instanceof ShadowRoot) {
           const ranges = event.getTargetRanges();
           const range = ranges[0];
 
