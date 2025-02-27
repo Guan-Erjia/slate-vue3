@@ -41,7 +41,6 @@ import {
   defineComponent,
   getCurrentInstance,
   h,
-  nextTick,
   onBeforeUpdate,
   onMounted,
   onUnmounted,
@@ -427,7 +426,7 @@ export const Editable = defineComponent({
       window.document.removeEventListener("drop", stoppedDragging);
     });
 
-    const onBeforeinput = async (event: Event) => {
+    const onBeforeinput = (event: Event) => {
       const isInputEvent = event instanceof InputEvent;
       if (!isInputEvent) {
         return;
