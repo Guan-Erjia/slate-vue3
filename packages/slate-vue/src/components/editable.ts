@@ -475,11 +475,6 @@ export const Editable = defineComponent({
             return androidInputManagerRef.value.handleDOMBeforeInput(event);
           }
 
-          // Some IMEs/Chrome extensions like e.g. Grammarly set the selection immediately before
-          // triggering a `beforeinput` expecting the change to be applied to the immediately before
-          // set selection.
-          await onDOMSelectionChange();
-
           const { selection } = editor;
           const { inputType } = event;
           const data = (event as any).dataTransfer || event.data || undefined;
