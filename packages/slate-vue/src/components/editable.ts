@@ -145,14 +145,13 @@ export const Editable = defineComponent({
     // while a selection is being dragged.
     const androidInputManagerRef = ref<AndroidInputManager | null>(null);
     const processing = ref(false);
-    const onDOMSelectionChange = async (event?: Event) => {
+    const onDOMSelectionChange = (event?: Event) => {
       const target = event?.target;
       const targetElement = target instanceof HTMLElement ? target : null;
       const targetTagName = targetElement?.tagName;
       if (targetTagName === "INPUT" || targetTagName === "TEXTAREA") {
         return;
       }
-      await nextTick();
 
       const el = DOMEditor.toDOMNode(editor, editor);
       const root = el.getRootNode();

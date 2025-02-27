@@ -42,7 +42,7 @@ const isDataTransfer = (value: any): value is DataTransfer =>
 
 export type CreateAndroidInputManagerOptions = {
   editor: DOMEditor;
-  onDOMSelectionChange: () => Promise<void>;
+  onDOMSelectionChange: () => void;
 };
 
 export type AndroidInputManager = {
