@@ -234,7 +234,6 @@ export const Editable = defineComponent({
       onDOMSelectionChange,
     });
 
-    const timeoutId = ref<NodeJS.Timeout>();
     const { onUserInput } = useRestoreDOM(editableRef, editor);
 
     // callbackRef
@@ -393,17 +392,6 @@ export const Editable = defineComponent({
 
       return newDomRange;
     };
-    const ensureDomSelection = (forceChange?: boolean) => {
-      try {
-        const el = DOMEditor.toDOMNode(editor, editor);
-        el.focus();
-
-        setDomSelection(forceChange);
-      } catch (e) {
-        // Ignore, dom and state might be out of sync
-      }
-    };
-    const animationFrameId = ref<number>();
     const changeEffect = () => {
       // Make sure the DOM selection state is in sync.
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
@@ -430,34 +418,9 @@ export const Editable = defineComponent({
         });
         return;
       }
-
-      animationFrameId.value = requestAnimationFrame(() => {
-        if (ensureSelection) {
-          // Compat: Android IMEs try to force their selection by manually re-applying it even after we set it.
-          // This essentially would make setting the slate selection during an update meaningless, so we force it
-          // again here. We can't only do it in the setTimeout after the animation frame since that would cause a
-          // visible flicker.
-          ensureDomSelection();
-
-          timeoutId.value = setTimeout(() => {
-            // COMPAT: While setting the selection in an animation frame visually correctly sets the selection,
-            // it doesn't update GBoards spellchecker state. We have to manually trigger a selection change after
-            // the animation frame to ensure it displays the correct state.
-            ensureDomSelection(true);
-            state.isUpdatingSelection = false;
-          });
-        }
-      });
     };
 
     useChangeEffect(changeEffect);
-
-    onUnmounted(() => {
-      animationFrameId.value && cancelAnimationFrame(animationFrameId.value);
-      if (timeoutId) {
-        clearTimeout(timeoutId.value);
-      }
-    });
 
     // Listen for dragend and drop globally. In Firefox, if a drop handler
     // initiates an operation that causes the originally dragged element to
