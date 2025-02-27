@@ -992,22 +992,37 @@ export const DOMEditor: DOMEditorInterface = {
           anchorOffset = domRange.anchorOffset
           focusNode = domRange.focusNode
           focusOffset = domRange.focusOffset
+          if (IS_FIREFOX) {
           // @ts-ignore role in Firefox
-          if (IS_FIREFOX && domRange.anchorNode?.role === 'textbox' && domRange.focusNode?.role === 'textbox') {
-            while (anchorNode?.firstElementChild) {
-            // @ts-ignore firstElementChild in Firefox
-              anchorNode = anchorNode.firstElementChild
+            if (domRange.anchorNode?.role === 'textbox' && domRange.focusNode?.role === 'textbox') {
+              while (anchorNode?.firstElementChild) {
+                // @ts-ignore firstElementChild in Firefox
+                  anchorNode = anchorNode.firstElementChild
+                }
+                while (focusNode?.lastElementChild) {
+                // @ts-ignore lastElementChild in Firefox
+                  focusNode = focusNode.lastElementChild
+                }
+                anchorNode = anchorNode.firstChild
+                focusNode = focusNode.lastChild
+                focusOffset = focusNode.length
+            } else {
+              const anchorEl = anchorNode?.previousSibling?.firstChild?.firstChild?.firstChild
+              if(anchorNode?.nodeType === 3 && anchorNode.textContent === '' && anchorEl) {
+                anchorNode = anchorEl
+                anchorOffset = anchorEl.textContent?.length || 0
+              }
+              const focusEl = focusNode?.previousSibling?.lastChild?.lastChild?.lastChild
+              if(focusNode?.nodeType === 3 && focusNode.textContent === '' && focusNode.previousSibling?.lastChild?.lastChild?.lastChild) {
+                focusNode = focusEl
+                focusOffset = focusEl?.textContent?.length || 0
+              }
             }
-            while (focusNode?.lastElementChild) {
-            // @ts-ignore lastElementChild in Firefox
-              focusNode = focusNode.lastElementChild
-            }
-            anchorNode = anchorNode.firstChild
-            focusNode = focusNode.lastChild
-            focusOffset = focusNode.length
           }
         }
-
+        if(!anchorNode || !focusNode) {
+          return null as T extends true ? Range | null : Range
+        }
         // COMPAT: There's a bug in chrome that always returns `true` for
         // `isCollapsed` for a Selection that comes from a ShadowRoot.
         // (2020/08/08)

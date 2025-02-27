@@ -376,7 +376,8 @@ export const Editable = defineComponent({
 
       return newDomRange;
     };
-    const changeEffect = () => {
+
+    useChangeEffect(() => {
       // Make sure the DOM selection state is in sync.
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
       const domSelection = getSelection(root);
@@ -399,9 +400,7 @@ export const Editable = defineComponent({
       if (!IS_ANDROID || !ensureSelection) {
         return;
       }
-    };
-
-    useChangeEffect(changeEffect);
+    });
 
     // Listen for dragend and drop globally. In Firefox, if a drop handler
     // initiates an operation that causes the originally dragged element to
