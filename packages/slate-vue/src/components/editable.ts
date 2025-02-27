@@ -123,11 +123,9 @@ export const Editable = defineComponent({
     // Keep track of some state for the event handler logic.
     const state = reactive<{
       isDraggingInternally: boolean;
-      isUpdatingSelection: boolean;
       latestElement: DOMElement | null;
     }>({
       isDraggingInternally: false,
-      isUpdatingSelection: false,
       latestElement: null,
     });
 
@@ -177,7 +175,6 @@ export const Editable = defineComponent({
       const androidInputManager = androidInputManagerRef.value;
       if (
         (IS_ANDROID || !DOMEditor.isComposing(editor)) &&
-        (!state.isUpdatingSelection || androidInputManager?.isFlushing()) &&
         !state.isDraggingInternally
       ) {
         const root = DOMEditor.findDocumentOrShadowRoot(editor);
@@ -269,7 +266,7 @@ export const Editable = defineComponent({
         return false;
       }
     });
-    const setDomSelection = (forceChange?: boolean) => {
+    const setDomSelection = () => {
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
       const domSelection = getSelection(root);
       if (!domSelection) {
@@ -313,12 +310,7 @@ export const Editable = defineComponent({
       }
 
       // If the DOM selection is in the editor and the editor selection is already correct, we're done.
-      if (
-        hasDomSelection &&
-        hasDomSelectionInEditor &&
-        editor.selection &&
-        !forceChange
-      ) {
+      if (hasDomSelection && hasDomSelectionInEditor && editor.selection) {
         const slateRange = DOMEditor.toSlateRange(editor, domSelection, {
           exactMatch: true,
 
@@ -354,9 +346,6 @@ export const Editable = defineComponent({
         });
         return;
       }
-
-      // Otherwise the DOM selection is out of sync, so update it.
-      state.isUpdatingSelection = true;
 
       let newDomRange: DOMRange | null = null;
 
@@ -413,9 +402,6 @@ export const Editable = defineComponent({
         androidInputManagerRef.value?.isFlushing() === "action";
 
       if (!IS_ANDROID || !ensureSelection) {
-        setTimeout(() => {
-          state.isUpdatingSelection = false;
-        });
         return;
       }
     };
@@ -812,7 +798,6 @@ export const Editable = defineComponent({
     const onBlur = (event: FocusEvent) => {
       if (
         readOnly ||
-        state.isUpdatingSelection ||
         !DOMEditor.hasSelectableTarget(editor, event.target) ||
         isEventHandled(event, attributes.onBlur)
       ) {
@@ -1135,7 +1120,6 @@ export const Editable = defineComponent({
     const onFocus = (event: FocusEvent) => {
       if (
         !readOnly &&
-        !state.isUpdatingSelection &&
         DOMEditor.hasEditableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onFocus)
       ) {
