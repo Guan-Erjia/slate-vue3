@@ -6,6 +6,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "description": "slate-react library implemented with vue3",
+  "license": "MIT",
   "files": [
     "dist/"
   ],
@@ -62,6 +63,6 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Guan-Erjia/slate-vue3"
+    "url": "git+https://github.com/Guan-Erjia/slate-vue3.git"
   }
 }
