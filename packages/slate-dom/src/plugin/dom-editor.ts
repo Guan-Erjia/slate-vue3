@@ -994,8 +994,9 @@ export const DOMEditor: DOMEditorInterface = {
           focusOffset = domRange.focusOffset
           if (IS_FIREFOX) {
           // @ts-ignore role in Firefox
-            if (domRange.anchorNode?.role === 'textbox' && domRange.focusNode?.role === 'textbox') {
-              while (anchorNode?.firstElementChild) {
+            const attributes = anchorNode.attributes
+            if (attributes && attributes['data-slate-editor'] && attributes['data-slate-editor']) {
+                while (anchorNode?.firstElementChild) {
                 // @ts-ignore firstElementChild in Firefox
                   anchorNode = anchorNode.firstElementChild
                 }
