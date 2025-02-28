@@ -3,6 +3,18 @@
 <p align="center">
   slate-<a style="color: #087ea4" href="https://react.dev/">react</a> library implemented with <a style="color: #42b883" href="https://vuejs.org/">vue3</a>
 </p>
+
+<p align="center">
+  <a href="https://unpkg.com/slate-vue3/dist/index.js">
+    <img src="http://img.badgesize.io/https://unpkg.com/slate-vue3/dist/index.js?compression=gzip&amp;label=size">
+  </a>
+  <a href="https://join.slack.com/t/slate-js/shared_invite/zt-f8t986ip-7dA1DyiqPpzootz1snKXkw">
+    <img src="https://img.shields.io/badge/slack-slate--js-brightgreen.svg?logo=slack">
+  </a>
+  <a href="./packages/slate-vue3/package.json">
+    <img src="https://img.shields.io/npm/v/slate-vue3.svg?maxAge=3600&label=version&colorB=007ec6">
+  </a>
+</p>
 <br/>
 
 
