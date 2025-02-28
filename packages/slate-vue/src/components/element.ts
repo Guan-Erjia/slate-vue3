@@ -1,6 +1,6 @@
 import { direction } from "direction";
 import { BaseElement, Editor, Node, Path, Range } from "slate";
-import { ChildrenComp } from "./children";
+import { ChildrenFC } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
@@ -14,6 +14,7 @@ import type { ElementProps } from "../utils/interface";
 import {
   computed,
   defineComponent,
+  Fragment,
   h,
   onMounted,
   onUnmounted,
@@ -148,7 +149,7 @@ export const ElementComp = defineComponent({
           h(TextComp, { parent: element, text })
         );
       }
-      return h(ChildrenComp, { node: element });
+      return h(Fragment, ChildrenFC(element));
     });
 
     const decorate = useDecorate();
