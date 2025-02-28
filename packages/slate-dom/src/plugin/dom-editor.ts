@@ -927,23 +927,12 @@ export const DOMEditor: DOMEditorInterface = {
       if (isDOMSelection(domRange)) {
         // COMPAT: In firefox the normal seletion way does not work
         // (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
+        anchorNode = domRange.anchorNode;
+        anchorOffset = domRange.anchorOffset;
+        focusNode = domRange.focusNode;
+        focusOffset = domRange.focusOffset;
+
         if (IS_FIREFOX) {
-          const firstRange = domRange.getRangeAt(0);
-          const lastRange = domRange.getRangeAt(domRange.rangeCount - 1);
-          // This is the read only mode of a firefox table
-          // Right to left
-          if (firstRange.startContainer === focusNode) {
-            anchorNode = lastRange.endContainer;
-            anchorOffset = lastRange.endOffset;
-            focusOffset = firstRange.startOffset;
-            focusNode = firstRange.startContainer;
-          } else {
-            // Left to right
-            anchorNode = firstRange.endContainer;
-            anchorOffset = firstRange.endOffset;
-            focusOffset = lastRange.startOffset;
-            focusNode = lastRange.startContainer;
-          }
           // @ts-ignore attributes in Firefox
           const attributes =
             anchorNode instanceof HTMLElement ? anchorNode.attributes : null;
@@ -961,12 +950,8 @@ export const DOMEditor: DOMEditorInterface = {
             focusNode = focusNode.lastChild;
             focusOffset = focusNode.length;
           }
-        } else {
-          anchorNode = domRange.anchorNode;
-          anchorOffset = domRange.anchorOffset;
-          focusNode = domRange.focusNode;
-          focusOffset = domRange.focusOffset;
         }
+
         if (!anchorNode || !focusNode) {
           return null as T extends true ? Range | null : Range;
         }
