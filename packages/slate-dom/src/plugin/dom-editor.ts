@@ -951,7 +951,8 @@ export const DOMEditor: DOMEditorInterface = {
             focusOffset = focusNode.length;
           } else {
             const anchorEl =
-              anchorNode?.previousSibling?.firstChild?.firstChild?.firstChild;
+              anchorNode?.previousSibling?.firstChild?.firstChild?.firstChild ||
+              anchorNode?.nextSibling?.firstChild?.firstChild?.firstChild;
             if (
               anchorNode?.nodeType === 3 &&
               anchorNode.textContent === "" &&
@@ -961,7 +962,8 @@ export const DOMEditor: DOMEditorInterface = {
               anchorOffset = anchorEl.textContent?.length || 0;
             }
             const focusEl =
-              focusNode?.previousSibling?.lastChild?.lastChild?.lastChild;
+              focusNode?.previousSibling?.lastChild?.lastChild?.lastChild ||
+              focusNode?.nextSibling?.firstChild?.firstChild?.firstChild;
             if (
               focusNode?.nodeType === 3 &&
               focusNode.textContent === "" &&
@@ -972,7 +974,6 @@ export const DOMEditor: DOMEditorInterface = {
             }
           }
         }
-        console.log(anchorNode, focusNode);
 
         if (!anchorNode || !focusNode) {
           return null as T extends true ? Range | null : Range;
