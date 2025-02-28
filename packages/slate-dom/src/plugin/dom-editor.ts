@@ -995,7 +995,7 @@ export const DOMEditor: DOMEditorInterface = {
           if (IS_FIREFOX) {
           // @ts-ignore role in Firefox
             const attributes = anchorNode.attributes
-            if (attributes && attributes['data-slate-editor'] && attributes['data-slate-editor']) {
+            if (attributes && attributes['data-slate-editor']) {
                 while (anchorNode?.firstElementChild) {
                 // @ts-ignore firstElementChild in Firefox
                   anchorNode = anchorNode.firstElementChild
