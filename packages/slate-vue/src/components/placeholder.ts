@@ -20,6 +20,7 @@ const style: CSSProperties = {
 };
 
 export const PlaceholderComp = defineComponent({
+  name: "slate-placeholder",
   props: ["placeholder", "onPlaceholderResize"],
   setup(props: {
     placeholder?: string;
@@ -37,7 +38,7 @@ export const PlaceholderComp = defineComponent({
         Node.string(editor) === "" &&
         !isComposing.value
     );
-    
+
     const attributes = computed(() => ({
       "data-slate-placeholder": true,
       style,
