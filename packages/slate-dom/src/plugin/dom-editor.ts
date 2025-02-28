@@ -50,6 +50,19 @@ type DOMText = globalThis.Text;
  * A DOM-specific version of the `Editor` interface.
  */
 
+function getFirefoxNodeEl(node: DOMNode, offset: number): [DOMNode, number] {
+  if (node.nodeType !== 3 || node.textContent !== "") {
+    return [node, offset];
+  } else {
+    const isLeft = node.previousSibling === null;
+    let el = node[isLeft ? "nextSibling" : "previousSibling"];
+    while (el?.firstChild) {
+      el = isLeft ? el.firstChild : el.lastChild;
+    }
+    return [el || node, isLeft ? 0 : el?.textContent?.length || 0];
+  }
+}
+
 export interface DOMEditor extends BaseEditor {
   hasEditableTarget: (
     editor: DOMEditor,
@@ -950,27 +963,15 @@ export const DOMEditor: DOMEditorInterface = {
             focusNode = focusNode.lastChild;
             focusOffset = focusNode.length;
           } else {
-            const anchorEl =
-              anchorNode?.previousSibling?.firstChild?.firstChild?.firstChild ||
-              anchorNode?.nextSibling?.firstChild?.firstChild?.firstChild;
-            if (
-              anchorNode?.nodeType === 3 &&
-              anchorNode.textContent === "" &&
-              anchorEl
-            ) {
-              anchorNode = anchorEl;
-              anchorOffset = anchorEl.textContent?.length || 0;
+            if (anchorNode) {
+              const [el, offset] = getFirefoxNodeEl(anchorNode, anchorOffset);
+              anchorNode = el;
+              anchorOffset = offset;
             }
-            const focusEl =
-              focusNode?.previousSibling?.lastChild?.lastChild?.lastChild ||
-              focusNode?.nextSibling?.firstChild?.firstChild?.firstChild;
-            if (
-              focusNode?.nodeType === 3 &&
-              focusNode.textContent === "" &&
-              focusEl
-            ) {
-              focusNode = focusEl;
-              focusOffset = focusEl?.textContent?.length || 0;
+            if (focusNode) {
+              const [el, offset] = getFirefoxNodeEl(focusNode, focusOffset);
+              focusNode = el;
+              focusOffset = offset;
             }
           }
         }
@@ -997,25 +998,15 @@ export const DOMEditor: DOMEditorInterface = {
         focusOffset = domRange.endOffset;
         isCollapsed = domRange.collapsed;
         if (IS_FIREFOX) {
-          const anchorEl =
-            anchorNode.previousSibling?.firstChild?.firstChild?.firstChild;
-          if (
-            anchorEl &&
-            anchorNode.nodeType === 3 &&
-            anchorNode.textContent === ""
-          ) {
-            anchorNode = anchorEl;
-            anchorOffset = anchorEl.textContent?.length || 0;
+          if (anchorNode) {
+            const [el, offset] = getFirefoxNodeEl(anchorNode, anchorOffset);
+            anchorNode = el;
+            anchorOffset = offset;
           }
-          const focusEl =
-            focusNode.previousSibling?.lastChild?.lastChild?.lastChild;
-          if (
-            focusEl &&
-            focusNode.nodeType === 3 &&
-            focusNode.textContent === ""
-          ) {
-            focusNode = focusEl;
-            focusOffset = focusEl?.textContent?.length || 0;
+          if (focusNode) {
+            const [el, offset] = getFirefoxNodeEl(focusNode, focusOffset);
+            focusNode = el;
+            focusOffset = offset;
           }
         }
       }
