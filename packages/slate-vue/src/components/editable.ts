@@ -1518,7 +1518,7 @@ export const Editable = defineComponent({
           onPaste,
         },
         [
-          ChildrenFC(editor),
+          ChildrenFC(editor, editor),
           h(PlaceholderComp, {
             placeholder,
             onPlaceholderResize,

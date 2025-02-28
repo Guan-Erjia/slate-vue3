@@ -149,7 +149,7 @@ export const ElementComp = defineComponent({
           h(TextComp, { parent: element, text })
         );
       }
-      return h(Fragment, ChildrenFC(element));
+      return h(Fragment, ChildrenFC(element, editor));
     });
 
     const decorate = useDecorate();
