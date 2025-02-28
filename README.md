@@ -8,11 +8,11 @@
 # How to use?
 
 ## 1. install slate-vue3
-```
+```sh
 npm install slate-vue3
 ```
 ## 2. now, you can use it in vue-sfc
-```
+```vue
 <script setup lang="ts">
 import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue3"
 import { h } from "vue";
@@ -45,7 +45,7 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
 > Get the current composing state of the editor. It deals with compositionstart, compositionupdate, compositionend events.
 
 const useComposing : ( ) => Ref<boolean>
-```
+```javascript
 import { useComposing } from 'slate-vue3'
 
 const composing = useComposing()
@@ -55,7 +55,7 @@ const composing = useComposing()
 > Get the current focused state of the editor.
 
 const useFocused : ( ) => Ref<boolean>
-```
+```javascript
 import { useFocused } from 'slate-vue3'
 
 const focused = useFocused()
@@ -65,7 +65,7 @@ const focused = useFocused()
 > Get the current readOnly state of the editor.
 
 const useReadOnly : ( ) => Ref<boolean>
-```
+```javascript
 import { useReadOnly } from 'slate-vue3'
 
 const readonly = useReadOnly()
@@ -75,7 +75,7 @@ const readonly = useReadOnly()
 > Get the current selected state of an element.
 
 const useSelected : ( ) => ComputedRef<boolean>
-```
+```javascript
 import { useSelected } from 'slate-vue3'
 
 const selected = useSelected()
@@ -85,7 +85,7 @@ const selected = useSelected()
 > Get the current editor object from the context. Context whenever changes occur in the editor.
 
 const useEditor : ( ) => Editor
-```
+```javascript
 import { useEditor } from 'slate-vue3'
 
 const editor = useEditor()
@@ -95,7 +95,7 @@ const editor = useEditor()
 > Get the current editor selection from the context.
 
 const useSelection : ( ) => ComputedRef<Selection>
-```
+```javascript
 import { useSelection } from 'slate-vue3'
 
 const selection = useSelection()
@@ -106,7 +106,7 @@ const selection = useSelection()
 > Automatically bind ref to the real node when the component is mounted，This is important when rendering element nodes directly
 
 const useInheritRef : ( attribute: HTMLAttributes ) => HTMLAttributes
-```
+```javascript
 const renderElement = (props: RenderElementProps) => {
   const { attributes, children, element } = props
   switch (element.type) {
