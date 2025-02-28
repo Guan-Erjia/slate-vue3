@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test'
 
-test.skip('iframe editor', () => {
+test.describe('iframe editor', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/slate-vue3/#/iframe')
+    await page.goto('http://localhost:5173/slate-vue3/#/render-in-iframe')
   })
 
   test('should be editable', async ({ page }) => {
