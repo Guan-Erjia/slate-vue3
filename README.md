@@ -42,7 +42,7 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
 </template>
 ```
 
-# [Component Props](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/utils/interface.ts)
+# Component Props
 ## Slate
 ### editor
 > slate-editor instance, add DOM specific behaviors to the editor
