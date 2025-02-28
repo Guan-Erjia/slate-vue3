@@ -50,6 +50,9 @@ type DOMText = globalThis.Text;
  * A DOM-specific version of the `Editor` interface.
  */
 
+// compact vue3, get the real node element when renderList in firefox
+// (https://github.com/vuejs/core/issues/8444#issuecomment-1577843668)
+// (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
 function getFirefoxNodeEl(node: DOMNode, offset: number): [DOMNode, number] {
   if (node.nodeType !== 3 || node.textContent !== "") {
     return [node, offset];

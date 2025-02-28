@@ -143,6 +143,8 @@ export const Editable = defineComponent({
     // released. This causes issues in situations where another change happens
     // while a selection is being dragged.
     const androidInputManagerRef = ref<AndroidInputManager | null>(null);
+
+    // should it be a throttled function?
     const onDOMSelectionChange = (event?: Event) => {
       const target = event?.target;
       const targetElement = target instanceof HTMLElement ? target : null;
