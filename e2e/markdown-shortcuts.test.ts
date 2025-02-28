@@ -18,6 +18,7 @@ test.describe('On markdown-shortcuts example', () => {
     await page
       .getByRole('textbox')
       .press(testInfo.project.name === 'webkit' ? 'Meta+ArrowLeft' : 'Home')
+    await page.keyboard.press('Enter')
     await page.getByRole('textbox').pressSequentially('* ')
     await page.getByRole('textbox').pressSequentially('1st Item')
     await page.keyboard.press('Enter')
