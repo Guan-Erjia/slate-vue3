@@ -1,19 +1,15 @@
 import { Element } from "slate";
 import { ElementComp } from "./element";
 import { TextComp } from "./text";
-import {
-  DOMEditor,
-  NODE_TO_INDEX,
-  NODE_TO_PARENT,
-} from "slate-dom";
+import { DOMEditor, NODE_TO_INDEX, NODE_TO_PARENT } from "slate-dom";
 import type { ChildrenProps } from "../utils/interface";
-import { defineComponent, h, onUpdated, renderList, VNode } from "vue";
+import { defineComponent, h, renderList, VNode } from "vue";
 import { useEditor } from "../hooks/use-editor";
 
 /**
  * Children.
  */
-export const Children = defineComponent({
+export const ChildrenComp = defineComponent({
   name: "Children",
   props: ["node"],
   setup(props: ChildrenProps) {

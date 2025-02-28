@@ -1,6 +1,6 @@
 import { direction } from "direction";
 import { BaseElement, Editor, Node, Path, Range } from "slate";
-import { Children } from "./children";
+import { ChildrenComp } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
@@ -148,7 +148,7 @@ export const ElementComp = defineComponent({
           h(TextComp, { parent: element, text })
         );
       }
-      return h(Children, { node: element });
+      return h(ChildrenComp, { node: element });
     });
 
     const decorate = useDecorate();

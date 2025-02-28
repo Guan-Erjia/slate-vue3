@@ -50,7 +50,7 @@ import {
   watch,
 } from "vue";
 import type { CSSProperties, HTMLAttributes } from "vue";
-import { Children } from "./children";
+import { ChildrenComp } from "./children";
 import { useRestoreDOM } from "../hooks/use-restore-dom";
 import type { EditableProps } from "../utils/interface";
 import {
@@ -1518,7 +1518,7 @@ export const Editable = defineComponent({
           onPaste,
         },
         [
-          h(Children, { node: editor }),
+          h(ChildrenComp, { node: editor }),
           h(PlaceholderComp, {
             placeholder,
             onPlaceholderResize,
