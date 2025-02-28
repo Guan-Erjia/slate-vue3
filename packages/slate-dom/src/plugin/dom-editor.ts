@@ -1042,6 +1042,18 @@ export const DOMEditor: DOMEditorInterface = {
         focusNode = domRange.endContainer
         focusOffset = domRange.endOffset
         isCollapsed = domRange.collapsed
+        if(IS_FIREFOX) {
+          const anchorEl = anchorNode.previousSibling?.firstChild?.firstChild?.firstChild
+          if(anchorNode.nodeType === 3 && anchorNode.textContent === '' && anchorEl) {
+            anchorNode = anchorEl
+            anchorOffset = anchorEl.textContent?.length || 0
+          }
+          const focusEl = focusNode.previousSibling?.lastChild?.lastChild?.lastChild
+          if(focusNode.nodeType === 3 && focusNode.textContent === '' && focusNode.previousSibling?.lastChild?.lastChild?.lastChild) {
+            focusNode = focusEl
+            focusOffset = focusEl?.textContent?.length || 0
+          } 
+        }
       }
     }
 
