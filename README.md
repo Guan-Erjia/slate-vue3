@@ -17,10 +17,12 @@ npm install slate-vue3
 import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue3"
 import { h } from "vue";
 
-const initialValue = [{
-  type: 'paragraph',
-  children: [{ text: 'Let's start' }]
-}]
+const initialValue = [
+  {
+    type: 'paragraph',
+    children: [{ text: 'Let us start'}]
+  }
+]
 const renderElement = ({ attributes, children }) => h('p', attributes, children)
 const editor = withHistory(withDOM(createEditor(initialValue)))
 </script>
