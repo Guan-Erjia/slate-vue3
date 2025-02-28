@@ -949,8 +949,30 @@ export const DOMEditor: DOMEditorInterface = {
             anchorOffset = 0;
             focusNode = focusNode.lastChild;
             focusOffset = focusNode.length;
+          } else {
+            const anchorEl =
+              anchorNode?.previousSibling?.firstChild?.firstChild?.firstChild;
+            if (
+              anchorNode?.nodeType === 3 &&
+              anchorNode.textContent === "" &&
+              anchorEl
+            ) {
+              anchorNode = anchorEl;
+              anchorOffset = anchorEl.textContent?.length || 0;
+            }
+            const focusEl =
+              focusNode?.previousSibling?.lastChild?.lastChild?.lastChild;
+            if (
+              focusNode?.nodeType === 3 &&
+              focusNode.textContent === "" &&
+              focusEl
+            ) {
+              focusNode = focusEl;
+              focusOffset = focusEl?.textContent?.length || 0;
+            }
           }
         }
+        console.log(anchorNode, focusNode);
 
         if (!anchorNode || !focusNode) {
           return null as T extends true ? Range | null : Range;
@@ -977,9 +999,9 @@ export const DOMEditor: DOMEditorInterface = {
           const anchorEl =
             anchorNode.previousSibling?.firstChild?.firstChild?.firstChild;
           if (
+            anchorEl &&
             anchorNode.nodeType === 3 &&
-            anchorNode.textContent === "" &&
-            anchorEl
+            anchorNode.textContent === ""
           ) {
             anchorNode = anchorEl;
             anchorOffset = anchorEl.textContent?.length || 0;
@@ -987,9 +1009,9 @@ export const DOMEditor: DOMEditorInterface = {
           const focusEl =
             focusNode.previousSibling?.lastChild?.lastChild?.lastChild;
           if (
+            focusEl &&
             focusNode.nodeType === 3 &&
-            focusNode.textContent === "" &&
-            focusNode.previousSibling?.lastChild?.lastChild?.lastChild
+            focusNode.textContent === ""
           ) {
             focusNode = focusEl;
             focusOffset = focusEl?.textContent?.length || 0;
