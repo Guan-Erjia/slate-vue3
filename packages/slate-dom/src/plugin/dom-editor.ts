@@ -927,115 +927,45 @@ export const DOMEditor: DOMEditorInterface = {
       if (isDOMSelection(domRange)) {
         // COMPAT: In firefox the normal seletion way does not work
         // (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
-        if (IS_FIREFOX && domRange.rangeCount > 1) {
-          focusNode = domRange.focusNode; // Focus node works fine
+        if (IS_FIREFOX) {
           const firstRange = domRange.getRangeAt(0);
           const lastRange = domRange.getRangeAt(domRange.rangeCount - 1);
-
-          // Here we are in the contenteditable mode of a table in firefox
-          if (
-            focusNode instanceof HTMLTableRowElement &&
-            firstRange.startContainer instanceof HTMLTableRowElement &&
-            lastRange.startContainer instanceof HTMLTableRowElement
-          ) {
-            // HTMLElement, becouse Element is a slate element
-            function getLastChildren(element: HTMLElement): HTMLElement {
-              if (element.childElementCount > 0) {
-                return getLastChildren(<HTMLElement>element.children[0]);
-              } else {
-                return element;
-              }
-            }
-
-            const firstNodeRow = <HTMLTableRowElement>firstRange.startContainer;
-            const lastNodeRow = <HTMLTableRowElement>lastRange.startContainer;
-
-            // This should never fail as "The HTMLElement interface represents any HTML element."
-            const firstNode = getLastChildren(
-              <HTMLElement>firstNodeRow.children[firstRange.startOffset]
-            );
-            const lastNode = getLastChildren(
-              <HTMLElement>lastNodeRow.children[lastRange.startOffset]
-            );
-
-            // Zero, as we allways take the right one as the anchor point
-            focusOffset = 0;
-
-            if (lastNode.childNodes.length > 0) {
-              anchorNode = lastNode.childNodes[0];
-            } else {
-              anchorNode = lastNode;
-            }
-
-            if (firstNode.childNodes.length > 0) {
-              focusNode = firstNode.childNodes[0];
-            } else {
-              focusNode = firstNode;
-            }
-
-            if (lastNode instanceof HTMLElement) {
-              anchorOffset = (<HTMLElement>lastNode).innerHTML.length;
-            } else {
-              // Fallback option
-              anchorOffset = 0;
-            }
+          // This is the read only mode of a firefox table
+          // Right to left
+          if (firstRange.startContainer === focusNode) {
+            anchorNode = lastRange.endContainer;
+            anchorOffset = lastRange.endOffset;
+            focusOffset = firstRange.startOffset;
+            focusNode = firstRange.startContainer;
           } else {
-            // This is the read only mode of a firefox table
-            // Right to left
-            if (firstRange.startContainer === focusNode) {
-              anchorNode = lastRange.endContainer;
-              anchorOffset = lastRange.endOffset;
-              focusOffset = firstRange.startOffset;
-            } else {
-              // Left to right
-              anchorNode = firstRange.startContainer;
-              anchorOffset = firstRange.endOffset;
-              focusOffset = lastRange.startOffset;
+            // Left to right
+            anchorNode = firstRange.endContainer;
+            anchorOffset = firstRange.endOffset;
+            focusOffset = lastRange.startOffset;
+            focusNode = lastRange.startContainer;
+          }
+          // @ts-ignore attributes in Firefox
+          const attributes =
+            anchorNode instanceof HTMLElement ? anchorNode.attributes : null;
+          if (attributes && attributes.getNamedItem("data-slate-editor")) {
+            while (anchorNode?.firstElementChild) {
+              // @ts-ignore firstElementChild in Firefox
+              anchorNode = anchorNode.firstElementChild;
             }
+            while (focusNode?.lastElementChild) {
+              // @ts-ignore lastElementChild in Firefox
+              focusNode = focusNode.lastElementChild;
+            }
+            anchorNode = anchorNode.firstChild;
+            anchorOffset = 0;
+            focusNode = focusNode.lastChild;
+            focusOffset = focusNode.length;
           }
         } else {
           anchorNode = domRange.anchorNode;
           anchorOffset = domRange.anchorOffset;
           focusNode = domRange.focusNode;
           focusOffset = domRange.focusOffset;
-          if (IS_FIREFOX) {
-            // @ts-ignore role in Firefox
-            const attributes = anchorNode.attributes;
-            if (attributes && attributes["data-slate-editor"]) {
-              while (anchorNode?.firstElementChild) {
-                // @ts-ignore firstElementChild in Firefox
-                anchorNode = anchorNode.firstElementChild;
-              }
-              while (focusNode?.lastElementChild) {
-                // @ts-ignore lastElementChild in Firefox
-                focusNode = focusNode.lastElementChild;
-              }
-              anchorNode = anchorNode.firstChild;
-              focusNode = focusNode.lastChild;
-              focusOffset = focusNode.length;
-            } else {
-              const anchorEl =
-                anchorNode?.previousSibling?.firstChild?.firstChild?.firstChild;
-              if (
-                anchorNode?.nodeType === 3 &&
-                anchorNode.textContent === "" &&
-                anchorEl
-              ) {
-                anchorNode = anchorEl;
-                anchorOffset = anchorEl.textContent?.length || 0;
-              }
-              const focusEl =
-                focusNode?.previousSibling?.lastChild?.lastChild?.lastChild;
-              if (
-                focusNode?.nodeType === 3 &&
-                focusNode.textContent === "" &&
-                focusNode.previousSibling?.lastChild?.lastChild?.lastChild
-              ) {
-                focusNode = focusEl;
-                focusOffset = focusEl?.textContent?.length || 0;
-              }
-            }
-          }
         }
         if (!anchorNode || !focusNode) {
           return null as T extends true ? Range | null : Range;
