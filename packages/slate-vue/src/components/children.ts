@@ -10,7 +10,6 @@ import { useEditor } from "../hooks/use-editor";
  */
 export const ChildrenFC = (element: Element) => {
   const editor = useEditor();
-  console.log(editor)
 
   return renderList(element.children, (child, i): VNode => {
     // 这些逻辑不会触发多余渲染
