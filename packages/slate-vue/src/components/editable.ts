@@ -21,7 +21,6 @@ import {
   IS_UC_MOBILE,
   IS_WECHATBROWSER,
   Hotkeys,
-  IS_NODE_MAP_DIRTY,
   EDITOR_TO_ELEMENT,
   EDITOR_TO_FORCE_RENDER,
   EDITOR_TO_PENDING_INSERTION_MARKS,
@@ -507,52 +506,47 @@ export const Editable = defineComponent({
               native = false;
             }
 
-            // If the NODE_MAP is dirty, we can't trust the selection anchor (eg DOMEditor.toDOMPoint)
-            if (!IS_NODE_MAP_DIRTY.get(editor)) {
-              // Chrome also has issues correctly editing the end of anchor elements: https://bugs.chromium.org/p/chromium/issues/detail?id=1259100
-              // Therefore we don't allow native events to insert text at the end of anchor nodes.
-              const { anchor } = selection;
+            // Chrome also has issues correctly editing the end of anchor elements: https://bugs.chromium.org/p/chromium/issues/detail?id=1259100
+            // Therefore we don't allow native events to insert text at the end of anchor nodes.
+            const { anchor } = selection;
 
-              const [node, offset] = DOMEditor.toDOMPoint(editor, anchor);
-              const anchorNode = node.parentElement?.closest("a");
+            const [node, offset] = DOMEditor.toDOMPoint(editor, anchor);
+            const anchorNode = node.parentElement?.closest("a");
 
-              const window = DOMEditor.getWindow(editor);
+            const window = DOMEditor.getWindow(editor);
+
+            if (
+              native &&
+              anchorNode &&
+              DOMEditor.hasDOMNode(editor, anchorNode)
+            ) {
+              // Find the last text node inside the anchor.
+              const lastText = window?.document
+                .createTreeWalker(anchorNode, NodeFilter.SHOW_TEXT)
+                .lastChild() as DOMText | null;
 
               if (
-                native &&
-                anchorNode &&
-                DOMEditor.hasDOMNode(editor, anchorNode)
+                lastText === node &&
+                lastText.textContent?.length === offset
               ) {
-                // Find the last text node inside the anchor.
-                const lastText = window?.document
-                  .createTreeWalker(anchorNode, NodeFilter.SHOW_TEXT)
-                  .lastChild() as DOMText | null;
-
-                if (
-                  lastText === node &&
-                  lastText.textContent?.length === offset
-                ) {
-                  native = false;
-                }
+                native = false;
               }
+            }
 
-              // Chrome has issues with the presence of tab characters inside elements with whiteSpace = 'pre'
-              // causing abnormal insert behavior: https://bugs.chromium.org/p/chromium/issues/detail?id=1219139
-              if (
-                native &&
-                node.parentElement &&
-                window?.getComputedStyle(node.parentElement)?.whiteSpace ===
-                  "pre"
-              ) {
-                const block = Editor.above(editor, {
-                  at: anchor.path,
-                  match: (n) =>
-                    Element.isElement(n) && Editor.isBlock(editor, n),
-                });
+            // Chrome has issues with the presence of tab characters inside elements with whiteSpace = 'pre'
+            // causing abnormal insert behavior: https://bugs.chromium.org/p/chromium/issues/detail?id=1219139
+            if (
+              native &&
+              node.parentElement &&
+              window?.getComputedStyle(node.parentElement)?.whiteSpace === "pre"
+            ) {
+              const block = Editor.above(editor, {
+                at: anchor.path,
+                match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+              });
 
-                if (block && Node.string(block[0]).includes("\t")) {
-                  native = false;
-                }
+              if (block && Node.string(block[0]).includes("\t")) {
+                native = false;
               }
             }
           }
@@ -561,9 +555,8 @@ export const Editable = defineComponent({
           // and those commands determine that for themselves.
           // If the NODE_MAP is dirty, we can't trust the selection anchor (eg DOMEditor.toDOMPoint via DOMEditor.toSlateRange)
           if (
-            (!inputType.startsWith("delete") ||
-              inputType.startsWith("deleteBy")) &&
-            !IS_NODE_MAP_DIRTY.get(editor)
+            !inputType.startsWith("delete") ||
+            inputType.startsWith("deleteBy")
           ) {
             const [targetRange] = event.getTargetRanges();
 

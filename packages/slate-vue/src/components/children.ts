@@ -3,7 +3,6 @@ import { ElementComp } from "./element";
 import { TextComp } from "./text";
 import {
   DOMEditor,
-  IS_NODE_MAP_DIRTY,
   NODE_TO_INDEX,
   NODE_TO_PARENT,
 } from "slate-dom";
@@ -19,11 +18,6 @@ export const Children = defineComponent({
   props: ["node"],
   setup(props: ChildrenProps) {
     const editor = useEditor();
-
-    // 更新成功后可信任 selection
-    onUpdated(() => {
-      IS_NODE_MAP_DIRTY.set(editor, false);
-    });
 
     return () =>
       renderList(props.node.children, (child, i): VNode => {

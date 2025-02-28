@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { withDOM, Node, Element, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Editor, withHistory } from "slate-vue"
-import { h } from "vue";
+import { CSSProperties, h } from "vue";
 import type { Descendant, DOMEditor, RenderElementProps, RenderLeafProps, } from "slate-vue";
 import { TitleElement, ParagraphElement } from "../../custom-types";
 import HoveringToolbar from "./HoveringToolbar.vue";
@@ -86,19 +86,19 @@ const renderElement = ({ attributes, children }: RenderElementProps) => {
 }
 
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
+
+  const style: CSSProperties = {};
   if ('bold' in leaf) {
-    return h('strong', attributes, children)
+    style.fontWeight = "bold";
   }
-
   if ('italic' in leaf) {
-    return h('em', attributes, children)
+    style.fontStyle = "italic";
   }
-
   if ('underlined' in leaf) {
-    return h('u', attributes, children)
+    style.borderBottom = "1px solid black";
   }
 
-  return h('span', attributes, children)
+  return h('span', { ...attributes, style }, children)
 }
 
 const editor = withHistory(withLayout(withDOM(createEditor(initialValue))))

@@ -24,7 +24,6 @@ import {
 import { Key } from '../utils/key'
 import { findCurrentLineRange } from '../utils/lines'
 import {
-  IS_NODE_MAP_DIRTY,
   EDITOR_TO_KEY_TO_ELEMENT,
   EDITOR_TO_ON_CHANGE,
   EDITOR_TO_PENDING_ACTION,
@@ -205,16 +204,6 @@ export const withDOM = <T extends BaseEditor>(
     }
 
     apply(op)
-
-    switch (op.type) {
-      case 'insert_node':
-      case 'remove_node':
-      case 'merge_node':
-      case 'move_node':
-      case 'split_node': {
-        IS_NODE_MAP_DIRTY.set(e, true)
-      }
-    }
 
     for (const [path, key] of matches) {
       const [node] = Editor.node(e, path)
