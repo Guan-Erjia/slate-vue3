@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('Inlines example', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/slate-vue3/#/inlines')
+    await page.goto(`${E2E_BASE_URL}#/inlines`)
   })
 
   test('contains link', async ({ page }) => {

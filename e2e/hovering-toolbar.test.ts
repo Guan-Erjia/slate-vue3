@@ -1,8 +1,9 @@
 import { test, expect } from "@playwright/test";
+import { E2E_BASE_URL } from "../test/utils";
 
 test.describe("hovering toolbar example", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("http://localhost:5173/slate-vue3/#/hovering-toolbar");
+    await page.goto(`${E2E_BASE_URL}#/hovering-toolbar`);
   });
 
   test("hovering toolbar appears", async ({ page }) => {

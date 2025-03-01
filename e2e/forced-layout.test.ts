@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('forced layout example', () => {
   const elements = [
@@ -7,7 +8,7 @@ test.describe('forced layout example', () => {
   ]
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/slate-vue3/#/forced-layout')
+    await page.goto(`${E2E_BASE_URL}#/forced-layout`)
   })
 
   test('checks for the elements', async ({ page }) => {

@@ -1,10 +1,11 @@
 import { test, expect, Page } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.setTimeout(60 * 1000)
 
 test.describe('code highlighting', () => {
   test.beforeEach(async ({ page }) => {
-    page.goto('http://localhost:5173/slate-vue3/#/code-highlighting')
+    page.goto(`${E2E_BASE_URL}#/code-highlighting`)
   })
 
   for (const testCase of getTestCases()) {

@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('styling example', () => {
   test.beforeEach(
     async ({ page }) =>
-      await page.goto('http://localhost:5173/slate-vue3/#/styling')
+      await page.goto(`${E2E_BASE_URL}#/styling`)
   )
 
   test('applies styles to editor from style prop', async ({ page }) => {

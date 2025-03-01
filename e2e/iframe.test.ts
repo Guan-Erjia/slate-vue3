@@ -1,8 +1,9 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('iframe editor', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/slate-vue3/#/render-in-iframe')
+    await page.goto(`${E2E_BASE_URL}#/render-in-iframe`)
   })
 
   test('should be editable', async ({ page }) => {

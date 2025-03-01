@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('mentions example', () => {
   test.beforeEach(
     async ({ page }) =>
-      await page.goto('http://localhost:5173/slate-vue3/#/mentions')
+      await page.goto(`${E2E_BASE_URL}#/mentions`)
   )
 
   test('renders mention element', async ({ page }) => {

@@ -1,10 +1,11 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('selection', () => {
   const slateEditor = '[data-slate-node="element"]'
   test.beforeEach(
     async ({ page }) =>
-      await page.goto('http://localhost:5173/slate-vue3/#/richtext')
+      await page.goto(`${E2E_BASE_URL}#/richtext`)
   )
   test('select the correct block when triple clicking', async ({ page }) => {
     // triple clicking the second block (paragraph) shouldn't highlight the

@@ -53,3 +53,7 @@ export const resolveModules = async (
       return module;
     })
   );
+
+export const E2E_BASE_URL = process.env.CI
+  ? "https://guan-erjia.github.io/slate-vue3/"
+  : "http://localhost:5173/slate-vue3/";

@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('search highlighting', () => {
   test.beforeEach(
     async ({ page }) =>
-      await page.goto('http://localhost:5173/slate-vue3/#/search-highlighting')
+      await page.goto(`${E2E_BASE_URL}#/search-highlighting`)
   )
 
   test('highlights the searched text', async ({ page }) => {

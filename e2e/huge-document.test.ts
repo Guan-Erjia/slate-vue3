@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('huge document example', () => {
   const elements = [
@@ -7,7 +8,7 @@ test.describe('huge document example', () => {
   ]
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/slate-vue3/#/huge-document')
+    await page.goto(`${E2E_BASE_URL}#/huge-document`)
   })
 
   test('contains image', async ({ page }) => {

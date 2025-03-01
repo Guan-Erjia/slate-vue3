@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('editable voids', () => {
   const input = 'input[type="text"]'
@@ -9,7 +10,7 @@ test.describe('editable voids', () => {
   ]
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost:5173/slate-vue3/#/editable-voids')
+    await page.goto(`${E2E_BASE_URL}#/editable-voids`)
   })
 
   test('checks for the elements', async ({ page }) => {
