@@ -24,9 +24,11 @@ jobs:
      run: pnpm test run
    - name: 开始打包
      run: pnpm build-all
+   - name: 登陆npm
+     run: npm login
    - name: 发布npm
      run: npm publish --provenance --access public
      env:
       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
