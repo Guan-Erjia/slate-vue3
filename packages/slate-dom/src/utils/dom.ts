@@ -56,7 +56,12 @@ export const isDOMElement = (value: any): value is DOMElement => {
 
 export const isDOMNode = (value: any): value is DOMNode => {
   const window = getDefaultView(value)
-  return !!window && value instanceof window.Node
+  /*
+  * In vue, value may also be created by globalThis.Node
+  * both of which are considered as DOMNode
+  * return !!window && value instanceof window.Node
+  */
+  return !!window && (value instanceof window.Node || value instanceof globalThis.Node)
 }
 
 /**
