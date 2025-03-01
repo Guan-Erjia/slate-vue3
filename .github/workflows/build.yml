@@ -1,11 +1,11 @@
-name: build website
+name: publish package
 on:
  push:
   branches:
-   - develop
+   - master
 permissions: write-all
 jobs:
- docs:
+ build-package:
   runs-on: ubuntu-latest
   steps:
    - uses: actions/checkout@v4
@@ -20,14 +20,15 @@ jobs:
      run: npm i -g pnpm
    - name: 安装依赖
      run: pnpm install --no-frozen-lockfile
-   - name: 单元测试
+   - name: 开始单元测试
      run: pnpm test run
-   - name: 构建
-     run: pnpm build
-   - name: 发布到Github Pages
-     uses: crazy-max/ghaction-github-pages@v4
-     with:
-      target_branch: docs
-      build_dir: ./dist
+   - name: 开始打包
+     run: pnpm build-all
+   - name: 登陆npm
+     run: npm login
+   - name: 发布npm
+     run: npm publish --provenance --access public
      env:
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
