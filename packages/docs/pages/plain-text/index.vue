@@ -9,19 +9,7 @@ const initialValue: Descendant[] = [
     children: [
       { text: 'This is editable plain text, just like a <textarea>!' },
     ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'This is editable plain text, just like a <textarea>!' },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      { text: 'This is editable plain text, just like a <textarea>!' },
-    ],
-  },
+  }
 ]
 
 

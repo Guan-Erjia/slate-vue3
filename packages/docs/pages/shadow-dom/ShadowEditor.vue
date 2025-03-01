@@ -21,12 +21,22 @@ const initialValue: Descendant[] = [
 const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)
 }
-const editor = withHistory(withDOM(createEditor(initialValue))) 
+const editor = withHistory(withDOM(createEditor(initialValue)))
 </script>
 
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
-    <Editable style="padding: 10px;" placeholder="Enter some plain text..." />
+    <Editable placeholder="Enter some plain text..." />
   </Slate>
 </template>
+
+<style>
+[data-slate-editor]>*+* {
+  margin-top: 12px;
+}
+
+[data-slate-placeholder] {
+  margin-top: 0;
+}
+</style>

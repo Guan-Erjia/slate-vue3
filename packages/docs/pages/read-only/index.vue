@@ -11,26 +11,8 @@ const initialValue: Descendant[] = [
         text: 'This example shows what happens when the Editor is set to readOnly, it is not editable',
       },
     ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'This example shows what happens when the Editor is set to readOnly, it is not editable',
-      },
-    ],
-  },
-  {
-    type: 'paragraph',
-    children: [
-      {
-        text: 'This example shows what happens when the Editor is set to readOnly, it is not editable',
-      },
-    ],
-  },
+  }
 ]
-
-
 
 const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)
