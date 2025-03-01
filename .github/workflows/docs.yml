@@ -2,7 +2,7 @@ name: build website
 on:
  push:
   branches:
-   - master
+   - develop
 permissions: write-all
 jobs:
  docs:
@@ -20,6 +20,8 @@ jobs:
      run: npm i -g pnpm
    - name: 安装依赖
      run: pnpm install --no-frozen-lockfile
+   - name: 单元测试
+     run: pnpm test run
    - name: 构建
      run: pnpm build
    - name: 发布到Github Pages

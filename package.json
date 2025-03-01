@@ -1,6 +1,6 @@
 {
   "name": "slate-vue3",
-  "version": "0.0.25",
+  "version": "0.0.28",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -49,6 +49,13 @@
     "vitest": "^3.0.5",
     "vue-router": "^4.5.0"
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Guan-Erjia/slate-vue3.git"
+  },
   "keywords": [
     "slate-vue3",
     "slate-vue",
@@ -60,9 +67,5 @@
     "editable",
     "markdown",
     "html"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Guan-Erjia/slate-vue3.git"
-  }
+  ]
 }
