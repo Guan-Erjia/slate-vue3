@@ -71,7 +71,8 @@ export const TextComp = defineComponent({
       decorations.value.forEach((dec) => {
         ds.push(Range.intersection(dec, range)!);
       });
-      return Text.decorations(text, ds.filter(Boolean).length ? ds : []);
+      const filterDs = ds.filter(Boolean);
+      return Text.decorations(text, filterDs.length ? filterDs : []);
     });
 
     onMounted(() => {
