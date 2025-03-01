@@ -24,8 +24,6 @@ jobs:
      run: pnpm test run
    - name: 开始打包
      run: pnpm build-all
-   - name: 登陆npm
-     run: npm login
    - name: 发布npm
      run: npm publish --provenance --access public
      env:
