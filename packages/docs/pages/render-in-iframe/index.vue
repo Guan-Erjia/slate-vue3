@@ -76,7 +76,8 @@ const isMarkActive = (format: string) => {
   const marks = Editor.marks(editor)
   return marks ? marks[format as keyof typeof marks] === true : false
 }
-const toggleMark = (format: string) => {
+const toggleMark = (format: string, event?: Event) => {
+  event?.preventDefault()
   const isActive = isMarkActive(format)
   if (isActive) {
     Editor.removeMark(editor, format)
@@ -101,26 +102,26 @@ const handleLoad = (e: Event) => {
     iframeBody.value = e.target.contentDocument.body
   }
 }
+
 const onBlur = () => {
   DOMEditor.deselect(editor)
 }
-
 </script>
 
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
     <Toolbar>
-      <Button :active="isMarkActive('bold')" @click="toggleMark('bold')">
+      <Button :active="isMarkActive('bold')" @mousedown="toggleMark('bold', $event)">
         format_bold
       </Button>
-      <Button :active="isMarkActive('italic')" @click="toggleMark('italic')">
+      <Button :active="isMarkActive('italic')" @mousedown="toggleMark('italic', $event)">
         format_italic
       </Button>
-      <Button :active="isMarkActive('underline')" @click="toggleMark('underline')">
+      <Button :active="isMarkActive('underline')" @mousedown="toggleMark('underline', $event)">
         format_underlined
       </Button>
-      <Button :active="isMarkActive('code')" @click="toggleMark('code')">
+      <Button :active="isMarkActive('code')" @mousedown="toggleMark('code', $event)">
         code
       </Button>
     </Toolbar>
