@@ -45,7 +45,6 @@ type DOMNode = globalThis.Node;
 type DOMRange = globalThis.Range;
 type DOMSelection = globalThis.Selection;
 type DOMStaticRange = globalThis.StaticRange;
-type DOMText = globalThis.Text;
 /**
  * A DOM-specific version of the `Editor` interface.
  */

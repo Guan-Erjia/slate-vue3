@@ -39,9 +39,6 @@ type AttrType = {
   ref: any;
 };
 
-/**
- * Element.
- */
 export const ElementComp = defineComponent({
   name: "slate-element",
   props: ["element"],
@@ -146,7 +143,7 @@ export const ElementComp = defineComponent({
               position: "absolute",
             },
           },
-          h(TextComp, { parent: element, text })
+          h(TextComp, { element, text })
         );
       }
       return h(Fragment, ChildrenFC(element, editor));

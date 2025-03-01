@@ -60,7 +60,7 @@ export interface ChildrenProps {
 }
 
 export interface TextProps {
-  parent: Element;
+  element: Element;
   text: Text;
 }
 
@@ -68,7 +68,7 @@ export interface StringProps {
   isLast: boolean;
   text: Text;
   leaf: Text;
-  parent: Element;
+  element: Element;
 }
 
 export interface ElementProps {

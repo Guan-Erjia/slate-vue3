@@ -66,13 +66,7 @@ import { useChangeEffect } from "../hooks/use-render";
 import { PlaceholderComp } from "./placeholder";
 import { useDecorate } from "../hooks/use-decorate";
 import { SLATE_INNER_DESCORATION } from "../utils/constants";
-type DOMElement = globalThis.Element;
-type DOMRange = globalThis.Range;
-type DOMText = globalThis.Text;
 
-/**
- * Editable.
- */
 export const Editable = defineComponent({
   name: "slate-editable",
   props: {
@@ -121,7 +115,7 @@ export const Editable = defineComponent({
     // Keep track of some state for the event handler logic.
     const state = reactive<{
       isDraggingInternally: boolean;
-      latestElement: DOMElement | null;
+      latestElement: globalThis.Element | null;
     }>({
       isDraggingInternally: false,
       latestElement: null,
@@ -342,7 +336,7 @@ export const Editable = defineComponent({
         return;
       }
 
-      let newDomRange: DOMRange | null = null;
+      let newDomRange: globalThis.Range | null = null;
 
       try {
         newDomRange =
@@ -523,7 +517,7 @@ export const Editable = defineComponent({
               // Find the last text node inside the anchor.
               const lastText = window?.document
                 .createTreeWalker(anchorNode, NodeFilter.SHOW_TEXT)
-                .lastChild() as DOMText | null;
+                .lastChild() as globalThis.Text | null;
 
               if (
                 lastText === node &&

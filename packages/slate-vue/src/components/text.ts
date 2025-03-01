@@ -22,14 +22,11 @@ import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
 import { useParentDescoration, useRenderLeaf } from "../hooks/use-render";
 
-/**
- * Text.
- */
 export const TextComp = defineComponent({
   name: "slate-text",
-  props: ["text", "parent"],
+  props: ["text", "element"],
   setup(props: TextProps) {
-    const { text, parent } = props;
+    const { text, element } = props;
     const editor = useEditor();
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
@@ -96,7 +93,7 @@ export const TextComp = defineComponent({
     });
 
     const isLastText = computed(() => {
-      const isVoid = Editor.isVoid(editor, parent);
+      const isVoid = Editor.isVoid(editor, element);
       const isLeafBlock =
         Element.isElement(parent) &&
         !editor.isInline(parent) &&
@@ -105,7 +102,7 @@ export const TextComp = defineComponent({
       return (
         !isVoid &&
         isLeafBlock &&
-        NODE_TO_INDEX.get(text) === parent.children.length - 1
+        NODE_TO_INDEX.get(text) === element.children.length - 1
       );
     });
 
@@ -123,7 +120,7 @@ export const TextComp = defineComponent({
             children: h(StringComp, {
               isLast: isLastText.value && i === leaves.value.length - 1,
               leaf,
-              parent,
+              element,
               text,
               key: `${text.text}-${leaf.text}-${i}`,
             }),

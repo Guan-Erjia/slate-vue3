@@ -4,9 +4,6 @@ import { TextComp } from "./text";
 import { DOMEditor, NODE_TO_INDEX, NODE_TO_PARENT } from "slate-dom";
 import { h, renderList, VNode } from "vue";
 
-/**
- * ChildrenFC
- */
 export const ChildrenFC = (element: Element, editor: DOMEditor) =>
   renderList(element.children, (child, i): VNode => {
     // 这些逻辑不会触发多余渲染
@@ -17,5 +14,5 @@ export const ChildrenFC = (element: Element, editor: DOMEditor) =>
 
     return Element.isElement(child)
       ? h(ElementComp, { element: child, key: key.id })
-      : h(TextComp, { text: child, parent: element, key: key.id });
+      : h(TextComp, { text: child, element, key: key.id });
   });

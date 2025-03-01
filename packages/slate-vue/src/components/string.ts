@@ -9,14 +9,11 @@ import { computed, defineComponent, h } from "vue";
 import type { StringProps } from "../utils/interface";
 import { useEditor } from "../hooks/use-editor";
 
-/**
- * Leaf content strings.
- */
 export const StringComp = defineComponent({
   name: "slate-string",
-  props: ["isLast", "leaf", "parent", "text"],
+  props: ["isLast", "leaf", "element", "text"],
   setup(props: StringProps) {
-    const { isLast, leaf, parent, text } = props;
+    const { isLast, leaf, element, text } = props;
     const editor = useEditor();
 
     const getTextContent = computed(() => {
@@ -32,18 +29,18 @@ export const StringComp = defineComponent({
       const pathParent = Path.parent(DOMEditor.findPath(editor, text));
       return (
         leaf.text === "" &&
-        parent.children[parent.children.length - 1] === text &&
-        !editor.isInline(parent) &&
+        element.children[element.children.length - 1] === text &&
+        !editor.isInline(element) &&
         Editor.string(editor, pathParent) === ""
       );
     });
 
     const zeroStringAttrs = computed(() => {
-      const length = Node.string(parent).length || 0
+      const length = Node.string(element).length || 0
       const isMarkPlaceholder = Boolean((leaf as any)[MARK_PLACEHOLDER_SYMBOL]) || false
       // COMPAT: Render text inside void nodes with a zero-width space.
       // So the node can contain selection but the text is not visible.
-      const isVoidParent = editor.isVoid(parent)
+      const isVoidParent = editor.isVoid(element)
       if (isVoidParent || isLineBreak.value || leaf.text === '') {
         return {
           "data-slate-zero-width": isLineBreak.value ? "n" : "z",
