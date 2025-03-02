@@ -438,20 +438,42 @@ export const Editable = defineComponent({
           const range = ranges[0];
 
           const newRange = new window.Range();
+          let endContainer = range.endContainer;
+          let endOffset = range.endOffset;
+
+          if (
+            endContainer.nodeType === 3 &&
+            endContainer.textContent === "" &&
+            endContainer.previousSibling
+          ) {
+            endContainer = endContainer.previousSibling;
+          }
+
+          while (
+            endContainer instanceof HTMLElement &&
+            !endContainer.attributes.getNamedItem("data-slate-string") &&
+            endContainer.lastElementChild
+          ) {
+            endContainer = endContainer.lastElementChild;
+          }
+
+          if (
+            endContainer instanceof HTMLElement &&
+            endContainer.attributes.getNamedItem("data-slate-string") &&
+            endContainer.lastChild
+          ) {
+            endContainer = endContainer.lastChild;
+          }
 
           newRange.setStart(range.startContainer, range.startOffset);
-          newRange.setEnd(range.endContainer, range.endOffset);
+          newRange.setEnd(endContainer, endOffset);
 
-          try {
-            // Translate the DOM Range into a Slate Range
-            const slateRange = DOMEditor.toSlateRange(editor, newRange, {
-              exactMatch: false,
-              suppressThrow: false,
-            });
-            Transforms.select(editor, slateRange);
-          } catch (error) {
-            console.log(error);
-          }
+          // Translate the DOM Range into a Slate Range
+          const slateRange = DOMEditor.toSlateRange(editor, newRange, {
+            exactMatch: false,
+            suppressThrow: false,
+          });
+          Transforms.select(editor, slateRange);
           processing.value = false;
           event.preventDefault();
           event.stopImmediatePropagation();

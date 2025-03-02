@@ -948,22 +948,25 @@ export const DOMEditor: DOMEditorInterface = {
         focusOffset = domRange.focusOffset;
 
         if (IS_FIREFOX) {
-          // @ts-ignore attributes in Firefox
-          const attributes =
+          const anchorAttr =
             anchorNode instanceof HTMLElement ? anchorNode.attributes : null;
-          if (attributes && attributes.getNamedItem("data-slate-editor")) {
-            while (anchorNode?.firstElementChild) {
-              // @ts-ignore firstElementChild in Firefox
+          if (anchorAttr?.getNamedItem("data-slate-editor")) {
+            while (
+              anchorNode instanceof HTMLElement &&
+              anchorNode.firstElementChild
+            ) {
               anchorNode = anchorNode.firstElementChild;
             }
-            while (focusNode?.lastElementChild) {
-              // @ts-ignore lastElementChild in Firefox
+            while (
+              focusNode instanceof HTMLElement &&
+              focusNode.lastElementChild
+            ) {
               focusNode = focusNode.lastElementChild;
             }
-            anchorNode = anchorNode.firstChild;
+            anchorNode = anchorNode?.firstChild;
             anchorOffset = 0;
-            focusNode = focusNode.lastChild;
-            focusOffset = focusNode.length;
+            focusNode = focusNode?.lastChild;
+            focusOffset = focusNode?.textContent?.length || 0;
           } else {
             if (anchorNode) {
               const [el, offset] = getFirefoxNodeEl(anchorNode, anchorOffset);
