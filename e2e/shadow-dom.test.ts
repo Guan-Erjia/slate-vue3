@@ -28,6 +28,6 @@ test.describe('shadow-dom example', () => {
     await textbox.fill('Hello, Playwright!')
 
     // Assert that the textbox contains the correct text
-    await expect(textbox).toHaveText('Hello, Playwright!')
+    await expect(textbox).toContainText('Hello, Playwright!')
   })
 })

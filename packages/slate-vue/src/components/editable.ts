@@ -137,6 +137,8 @@ export const Editable = defineComponent({
     // while a selection is being dragged.
     const androidInputManagerRef = ref<AndroidInputManager | null>(null);
 
+    // webkit 内核使用，在影子节点渲染是获取 selection
+    const processing = ref(false);
     // should it be a throttled function?
     const onDOMSelectionChange = (event?: Event) => {
       const target = event?.target;
@@ -149,7 +151,8 @@ export const Editable = defineComponent({
       const el = DOMEditor.toDOMNode(editor, editor);
       const root = el.getRootNode();
 
-      if (IS_WEBKIT && root instanceof ShadowRoot) {
+      if (!processing.value && IS_WEBKIT && root instanceof ShadowRoot) {
+        processing.value = true;
         const active = getActiveElement();
 
         if (active) {
@@ -430,7 +433,7 @@ export const Editable = defineComponent({
         const el = DOMEditor.toDOMNode(editor, editor);
         const root = el.getRootNode();
 
-        if (IS_WEBKIT && root instanceof ShadowRoot) {
+        if (processing.value && IS_WEBKIT && root instanceof ShadowRoot) {
           const ranges = event.getTargetRanges();
           const range = ranges[0];
 
@@ -439,14 +442,17 @@ export const Editable = defineComponent({
           newRange.setStart(range.startContainer, range.startOffset);
           newRange.setEnd(range.endContainer, range.endOffset);
 
-          // Translate the DOM Range into a Slate Range
-          const slateRange = DOMEditor.toSlateRange(editor, newRange, {
-            exactMatch: false,
-            suppressThrow: false,
-          });
-
-          Transforms.select(editor, slateRange);
-
+          try {
+            // Translate the DOM Range into a Slate Range
+            const slateRange = DOMEditor.toSlateRange(editor, newRange, {
+              exactMatch: false,
+              suppressThrow: false,
+            });
+            Transforms.select(editor, slateRange);
+          } catch (error) {
+            console.log(error);
+          }
+          processing.value = false;
           event.preventDefault();
           event.stopImmediatePropagation();
           return;
