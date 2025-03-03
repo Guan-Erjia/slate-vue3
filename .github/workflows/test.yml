@@ -1,0 +1,40 @@
+name: test package
+on:
+  push:
+    branches-ignore:
+      - docs
+      - master
+permissions: write-all
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: 配置 Node 环境
+        uses: actions/setup-node@v4
+        with:
+          registry-url: "https://registry.npmjs.org/"
+          node-version: "latest"
+
+      - name: 安装 PNPM
+        run: npm i -g pnpm
+
+      - name: 安装依赖
+        run: pnpm install --no-frozen-lockfile
+
+      - name: 准备集成测试环境
+        run: pnpm playwright install --with-deps
+
+      - name: 开始集成测试
+        run: pnpm e2e
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30

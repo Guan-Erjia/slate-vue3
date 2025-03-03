@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { IS_ANDROID, withDOM, Slate, Editable, createEditor, withHistory } from "slate-vue"
+import { withDOM, Slate, Editable, createEditor, withHistory, defaultRenderPlaceHolder } from "slate-vue"
 import { CSSProperties, h } from "vue";
-import type { RenderElementProps, RenderLeafProps, RenderPlaceholderProps } from "slate-vue";
+import type { RenderElementProps, RenderLeafProps, } from "slate-vue";
 import Toolbar from '../../components/Toolbar.vue'
 import MarkButton from "./MarkButton.vue";
 import BlockButton from "./BlockButton.vue";
@@ -97,19 +97,12 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
   )
 }
 
-const renderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => {
-  return h('span', attributes, [
-    children,
-    IS_ANDROID ? h('br') : undefined
-  ])
-}
-
 const editor = withHistory(withDOM(createEditor(initialValue))) 
 </script>
 
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="renderPlaceHolder">
+    :render-placeholder="defaultRenderPlaceHolder">
     <Toolbar>
       <MarkButton format="bold" icon="format_bold" />
       <MarkButton format="italic" icon="format_italic" />
