@@ -4,7 +4,6 @@ import {
   type CreateAndroidInputManagerOptions,
 } from "./android-input-manager";
 import {
-  inject,
   onBeforeUnmount,
   onBeforeUpdate,
   onMounted,
@@ -12,6 +11,7 @@ import {
   ref,
   type Ref,
 } from "vue";
+import { useEditor } from "../use-editor";
 
 type UseAndroidInputManagerOptions = {
   node: Ref<HTMLElement | undefined>;
@@ -33,7 +33,7 @@ export const useAndroidInputManager = !IS_ANDROID
         return null;
       }
 
-      const editor = inject("editorRef") as DOMEditor;
+      const editor = useEditor();
 
       const isMounted = ref(false);
       onMounted(() => (isMounted.value = true));
