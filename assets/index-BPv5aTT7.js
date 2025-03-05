@@ -1,0 +1,1 @@
+import{h as f}from"./with-history-DxUag8fJ.js";var t,a;function u(){if(a)return t;a=1,t=l;var s=/^(?:\w+:)?\/\/(\S+)$/,i=/^localhost[\:?\d]*(?:[^\:?\d]\S*)?$/,n=/^[^\s\.]+\.\S{2,}$/;function l(o){if(typeof o!="string")return!1;var e=o.match(s);if(!e)return!1;var r=e[1];return r?!!(i.test(r)||n.test(r)):!1}return t}var c=u();const h=f(c);export{h as i};
