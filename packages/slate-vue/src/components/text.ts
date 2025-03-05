@@ -95,9 +95,9 @@ export const TextComp = defineComponent({
     const isLastText = computed(() => {
       const isVoid = Editor.isVoid(editor, element);
       const isLeafBlock =
-        Element.isElement(parent) &&
-        !editor.isInline(parent) &&
-        Editor.hasInlines(editor, parent);
+        Element.isElement(element) &&
+        !editor.isInline(element) &&
+        Editor.hasInlines(editor, element);
 
       return (
         !isVoid &&
