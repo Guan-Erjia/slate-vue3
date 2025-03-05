@@ -47,7 +47,7 @@ const handleContainerClick = () => {
       style="margin-right: 12px; cursor: default;font-size: 13px;font-weight: 500;" :style="{
         color: isFold ? 'white' : '#aaaaaa',
       }">
-      {{ isFold ? '展开' : '折叠' }}菜单
+      {{ isFold ? 'Expand' : 'Fold' }} Menu
     </div>
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
   </header>
