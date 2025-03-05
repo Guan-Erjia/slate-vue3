@@ -1,19 +1,50 @@
 <script setup lang="ts">
+import { computed, CSSProperties, ref } from 'vue';
 import { ExampleOptions } from './main'
 import { RouterView, RouterLink, useRoute } from 'vue-router'
 
 const route = useRoute()
+const isMobileDevice = computed(() => {
+  const ua = window.navigator.userAgent;
+
+  const isAndroid = ua.includes('Android');
+  const isMobile = ua.includes('Mobile') || isAndroid;
+  const isFireFox = /(?:Firefox)/.test(ua);
+  // 是否为平板
+  const isTablet =
+    /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua));
+
+  return (isMobile && !isTablet);
+})
+
+const isFold = ref(false)
+
+const olStyle = computed<CSSProperties>(() => ({
+  flexShrink: 0,
+  boxSizing: 'border-box',
+  height: 'calc(100%-32px)',
+  width: '200px',
+  paddingInlineStart: '30px',
+  overflowY: 'auto',
+  marginTop: 0,
+  backgroundColor: 'white',
+  zIndex: 999,
+  position: isMobileDevice.value ? 'absolute' : 'static',
+}))
 </script>
 
 <template>
   <header class="header">
     <span>SlateVue3 Examples</span>
     <div style="flex-grow: 1;min-width: 0;"></div>
+    <div v-if="isMobileDevice" @click="isFold = !isFold"
+      style="color: #aaaaaa;margin-right: 12px; cursor: default;font-size: 13px;">
+      {{ isFold ? '展开' : '折叠' }}菜单
+    </div>
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
   </header>
   <div style="display: flex;height: calc(100% - 50px);">
-    <ol style="width: 200px;flex-shrink: 0;box-sizing: border-box;height: calc(100%-32px);
-      overflow-y: auto;margin-top: 0;">
+    <ol v-show="!isFold" :style="olStyle">
       <RouterLink :to="item.name" v-for="item in ExampleOptions">
         <li style="text-decoration: none;margin: 10px 0;" :style="{
           color: item.name === route.name ? '#0366d6' : undefined,
