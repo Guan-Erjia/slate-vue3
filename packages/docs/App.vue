@@ -31,6 +31,12 @@ const olStyle = computed<CSSProperties>(() => ({
   zIndex: 999,
   position: isMobileDevice.value ? 'absolute' : 'static',
 }))
+
+const handleContainerClick = () => {
+  if (isMobileDevice.value) {
+    isFold.value = true;
+  }
+}
 </script>
 
 <template>
@@ -38,7 +44,9 @@ const olStyle = computed<CSSProperties>(() => ({
     <span>SlateVue3 Examples</span>
     <div style="flex-grow: 1;min-width: 0;"></div>
     <div v-if="isMobileDevice" @click="isFold = !isFold"
-      style="color: #aaaaaa;margin-right: 12px; cursor: default;font-size: 13px;">
+      style="margin-right: 12px; cursor: default;font-size: 13px;font-weight: 500;" :style="{
+        color: isFold ? 'white' : '#aaaaaa',
+      }">
       {{ isFold ? '展开' : '折叠' }}菜单
     </div>
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
@@ -52,7 +60,7 @@ const olStyle = computed<CSSProperties>(() => ({
         }">{{ item.name }}</li>
       </RouterLink>
     </ol>
-    <div class="scroll-container">
+    <div class="scroll-container" @click="handleContainerClick">
       <header style="display: flex; padding-top: 20px;">
         <span style="cursor: default;font-size: 20px;"> {{ route.name }} </span>
         <div style="flex-grow: 1;"></div>
