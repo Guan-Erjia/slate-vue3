@@ -29,15 +29,7 @@ const MUTATION_OBSERVER_CONFIG: MutationObserverInit = {
 export const useAndroidInputManager = !IS_ANDROID
   ? () => null
   : ({ node, ...options }: UseAndroidInputManagerOptions) => {
-      if (!IS_ANDROID) {
-        return null;
-      }
-
       const editor = useEditor();
-
-      const isMounted = ref(false);
-      onMounted(() => (isMounted.value = true));
-      onUnmounted(() => (isMounted.value = false));
 
       const inputManager = createAndroidInputManager({
         editor,
@@ -61,16 +53,14 @@ export const useAndroidInputManager = !IS_ANDROID
           );
         }
         mutationObserver.observe(node.value, MUTATION_OBSERVER_CONFIG);
+        inputManager.flush();
       });
 
-      onBeforeUnmount(() => {
+      onUnmounted(() => {
         mutationObserver.disconnect();
       });
 
       EDITOR_TO_SCHEDULE_FLUSH.set(editor, inputManager.scheduleFlush);
-      if (isMounted.value) {
-        inputManager.flush();
-      }
 
       return inputManager;
     };

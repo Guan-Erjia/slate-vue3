@@ -116,7 +116,7 @@ export function createAndroidInputManager({
     action.run();
   };
 
-  const flush = async () => {
+  const flush = () => {
     if (flushTimeoutId) {
       clearTimeout(flushTimeoutId);
       flushTimeoutId = null;
@@ -223,7 +223,7 @@ export function createAndroidInputManager({
       debug("scheduleOnDOMSelectionChange pending changes");
     }
 
-    await onDOMSelectionChange();
+    onDOMSelectionChange();
 
     applyPendingSelection();
 

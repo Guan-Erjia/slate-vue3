@@ -51,7 +51,6 @@ import {
 } from "vue";
 import type { CSSProperties, HTMLAttributes } from "vue";
 import { ChildrenFC } from "./children";
-import { useRestoreDOM } from "../hooks/use-restore-dom";
 import type { EditableProps } from "../utils/interface";
 import {
   defaultScrollSelectionIntoView,
@@ -66,6 +65,8 @@ import { useChangeEffect } from "../hooks/use-render";
 import { PlaceholderComp } from "./placeholder";
 import { useDecorate } from "../hooks/use-decorate";
 import { SLATE_INNER_DESCORATION } from "../utils/constants";
+import { RestoreDOM } from "./restore-dom";
+import { useTrackUserInput } from "../hooks/use-track-user-input";
 
 export const Editable = defineComponent({
   name: "slate-editable",
@@ -223,7 +224,7 @@ export const Editable = defineComponent({
       onDOMSelectionChange,
     });
 
-    const { onUserInput } = useRestoreDOM(editableRef, editor);
+    const { onUserInput, receivedUserInput } = useTrackUserInput();
 
     // callbackRef
     onMounted(() => {
@@ -1507,45 +1508,47 @@ export const Editable = defineComponent({
     provide(SLATE_INNER_DESCORATION, descProvide);
 
     return () =>
-      h(
-        is,
-        {
-          role: readOnly ? undefined : "textbox",
-          "aria-multiline": readOnly ? undefined : true,
-          "data-slate-editor": true,
-          "data-slate-node": "value",
-          ...attributes,
-          zindex: -1,
-          spellcheck: spellcheck.value,
-          autocorrect: autocorrect.value,
-          autocapitalize: autocapitalize.value,
-          contenteditable: !readOnly,
-          ref: editableRef,
-          style: mergedEditableStyle.value,
-          onBeforeinput,
-          onInput,
-          onBlur,
-          onClick,
-          onCompositionend,
-          onCompositionupdate,
-          onCompositionstart,
-          onCopy,
-          onCut,
-          onDragover,
-          onDragstart,
-          onDrop,
-          onDragend,
-          onFocus,
-          onKeydown,
-          onPaste,
-        },
-        [
-          ChildrenFC(editor, editor),
-          h(PlaceholderComp, {
-            placeholder,
-            onPlaceholderResize,
-          }),
-        ]
+      h(RestoreDOM, { node: editableRef, receivedUserInput }, () =>
+        h(
+          is,
+          {
+            role: readOnly ? undefined : "textbox",
+            "aria-multiline": readOnly ? undefined : true,
+            "data-slate-editor": true,
+            "data-slate-node": "value",
+            ...attributes,
+            zindex: -1,
+            spellcheck: spellcheck.value,
+            autocorrect: autocorrect.value,
+            autocapitalize: autocapitalize.value,
+            contenteditable: !readOnly,
+            ref: editableRef,
+            style: mergedEditableStyle.value,
+            onBeforeinput,
+            onInput,
+            onBlur,
+            onClick,
+            onCompositionend,
+            onCompositionupdate,
+            onCompositionstart,
+            onCopy,
+            onCut,
+            onDragover,
+            onDragstart,
+            onDrop,
+            onDragend,
+            onFocus,
+            onKeydown,
+            onPaste,
+          },
+          [
+            ChildrenFC(editor, editor),
+            h(PlaceholderComp, {
+              placeholder,
+              onPlaceholderResize,
+            }),
+          ]
+        )
       );
   },
 });
