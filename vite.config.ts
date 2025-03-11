@@ -36,7 +36,7 @@ export default defineConfig(({ command, mode }) => {
         minify: false,
         modulePreload: { polyfill: false },
         lib: {
-          entry: "./packages/slate-vue3/src/index.ts",
+          entry: "./packages/slate-vue/src/index.ts",
           name: "slate-vue3",
           fileName: "index",
           formats: ["es"],
