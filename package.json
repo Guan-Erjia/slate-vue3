@@ -67,5 +67,10 @@
     "editable",
     "markdown",
     "html"
-  ]
+  ],
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
 }
