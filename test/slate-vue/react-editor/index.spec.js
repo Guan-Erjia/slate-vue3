@@ -2,7 +2,7 @@ import { render } from "@testing-library/vue";
 import { describe, test, expect, vi } from "vitest";
 import { createEditor, Transforms, withDOM, DOMEditor } from "slate-vue";
 import VueEditor from "../VueEditor.vue";
-import { nextTick } from "process";
+import { nextTick } from "vue";
 
 describe("slate-react", () => {
   describe("ReactEditor", () => {
@@ -20,9 +20,9 @@ describe("slate-react", () => {
           props: { editor },
         });
 
+        await nextTick();
         expect(editor.selection).toBe(null);
-
-        await DOMEditor.focus(editor);
+        DOMEditor.focus(editor);
         expect(editor.selection).toEqual(testSelection);
 
         const windowSelection = DOMEditor.getWindow(editor).getSelection();
@@ -51,18 +51,20 @@ describe("slate-react", () => {
 
         Transforms.removeNodes(editor, { at: [0] });
         Transforms.insertNodes(editor, propagatedValue);
-        await DOMEditor.focus(editor); // Note: calling focus in the middle of these transformations.
+        await nextTick();
+        DOMEditor.focus(editor); // Note: calling focus in the middle of these transformations.
         Transforms.select(editor, testSelection);
 
         expect(editor.selection).toEqual(testSelection);
 
-        await DOMEditor.focus(editor);
+        DOMEditor.focus(editor);
 
+        await nextTick();
         const windowSelection = DOMEditor.getWindow(editor).getSelection();
-        // expect(windowSelection?.focusNode?.textContent).toBe("bar");
-        // expect(windowSelection?.anchorNode?.textContent).toBe("bar");
-        // expect(windowSelection?.anchorOffset).toBe(testSelection.anchor.offset);
-        // expect(windowSelection?.focusOffset).toBe(testSelection.focus.offset);
+        expect(windowSelection?.focusNode?.textContent).toBe("bar");
+        expect(windowSelection?.anchorNode?.textContent).toBe("bar");
+        expect(windowSelection?.anchorOffset).toBe(testSelection.anchor.offset);
+        expect(windowSelection?.focusOffset).toBe(testSelection.focus.offset);
       });
 
       test("should not trigger onValueChange when focus is called", async () => {
@@ -79,7 +81,7 @@ describe("slate-react", () => {
 
         expect(editor.selection).toBe(null);
 
-       await DOMEditor.focus(editor);
+        DOMEditor.focus(editor);
 
         expect(editor.selection).toEqual({
           anchor: { path: [0, 0], offset: 0 },

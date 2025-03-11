@@ -388,10 +388,8 @@ export const Node: NodeInterface = {
       }
 
       if (Editor.isEditor(newRoot)) {
-      // 修改完毕后才能设置 selection
-        nextTick(() => {
-          newRoot.selection = null
-        });
+        // 修改完毕后才能设置 selection
+        newRoot.selection = null
       }
 
     return newRoot.children

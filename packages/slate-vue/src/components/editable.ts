@@ -1,6 +1,5 @@
 import { direction } from "direction";
 import { Editor, Element, Node, Path, Range, Text, Transforms } from "slate";
-import { useAndroidInputManager } from "../hooks/android-input-manager/use-android-input-manager";
 import {
   DOMEditor,
   TRIPLE_CLICK,
@@ -22,8 +21,6 @@ import {
   IS_WECHATBROWSER,
   Hotkeys,
   EDITOR_TO_ELEMENT,
-  EDITOR_TO_FORCE_RENDER,
-  EDITOR_TO_PENDING_INSERTION_MARKS,
   EDITOR_TO_USER_MARKS,
   EDITOR_TO_USER_SELECTION,
   EDITOR_TO_WINDOW,
@@ -33,14 +30,10 @@ import {
   IS_READ_ONLY,
   NODE_TO_ELEMENT,
 } from "slate-dom";
-
-import type { AndroidInputManager } from "../hooks/android-input-manager/android-input-manager";
 import {
   computed,
   defineComponent,
-  getCurrentInstance,
   h,
-  onBeforeUpdate,
   onMounted,
   onUnmounted,
   provide,
@@ -65,8 +58,10 @@ import { useChangeEffect } from "../hooks/use-render";
 import { PlaceholderComp } from "./placeholder";
 import { useDecorate } from "../hooks/use-decorate";
 import { SLATE_INNER_DESCORATION } from "../utils/constants";
-import { RestoreDOM } from "./restore-dom";
-import { useTrackUserInput } from "../hooks/use-track-user-input";
+import {
+  AndroidManager,
+  useAndroidManager,
+} from "../hooks/use-android-manager";
 
 export const Editable = defineComponent({
   name: "slate-editable",
@@ -99,9 +94,6 @@ export const Editable = defineComponent({
     const isComposing = useComposing();
 
     const deferredOperations = ref<Array<() => void>>([]);
-
-    const proxy = getCurrentInstance();
-    EDITOR_TO_FORCE_RENDER.set(editor, () => proxy?.update());
 
     // Update internal state on each render.
     const isReadOnly = useReadOnly();
@@ -136,7 +128,6 @@ export const Editable = defineComponent({
     // and non-standard so it doesn't fire until after a selection has been
     // released. This causes issues in situations where another change happens
     // while a selection is being dragged.
-    const androidInputManagerRef = ref<AndroidInputManager | null>(null);
 
     // webkit 内核使用，在影子节点渲染是获取 selection
     const processing = ref(false);
@@ -165,7 +156,6 @@ export const Editable = defineComponent({
         return;
       }
 
-      const androidInputManager = androidInputManagerRef.value;
       if (
         (IS_ANDROID || !DOMEditor.isComposing(editor)) &&
         !state.isDraggingInternally
@@ -199,16 +189,8 @@ export const Editable = defineComponent({
             exactMatch: false,
             suppressThrow: true,
           });
-          if (range) {
-            if (
-              !DOMEditor.isComposing(editor) &&
-              !androidInputManager?.hasPendingChanges() &&
-              !androidInputManager?.isFlushing()
-            ) {
-              Transforms.select(editor, range);
-            } else {
-              androidInputManager?.handleUserSelect(range);
-            }
+          if (range && !DOMEditor.isComposing(editor)) {
+            Transforms.select(editor, range);
           }
         }
 
@@ -219,12 +201,10 @@ export const Editable = defineComponent({
       }
     };
     const editableRef = ref<HTMLElement>();
-    androidInputManagerRef.value = useAndroidInputManager({
-      node: editableRef,
-      onDOMSelectionChange,
-    });
-
-    const { onUserInput, receivedUserInput } = useTrackUserInput();
+    const androidManager = ref<AndroidManager>();
+    if (IS_ANDROID) {
+      androidManager.value = useAndroidManager(editableRef);
+    }
 
     // callbackRef
     onMounted(() => {
@@ -379,24 +359,13 @@ export const Editable = defineComponent({
       // Make sure the DOM selection state is in sync.
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
       const domSelection = getSelection(root);
-      if (
-        !domSelection ||
-        !DOMEditor.isFocused(editor) ||
-        androidInputManagerRef.value?.hasPendingAction()
-      ) {
+      if (!domSelection || !DOMEditor.isFocused(editor)) {
         return;
       }
 
       // In firefox if there is more then 1 range and we call setDomSelection we remove the ability to select more cells in a table
       if (domSelection.rangeCount <= 1) {
         setDomSelection();
-      }
-
-      const ensureSelection =
-        androidInputManagerRef.value?.isFlushing() === "action";
-
-      if (!IS_ANDROID || !ensureSelection) {
-        return;
       }
     });
 
@@ -480,7 +449,6 @@ export const Editable = defineComponent({
           event.stopImmediatePropagation();
           return;
         }
-        onUserInput();
 
         if (
           !readOnly &&
@@ -488,8 +456,8 @@ export const Editable = defineComponent({
           !isDOMEventHandled(event, attributes.onBeforeinput)
         ) {
           // COMPAT: BeforeInput events aren't cancelable on android, so we have to handle them differently using the android input manager.
-          if (androidInputManagerRef.value) {
-            return androidInputManagerRef.value.handleDOMBeforeInput(event);
+          if (IS_ANDROID) {
+            return androidManager.value?.handleDOMBeforeInput(event);
           }
 
           const { selection } = editor;
@@ -757,13 +725,13 @@ export const Editable = defineComponent({
       }
     };
 
-    const onInput = (event: Event) => {
+    const onInput = (event: InputEvent) => {
       if (isEventHandled(event, attributes.onInput)) {
         return;
       }
 
-      if (androidInputManagerRef.value) {
-        androidInputManagerRef.value.handleInput();
+      if (IS_ANDROID) {
+        androidManager.value?.handleInput(event);
         return;
       }
 
@@ -916,15 +884,15 @@ export const Editable = defineComponent({
     const onCompositionend = (event: CompositionEvent) => {
       if (DOMEditor.hasSelectableTarget(editor, event.target)) {
         if (DOMEditor.isComposing(editor)) {
-          Promise.resolve().then(() => {
-            isComposing.value = false;
-            IS_COMPOSING.set(editor, false);
-          });
+          isComposing.value = false;
+          IS_COMPOSING.set(editor, false);
         }
 
-        androidInputManagerRef.value?.handleCompositionEnd(event);
+        if (IS_ANDROID) {
+          return androidManager.value?.handleCompositionEnd(event);
+        }
 
-        if (isEventHandled(event, attributes.onCompositionend) || IS_ANDROID) {
+        if (isEventHandled(event, attributes.onCompositionend)) {
           return;
         }
 
@@ -940,15 +908,7 @@ export const Editable = defineComponent({
           !IS_UC_MOBILE &&
           event.data
         ) {
-          const placeholderMarks =
-            EDITOR_TO_PENDING_INSERTION_MARKS.get(editor);
-          EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor);
-
           // Ensure we insert text with the marks the user was actually seeing
-          if (placeholderMarks !== undefined) {
-            EDITOR_TO_USER_MARKS.set(editor, editor.marks);
-            editor.marks = placeholderMarks;
-          }
 
           Editor.insertText(editor, event.data);
 
@@ -962,29 +922,31 @@ export const Editable = defineComponent({
     };
 
     const onCompositionupdate = (event: CompositionEvent) => {
-      if (
-        DOMEditor.hasSelectableTarget(editor, event.target) &&
-        !isEventHandled(event, attributes.onCompositionupdate)
-      ) {
+      if (isEventHandled(event, attributes.onCompositionupdate)) {
+        return;
+      }
+
+      if (DOMEditor.hasSelectableTarget(editor, event.target)) {
         if (!DOMEditor.isComposing(editor)) {
           isComposing.value = true;
           IS_COMPOSING.set(editor, true);
         }
+        androidManager.value?.handleCompositionUpdate(event);
       }
     };
 
     const onCompositionstart = (event: CompositionEvent) => {
       if (DOMEditor.hasSelectableTarget(editor, event.target)) {
-        androidInputManagerRef.value?.handleCompositionStart(event);
+        if (IS_ANDROID) {
+          return androidManager.value?.handleCompositionStart(event);
+        }
 
-        if (
-          isEventHandled(event, attributes.onCompositionstart) ||
-          IS_ANDROID
-        ) {
+        if (isEventHandled(event, attributes.onCompositionstart)) {
           return;
         }
 
         isComposing.value = true;
+        IS_COMPOSING.set(editor, true);
 
         const { selection } = editor;
         if (selection && Range.isExpanded(selection)) {
@@ -1147,7 +1109,7 @@ export const Editable = defineComponent({
 
     const onKeydown = (event: KeyboardEvent) => {
       if (!readOnly && DOMEditor.hasEditableTarget(editor, event.target)) {
-        androidInputManagerRef.value?.handleKeyDown(event);
+        androidManager.value?.handleKeyDown(event);
 
         // COMPAT: The composition end event isn't fired reliably in all browsers,
         // so we sometimes might end up stuck in a composition state even though we
@@ -1456,24 +1418,6 @@ export const Editable = defineComponent({
       }
     };
 
-    // Update EDITOR_TO_MARK_PLACEHOLDER_MARKS in setTimeout useEffect to ensure we don't set it
-    // before we receive the composition end event.
-    onBeforeUpdate(() => {
-      if (editor.selection) {
-        const text = Node.leaf(editor, editor.selection.anchor.path);
-        // While marks isn't a 'complete' text, we can still use loose Text.equals
-        // here which only compares marks anyway.
-        if (
-          editor.marks &&
-          !Text.equals(text, editor.marks as Text, { loose: true })
-        ) {
-          EDITOR_TO_PENDING_INSERTION_MARKS.set(editor, editor.marks);
-          return;
-        }
-      }
-      EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor);
-    });
-
     const mergedEditableStyle = computed<CSSProperties>(() => ({
       // Allow positioning relative to the editable element.
       position: "relative",
@@ -1508,47 +1452,45 @@ export const Editable = defineComponent({
     provide(SLATE_INNER_DESCORATION, descProvide);
 
     return () =>
-      h(RestoreDOM, { node: editableRef, receivedUserInput }, () =>
-        h(
-          is,
-          {
-            role: readOnly ? undefined : "textbox",
-            "aria-multiline": readOnly ? undefined : true,
-            "data-slate-editor": true,
-            "data-slate-node": "value",
-            ...attributes,
-            zindex: -1,
-            spellcheck: spellcheck.value,
-            autocorrect: autocorrect.value,
-            autocapitalize: autocapitalize.value,
-            contenteditable: !readOnly,
-            ref: editableRef,
-            style: mergedEditableStyle.value,
-            onBeforeinput,
-            onInput,
-            onBlur,
-            onClick,
-            onCompositionend,
-            onCompositionupdate,
-            onCompositionstart,
-            onCopy,
-            onCut,
-            onDragover,
-            onDragstart,
-            onDrop,
-            onDragend,
-            onFocus,
-            onKeydown,
-            onPaste,
-          },
-          [
-            ChildrenFC(editor, editor),
-            h(PlaceholderComp, {
-              placeholder,
-              onPlaceholderResize,
-            }),
-          ]
-        )
+      h(
+        is,
+        {
+          role: readOnly ? undefined : "textbox",
+          "aria-multiline": readOnly ? undefined : true,
+          "data-slate-editor": true,
+          "data-slate-node": "value",
+          ...attributes,
+          zindex: -1,
+          spellcheck: spellcheck.value,
+          autocorrect: autocorrect.value,
+          autocapitalize: autocapitalize.value,
+          contenteditable: !readOnly,
+          ref: editableRef,
+          style: mergedEditableStyle.value,
+          onBeforeinput,
+          onInput,
+          onBlur,
+          onClick,
+          onCompositionend,
+          onCompositionupdate,
+          onCompositionstart,
+          onCopy,
+          onCut,
+          onDragover,
+          onDragstart,
+          onDrop,
+          onDragend,
+          onFocus,
+          onKeydown,
+          onPaste,
+        },
+        [
+          ChildrenFC(editor, editor),
+          h(PlaceholderComp, {
+            placeholder,
+            onPlaceholderResize,
+          }),
+        ]
       );
   },
 });

@@ -9,7 +9,6 @@ import {
   Scrubber,
   Transforms,
 } from "slate";
-import { TextDiff } from "../utils/diff-text";
 import {
   DOMPoint,
   getSelection,
@@ -27,8 +26,6 @@ import { Key } from "../utils/key";
 import {
   EDITOR_TO_ELEMENT,
   EDITOR_TO_KEY_TO_ELEMENT,
-  EDITOR_TO_PENDING_DIFFS,
-  EDITOR_TO_SCHEDULE_FLUSH,
   EDITOR_TO_WINDOW,
   ELEMENT_TO_NODE,
   IS_COMPOSING,
@@ -38,7 +35,6 @@ import {
   NODE_TO_KEY,
   NODE_TO_PARENT,
 } from "../utils/weak-maps";
-import { nextTick } from "vue";
 
 type DOMElement = globalThis.Element;
 type DOMNode = globalThis.Node;
@@ -93,15 +89,6 @@ export interface DOMEditor extends BaseEditor {
 }
 
 export interface DOMEditorInterface {
-  /**
-   * Experimental and android specific: Get pending diffs
-   */
-  androidPendingDiffs: (editor: Editor) => TextDiff[] | undefined;
-
-  /**
-   * Experimental and android specific: Flush all pending diffs and cancel composition at the next possible time.
-   */
-  androidScheduleFlush: (editor: Editor) => void;
 
   /**
    * Blur the editor.
@@ -136,7 +123,7 @@ export interface DOMEditorInterface {
   /**
    * Focus the editor.
    */
-  focus: (editor: DOMEditor) => Promise<void>;
+  focus: (editor: DOMEditor) => void;
 
   /**
    * Return the host window of the current editor.
@@ -285,11 +272,6 @@ export interface DOMEditorInterface {
 
 // eslint-disable-next-line no-redeclare
 export const DOMEditor: DOMEditorInterface = {
-  androidPendingDiffs: (editor) => EDITOR_TO_PENDING_DIFFS.get(editor),
-
-  androidScheduleFlush: (editor) => {
-    EDITOR_TO_SCHEDULE_FLUSH.get(editor)?.();
-  },
 
   blur: (editor) => {
     const el = DOMEditor.toDOMNode(editor, editor);
@@ -436,27 +418,13 @@ export const DOMEditor: DOMEditorInterface = {
     );
   },
 
-  focus: async (editor) => {
+  focus: (editor) => {
     // Return if already focused
     if (IS_FOCUSED.get(editor)) {
       return;
     }
     // 使用 Vue 的 nextTick，无需检查是否渲染完成
-    await nextTick();
-    // Retry setting focus if the editor has pending operations.
-    // The DOM (selection) is unstable while changes are applied.
-    // Retry until retries are exhausted or editor is focused.
-    // if (options.retries <= 0) {
-    //   throw new Error(
-    //     'Could not set focus, editor seems stuck with pending operations'
-    //   )
-    // }
-    // if (editor.operations.length > 0) {
-    //   setTimeout(() => {
-    //     DOMEditor.focus(editor, { retries: options.retries - 1 })
-    //   }, 10)
-    //   return
-    // }
+  
 
     const el = DOMEditor.toDOMNode(editor, editor);
     const root = DOMEditor.findDocumentOrShadowRoot(editor);

@@ -8,7 +8,6 @@ import {
   Text,
   Element,
 } from 'slate'
-import { EDITOR_TO_PENDING_DIFFS } from './weak-maps'
 
 export type StringDiff = {
   start: number
@@ -211,88 +210,6 @@ export function normalizeRange(editor: Editor, range: Range): Range | null {
   }
 
   const focus = normalizePoint(editor, range.focus)
-  if (!focus) {
-    return null
-  }
-
-  return { anchor, focus }
-}
-
-export function transformPendingPoint(
-  editor: Editor,
-  point: Point,
-  op: Operation
-): Point | null {
-  const pendingDiffs = EDITOR_TO_PENDING_DIFFS.get(editor)
-  const textDiff = pendingDiffs?.find(({ path }) =>
-    Path.equals(path, point.path)
-  )
-
-  if (!textDiff || point.offset <= textDiff.diff.start) {
-    return Point.transform(point, op, { affinity: 'backward' })
-  }
-
-  const { diff } = textDiff
-  // Point references location inside the diff => transform the point based on the location
-  // the diff will be applied to and add the offset inside the diff.
-  if (point.offset <= diff.start + diff.text.length) {
-    const anchor = { path: point.path, offset: diff.start }
-    const transformed = Point.transform(anchor, op, {
-      affinity: 'backward',
-    })
-
-    if (!transformed) {
-      return null
-    }
-
-    return {
-      path: transformed.path,
-      offset: transformed.offset + point.offset - diff.start,
-    }
-  }
-
-  // Point references location after the diff
-  const anchor = {
-    path: point.path,
-    offset: point.offset - diff.text.length + diff.end - diff.start,
-  }
-  const transformed = Point.transform(anchor, op, {
-    affinity: 'backward',
-  })
-  if (!transformed) {
-    return null
-  }
-
-  if (
-    op.type === 'split_node' &&
-    Path.equals(op.path, point.path) &&
-    anchor.offset < op.position &&
-    diff.start < op.position
-  ) {
-    return transformed
-  }
-
-  return {
-    path: transformed.path,
-    offset: transformed.offset + diff.text.length - diff.end + diff.start,
-  }
-}
-
-export function transformPendingRange(
-  editor: Editor,
-  range: Range,
-  op: Operation
-): Range | null {
-  const anchor = transformPendingPoint(editor, range.anchor, op)
-  if (!anchor) {
-    return null
-  }
-
-  if (Range.isCollapsed(range)) {
-    return { anchor, focus: anchor }
-  }
-
-  const focus = transformPendingPoint(editor, range.focus, op)
   if (!focus) {
     return null
   }

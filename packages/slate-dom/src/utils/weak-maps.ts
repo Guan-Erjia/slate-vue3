@@ -8,7 +8,6 @@ import {
   RangeRef,
   Text,
 } from 'slate'
-import { TextDiff } from './diff-text'
 import { Key } from './key'
 import { toRawWeakMap as WeakMap } from "share-tools"
 import { RendererNode } from 'vue'
@@ -66,28 +65,8 @@ export const EDITOR_TO_ON_CHANGE = new WeakMap<
 export const EDITOR_TO_SCHEDULE_FLUSH: WeakMap<Editor, () => void> =
   new WeakMap()
 
-export const EDITOR_TO_PENDING_INSERTION_MARKS: WeakMap<
-  Editor,
-  Partial<Text> | null
-> = new WeakMap()
-
 export const EDITOR_TO_USER_MARKS: WeakMap<Editor, Partial<Text> | null> =
   new WeakMap()
-
-/**
- * Android input handling specific weak-maps
- */
-
-export const EDITOR_TO_PENDING_DIFFS: WeakMap<Editor, TextDiff[]> =
-  new WeakMap()
-
-export const EDITOR_TO_PENDING_ACTION: WeakMap<Editor, Action | null> =
-  new WeakMap()
-
-export const EDITOR_TO_PENDING_SELECTION: WeakMap<Editor, Range | null> =
-  new WeakMap()
-
-export const EDITOR_TO_FORCE_RENDER: WeakMap<Editor, () => void> = new WeakMap()
 
 /**
  * Symbols.
