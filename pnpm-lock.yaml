@@ -25,8 +25,8 @@ importers:
         version: 3.5.13(typescript@5.8.2)
     devDependencies:
       '@faker-js/faker':
-        specifier: ^9.4.0
-        version: 9.4.0
+        specifier: ^9.6.0
+        version: 9.6.0
       '@playwright/test':
         specifier: ^1.50.1
         version: 1.50.1
@@ -80,7 +80,7 @@ importers:
         version: 3.0.5(@types/node@22.13.1)(jsdom@26.0.0)(terser@5.37.0)
       vue-router:
         specifier: ^4.5.0
-        version: 4.5.0(vue@3.5.13(typescript@5.7.2))
+        version: 4.5.0(vue@3.5.13(typescript@5.8.2))
 
   packages/slate: {}
 
@@ -296,10 +296,9 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@faker-js/faker@9.4.0':
-    resolution: {integrity: sha512-85+k0AxaZSTowL0gXp8zYWDIrWclTbRPg/pm/V0dSFZ6W6D4lhcG3uuZl4zLsEKfEvs69xDbLN2cHQudwp95JA==}
+  '@faker-js/faker@9.6.0':
+    resolution: {integrity: sha512-3vm4by+B5lvsFPSyep3ELWmZfE3kicDtmemVpuwl1yH7tqtnHdsA6hG8fbXedMVdkzgtvzWoRgjSB4Q+FHnZiw==}
     engines: {node: '>=18.0.0', npm: '>=9.0.0'}
-    deprecated: Please update to a newer version
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -1803,7 +1802,7 @@ snapshots:
   '@esbuild/win32-x64@0.25.0':
     optional: true
 
-  '@faker-js/faker@9.4.0': {}
+  '@faker-js/faker@9.6.0': {}
 
   '@isaacs/cliui@8.0.2':
     dependencies:
