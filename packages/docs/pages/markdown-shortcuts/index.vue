@@ -7,13 +7,13 @@
 <script lang="ts" setup>
 import {
   createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder,
-  defaultRenderLeaf, DOMEditor, Editor, Element, Node,
+  defaultRenderLeaf,
   withHistory
 } from 'slate-vue3';
 import { h } from 'vue';
 import "prismjs";
 import 'prismjs/components/prism-markdown'
-import { SHORTCUTS, withShortcuts } from './plugin';
+import { withShortcuts } from './plugin';
 
 const initialValue: Descendant[] = [
   {
@@ -66,35 +66,6 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 }
 
 const onDomBeforeInput = (e: Event) => {
-  queueMicrotask(() => {
-    const pendingDiffs = DOMEditor.androidPendingDiffs(editor)
 
-    const scheduleFlush = pendingDiffs?.some(({ diff, path }) => {
-      if (!diff.text.endsWith(' ')) {
-        return false
-      }
-
-      const { text } = Node.leaf(editor, path)
-      const beforeText = text.slice(0, diff.start) + diff.text.slice(0, -1)
-      if (!(beforeText in SHORTCUTS)) {
-        return
-      }
-
-      const blockEntry = Editor.above(editor, {
-        at: path,
-        match: n => Element.isElement(n) && Editor.isBlock(editor, n),
-      })
-      if (!blockEntry) {
-        return false
-      }
-
-      const [, blockPath] = blockEntry
-      return Editor.isStart(editor, Editor.start(editor, path), blockPath)
-    })
-
-    if (scheduleFlush) {
-      DOMEditor.androidScheduleFlush(editor)
-    }
-  })
 }
 </script>
