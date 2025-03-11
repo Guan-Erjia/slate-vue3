@@ -19,7 +19,6 @@ import { findCurrentLineRange } from '../utils/lines'
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   EDITOR_TO_ON_CHANGE,
-  EDITOR_TO_SCHEDULE_FLUSH,
   EDITOR_TO_USER_MARKS,
   EDITOR_TO_USER_SELECTION,
   NODE_TO_KEY,
@@ -48,7 +47,6 @@ export const withDOM = <T extends BaseEditor>(
   EDITOR_TO_KEY_TO_ELEMENT.set(e, new WeakMap())
 
   e.addMark = (key, value) => {
-    EDITOR_TO_SCHEDULE_FLUSH.get(e)?.()
 
     EDITOR_TO_USER_MARKS.delete(e)
 

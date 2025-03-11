@@ -27,7 +27,6 @@ export const NODE_TO_PARENT: WeakMap<Node, Ancestor> = new WeakMap()
  */
 export const EDITOR_TO_WINDOW: WeakMap<Editor, Window> = new WeakMap()
 export const EDITOR_TO_ELEMENT: WeakMap<Editor, HTMLElement> = new WeakMap()
-export const EDITOR_TO_PLACEHOLDER: WeakMap<Editor, string> = new WeakMap()
 export const EDITOR_TO_PLACEHOLDER_ELEMENT: WeakMap<Editor, RendererNode> =
   new WeakMap()
 export const ELEMENT_TO_NODE: WeakMap<HTMLElement, Node> = new WeakMap()
@@ -58,12 +57,6 @@ export const EDITOR_TO_ON_CHANGE = new WeakMap<
   (options?: { operation?: Operation }) => void
 >()
 
-/**
- * Weak maps for saving pending state on composition stage.
- */
-
-export const EDITOR_TO_SCHEDULE_FLUSH: WeakMap<Editor, () => void> =
-  new WeakMap()
 
 export const EDITOR_TO_USER_MARKS: WeakMap<Editor, Partial<Text> | null> =
   new WeakMap()

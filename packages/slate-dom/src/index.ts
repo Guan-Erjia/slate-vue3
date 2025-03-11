@@ -3,17 +3,7 @@ export { DOMEditor, type DOMEditorInterface } from './plugin/dom-editor'
 export { withDOM } from './plugin/with-dom'
 
 // Utils
-export { TRIPLE_CLICK } from './utils/constants'
-
-export {
-  applyStringDiff,
-  mergeStringDiffs,
-  normalizePoint,
-  normalizeRange,
-  normalizeStringDiff,
-  targetRange,
-  verifyDiffState,
-} from './utils/diff-text'
+export { applyStringDiff, normalizeStringDiff } from './utils/diff-text'
 export type { StringDiff, TextDiff } from './utils/diff-text'
 
 export {
@@ -59,7 +49,6 @@ export {
   EDITOR_TO_KEY_TO_ELEMENT,
   EDITOR_TO_ON_CHANGE,
   EDITOR_TO_PLACEHOLDER_ELEMENT,
-  EDITOR_TO_SCHEDULE_FLUSH,
   EDITOR_TO_USER_MARKS,
   EDITOR_TO_USER_SELECTION,
   EDITOR_TO_WINDOW,

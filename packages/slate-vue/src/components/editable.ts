@@ -2,7 +2,6 @@ import { direction } from "direction";
 import { Editor, Element, Node, Path, Range, Text, Transforms } from "slate";
 import {
   DOMEditor,
-  TRIPLE_CLICK,
   getActiveElement,
   getDefaultView,
   getSelection,
@@ -726,12 +725,7 @@ export const Editable = defineComponent({
     };
 
     const onInput = (event: InputEvent) => {
-      if (isEventHandled(event, attributes.onInput)) {
-        return;
-      }
-
-      if (IS_ANDROID) {
-        androidManager.value?.handleInput(event);
+      if (IS_ANDROID || isEventHandled(event, attributes.onInput)) {
         return;
       }
 
@@ -849,7 +843,7 @@ export const Editable = defineComponent({
           return;
         }
 
-        if (event.detail === TRIPLE_CLICK && path.length >= 1) {
+        if (event.detail === 3 && path.length >= 1) {
           let blockPath = path;
           if (!(Element.isElement(node) && Editor.isBlock(editor, node))) {
             const block = Editor.above(editor, {
@@ -888,11 +882,7 @@ export const Editable = defineComponent({
           IS_COMPOSING.set(editor, false);
         }
 
-        if (IS_ANDROID) {
-          return androidManager.value?.handleCompositionEnd(event);
-        }
-
-        if (isEventHandled(event, attributes.onCompositionend)) {
+        if (IS_ANDROID || isEventHandled(event, attributes.onCompositionend)) {
           return;
         }
 
@@ -931,22 +921,20 @@ export const Editable = defineComponent({
           isComposing.value = true;
           IS_COMPOSING.set(editor, true);
         }
-        androidManager.value?.handleCompositionUpdate(event);
       }
     };
 
     const onCompositionstart = (event: CompositionEvent) => {
       if (DOMEditor.hasSelectableTarget(editor, event.target)) {
-        if (IS_ANDROID) {
-          return androidManager.value?.handleCompositionStart(event);
-        }
-
-        if (isEventHandled(event, attributes.onCompositionstart)) {
-          return;
-        }
-
         isComposing.value = true;
         IS_COMPOSING.set(editor, true);
+
+        if (
+          IS_ANDROID ||
+          isEventHandled(event, attributes.onCompositionstart)
+        ) {
+          return;
+        }
 
         const { selection } = editor;
         if (selection && Range.isExpanded(selection)) {
@@ -1109,8 +1097,6 @@ export const Editable = defineComponent({
 
     const onKeydown = (event: KeyboardEvent) => {
       if (!readOnly && DOMEditor.hasEditableTarget(editor, event.target)) {
-        androidManager.value?.handleKeyDown(event);
-
         // COMPAT: The composition end event isn't fired reliably in all browsers,
         // so we sometimes might end up stuck in a composition state even though we
         // aren't composing any more.

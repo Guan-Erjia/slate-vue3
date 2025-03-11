@@ -1,19 +1,13 @@
 import {
   applyStringDiff,
   DOMEditor,
-  IS_COMPOSING,
   isDOMSelection,
   normalizeStringDiff,
   StringDiff,
 } from "slate-dom";
 import { Editor, Node, Path, Point, Range, Text } from "slate";
-import { onMounted, ref, watch, type Ref } from "vue";
-import { useComposing } from "./use-composing";
+import { onMounted, ref, type Ref } from "vue";
 import { useEditor } from "./use-editor";
-
-const debug = (..._: unknown[]) => {
-  // console.log(..._);
-};
 
 const MUTATION_OBSERVER_CONFIG: MutationObserverInit = {
   subtree: true,
@@ -23,38 +17,21 @@ const MUTATION_OBSERVER_CONFIG: MutationObserverInit = {
 };
 
 export interface AndroidManager {
-  handleCompositionStart: (event: CompositionEvent) => void;
-  handleCompositionUpdate: (event: CompositionEvent) => void;
-  handleCompositionEnd: (event: CompositionEvent) => void;
+  // handleCompositionStart: (event: CompositionEvent) => void;
+  // handleCompositionUpdate: (event: CompositionEvent) => void;
+  // handleCompositionEnd: (event: CompositionEvent) => void;
   handleDOMBeforeInput: (event: InputEvent) => void;
-  handleKeyDown: (event: KeyboardEvent) => void;
-  handleInput: (event: InputEvent) => void;
+  // handleKeyDown: (event: KeyboardEvent) => void;
+  // handleInput: (event: InputEvent) => void;
 }
 
 export const useAndroidManager = (
   editableRef: Ref<HTMLElement | undefined>
 ): AndroidManager => {
   const editor = useEditor();
-  const isComposing = useComposing();
-
-  const buffComposeEvent = ref<CompositionEvent>();
   const mutationObserver = ref<MutationObserver>();
   const schedule = ref<() => void>();
-
   let insertPositionHint: StringDiff | null | false = false;
-  const isDataTransfer = (value: any): value is DataTransfer =>
-    value?.constructor.name === "DataTransfer";
-
-  watch(
-    () => editor,
-    (val) => {
-      // console.log(val.children);
-      // console.log(val.selection);
-    },
-    {
-      deep: true,
-    }
-  );
   onMounted(() => {
     mutationObserver.value = new MutationObserver((mutations) => {
       mutationObserver.value?.disconnect();
@@ -78,38 +55,30 @@ export const useAndroidManager = (
     });
   });
 
-  const handleCompositionEnd = (_event: CompositionEvent) => {
-    debug("composition end", _event);
-    buffComposeEvent.value = _event;
-  };
-  const handleCompositionStart = (_event: CompositionEvent) => {
-    debug("composition start", _event);
-    IS_COMPOSING.set(editor, true);
-    isComposing.value = true;
-    buffComposeEvent.value = _event;
-  };
-  const handleCompositionUpdate = (_event: CompositionEvent) => {
-    debug("composition update", _event);
-    buffComposeEvent.value = _event;
-  };
-
   const scheduleAction = (run: () => void, at?: Point | Range): void => {
     insertPositionHint = false;
-    debug("scheduleAction", { at, run });
     schedule.value = run;
   };
 
   const storeDiff = (path: Path, diff: StringDiff) => {
-    debug("storeDiff", path, diff);
     const target = Node.leaf(editor, path);
     const normalized = normalizeStringDiff(target.text, diff);
-    if (normalized?.text) {
-      scheduleAction(() => Editor.insertText(editor, normalized.text));
+    if (!normalized) {
+      return;
     }
+    scheduleAction(() => {
+      if (normalized.start !== normalized.end) {
+        if (normalized.text) {
+          Editor.deleteBackward(editor, { unit: "word" });
+        } else {
+          Editor.deleteBackward(editor, { unit: "character" });
+        }
+      }
+      Editor.insertText(editor, normalized.text);
+    });
   };
 
   const handleDOMBeforeInput = (event: InputEvent) => {
-    console.log(event, "input-before");
     mutationObserver.value?.observe(
       editableRef.value!,
       MUTATION_OBSERVER_CONFIG
@@ -336,7 +305,7 @@ export const useAndroidManager = (
       case "insertFromYank":
       case "insertReplacementText":
       case "insertText": {
-        if (isDataTransfer(data)) {
+        if (data instanceof DataTransfer) {
           return scheduleAction(
             () => DOMEditor.insertData(editor, data),
             targetRange
@@ -376,7 +345,6 @@ export const useAndroidManager = (
             end: end.offset,
             text,
           };
-
           // COMPAT: Swiftkey has a weird bug where the target range of the 2nd word
           // inserted after a mark placeholder is inserted with an anchor offset off by 1.
           // So writing 'some text' will result in 'some ttext'. Luckily all 'normal' insert
@@ -393,10 +361,8 @@ export const useAndroidManager = (
               diff.end ===
                 insertPositionHint.start + insertPositionHint.text.length
             ) {
-              debug("adjusting swiftKey insert position using hint");
               diff.start -= 1;
               insertPositionHint = null;
-              // scheduleFlush();
             } else {
               insertPositionHint = false;
             }
@@ -434,16 +400,21 @@ export const useAndroidManager = (
     }
   };
 
-  const handleInput = (_: InputEvent) => {};
+  // const buffComposeEvent = ref<CompositionEvent>();
+  // const handleCompositionEnd = (_event: CompositionEvent) => {
+  //   buffComposeEvent.value = _event;
+  // };
+  // const handleCompositionStart = (_event: CompositionEvent) => {
+  //   buffComposeEvent.value = _event;
+  // };
+  // const handleCompositionUpdate = (_event: CompositionEvent) => {
+  //   buffComposeEvent.value = _event;
+  // };
+  // const handleInput = (_: InputEvent) => {};
 
-  const handleKeyDown = (_: KeyboardEvent) => {};
+  // const handleKeyDown = (_: KeyboardEvent) => {};
 
   return {
-    handleCompositionEnd,
-    handleCompositionUpdate,
-    handleCompositionStart,
     handleDOMBeforeInput,
-    handleKeyDown,
-    handleInput,
   };
 };
