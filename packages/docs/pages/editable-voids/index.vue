@@ -8,7 +8,7 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, withHistory, Transforms, useInheritRef } from 'slate-vue';
+import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, withHistory, Transforms, useInheritRef } from 'slate-vue3';
 import Toolbar from '../../components/Toolbar.vue';
 import EditableVoid from './EditableVoid.vue';
 import Button from '../../components/Button.vue';

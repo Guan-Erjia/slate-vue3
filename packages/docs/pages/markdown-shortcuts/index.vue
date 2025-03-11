@@ -9,7 +9,7 @@ import {
   createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder,
   defaultRenderLeaf, DOMEditor, Editor, Element, Node,
   withHistory
-} from 'slate-vue';
+} from 'slate-vue3';
 import { h } from 'vue';
 import "prismjs";
 import 'prismjs/components/prism-markdown'

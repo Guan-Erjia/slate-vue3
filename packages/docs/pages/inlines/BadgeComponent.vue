@@ -9,7 +9,7 @@
   </span>
 </template>
 <script setup lang="ts">
-import { useSelected } from 'slate-vue';
+import { useSelected } from 'slate-vue3';
 import InlineChromiumBugfix from './InlineChromiumBugfix.vue'
 const selected = useSelected()
 </script>

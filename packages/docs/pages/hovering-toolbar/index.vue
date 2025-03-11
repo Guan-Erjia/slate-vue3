@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { withDOM, Node, Element, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Editor, withHistory } from "slate-vue"
+import { withDOM, Node, Element, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Editor, withHistory } from "slate-vue3"
 import { CSSProperties, h } from "vue";
-import type { Descendant, DOMEditor, RenderElementProps, RenderLeafProps, } from "slate-vue";
+import type { Descendant, DOMEditor, RenderElementProps, RenderLeafProps, } from "slate-vue3";
 import { TitleElement, ParagraphElement } from "../../custom-types";
 import HoveringToolbar from "./HoveringToolbar.vue";
 

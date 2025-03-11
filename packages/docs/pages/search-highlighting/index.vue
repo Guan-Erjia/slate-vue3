@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Text, withHistory } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Text, withHistory } from "slate-vue3"
 import { h, ref } from "vue";
-import type { DecoratedRange, Descendant, NodeEntry, RenderElementProps, RenderLeafProps } from "slate-vue";
+import type { DecoratedRange, Descendant, NodeEntry, RenderElementProps, RenderLeafProps } from "slate-vue3";
 import Toolbar from "../../components/Toolbar.vue";
 
 const initialValue: Descendant[] = [

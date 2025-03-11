@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { DOMEditor, Transforms, useEditor, useReadOnly } from 'slate-vue';
+import { DOMEditor, Transforms, useEditor, useReadOnly } from 'slate-vue3';
 import { computed, Events, } from 'vue';
 import { CustomElement } from '../../custom-types';
 const props = defineProps<{

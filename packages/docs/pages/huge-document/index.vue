@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, withHistory } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, withHistory } from "slate-vue3"
 import { h } from "vue";
-import type { Descendant, RenderElementProps, } from "slate-vue";
+import type { Descendant, RenderElementProps, } from "slate-vue3";
 import { faker } from '@faker-js/faker'
 
 const HEADINGS = 100

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Range, Editor, DOMEditor, withHistory } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Range, Editor, DOMEditor, withHistory } from "slate-vue3"
 import { computed, CSSProperties, h, ref } from "vue";
-import type { Descendant, RenderElementProps, RenderLeafProps } from "slate-vue";
+import type { Descendant, RenderElementProps, RenderLeafProps } from "slate-vue3";
 import Mention from "./Mention.vue";
 import { CHARACTERS } from "./utils";
 

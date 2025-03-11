@@ -5,7 +5,7 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, useInheritRef, DOMEditor, withHistory } from 'slate-vue';
+import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, useInheritRef, DOMEditor, withHistory } from 'slate-vue3';
 import { h } from 'vue';
 import VideoElement from './VideoElement.vue'
 

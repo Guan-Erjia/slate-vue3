@@ -22,7 +22,7 @@
       "slate": ["./packages/slate/src/index.ts"],
       "slate-dom": ["./packages/slate-dom/src/index.ts"],
       "slate-history": ["./packages/slate-history/src/index.ts"],
-      "slate-vue": ["./packages/slate-vue/src/index.ts"],
+      "slate-vue3": ["./packages/slate-vue/src/index.ts"],
       "share-tools": ["./packages/share-tools/index.ts"],
       "@test-utils": ["./test/utils.ts"],
     }

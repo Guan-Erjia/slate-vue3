@@ -5,7 +5,7 @@ import {
   Point,
   Transforms,
   DOMEditor,
-} from "slate-vue";
+} from "slate-vue3";
 export const withChecklists = (editor: DOMEditor) => {
   const { deleteBackward } = editor;
 

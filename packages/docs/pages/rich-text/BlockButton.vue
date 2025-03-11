@@ -10,7 +10,7 @@ import {
   Element,
   Transforms,
 } from 'slate';
-import { useEditor } from 'slate-vue'
+import { useEditor } from 'slate-vue3'
 import Button from '../../components/Button.vue';
 import { computed } from 'vue';
 import { CustomElement } from '../../custom-types';

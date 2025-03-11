@@ -21,7 +21,7 @@
   </span>
 </template>
 <script setup lang="ts">
-import { useFocused, useSelected } from 'slate-vue';
+import { useFocused, useSelected } from 'slate-vue3';
 import { IS_MAC } from '../../utils/environment';
 const selected = useSelected()
 const focused = useFocused()

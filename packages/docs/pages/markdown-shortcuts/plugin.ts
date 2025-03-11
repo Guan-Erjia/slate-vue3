@@ -6,7 +6,7 @@ import {
   Editor,
   Transforms,
   Point,
-} from "slate-vue";
+} from "slate-vue3";
 
 export const SHORTCUTS = {
   "*": "list-item",

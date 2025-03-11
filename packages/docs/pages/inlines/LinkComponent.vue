@@ -8,7 +8,7 @@
 </template>
 <script setup lang="ts">
 import { LinkElement } from '../../custom-types';
-import { useSelected } from 'slate-vue';
+import { useSelected } from 'slate-vue3';
 import { computed, HTMLAttributes, useAttrs } from 'vue';
 import InlineChromiumBugfix from './InlineChromiumBugfix.vue';
 const allowedSchemes = ['http:', 'https:', 'mailto:', 'tel:']

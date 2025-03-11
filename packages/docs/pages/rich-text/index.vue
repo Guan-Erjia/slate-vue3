@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, createEditor, withHistory, defaultRenderPlaceHolder } from "slate-vue"
+import { withDOM, Slate, Editable, createEditor, withHistory, defaultRenderPlaceHolder } from "slate-vue3"
 import { CSSProperties, h } from "vue";
-import type { RenderElementProps, RenderLeafProps, } from "slate-vue";
+import type { RenderElementProps, RenderLeafProps, } from "slate-vue3";
 import Toolbar from '../../components/Toolbar.vue'
 import MarkButton from "./MarkButton.vue";
 import BlockButton from "./BlockButton.vue";

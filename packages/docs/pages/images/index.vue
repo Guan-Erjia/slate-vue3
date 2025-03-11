@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, Transforms, withHistory, useInheritRef } from "slate-vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, Transforms, withHistory, useInheritRef } from "slate-vue3"
 import { h } from "vue";
 import imageExtensions from 'image-extensions'
 import isUrl from 'is-url'
-import type { Descendant, DOMEditor, RenderElementProps, } from "slate-vue";
+import type { Descendant, DOMEditor, RenderElementProps, } from "slate-vue3";
 import { ImageElement } from "../../custom-types";
 import ImageComp from './ImageComp.vue'
 import Toolbar from '../../components/Toolbar.vue'

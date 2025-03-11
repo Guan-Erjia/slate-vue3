@@ -4,7 +4,7 @@
     :style="{ boxShadow: selected && focused ? '0 0 0 2px blue' : 'none' }" />
 </template>
 <script lang="ts" setup>
-import { useFocused, useSelected } from 'slate-vue';
+import { useFocused, useSelected } from 'slate-vue3';
 const selected = useSelected()
 const focused = useFocused()
 const props = defineProps<{

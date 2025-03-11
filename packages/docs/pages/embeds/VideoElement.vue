@@ -6,7 +6,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { DOMEditor, useEditor, Element, Transforms } from 'slate-vue'
+import { DOMEditor, useEditor, Element, Transforms } from 'slate-vue3'
 import { computed, HTMLAttributes, ref, useAttrs } from 'vue';
 const allowedSchemes = ['http:', 'https:']
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, Editor, createEditor, defaultRenderPlaceHolder, DOMEditor, withHistory } from "slate-vue"
+import { withDOM, Slate, Editable, Editor, createEditor, defaultRenderPlaceHolder, DOMEditor, withHistory } from "slate-vue3"
 import { h, ref } from "vue";
-import type { Descendant, RenderElementProps, RenderLeafProps } from "slate-vue";
+import type { Descendant, RenderElementProps, RenderLeafProps } from "slate-vue3";
 import Toolbar from '../../components/Toolbar.vue'
 import isHotkey from "is-hotkey";
 import Button from '../../components/Button.vue'

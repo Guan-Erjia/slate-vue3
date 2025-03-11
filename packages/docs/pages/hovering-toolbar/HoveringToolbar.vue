@@ -9,7 +9,7 @@
   </Teleport>
 </template>
 <script lang="ts" setup>
-import { Editor, useEditor, useFocused, Range } from 'slate-vue';
+import { Editor, useEditor, useFocused, Range } from 'slate-vue3';
 import { computed, CSSProperties, ref } from 'vue';
 import Button from '../../components/Button.vue';
 const menuRef = ref<HTMLDivElement>()

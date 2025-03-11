@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue"
+import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue3"
 import { h } from "vue";
-import type { RenderElementProps } from "slate-vue";
+import type { RenderElementProps } from "slate-vue3";
 
 const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)

@@ -21,7 +21,7 @@ const BaseConfig: UserConfig = {
         __dirname,
         "./packages/slate-history/src/index.ts"
       ),
-      "slate-vue": path.resolve(__dirname, "./packages/slate-vue/src/index.ts"),
+      "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/src/index.ts"),
       "share-tools": path.resolve(__dirname, "./packages/share-tools/index.ts"),
       "@test-utils": path.resolve(__dirname, "./test/utils.ts"),
     },
@@ -36,7 +36,7 @@ export default defineConfig(({ command, mode }) => {
         minify: false,
         modulePreload: { polyfill: false },
         lib: {
-          entry: "./packages/slate-vue/src/index.ts",
+          entry: "./packages/slate-vue3/src/index.ts",
           name: "slate-vue3",
           fileName: "index",
           formats: ["es"],
