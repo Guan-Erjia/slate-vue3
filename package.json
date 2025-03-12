@@ -17,10 +17,22 @@
         "default": "./index.js"
       }
     },
-    "./*": {
+    "./core": {
       "import": {
-        "types": "./*.d.ts",
-        "default": "./*.js"
+        "types": "./dist/core.d.ts",
+        "default": "./dist/core.js"
+      }
+    },
+    "./dom": {
+      "import": {
+        "types": "./dist/dom.d.ts",
+        "default": "./dist/dom.js"
+      }
+    },
+    "./history": {
+      "import": {
+        "types": "./dist/history.d.ts",
+        "default": "./dist/history.js"
       }
     }
   },
