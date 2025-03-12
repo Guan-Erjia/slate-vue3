@@ -35,7 +35,7 @@ export {
   IS_WECHATBROWSER,
 } from './utils/environment'
 
-export { default as Hotkeys } from './utils/hotkeys'
+export { Hotkeys } from './utils/hotkeys'
 
 export { Key } from './utils/key'
 

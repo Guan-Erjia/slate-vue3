@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Range, Editor, Element, Point, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderPlaceHolder } from "slate-vue3"
+import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { h } from "vue";
-import type { Descendant, DOMEditor, RenderElementProps, RenderLeafProps } from "slate-vue3";
+import { Editor, Range, Element, Point, Descendant, createEditor } from 'slate-vue3/core'
+import { withHistory } from "slate-vue3/history";
 
 const withTables = (editor: DOMEditor) => {
   const { deleteBackward, deleteForward, insertBreak } = editor

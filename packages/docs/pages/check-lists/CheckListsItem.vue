@@ -13,9 +13,11 @@
 </template>
 
 <script lang="ts" setup>
-import { DOMEditor, Transforms, useEditor, useReadOnly } from 'slate-vue3';
+import { useEditor, useReadOnly } from 'slate-vue3';
 import { computed, Events, } from 'vue';
 import { CustomElement } from '../../custom-types';
+import { DOMEditor } from 'slate-vue3/dom';
+import { Transforms } from 'slate-vue3/core';
 const props = defineProps<{
   element: any
 }>()

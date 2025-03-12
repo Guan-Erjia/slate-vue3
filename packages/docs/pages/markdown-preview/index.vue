@@ -5,10 +5,13 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, DecoratedRange, NodeEntry, Text, RenderLeafProps, withHistory } from 'slate-vue3';
+import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, } from 'slate-vue3';
 import { CSSProperties, h } from 'vue';
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'
+import { createEditor, DecoratedRange, Descendant, NodeEntry, Text } from 'slate-vue3/core';
+import { withDOM } from 'slate-vue3/dom';
+import { withHistory } from 'slate-vue3/history';
 
 const initialValue: Descendant[] = [
   {

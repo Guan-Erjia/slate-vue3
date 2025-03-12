@@ -20,7 +20,7 @@ import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-php'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-java'
-import { createEditor, Element, withDOM, Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, DOMEditor, Transforms, Editor, NodeEntry, Node, Range, withHistory, useInheritRef } from 'slate-vue3';
+import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef } from 'slate-vue3';
 import { computed, h } from 'vue';
 import LanguageSelect from './LanguageSelect.vue'
 import Toolbar from '../../components/Toolbar.vue';
@@ -29,6 +29,9 @@ import isHotkey from "is-hotkey";
 import { CodeBlockElement } from "../../custom-types";
 import { normalizeTokens } from '../../utils/normalize-tokens'
 import Prism from 'prismjs'
+import { withHistory } from "slate-vue3/history";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { createEditor, Editor, Element, NodeEntry, Transforms, Node, Range } from "slate-vue3/core";
 
 const toChildren = (content: string) => [{ text: content }]
 const toCodeLines = (content: string): Element[] =>

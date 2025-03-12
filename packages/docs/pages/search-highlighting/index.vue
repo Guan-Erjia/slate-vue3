@@ -1,8 +1,11 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Text, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderPlaceHolder } from "slate-vue3"
 import { h, ref } from "vue";
-import type { DecoratedRange, Descendant, NodeEntry, RenderElementProps, RenderLeafProps } from "slate-vue3";
+import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import Toolbar from "../../components/Toolbar.vue";
+import { createEditor, DecoratedRange, Descendant, NodeEntry, Text } from "slate-vue3/core";
+import { withDOM } from "slate-vue3/dom";
+import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
   {
@@ -94,7 +97,8 @@ const search = ref('')
     :render-placeholder="defaultRenderPlaceHolder">
     <Toolbar>
       <div style="position: relative;">
-        <span style="position: absolute; top: 0.5em; left: 0.6em; color: #ccc;font-family: 'Material Icons'">search</span>
+        <span
+          style="position: absolute; top: 0.5em; left: 0.6em; color: #ccc;font-family: 'Material Icons'">search</span>
         <input type="search" placeholder="Search the text..." v-model="search" style="  padding-left: 2.5em;
         width: 100%;" />
       </div>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, type RenderElementProps } from "slate-vue3"
 import { h } from "vue";
-import type { Descendant, RenderElementProps } from "slate-vue3";
+import { createEditor, Descendant } from "slate-vue3/core";
+import { withDOM } from "slate-vue3/dom";
+import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
   {
@@ -11,7 +13,6 @@ const initialValue: Descendant[] = [
     ],
   }
 ]
-
 
 const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)

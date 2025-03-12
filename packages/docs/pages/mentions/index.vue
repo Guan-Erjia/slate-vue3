@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Range, Editor, DOMEditor, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderPlaceHolder, } from "slate-vue3"
 import { computed, CSSProperties, h, ref } from "vue";
-import type { Descendant, RenderElementProps, RenderLeafProps } from "slate-vue3";
+import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import Mention from "./Mention.vue";
 import { CHARACTERS } from "./utils";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { createEditor, Descendant, Editor, Range, Transforms } from "slate-vue3/core";
+import { withHistory } from "slate-vue3/history";
 
 const withMentions = (editor: DOMEditor) => {
   const { isInline, isVoid, markableVoid } = editor

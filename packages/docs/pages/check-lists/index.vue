@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withDOM, withHistory, useInheritRef } from "slate-vue3"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, useInheritRef } from "slate-vue3"
 import { h } from "vue";
 import type { RenderElementProps } from "slate-vue3";
 import { CustomElement } from "../../custom-types";
 import CheckListItem from './CheckListsItem.vue'
 import { withChecklists } from "./plugin";
+import { withDOM } from "slate-vue3/dom";
+import { createEditor } from "slate";
+import { withHistory } from "slate-vue3/history";
 
 const initialValue: CustomElement[] = [
   {

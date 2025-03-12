@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, createEditor, withHistory, defaultRenderPlaceHolder } from "slate-vue3"
+import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { CSSProperties, h } from "vue";
-import type { RenderElementProps, RenderLeafProps, } from "slate-vue3";
 import Toolbar from '../../components/Toolbar.vue'
 import MarkButton from "./MarkButton.vue";
 import BlockButton from "./BlockButton.vue";
 import { CustomElement } from "../../custom-types";
+import { withHistory } from "slate-vue3/history";
+import { withDOM } from "slate-vue3/dom";
+import { createEditor } from "slate-vue3/core";
 
 const initialValue: CustomElement[] = [
   {

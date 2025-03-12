@@ -8,12 +8,15 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { createEditor, Descendant, withDOM, Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, withHistory, Transforms, useInheritRef } from 'slate-vue3';
+import { Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, useInheritRef } from 'slate-vue3';
 import Toolbar from '../../components/Toolbar.vue';
 import EditableVoid from './EditableVoid.vue';
 import Button from '../../components/Button.vue';
 import { EditableVoidElement } from '../../custom-types';
 import { h } from 'vue';
+import { createEditor, Descendant, Transforms } from 'slate-vue3/core';
+import { withHistory } from 'slate-vue3/history';
+import { withDOM } from 'slate-vue3/dom';
 
 const initialValue: Descendant[] = [
   {

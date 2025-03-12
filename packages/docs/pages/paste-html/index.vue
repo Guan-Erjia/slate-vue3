@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Range, Editor, DOMEditor, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderPlaceHolder, } from "slate-vue3"
+import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { jsx } from 'slate-hyperscript'
 import { h } from "vue";
-import type { Descendant, RenderElementProps, RenderLeafProps } from "slate-vue3";
 import ImageElement from "./ImageElement.vue";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { createEditor, Descendant, Transforms } from "slate-vue3/core";
+import { withHistory } from "slate-vue3/history";
 
 const allowedSchemes = ['http:', 'https:', 'mailto:', 'tel:']
 const ELEMENT_TAGS = {

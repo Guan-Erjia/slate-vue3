@@ -1,12 +1,6 @@
+import { DOMEditor } from "slate-vue3/dom";
 import { BulletedListElement } from "../../custom-types";
-import {
-  DOMEditor,
-  Range,
-  Element,
-  Editor,
-  Transforms,
-  Point,
-} from "slate-vue3";
+import { Range, Element, Editor, Transforms, Point } from "slate-vue3/core";
 
 export const SHORTCUTS = {
   "*": "list-item",

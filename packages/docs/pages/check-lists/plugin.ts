@@ -1,11 +1,5 @@
-import {
-  Range,
-  Editor,
-  Element,
-  Point,
-  Transforms,
-  DOMEditor,
-} from "slate-vue3";
+import { Range, Editor, Element, Point, Transforms } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
 export const withChecklists = (editor: DOMEditor) => {
   const { deleteBackward } = editor;
 

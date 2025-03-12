@@ -19,10 +19,12 @@
     "noCheck": false,
     "baseUrl": ".",
     "paths": {
-      "slate": ["./packages/slate/src/index.ts"],
-      "slate-dom": ["./packages/slate-dom/src/index.ts"],
-      "slate-history": ["./packages/slate-history/src/index.ts"],
+      "slate-vue3/core": ["./packages/slate/src/index.ts"],
+      "slate-vue3/dom": ["./packages/slate-dom/src/index.ts"],
+      "slate-vue3/history": ["./packages/slate-history/src/index.ts"],
       "slate-vue3": ["./packages/slate-vue/src/index.ts"],
+      "slate-dom": ["./packages/slate-dom/src/index.ts"],
+      "slate": ["./packages/slate/src/index.ts"],
       "share-tools": ["./packages/share-tools/index.ts"],
       "@test-utils": ["./test/utils.ts"],
     }

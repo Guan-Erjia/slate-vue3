@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderLeaf, createEditor, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderLeaf, type RenderElementProps, type RenderPlaceholderProps } from "slate-vue3"
 import { h } from "vue";
-import type { Descendant, RenderElementProps, RenderPlaceholderProps } from "slate-vue3";
+import { createEditor, Descendant } from "slate-vue3/core";
+import { withDOM } from "slate-vue3/dom";
+import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
   { type: 'paragraph', children: [{ text: '' }], }

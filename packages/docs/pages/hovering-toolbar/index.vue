@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { withDOM, Node, Element, Slate, Editable, defaultRenderPlaceHolder, createEditor, Transforms, Editor, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { CSSProperties, h } from "vue";
-import type { Descendant, DOMEditor, RenderElementProps, RenderLeafProps, } from "slate-vue3";
 import { TitleElement, ParagraphElement } from "../../custom-types";
 import HoveringToolbar from "./HoveringToolbar.vue";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { Editor, Transforms, Node, Element, createEditor, Descendant } from "slate-vue3/core";
+import { withHistory } from "slate-vue3/history";
 
 const withLayout = (editor: DOMEditor) => {
   const { normalizeNode } = editor

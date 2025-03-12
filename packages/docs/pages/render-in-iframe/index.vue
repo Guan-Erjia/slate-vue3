@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { withDOM, Slate, Editable, Editor, createEditor, defaultRenderPlaceHolder, DOMEditor, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderPlaceHolder, } from "slate-vue3"
+import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { h, ref } from "vue";
-import type { Descendant, RenderElementProps, RenderLeafProps } from "slate-vue3";
 import Toolbar from '../../components/Toolbar.vue'
 import isHotkey from "is-hotkey";
 import Button from '../../components/Button.vue'
+import { createEditor, Descendant, Editor } from "slate-vue3/core";
+import { withHistory } from "slate-vue3/history";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
 
 const initialValue: Descendant[] = [
   {

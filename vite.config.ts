@@ -15,13 +15,24 @@ const BaseConfig: UserConfig = {
   },
   resolve: {
     alias: {
-      slate: path.resolve(__dirname, "./packages/slate/src/index.ts"),
-      "slate-dom": path.resolve(__dirname, "./packages/slate-dom/src/index.ts"),
-      "slate-history": path.resolve(
+      "slate-vue3/core": path.resolve(
+        __dirname,
+        "./packages/slate/src/index.ts"
+      ),
+      "slate-vue3/dom": path.resolve(
+        __dirname,
+        "./packages/slate-dom/src/index.ts"
+      ),
+      "slate-vue3/history": path.resolve(
         __dirname,
         "./packages/slate-history/src/index.ts"
       ),
-      "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/src/index.ts"),
+      "slate-vue3": path.resolve(
+        __dirname,
+        "./packages/slate-vue/src/index.ts"
+      ),
+      "slate-dom": path.resolve(__dirname, "./packages/slate-dom/src/index.ts"),
+      slate: path.resolve(__dirname, "./packages/slate/src/index.ts"),
       "share-tools": path.resolve(__dirname, "./packages/share-tools/index.ts"),
       "@test-utils": path.resolve(__dirname, "./test/utils.ts"),
     },
@@ -35,13 +46,17 @@ export default defineConfig(({ command, mode }) => {
       build: {
         minify: false,
         modulePreload: { polyfill: false },
+        copyPublicDir: false,
         lib: {
-          entry: "./packages/slate-vue/src/index.ts",
+          entry: {
+            index: "./packages/slate-vue/src/index.ts",
+            core: "./packages/slate/src/index.ts",
+            dom: "./packages/slate-dom/src/index.ts",
+            history: "./packages/slate-history/src/index.ts",
+          },
           name: "slate-vue3",
-          fileName: "index",
           formats: ["es"],
         },
-        copyPublicDir: false,
         rollupOptions: {
           external: ["vue"],
         },
@@ -56,7 +71,7 @@ export default defineConfig(({ command, mode }) => {
           },
         }),
       ],
-    });
+    } as UserConfig);
   }
   return BaseConfig;
 });

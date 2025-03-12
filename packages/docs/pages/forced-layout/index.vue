@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { withDOM, Node, Element, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, Transforms, Editor, withHistory } from "slate-vue3"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, type RenderElementProps, } from "slate-vue3"
 import { h } from "vue";
-import type { Descendant, DOMEditor, RenderElementProps, } from "slate-vue3";
 import { TitleElement, ParagraphElement } from "../../custom-types";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { Editor, Transforms, Node, Element, Descendant, createEditor } from "slate-vue3/core";
+import { withHistory } from "slate-vue3/history";
 
 const withLayout = (editor: DOMEditor) => {
   const { normalizeNode } = editor

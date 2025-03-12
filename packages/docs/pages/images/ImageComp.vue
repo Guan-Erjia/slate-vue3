@@ -14,9 +14,11 @@
 
 <script setup lang="ts">
 import { ImageElement } from '../../custom-types';
-import { useFocused, useSelected, Transforms, useEditor, DOMEditor } from 'slate-vue3';
+import { useFocused, useSelected, useEditor, } from 'slate-vue3';
 import Button from '../../components/Button.vue'
 import { HTMLAttributes, useAttrs } from 'vue';
+import { DOMEditor } from 'slate-vue3/dom';
+import { Transforms } from 'slate-vue3/core';
 const props = defineProps<{
   element: ImageElement
 }>()
