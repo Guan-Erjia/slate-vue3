@@ -1,6 +1,6 @@
 {
   "name": "slate-vue3",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -13,8 +13,8 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./index.d.ts",
-        "default": "./index.js"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       }
     },
     "./core": {
