@@ -80,9 +80,8 @@ export const Slate = defineComponent({
     provide(SLATE_INNER_CHANGE_EFFECT_INJECT, changeEffect);
 
     onMounted(() => {
-      const window = DOMEditor.getWindow(editor);
-      window.document.addEventListener("focusin", focusCb);
-      window.document.addEventListener("focusout", focusCb);
+      document.addEventListener("focusin", focusCb);
+      document.addEventListener("focusout", focusCb);
       EDITOR_TO_ON_CHANGE.set(editor, (options?: { operation?: Operation }) => {
         emit("change", editor.children);
         changeEffect.value++;
@@ -96,9 +95,8 @@ export const Slate = defineComponent({
       });
     });
     onUnmounted(() => {
-      const window = DOMEditor.getWindow(editor);
-      window.document.removeEventListener("focusin", focusCb);
-      window.document.removeEventListener("focusout", focusCb);
+      document.removeEventListener("focusin", focusCb);
+      document.removeEventListener("focusout", focusCb);
       EDITOR_TO_ON_CHANGE.delete(editor);
     });
 

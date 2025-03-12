@@ -42,7 +42,7 @@
     "preview": "vite preview",
     "build-all": "vite build --mode=lib",
     "e2e": "node --no-experimental-strip-types node_modules/@playwright/test/cli.js test",
-    "e2e-ui": "playwright test --ui",
+    "e2e-ui": "node --no-experimental-strip-types node_modules/@playwright/test/cli.js test --ui",
     "test": "vitest"
   },
   "dependencies": {
