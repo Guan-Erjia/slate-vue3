@@ -1,6 +1,6 @@
 import { CSSProperties, defineComponent, VNode, ref, computed } from "vue";
 import { useRenderPlaceholder } from "../hooks/use-render";
-import { EDITOR_TO_PLACEHOLDER_ELEMENT, IS_WEBKIT } from "slate-dom";
+import { IS_WEBKIT } from "slate-dom";
 import { useEditor } from "../hooks/use-editor";
 import { Node } from "slate";
 import { useComposing } from "../hooks/use-composing";
@@ -45,7 +45,6 @@ export const PlaceholderComp = defineComponent({
       contenteditable: false,
       onVnodeMounted(vNode: VNode) {
         if (vNode.el) {
-          EDITOR_TO_PLACEHOLDER_ELEMENT.set(editor, vNode.el);
           placeholderResizeObserver.value = new ResizeObserver(() => {
             props.onPlaceholderResize(
               vNode.el?.getBoundingClientRect()?.height
@@ -55,7 +54,6 @@ export const PlaceholderComp = defineComponent({
         }
       },
       onVnodeUnmounted() {
-        EDITOR_TO_PLACEHOLDER_ELEMENT.delete(editor);
         placeholderResizeObserver.value?.disconnect();
         placeholderResizeObserver.value = undefined;
         props.onPlaceholderResize();
