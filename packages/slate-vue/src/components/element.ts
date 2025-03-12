@@ -16,6 +16,7 @@ import {
   defineComponent,
   Fragment,
   h,
+  HTMLAttributes,
   onMounted,
   onUnmounted,
   provide,
@@ -30,13 +31,22 @@ import { useParentDescoration, useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
 import { useDecorate } from "../hooks/use-decorate";
 
-type AttrType = {
+interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
   "data-slate-void"?: true;
   "data-slate-inline"?: true;
-  contentEditable?: false;
   dir?: "rtl";
   ref: any;
+}
+
+const VOID_CHILDREN_ATTRS = {
+  "data-slate-spacer": true,
+  style: {
+    height: "0",
+    color: "transparent",
+    outline: "none",
+    position: "absolute",
+  },
 };
 
 export const ElementComp = defineComponent({
@@ -91,62 +101,40 @@ export const ElementComp = defineComponent({
 
     const isInline = computed(() => editor.isInline(element));
     const readOnly = useReadOnly();
-    // Attributes that the developer must mix into the element in their
-    // custom node renderer component.
+
     const attributes = computed(() => {
-      const attr: AttrType = {
+      const attr: ElementAttributes = {
         "data-slate-node": "element",
         ref: elementRef,
       };
-
       if (isInline.value) {
         attr["data-slate-inline"] = true;
-      }
-
-      // If it's a block node with inline children, add the proper `dir` attribute
-      // for text direction.
-      if (!isInline.value && Editor.hasInlines(editor, element)) {
+      } else if (Editor.hasInlines(editor, element)) {
+        // If it's a block node with inline children, add the proper `dir` attribute for text direction.
         const text = Node.string(element);
         const dir = direction(text);
-
         if (dir === "rtl") {
           attr.dir = dir;
         }
       }
-
       if (Editor.isVoid(editor, element)) {
         attr["data-slate-void"] = true;
-
         if (!readOnly && isInline.value) {
-          attr.contentEditable = false;
+          attr.contenteditable = false;
         }
       }
       return attr;
     });
 
     const children = computed(() => {
-      // If it's a void node, wrap the children in extra void-specific elements.
-      if (Editor.isVoid(editor, element)) {
-        const [[text]] = Node.texts(element);
-
-        NODE_TO_INDEX.set(text, 0);
-        NODE_TO_PARENT.set(text, element);
-
-        return h(
-          isInline.value ? "span" : "div",
-          {
-            "data-slate-spacer": true,
-            style: {
-              height: "0",
-              color: "transparent",
-              outline: "none",
-              position: "absolute",
-            },
-          },
-          h(TextComp, { element, text })
-        );
+      if (!Editor.isVoid(editor, element)) {
+        return h(Fragment, ChildrenFC(element, editor));
       }
-      return h(Fragment, ChildrenFC(element, editor));
+      const [[text]] = Node.texts(element);
+      NODE_TO_INDEX.set(text, 0);
+      NODE_TO_PARENT.set(text, element);
+      const tag = isInline.value ? "span" : "div";
+      return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { element, text }));
     });
 
     const decorate = useDecorate();
