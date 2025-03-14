@@ -33,36 +33,35 @@ export function isPlainObject(o: any): boolean {
   return true;
 }
 
-export class toRawWeakMap<K extends WeakKey, V> {
-  private weak: WeakMap<K, V>;
+export class toRawWeakMap<K extends WeakKey, V> extends WeakMap {
   constructor() {
-    this.weak = new WeakMap();
+    super();
   }
   /**
    * Removes the specified element from the toRawWeakMap.
    * @returns true if the element was successfully removed, or false if it was not present.
    */
   delete(key: K) {
-    return this.weak.delete(isProxy(key) ? toRaw(key) : key);
+    return super.delete(isProxy(key) ? toRaw(key) : key);
   }
   /**
    * @returns a specified element.
    */
   get(key: K) {
-    return this.weak.get(isProxy(key) ? toRaw(key) : key);
+    return super.get(isProxy(key) ? toRaw(key) : key);
   }
   /**
    * @returns a boolean indicating whether an element with the specified key exists or not.
    */
   has(key: K) {
-    return this.weak.has(isProxy(key) ? toRaw(key) : key);
+    return super.has(isProxy(key) ? toRaw(key) : key);
   }
   /**
    * Adds a new element with a specified key and value.
    * @param key Must be an object or symbol.
    */
   set(key: K, value: V) {
-    return this.weak.set(
+    return super.set(
       isProxy(key) ? toRaw(key) : key,
       isProxy(value) ? toRaw(value) : value
     );
