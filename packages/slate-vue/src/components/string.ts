@@ -1,4 +1,4 @@
-import { Editor, Path, Node } from "slate";
+import { Editor, Path, Node, Element, Text } from "slate";
 import {
   IS_ANDROID,
   IS_IOS,
@@ -6,13 +6,17 @@ import {
   MARK_PLACEHOLDER_SYMBOL,
 } from "slate-dom";
 import { computed, defineComponent, h } from "vue";
-import type { StringProps } from "../utils/interface";
 import { useEditor } from "../hooks/use-editor";
 
 export const StringComp = defineComponent({
   name: "slate-string",
   props: ["isLast", "leaf", "element", "text"],
-  setup(props: StringProps) {
+  setup(props: {
+    isLast: boolean;
+    text: Text;
+    leaf: Text;
+    element: Element;
+  }) {
     const { isLast, leaf, element, text } = props;
     const editor = useEditor();
 

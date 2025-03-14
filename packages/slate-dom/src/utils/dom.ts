@@ -6,12 +6,7 @@
 // weird things for Slate's types with the same name as globals. (2019/11/27)
 // https://github.com/microsoft/TypeScript/issues/35002
 type DOMNode = globalThis.Node
-type DOMComment = globalThis.Comment
 type DOMElement = globalThis.Element
-type DOMText = globalThis.Text
-type DOMRange = globalThis.Range
-type DOMSelection = globalThis.Selection
-type DOMStaticRange = globalThis.StaticRange
 import { DOMEditor } from '../plugin/dom-editor'
 
 declare global {
@@ -38,7 +33,7 @@ export const getDefaultView = (value: any): Window | null => {
  * Check if a DOM node is a comment node.
  */
 
-export const isDOMComment = (value: any): value is DOMComment => {
+export const isDOMComment = (value: any): value is globalThis.Comment => {
   return isDOMNode(value) && value.nodeType === 8
 }
 
@@ -68,7 +63,7 @@ export const isDOMNode = (value: any): value is DOMNode => {
  * Check if a value is a DOM selection.
  */
 
-export const isDOMSelection = (value: any): value is DOMSelection => {
+export const isDOMSelection = (value: any): value is globalThis.Selection => {
   const window = value && value.anchorNode && getDefaultView(value.anchorNode)
   return !!window && value instanceof window.Selection
 }
@@ -77,7 +72,7 @@ export const isDOMSelection = (value: any): value is DOMSelection => {
  * Check if a DOM node is an element node.
  */
 
-export const isDOMText = (value: any): value is DOMText => {
+export const isDOMText = (value: any): value is globalThis.Text => {
   return isDOMNode(value) && value.nodeType === 3
 }
 

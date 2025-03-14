@@ -1,10 +1,3 @@
-export type DOMElement = globalThis.Element;
-export type DOMNode = globalThis.Node;
-export type DOMRange = globalThis.Range;
-export type DOMSelection = globalThis.Selection;
-export type DOMStaticRange = globalThis.StaticRange;
-export type DOMText = globalThis.Text;
-
 export type {
   RenderElementProps,
   RenderLeafProps,

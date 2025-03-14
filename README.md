@@ -118,7 +118,7 @@ export interface RenderPlaceholderProps {
 ## Editable
 > customize style of editablearea, you can inherient other HTMLAttribute on it
 ```typescript
-export interface EditableProps extends HTMLAttributes {
+interface EditableProps extends HTMLAttributes {
   role?: string
   readOnly: boolean
   placeholder?: string

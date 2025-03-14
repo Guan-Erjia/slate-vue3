@@ -6,6 +6,7 @@ import {
   provide,
   ref,
   renderSlot,
+  VNode,
 } from "vue";
 import {
   SLATE_INNER_CHANGE_EFFECT_INJECT,
@@ -19,8 +20,12 @@ import {
   SLATE_USE_DECORATE,
   SLATE_USE_EDITOR,
 } from "../utils/constants";
-import { Node, Operation, Scrubber } from "slate";
-import type { SlateProps } from "../utils/interface";
+import { DecoratedRange, Node, NodeEntry, Operation, Scrubber } from "slate";
+import type {
+  RenderElementProps,
+  RenderLeafProps,
+  RenderPlaceholderProps,
+} from "../utils/interface";
 import { DOMEditor, EDITOR_TO_ON_CHANGE } from "slate-dom";
 
 export const Slate = defineComponent({
@@ -48,7 +53,16 @@ export const Slate = defineComponent({
       required: true,
     },
   },
-  setup(props: SlateProps, { slots, emit }) {
+  setup(
+    props: {
+      editor: DOMEditor;
+      decorate: (entry: NodeEntry) => DecoratedRange[];
+      renderElement: (props: RenderElementProps) => VNode;
+      renderLeaf: (props: RenderLeafProps) => VNode;
+      renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
+    },
+    { slots, emit }
+  ) {
     const { editor, decorate, renderElement, renderLeaf, renderPlaceholder } =
       props;
     if (!Node.isNodeList(editor.children)) {

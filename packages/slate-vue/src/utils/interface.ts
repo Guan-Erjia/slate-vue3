@@ -1,16 +1,16 @@
-import type { DecoratedRange, NodeEntry, Text, Element, Ancestor } from "slate";
-import type { DOMEditor } from "slate-dom";
-import type { CSSProperties, HTMLAttributes, VNode, VNodeProps } from "vue";
+import type { Text, Element } from "slate";
+import type { HTMLAttributes, VNode, VNodeProps } from "vue";
 
 /**
  * The props that get passed to renderPlaceholder
  */
 export interface RenderPlaceholderProps {
   children?: string;
-  attributes: HTMLAttributes & VNodeProps & {
-    "data-slate-placeholder": boolean;
-    dir?: "rtl";
-  };
+  attributes: HTMLAttributes &
+    VNodeProps & {
+      "data-slate-placeholder": boolean;
+      dir?: "rtl";
+    };
 }
 
 /**
@@ -38,47 +38,4 @@ export interface RenderElementProps {
     dir?: "rtl";
     ref: any;
   };
-}
-
-/**
- * `EditableProps` are passed to the `<Editable>` component.
- */
-export interface EditableProps extends HTMLAttributes {
-  role?: string;
-  readOnly: boolean;
-  placeholder?: string;
-  style?: CSSProperties;
-  scrollSelectionIntoView: (
-    editor: DOMEditor,
-    domRange: globalThis.Range
-  ) => void;
-  is: string;
-}
-
-export interface ChildrenProps {
-  node: Ancestor;
-}
-
-export interface TextProps {
-  element: Element;
-  text: Text;
-}
-
-export interface StringProps {
-  isLast: boolean;
-  text: Text;
-  leaf: Text;
-  element: Element;
-}
-
-export interface ElementProps {
-  element: Element;
-}
-
-export interface SlateProps {
-  editor: DOMEditor;
-  decorate: (entry: NodeEntry) => DecoratedRange[];
-  renderElement: (props: RenderElementProps) => VNode;
-  renderLeaf: (props: RenderLeafProps) => VNode;
-  renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
 }

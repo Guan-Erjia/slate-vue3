@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { BaseElement, Editor, Node, Path, Range } from "slate";
+import { BaseElement, Editor, Element, Node, Path, Range } from "slate";
 import { ChildrenFC } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -10,7 +10,6 @@ import {
   DOMEditor,
 } from "slate-dom";
 import { TextComp } from "./text";
-import type { ElementProps } from "../utils/interface";
 import {
   computed,
   defineComponent,
@@ -52,8 +51,10 @@ const VOID_CHILDREN_ATTRS = {
 export const ElementComp = defineComponent({
   name: "slate-element",
   props: ["element"],
-  setup(props: ElementProps) {
-    const { element } = props;
+  setup(props: {
+    element: Element
+  }) {
+    const element = props.element;
     const editor = useEditor();
 
     const selection = computed(() => {

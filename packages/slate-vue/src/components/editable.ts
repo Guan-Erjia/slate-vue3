@@ -43,7 +43,6 @@ import {
 } from "vue";
 import type { CSSProperties, HTMLAttributes } from "vue";
 import { ChildrenFC } from "./children";
-import type { EditableProps } from "../utils/interface";
 import {
   defaultScrollSelectionIntoView,
   isDOMEventHandled,
@@ -61,6 +60,18 @@ import {
   AndroidManager,
   useAndroidManager,
 } from "../hooks/use-android-manager";
+
+interface EditableProps extends HTMLAttributes {
+  role?: string;
+  readOnly: boolean;
+  placeholder?: string;
+  style?: CSSProperties;
+  scrollSelectionIntoView: (
+    editor: DOMEditor,
+    domRange: globalThis.Range
+  ) => void;
+  is: string;
+}
 
 export const Editable = defineComponent({
   name: "slate-editable",

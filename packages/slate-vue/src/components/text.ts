@@ -7,7 +7,6 @@ import {
   NODE_TO_ELEMENT,
   NODE_TO_INDEX,
 } from "slate-dom";
-import type { TextProps } from "../utils/interface";
 import {
   computed,
   defineComponent,
@@ -25,7 +24,10 @@ import { useParentDescoration, useRenderLeaf } from "../hooks/use-render";
 export const TextComp = defineComponent({
   name: "slate-text",
   props: ["text", "element"],
-  setup(props: TextProps) {
+  setup(props: {
+    element: Element;
+    text: Text;
+  }) {
     const { text, element } = props;
     const editor = useEditor();
     const spanRef = ref<HTMLSpanElement>();
