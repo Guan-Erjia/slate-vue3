@@ -29,6 +29,10 @@ export const ExampleOptions = [
     component: () => import("./pages/code-highlighting/index.vue"),
   },
   {
+    name: 'cursor-segmentation',
+    component: () => import("./pages/cursor-segmentation/index.vue"),
+  },
+  {
     name: "forced-layout",
     component: () => import("./pages/forced-layout/index.vue"),
   },
