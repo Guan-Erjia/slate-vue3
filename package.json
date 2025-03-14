@@ -68,7 +68,6 @@
     "is-url": "^1.2.4",
     "jsdom": "^26.0.0",
     "prismjs": "^1.30.0",
-    "slate-hyperscript": "^0.100.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-dts": "^4.5.0",

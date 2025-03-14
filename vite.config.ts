@@ -23,6 +23,10 @@ const BaseConfig: UserConfig = {
         __dirname,
         "./packages/slate-dom/src/index.ts"
       ),
+      "slate-vue3/hyperscript": path.resolve(
+        __dirname,
+        "./packages/slate-hyperscript/src/index.ts"
+      ),
       "slate-vue3/history": path.resolve(
         __dirname,
         "./packages/slate-history/src/index.ts"
@@ -31,8 +35,9 @@ const BaseConfig: UserConfig = {
         __dirname,
         "./packages/slate-vue/src/index.ts"
       ),
+      "slate-hyperscript": path.resolve(__dirname, "./packages/slate-hyperscript/src/index.ts"),
       "slate-dom": path.resolve(__dirname, "./packages/slate-dom/src/index.ts"),
-      slate: path.resolve(__dirname, "./packages/slate/src/index.ts"),
+      "slate": path.resolve(__dirname, "./packages/slate/src/index.ts"),
       "share-tools": path.resolve(__dirname, "./packages/share-tools/index.ts"),
       "@test-utils": path.resolve(__dirname, "./test/utils.ts"),
     },
