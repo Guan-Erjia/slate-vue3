@@ -6,7 +6,6 @@ export const SLATE_USE_SELECTED = Symbol("SLATE_USE_SELECTED");
 
 export const SLATE_USE_SELECTION = Symbol("SLATE_USE_SELECTION");
 
-
 export const SLATE_STATE_FOCUS = Symbol("SLATE_STATE_FOCUS");
 
 export const SLATE_STATE_COMPOSING = Symbol("SLATE_STATE_COMPOSING");
