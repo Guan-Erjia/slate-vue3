@@ -83,9 +83,6 @@ export const TextComp = defineComponent({
     });
 
     onUnmounted(() => {
-      const key = DOMEditor.findKey(editor, text);
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-      KEY_TO_ELEMENT?.delete(key);
       NODE_TO_ELEMENT.delete(text);
       if (spanRef.value) {
         ELEMENT_TO_NODE.delete(spanRef.value);
