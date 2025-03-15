@@ -6,8 +6,8 @@ const modules = await resolveModules(import.meta.glob("./*.jsx"));
 
 describe("undo", () => {
   modules.forEach((module) => {
-    const { input, run, output, path } = module;
-    test(path, () => {
+    const { input, run, output, path, skip } = module;
+    test.skipIf(skip)(path, () => {
       const editor = withTest(withHistory(reactive(input)));
 
       run(editor);

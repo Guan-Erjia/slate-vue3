@@ -6,7 +6,7 @@ const modules = await resolveModules(import.meta.glob("./**/*.(j|t)s?(x)"));
 describe("slate-transforms", () => {
   modules.forEach((module) => {
     const { input, run, output, path, skip } = module;
-    test.skipIf(skip)(path, async () => {
+    test.skipIf(skip)(path, () => {
       const editor = withTest(input);
       run(editor);
 
