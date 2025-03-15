@@ -6,7 +6,7 @@ import { CustomElement } from "../../custom-types";
 import CheckListItem from './CheckListsItem.vue'
 import { withChecklists } from "./plugin";
 import { withDOM } from "slate-vue3/dom";
-import { createEditor } from "slate";
+import { createEditor } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: CustomElement[] = [
