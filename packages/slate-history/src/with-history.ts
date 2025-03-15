@@ -100,7 +100,7 @@ export const withHistory = <T extends Editor>(editor: T) => {
       } else {
         const batch = {
           operations: [op],
-          selectionBefore: e.selection,
+          selectionBefore: {...e.selection},
         }
         e.writeHistory('undos', batch)
       }
