@@ -16,5 +16,5 @@ export const input = (
 export const output = cloneDeep(input);
 
 export const run = (editor) => {
-  Transforms.delete(editor);
+  Transforms.delete(editor, {reverse: true});
 };
