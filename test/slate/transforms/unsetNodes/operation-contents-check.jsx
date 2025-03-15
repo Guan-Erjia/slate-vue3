@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import assert from 'assert'
-import { Transforms, Text, Editor } from 'slate'
+import { Transforms } from 'slate'
 import { jsx } from '@test-utils'
 
-export const run = (editor: Editor) => {
+export const run = (editor) => {
   Transforms.unsetNodes(editor, 'someKey', { at: [0] })
 
   // unsetNodes uses null to remove properties, but that should not

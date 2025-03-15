@@ -1,7 +1,6 @@
-import { Element } from 'slate'
 import { isHeadingElement } from './type-guards'
 
-export const input: Element = {
+export const input = {
   type: 'list-item',
   depth: 5,
   children: [],

@@ -1,7 +1,6 @@
-import { Operation } from 'slate'
 import { isCustomOperation } from './type-guards'
 
-export const input: Operation = {
+export const input = {
   type: 'insert_text',
   path: [0, 0],
   offset: 0,

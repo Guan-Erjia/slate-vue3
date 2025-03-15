@@ -1,7 +1,6 @@
-import { Element } from 'slate'
 import { isHeadingElement } from './type-guards'
 
-export const input: Element = {
+export const input = {
   type: 'heading',
   level: 5,
   children: [],

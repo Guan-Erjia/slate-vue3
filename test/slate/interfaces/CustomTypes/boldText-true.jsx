@@ -1,8 +1,7 @@
 // show that regular methods that are imported work as expected
-import { Text } from 'slate'
 import { isBoldText } from './type-guards'
 
-export const input: Text = {
+export const input = {
   bold: true,
   text: 'mytext',
 }

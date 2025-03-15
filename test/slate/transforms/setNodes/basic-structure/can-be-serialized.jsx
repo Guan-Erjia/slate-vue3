@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import assert from 'assert'
-import { Editor, Transforms, Operation } from 'slate'
+import { Transforms } from 'slate'
 import { jsx } from '@test-utils'
 
-export const run = (editor: Editor) => {
+export const run = (editor) => {
   Transforms.setNodes(editor, { someKey: true }, { at: [0] })
   const [op] = editor.operations
-  const roundTrip: Operation = JSON.parse(JSON.stringify(op))
+  const roundTrip = JSON.parse(JSON.stringify(op))
   assert.deepStrictEqual(op, roundTrip)
 }
 export const input = (

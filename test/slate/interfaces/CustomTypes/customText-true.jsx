@@ -1,11 +1,10 @@
-import { Text } from 'slate'
 import { isCustomText } from './type-guards'
 
-export const input: Text = {
-  bold: true,
+export const input = {
+  placeholder: 'mystring',
   text: 'mytext',
 }
 
 export const test = isCustomText
 
-export const output = false
+export const output = true

@@ -11,13 +11,13 @@ export const input = (
   </editor>
 )
 
-const editor = input as unknown as Editor
+const editor = input
 const defaultNormalize = editor.normalizeNode
 editor.normalizeNode = entry => {
   const [node, path] = entry
   if (
     Element.isElement(node) &&
-    (node as any).type === 'body' &&
+    node.type === 'body' &&
     Editor.string(editor, path, { voids: true }) === 'one'
   ) {
     Transforms.setNodes(
