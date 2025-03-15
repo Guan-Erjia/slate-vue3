@@ -33,8 +33,11 @@ npm install slate-vue3
 ## 2. Now, you can use it in vue-sfc :point_right: [**live demo**](https://guan-erjia.github.io/slate-vue3/)
 ```vue
 <script setup lang="ts">
-import { withDOM, Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, createEditor, withHistory } from "slate-vue3"
 import { h } from "vue"
+import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder } from "slate-vue3"
+import { createEditor } from "slate-vue3/core"
+import { withDOM } from "slate-vue3/dom"
+import { withHistory } from "slate-vue3/history"
 
 const initialValue = [
   {
