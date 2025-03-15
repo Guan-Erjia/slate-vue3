@@ -263,17 +263,6 @@ Vue uses lazy updates, rendering with components generates additional state, whi
 3. packages/slate/src/interfaces/range.ts 224:224
 4. packages/slate/src/interfaces/transforms/general.ts 322:333
 
-**rewrite implement for WeakMap**
-
-1. packages/share-tools/index.ts
-2. packages/slate-dom/src/utils/weak-maps.ts
-
-**import types from globalThis in slate-dom**
-
-1. packages/slate-dom/src/index.ts
-2. packages/slate-dom/src/plugin/dom-editor.ts
-3. packages/slate-dom/src/utils/dom.ts
-
 **other compact**
 
 1. packages/slate/src/core/normalize-node.ts

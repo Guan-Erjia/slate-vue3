@@ -10,7 +10,6 @@ import {
 } from 'slate'
 import { Key } from './key'
 import { toRawWeakMap as WeakMap } from "share-tools"
-import { RendererNode } from 'vue'
 
 export type Action = { at?: Point | Range; run: () => void }
 
