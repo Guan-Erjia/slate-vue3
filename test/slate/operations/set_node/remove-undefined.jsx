@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from 'slate-hyperscript'
+import { jsx } from '@test-utils'
 import { Transforms, Editor } from 'slate'
 
 export const input = (
