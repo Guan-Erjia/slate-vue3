@@ -9,7 +9,7 @@ test.describe('readonly editor', () => {
   test('should not be editable', async ({ page }) => {
     const slateEditor = '[data-slate-editor="true"]'
     expect(
-      await page.locator(slateEditor).getAttribute('contentEditable')
+      await page.locator(slateEditor).getAttribute('contenteditable')
     ).toBe('false')
     expect(await page.locator(slateEditor).getAttribute('role')).toBe(null)
     await page.locator(slateEditor).click()

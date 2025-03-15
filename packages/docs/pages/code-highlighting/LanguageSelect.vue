@@ -1,7 +1,7 @@
 <template>
   <div v-bind="attrs" style="font-family: monospace;font-size: 16px;line-height: 20px;margin-top: 0;
     background-color: rgba(0,20,60,.03);padding: 5px 13px;position: relative;" :spellcheck="false">
-    <select data-testid="language-select" :value="props.value" :contentEditable="false" style="position: absolute; right: 5px; top:
+    <select data-testid="language-select" :value="props.value" :contenteditable="false" style="position: absolute; right: 5px; top:
     5px; z-index: 1;" @change="onChange">
       <option value="css">CSS</option>
       <option value="html">HTML</option>

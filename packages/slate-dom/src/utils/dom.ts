@@ -284,7 +284,7 @@ export const isTrackedMutation = (
   batch: MutationRecord[]
 ): boolean => {
   const { target } = mutation
-  if (isDOMElement(target) && target.matches('[contentEditable="false"]')) {
+  if (isDOMElement(target) && target.matches('[contenteditable="false"]')) {
     return false
   }
 

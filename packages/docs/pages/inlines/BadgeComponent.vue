@@ -1,5 +1,5 @@
 <template>
-  <span :contentEditable="false" style="background-color: green; color: white;
+  <span :contenteditable="false" style="background-color: green; color: white;
     padding: 2px 6px; border-radius: 2px; font-size: 0.9em;" :style="{
       boxShadow: selected ? '0 0 0 3px #ddd' : '',
     }" :data-playwright-selected="selected">

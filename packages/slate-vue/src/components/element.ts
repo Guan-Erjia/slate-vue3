@@ -51,36 +51,18 @@ const VOID_CHILDREN_ATTRS = {
 export const ElementComp = defineComponent({
   name: "slate-element",
   props: ["element"],
-  setup(props: {
-    element: Element
-  }) {
+  setup(props: { element: Element }) {
     const element = props.element;
     const editor = useEditor();
 
-    const selection = computed(() => {
+    const selected = computed(() => {
       const path = DOMEditor.findPath(editor, element);
-      const elemList: Array<[BaseElement, Path]> = [[element, path]];
-      let parent = Editor.parent(editor, path);
-      // 递归收集父节点数据
-      while (parent[1].length) {
-        elemList.unshift(parent);
-        parent = Editor.parent(editor, parent[1]);
+      if (!editor.selection) {
+        return false;
       }
-
-      let sel = editor.selection;
-      // 遍历节点，获取选中范围
-      for (const item of elemList) {
-        if (sel) {
-          sel = Range.intersection(Editor.range(editor, item[1]), sel);
-        } else {
-          // selection1为空直接退出循环
-          break;
-        }
-      }
-      return sel;
+      return !!Range.intersection(Editor.range(editor, path), editor.selection);
     });
 
-    const selected = computed(() => !!selection.value);
     provide(SLATE_USE_SELECTED, selected);
 
     const elementRef = ref<HTMLElement | null>(null);

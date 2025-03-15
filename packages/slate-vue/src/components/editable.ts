@@ -298,7 +298,7 @@ export const Editable = defineComponent({
           exactMatch: true,
 
           // domSelection is not necessarily a valid Slate range
-          // (e.g. when clicking on contentEditable:false element)
+          // (e.g. when clicking on contenteditable:false element)
           suppressThrow: true,
         });
 

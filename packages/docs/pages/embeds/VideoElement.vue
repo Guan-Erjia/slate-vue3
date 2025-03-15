@@ -1,5 +1,5 @@
 <template>
-  <div :contentEditable="false" v-bind="attrs">
+  <div :contenteditable="false" v-bind="attrs">
     <iframe :src="`${safeUrl}?title=0&byline=0&portrait=0`" frameBorder="0"
       style="border: none; width: 100%;height: 400px;" />
     <input style="margin-top: 5px; box-sizing: border-box;" v-model="value" @change="onChange" />
