@@ -58,6 +58,7 @@ export default defineConfig(({ command, mode }) => {
             core: "./packages/slate/src/index.ts",
             dom: "./packages/slate-dom/src/index.ts",
             history: "./packages/slate-history/src/index.ts",
+            hyperscript: "./packages/slate-hyperscript/src/index.ts",
           },
           name: "slate-vue3",
           formats: ["es"],

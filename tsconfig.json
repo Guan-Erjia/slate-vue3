@@ -22,6 +22,7 @@
       "slate-vue3/core": ["./packages/slate/src/index.ts"],
       "slate-vue3/dom": ["./packages/slate-dom/src/index.ts"],
       "slate-vue3/history": ["./packages/slate-history/src/index.ts"],
+      "slate-vue3/hyperscript": ["./packages/slate-hyperscript/src/index.ts"],
       "slate-vue3": ["./packages/slate-vue/src/index.ts"],
       "slate-hyperscript": ["./packages/slate-hyperscript/src/index.ts"],
       "slate-dom": ["./packages/slate-dom/src/index.ts"],

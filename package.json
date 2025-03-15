@@ -34,6 +34,12 @@
         "types": "./dist/history.d.ts",
         "default": "./dist/history.js"
       }
+    },
+    "./hyperscript": {
+      "import": {
+        "types": "./dist/hyperscript.d.ts",
+        "default": "./dist/hyperscript.js"
+      }
     }
   },
   "scripts": {

@@ -1,7 +1,7 @@
 import {
   createHyperscript,
-  HyperscriptCreators,
-  HyperscriptShorthands,
+  type HyperscriptCreators,
+  type HyperscriptShorthands,
 } from './hyperscript'
 import { createEditor, createText } from './creators'
 
