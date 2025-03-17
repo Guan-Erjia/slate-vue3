@@ -5,8 +5,8 @@ export {
   codepointsIteratorRTL,
   getCharacterDistance,
   getWordDistance,
-} from "../packages/slate/src/utils/string";
-export { isDeepEqual } from "../packages/slate/src/utils/deep-equal";
+} from "../packages/slate/utils/string";
+export { isDeepEqual } from "../packages/slate/utils/deep-equal";
 
 /**
  * 给编辑器对象添加测试相关的扩展方法
