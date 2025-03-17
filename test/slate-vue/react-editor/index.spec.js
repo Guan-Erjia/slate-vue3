@@ -1,7 +1,7 @@
 import { render } from "@testing-library/vue";
 import { describe, test, expect, vi } from "vitest";
-import { createEditor, Transforms } from "slate-vue3/core";
-import { withDOM, DOMEditor } from "slate-vue3/dom";
+import { createEditor, Transforms } from "slate";
+import { withDOM, DOMEditor } from "slate-dom";
 import VueEditor from "../VueEditor.vue";
 import { nextTick } from "vue";
 

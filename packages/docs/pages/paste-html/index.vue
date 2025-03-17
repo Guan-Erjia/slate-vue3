@@ -4,9 +4,10 @@ import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { jsx } from 'slate-hyperscript'
 import { h } from "vue";
 import ImageElement from "./ImageElement.vue";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { withDOM } from "slate-vue3/dom";
 import { createEditor, Descendant, Transforms } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
+import { CustomEditor } from "../../custom-types";
 
 const allowedSchemes = ['http:', 'https:', 'mailto:', 'tel:']
 const ELEMENT_TAGS = {
@@ -77,7 +78,7 @@ const deserialize = (el: any): any => {
 
   return children
 }
-const withHtml = (editor: DOMEditor) => {
+const withHtml = (editor: CustomEditor) => {
   const { insertData, isInline, isVoid } = editor
 
   editor.isInline = element => element.type === 'link' ? true : isInline(element)

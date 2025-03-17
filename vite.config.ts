@@ -29,9 +29,14 @@ const BaseConfig: UserConfig = {
         "./packages/slate-history/index.ts"
       ),
       "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
+      "slate-vue": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
       "slate-hyperscript": path.resolve(
         __dirname,
         "./packages/slate-hyperscript/index.ts"
+      ),
+      "slate-history": path.resolve(
+        __dirname,
+        "./packages/slate-history/index.ts"
       ),
       "slate-dom": path.resolve(__dirname, "./packages/slate-dom/index.ts"),
       slate: path.resolve(__dirname, "./packages/slate/index.ts"),

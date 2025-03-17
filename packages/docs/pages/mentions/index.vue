@@ -7,8 +7,9 @@ import { CHARACTERS } from "./utils";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { createEditor, Descendant, Editor, Range, Transforms } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
+import { CustomEditor } from "../../custom-types";
 
-const withMentions = (editor: DOMEditor) => {
+const withMentions = (editor: CustomEditor) => {
   const { isInline, isVoid, markableVoid } = editor
   editor.isInline = element => {
     return element.type === 'mention' ? true : isInline(element)

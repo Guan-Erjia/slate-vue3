@@ -1,5 +1,4 @@
-import { DOMEditor } from "slate-vue3/dom";
-import { BulletedListElement } from "../../custom-types";
+import { BulletedListElement, CustomEditor } from "../../custom-types";
 import { Range, Element, Editor, Transforms, Point } from "slate-vue3/core";
 
 export const SHORTCUTS = {
@@ -15,7 +14,7 @@ export const SHORTCUTS = {
   "######": "heading-six",
 };
 
-export const withShortcuts = (editor: DOMEditor) => {
+export const withShortcuts = (editor: CustomEditor) => {
   const { deleteBackward, insertText } = editor;
 
   editor.insertText = (text) => {

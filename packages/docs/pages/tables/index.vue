@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { Slate, Editable, defaultRenderPlaceHolder } from "slate-vue3"
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { withDOM } from "slate-vue3/dom";
 import { h } from "vue";
 import { Editor, Range, Element, Point, Descendant, createEditor } from 'slate-vue3/core'
 import { withHistory } from "slate-vue3/history";
+import { CustomEditor } from "../../custom-types";
 
-const withTables = (editor: DOMEditor) => {
+const withTables = (editor: CustomEditor) => {
   const { deleteBackward, deleteForward, insertBreak } = editor
   editor.deleteBackward = unit => {
     if (editor.selection && Range.isCollapsed(editor.selection)) {

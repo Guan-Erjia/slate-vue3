@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { CSSProperties, h } from "vue";
-import { TitleElement, ParagraphElement } from "../../custom-types";
+import { TitleElement, ParagraphElement, CustomEditor } from "../../custom-types";
 import HoveringToolbar from "./HoveringToolbar.vue";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { withDOM } from "slate-vue3/dom";
 import { Editor, Transforms, Node, Element, createEditor, Descendant } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
-const withLayout = (editor: DOMEditor) => {
+const withLayout = (editor: CustomEditor) => {
   const { normalizeNode } = editor
   editor.normalizeNode = ([node, path]) => {
     if (path.length === 0) {

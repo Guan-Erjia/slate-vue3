@@ -9,7 +9,7 @@ import {
   Editor,
   Element,
   Transforms,
-} from 'slate';
+} from 'slate-vue3/core';
 import { useEditor } from 'slate-vue3'
 import Button from '../../components/Button.vue';
 import { computed } from 'vue';
@@ -26,10 +26,13 @@ const isBlockActive = computed(() => {
   const [match] = Array.from(
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, editor.selection),
-      match: n =>
-        !Editor.isEditor(n) &&
-        Element.isElement(n) &&
-        n[TEXT_ALIGN_TYPES.includes(props.format) ? 'align' : 'type'] === props.format,
+      match: n => {
+        const align = TEXT_ALIGN_TYPES.includes(props.format) ? 'align' : 'type'
+        return !Editor.isEditor(n) &&
+          Element.isElement(n) &&
+          // @ts-ignore
+          n[align] === props.format
+      }
     })
   )
 
@@ -50,12 +53,13 @@ const onMouseDown = (event: MouseEvent) => {
       !TEXT_ALIGN_TYPES.includes(props.format),
     split: true,
   })
-  let newProperties: Partial<Element>
+  let newProperties: Partial<CustomElement>
   if (TEXT_ALIGN_TYPES.includes(props.format)) {
     newProperties = {
       align: isActive ? undefined : props.format,
     }
   } else {
+    // @ts-ignore
     newProperties = {
       type: isActive ? 'paragraph' : isList ? 'list-item' : props.format as CustomElement['type'],
     }

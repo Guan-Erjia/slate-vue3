@@ -43,10 +43,11 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   const ranges = []
   if (
     search.value &&
+    'children' in node &&
     Array.isArray(node.children) &&
     node.children.every(Text.isText)
   ) {
-    const texts = node.children.map((it: { text: any; }) => it.text)
+    const texts = node.children.map((it) => it.text)
     const str = texts.join('')
     const length = search.value.length
     let start = str.indexOf(search.value)

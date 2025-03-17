@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, type RenderElementProps, } from "slate-vue3"
 import { h } from "vue";
-import { TitleElement, ParagraphElement } from "../../custom-types";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { TitleElement, ParagraphElement, CustomEditor } from "../../custom-types";
+import { withDOM } from "slate-vue3/dom";
 import { Editor, Transforms, Node, Element, Descendant, createEditor } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
-const withLayout = (editor: DOMEditor) => {
+const withLayout = (editor: CustomEditor) => {
   const { normalizeNode } = editor
   editor.normalizeNode = ([node, path]) => {
     if (path.length === 0) {

@@ -3,12 +3,12 @@ import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, type Rend
 import { h } from "vue";
 import imageExtensions from 'image-extensions'
 import isUrl from 'is-url'
-import { ImageElement } from "../../custom-types";
+import { CustomEditor, ImageElement } from "../../custom-types";
 import ImageComp from './ImageComp.vue'
 import Toolbar from '../../components/Toolbar.vue'
 import Button from '../../components/Button.vue'
 import { createEditor, Descendant, Transforms } from "slate-vue3/core";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
@@ -66,7 +66,7 @@ const renderElement = (props: RenderElementProps) => {
   }
 }
 
-const insertImage = (editor: DOMEditor, url: string) => {
+const insertImage = (editor: CustomEditor, url: string) => {
   const image: ImageElement = { type: 'image', url, children: [{ text: '' }] }
   Transforms.insertNodes(editor, image)
   Transforms.insertNodes(editor, {
@@ -82,7 +82,7 @@ const isImageUrl = (url: string) => {
   const ext = new URL(url).pathname.split('.').pop()
   return ext && imageExtensions.includes(ext)
 }
-const withImages = (editor: DOMEditor) => {
+const withImages = (editor: CustomEditor) => {
   const { insertData, isVoid } = editor
   editor.isVoid = element => {
     return element.type === 'image' ? true : isVoid(element)

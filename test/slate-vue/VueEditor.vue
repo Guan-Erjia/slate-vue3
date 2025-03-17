@@ -6,7 +6,8 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, DOMEditor } from 'slate-vue3'
+import { DOMEditor } from 'slate-dom';
+import { Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder } from 'slate-vue'
 import { h } from 'vue';
 
 const props = defineProps<{

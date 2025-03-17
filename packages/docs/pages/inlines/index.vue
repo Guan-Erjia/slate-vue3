@@ -2,7 +2,7 @@
 import { Slate, Editable, defaultRenderPlaceHolder, useInheritRef } from "slate-vue3"
 import { computed, h } from "vue";
 import type { RenderElementProps, RenderLeafProps, } from "slate-vue3";
-import { ButtonElement, LinkElement } from "../../custom-types";
+import { ButtonElement, CustomEditor, LinkElement } from "../../custom-types";
 import isUrl from "is-url";
 import { isKeyHotkey } from "is-hotkey";
 import Toolbar from "../../components/Toolbar.vue";
@@ -11,7 +11,7 @@ import LinkComponent from "./LinkComponent.vue";
 import BadgeComponent from "./BadgeComponent.vue";
 import ButtonComponent from "./ButtonComponent.vue";
 import { createEditor, Descendant, Editor, Element, Range, Transforms } from "slate-vue3/core";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
 const isLinkActive = computed(() => {
@@ -50,7 +50,7 @@ const isButtonActive = computed(() => {
   return !!button
 })
 
-const withInlines = (editor: DOMEditor) => {
+const withInlines = (editor: CustomEditor) => {
   const { insertData, insertText, isInline, isElementReadOnly, isSelectable } =
     editor
 
