@@ -1,6 +1,6 @@
 import { DOMEditor } from "slate-dom";
 import { createHyperscript } from "slate-hyperscript";
-export { withHistory, History } from "slate-vue3/history";
+export { withHistory, History } from "slate-history";
 export {
   codepointsIteratorRTL,
   getCharacterDistance,
@@ -18,19 +18,19 @@ export const withTest = (editor: DOMEditor) => {
   const { isInline, isVoid, isElementReadOnly, isSelectable } = editor;
 
   editor.isInline = (element) => {
-    return element.inline === true ? true : isInline(element);
+    return 'inline' in element && element.inline === true ? true : isInline(element);
   };
 
   editor.isVoid = (element) => {
-    return element.void === true ? true : isVoid(element);
+    return 'void' in element && element.void === true ? true : isVoid(element);
   };
 
   editor.isElementReadOnly = (element) => {
-    return element.readOnly === true ? true : isElementReadOnly(element);
+    return 'readOnly' in element && element.readOnly === true ? true : isElementReadOnly(element);
   };
 
   editor.isSelectable = (element) => {
-    return element.nonSelectable === true ? false : isSelectable(element);
+    return 'nonSelectable' in element && element.nonSelectable === true ? false : isSelectable(element);
   };
 
   return editor;
