@@ -1,0 +1,23 @@
+{
+  "include": ["./**/*"],
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "sourceMap": false,
+    "strict": true,
+    "target": "esnext",
+    "verbatimModuleSyntax": false,
+    "paths": {
+      "slate-vue3/core": ["../slate/index.ts"],
+      "slate-vue3/dom": ["../slate-dom/index.ts"],
+      "slate-vue3/history": ["../slate-history/index.ts"],
+      "slate-vue3/hyperscript": ["../slate-hyperscript/index.ts"],
+      "slate-vue3": ["../slate-vue/index.ts"]
+    }
+  }
+}

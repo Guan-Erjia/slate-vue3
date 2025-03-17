@@ -1,13 +1,12 @@
 {
   "include": ["./packages/**/*", "./test/**/*"],
+  "exclude": ["./packages/docs/**/*"],
   "compilerOptions": {
-    "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "allowSyntheticDefaultImports": true,
     "composite": false,
     "declaration": true,
     "declarationMap": false,
     "esModuleInterop": true,
-    "jsx": "preserve",
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -19,16 +18,11 @@
     "noCheck": false,
     "baseUrl": ".",
     "paths": {
-      "slate-vue3/core": ["./packages/slate/index.ts"],
-      "slate-vue3/dom": ["./packages/slate-dom/index.ts"],
-      "slate-vue3/history": ["./packages/slate-history/index.ts"],
-      "slate-vue3/hyperscript": ["./packages/slate-hyperscript/index.ts"],
-      "slate-vue3": ["./packages/slate-vue/index.ts"],
       "slate-hyperscript": ["./packages/slate-hyperscript/index.ts"],
       "slate-dom": ["./packages/slate-dom/index.ts"],
       "slate": ["./packages/slate/index.ts"],
       "share-tools": ["./packages/share-tools/index.ts"],
-      "@test-utils": ["./test/utils.ts"],
+      "@test-utils": ["./test/utils.ts"]
     }
-  },
+  }
 }

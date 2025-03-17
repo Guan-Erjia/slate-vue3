@@ -2,14 +2,10 @@ import { BaseRange, BaseText } from 'slate'
 declare module 'slate' {
   interface CustomTypes {
     Text: BaseText & {
-      placeholder?: string
-      onPlaceholderResize?: (node: HTMLElement | null) => void
       // FIXME: is unknown correct here?
       [key: string]: unknown
     }
     Range: BaseRange & {
-      placeholder?: string
-      onPlaceholderResize?: (node: HTMLElement | null) => void
       // FIXME: is unknown correct here?
       [key: string]: unknown
     }

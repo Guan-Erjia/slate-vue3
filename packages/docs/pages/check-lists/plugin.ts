@@ -1,6 +1,13 @@
-import { Range, Editor, Element, Point, Transforms } from "slate-vue3/core";
-import { DOMEditor } from "slate-vue3/dom";
-export const withChecklists = (editor: DOMEditor) => {
+import {
+  Range,
+  Editor,
+  Element,
+  Point,
+  Transforms,
+  BaseElement,
+} from "slate-vue3/core";
+import { CustomEditor, CustomElement } from "../../custom-types";
+export const withChecklists = (editor: CustomEditor) => {
   const { deleteBackward } = editor;
 
   editor.deleteBackward = (...args) => {
@@ -18,7 +25,7 @@ export const withChecklists = (editor: DOMEditor) => {
         const start = Editor.start(editor, path);
 
         if (Point.equals(selection.anchor, start)) {
-          const newProperties: Partial<Element> = {
+          const newProperties: Partial<CustomElement> = {
             type: "paragraph",
           };
           Transforms.setNodes(editor, newProperties, {

@@ -1,8 +1,14 @@
-import { Descendant, BaseEditor, BaseRange, Range, Element } from "slate";
-import { DOMEditor } from "slate-dom";
+import { Descendant, BaseEditor, BaseRange } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
 
 export type BlockQuoteElement = {
-  type: "block-quote" | "block";
+  type: "block-quote";
+  align?: string;
+  children: Descendant[];
+};
+
+export type BlockElement = {
+  type: "block";
   align?: string;
   children: Descendant[];
 };
@@ -107,7 +113,13 @@ export type VideoElement = {
 };
 
 export type CodeBlockElement = {
-  type: "code-block" | "code";
+  type: "code-block";
+  language: string;
+  children: Descendant[];
+};
+
+export type CodeElement = {
+  type: "code";
   language: string;
   children: Descendant[];
 };
@@ -119,6 +131,7 @@ export type CodeLineElement = {
 
 export type CustomElement =
   | BlockQuoteElement
+  | BlockElement
   | BulletedListElement
   | NumberedListElement
   | CheckListItemElement
@@ -142,6 +155,7 @@ export type CustomElement =
   | TitleElement
   | VideoElement
   | CodeBlockElement
+  | CodeElement
   | CodeLineElement;
 
 export type CustomText = {
@@ -155,17 +169,9 @@ export type EmptyText = {
   text: string;
 };
 
-export type CustomEditor = BaseEditor &
-  DOMEditor & {
-    nodeToDecorations?: Map<
-      CustomElement,
-      (BaseRange & {
-        [key: string]: unknown;
-      })[]
-    >;
-  };
+export type CustomEditor = BaseEditor & DOMEditor;
 
-declare module "slate" {
+declare module "slate-vue3/core" {
   interface CustomTypes {
     Editor: CustomEditor;
     Element: CustomElement;
