@@ -1,6 +1,6 @@
 {
   "name": "slate-vue3",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -13,31 +13,31 @@
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
+        "types": "./dist/slate-vue/index.d.ts",
         "default": "./dist/index.js"
       }
     },
     "./core": {
       "import": {
-        "types": "./dist/core.d.ts",
+        "types": "./dist/slate/index.d.ts",
         "default": "./dist/core.js"
       }
     },
     "./dom": {
       "import": {
-        "types": "./dist/dom.d.ts",
+        "types": "./dist/slate-dom/index.d.ts",
         "default": "./dist/dom.js"
       }
     },
     "./history": {
       "import": {
-        "types": "./dist/history.d.ts",
+        "types": "./dist/slate-history/index.d.ts",
         "default": "./dist/history.js"
       }
     },
     "./hyperscript": {
       "import": {
-        "types": "./dist/hyperscript.d.ts",
+        "types": "./dist/slate-hyperscript/index.d.ts",
         "default": "./dist/hyperscript.js"
       }
     }

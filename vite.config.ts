@@ -15,29 +15,26 @@ const BaseConfig: UserConfig = {
   },
   resolve: {
     alias: {
-      "slate-vue3/core": path.resolve(
-        __dirname,
-        "./packages/slate/src/index.ts"
-      ),
+      "slate-vue3/core": path.resolve(__dirname, "./packages/slate/index.ts"),
       "slate-vue3/dom": path.resolve(
         __dirname,
-        "./packages/slate-dom/src/index.ts"
+        "./packages/slate-dom/index.ts"
       ),
       "slate-vue3/hyperscript": path.resolve(
         __dirname,
-        "./packages/slate-hyperscript/src/index.ts"
+        "./packages/slate-hyperscript/index.ts"
       ),
       "slate-vue3/history": path.resolve(
         __dirname,
-        "./packages/slate-history/src/index.ts"
+        "./packages/slate-history/index.ts"
       ),
-      "slate-vue3": path.resolve(
+      "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
+      "slate-hyperscript": path.resolve(
         __dirname,
-        "./packages/slate-vue/src/index.ts"
+        "./packages/slate-hyperscript/index.ts"
       ),
-      "slate-hyperscript": path.resolve(__dirname, "./packages/slate-hyperscript/src/index.ts"),
-      "slate-dom": path.resolve(__dirname, "./packages/slate-dom/src/index.ts"),
-      "slate": path.resolve(__dirname, "./packages/slate/src/index.ts"),
+      "slate-dom": path.resolve(__dirname, "./packages/slate-dom/index.ts"),
+      slate: path.resolve(__dirname, "./packages/slate/index.ts"),
       "share-tools": path.resolve(__dirname, "./packages/share-tools/index.ts"),
       "@test-utils": path.resolve(__dirname, "./test/utils.ts"),
     },
@@ -54,11 +51,11 @@ export default defineConfig(({ command, mode }) => {
         copyPublicDir: false,
         lib: {
           entry: {
-            index: "./packages/slate-vue/src/index.ts",
-            core: "./packages/slate/src/index.ts",
-            dom: "./packages/slate-dom/src/index.ts",
-            history: "./packages/slate-history/src/index.ts",
-            hyperscript: "./packages/slate-hyperscript/src/index.ts",
+            index: "./packages/slate-vue/index.ts",
+            core: "./packages/slate/index.ts",
+            dom: "./packages/slate-dom/index.ts",
+            history: "./packages/slate-history/index.ts",
+            hyperscript: "./packages/slate-hyperscript/index.ts",
           },
           name: "slate-vue3",
           formats: ["es"],
@@ -70,7 +67,6 @@ export default defineConfig(({ command, mode }) => {
       plugins: [
         dts({
           tsconfigPath: "./tsconfig.json",
-          rollupTypes: true,
           exclude: ["./packages/docs/**/*", "./test/**/*"],
           compilerOptions: {
             verbatimModuleSyntax: false,
