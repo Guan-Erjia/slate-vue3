@@ -201,7 +201,7 @@ const menuStyle = computed(() => {
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder" @change="onSlateChange">
-    <Editable @keydown="onKeyDown" placeholder="Enter some text..." spellCheck />
+    <Editable @keydown="onKeyDown" placeholder="Enter some text..." spellcheck />
     <Teleport to="body">
       <div :style="menuStyle" data-cy="mentions-portal">
         <div v-for="(char, i) in chars" :key="char" @click="onCharClick(char)"

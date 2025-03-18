@@ -140,6 +140,6 @@ const onBeforeInput = (event: Event) => {
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
     <HoveringToolbar />
-    <Editable @beforeinput="onBeforeInput" placeholder="Enter some text..." spellCheck />
+    <Editable @beforeinput="onBeforeInput" placeholder="Enter some text..." spellcheck />
   </Slate>
 </template>

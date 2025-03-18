@@ -37,6 +37,6 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
-    <Editable placeholder="Enter a title…" spellCheck />
+    <Editable placeholder="Enter a title…" spellcheck />
   </Slate>
 </template>

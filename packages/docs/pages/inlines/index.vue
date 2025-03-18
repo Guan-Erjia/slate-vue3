@@ -180,6 +180,7 @@ const onLinkMouseDown = (event: MouseEvent) => {
   }
 }
 const onOffLinkMouseDown = (event: MouseEvent) => {
+  event.preventDefault()
   if (isLinkActive.value) {
     Transforms.unwrapNodes(editor, {
       match: n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'link',

@@ -41,6 +41,6 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
     <Editable :style="{ height: (props.short ? '150px' : '500px'), overflowY: 'scroll' }" placeholder="Enter a title…"
-      spellCheck />
+      spellcheck />
   </Slate>
 </template>

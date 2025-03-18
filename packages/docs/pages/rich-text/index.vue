@@ -120,6 +120,6 @@ const editor = withHistory(withDOM(createEditor(initialValue)))
       <BlockButton format="right" icon="format_align_right" />
       <BlockButton format="justify" icon="format_align_justify" />
     </Toolbar>
-    <Editable placeholder="Enter some rich text…" spellCheck />
+    <Editable placeholder="Enter some rich text…" spellcheck />
   </Slate>
 </template>

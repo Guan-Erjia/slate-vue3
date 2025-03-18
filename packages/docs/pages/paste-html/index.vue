@@ -187,6 +187,6 @@ const editor = withHistory(withHtml(withDOM(createEditor(initialValue))))
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
-    <Editable placeholder="Paste in some HTML..." spellCheck />
+    <Editable placeholder="Paste in some HTML..." spellcheck />
   </Slate>
 </template>
