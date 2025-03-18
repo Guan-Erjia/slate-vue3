@@ -41,7 +41,7 @@ export const StringComp = defineComponent({
 
     const zeroStringAttrs = computed(() => {
       const length = Node.string(element).length || 0
-      const isMarkPlaceholder = Boolean((leaf as any)[MARK_PLACEHOLDER_SYMBOL]) || false
+      const isMarkPlaceholder = Boolean(leaf[MARK_PLACEHOLDER_SYMBOL]) || false
       // COMPAT: Render text inside void nodes with a zero-width space.
       // So the node can contain selection but the text is not visible.
       const isVoidParent = editor.isVoid(element)

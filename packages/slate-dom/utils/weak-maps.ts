@@ -58,11 +58,6 @@ export const EDITOR_TO_ON_CHANGE = new WeakMap<
 export const EDITOR_TO_USER_MARKS: WeakMap<Editor, Partial<Text> | null> =
   new WeakMap()
 
-/**
- * Symbols.
- */
-
-export const PLACEHOLDER_SYMBOL = Symbol('placeholder') as unknown as string
 export const MARK_PLACEHOLDER_SYMBOL = Symbol(
   'mark-placeholder'
 ) as unknown as string

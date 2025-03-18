@@ -1,5 +1,4 @@
 import { Range } from 'slate'
-import { PLACEHOLDER_SYMBOL } from './weak-maps'
 
 export const shallowCompare = (
   obj1: { [key: string]: unknown },
@@ -14,9 +13,7 @@ const isDecorationFlagsEqual = (range: Range, other: Range) => {
   const { anchor: rangeAnchor, focus: rangeFocus, ...rangeOwnProps } = range
   const { anchor: otherAnchor, focus: otherFocus, ...otherOwnProps } = other
 
-  return (
-    range[PLACEHOLDER_SYMBOL] === other[PLACEHOLDER_SYMBOL] &&
-    shallowCompare(rangeOwnProps, otherOwnProps)
+  return shallowCompare(rangeOwnProps, otherOwnProps
   )
 }
 
