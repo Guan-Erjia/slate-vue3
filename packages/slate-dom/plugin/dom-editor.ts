@@ -57,7 +57,12 @@ function getFirefoxNodeEl(node: DOMNode, offset: number): [DOMNode, number] {
     while (el?.firstChild) {
       el = isLeft ? el.firstChild : el.lastChild;
     }
-    return [el || node, isLeft ? 0 : el?.textContent?.length || 0];
+    if(!el) {
+      throw new Error(
+          `Compact on Firefox: Failed to find adjacent nodes: ${Scrubber.stringify(node)}`
+      );
+    }
+    return [el, isLeft ? 0 : el.textContent?.length || 0];
   }
 }
 
