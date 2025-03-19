@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { BaseElement, Editor, Element, Node, Path, Range } from "slate";
+import { Editor, Element, Node, Range } from "slate";
 import { ChildrenFC } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,

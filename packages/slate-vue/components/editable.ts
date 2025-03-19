@@ -103,9 +103,7 @@ export const Editable = defineComponent({
     const attributes: HTMLAttributes = useAttrs();
     const isComposing = useComposing();
 
-    const deferredOperations = ref<Array<() => void>>([]);
 
-    // Update internal state on each render.
     const isReadOnly = useReadOnly();
     watch(
       () => readOnly,
@@ -126,18 +124,6 @@ export const Editable = defineComponent({
 
     const placeholderHeight = ref<number>();
     const onPlaceholderResize = (h?: number) => (placeholderHeight.value = h);
-
-    /**
-     * The AndroidInputManager object has a cyclical dependency on onDOMSelectionChange
-     *
-     * It is defined as a reference to simplify hook dependencies and clarify that
-     * it needs to be initialized.
-     */
-    // Listen on the native `selectionchange` event to be able to update any time
-    // the selection changes. This is required because React's `onSelect` is leaky
-    // and non-standard so it doesn't fire until after a selection has been
-    // released. This causes issues in situations where another change happens
-    // while a selection is being dragged.
 
     // webkit 内核使用，在影子节点渲染是获取 selection
     const processing = ref(false);
@@ -216,7 +202,6 @@ export const Editable = defineComponent({
       androidManager.value = useAndroidManager(editableRef);
     }
 
-    // callbackRef
     onMounted(() => {
       // Update element-related weak maps with the DOM element ref.
       let window;
@@ -245,10 +230,10 @@ export const Editable = defineComponent({
         if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
           return true;
         }
-      } else {
-        return false;
       }
+      return false;
     });
+
     const setDomSelection = () => {
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
       const domSelection = getSelection(root);
@@ -364,7 +349,6 @@ export const Editable = defineComponent({
 
       return newDomRange;
     };
-
     useChangeEffect(() => {
       // Make sure the DOM selection state is in sync.
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
@@ -372,7 +356,6 @@ export const Editable = defineComponent({
       if (!domSelection || !DOMEditor.isFocused(editor)) {
         return;
       }
-
       // In firefox if there is more then 1 range and we call setDomSelection we remove the ability to select more cells in a table
       if (domSelection.rangeCount <= 1) {
         setDomSelection();
@@ -404,6 +387,7 @@ export const Editable = defineComponent({
       window.document.removeEventListener("drop", stoppedDragging);
     });
 
+    const deferredOperations = ref<Array<() => void>>([]);
     const onBeforeinput = (event: Event) => {
       const isInputEvent = event instanceof InputEvent;
       if (!isInputEvent) {
