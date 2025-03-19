@@ -97,14 +97,14 @@ export const Slate = defineComponent({
       document.addEventListener("focusin", focusCb);
       document.addEventListener("focusout", focusCb);
       EDITOR_TO_ON_CHANGE.set(editor, (options?: { operation?: Operation }) => {
-        emit("change", editor.children);
+        emit("change", options);
         changeEffect.value++;
         switch (options?.operation?.type) {
           case "set_selection":
-            emit("selectionchange", editor.selection);
+            emit("selectionchange", options);
             break;
           default:
-            emit("valuechange", editor.children);
+            emit("valuechange", options);
         }
       });
     });

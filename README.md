@@ -139,19 +139,19 @@ interface EditableProps extends HTMLAttributes {
 ## onchange
 > any change in slate will trigger it
 ```typescript
-const onchange: (event: Descendant[]) => void
+const onchange: (event: { operation?: Operation }) => void
 ```
 
 ## onvaluechange
 > slate children change in slate will trigger it
 ```typescript
-const onvaluechange: (event: Descendant[]) => void
+const onvaluechange: (event: { operation?: Operation }) => void
 ```
 
 ## onselectionchange
 > slate selection change in slate will trigger it
 ```typescript
-const onselectionchange: (event: Selection) => void
+const onselectionchange: (event: { operation?: Operation }) => void
 ```
 
 # Hooks in slate-vue3
@@ -243,7 +243,9 @@ Vue uses lazy updates, rendering with components generates additional state, whi
 - [slate-vue](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate-vue)
   Vue components for rendering slate editors
 - [slate-history](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate-history)
-  Provide undo redo functions, replace Weakmap to UnProxyWeakmap
+  Same with slate-history
+- [slate-hyperscript](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/slate-hyperscript)
+  Same with slate-history
 - [share-tools](https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/share-tools)
   for special processing of Proxy data, obtain the raw pointer, isPlainObject declare
 
