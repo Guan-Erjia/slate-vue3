@@ -49,6 +49,7 @@ const handleContainerClick = () => {
       }">
       {{ isFold ? 'Expand' : 'Fold' }} Menu
     </div>
+    <a style="margin-right: 20px;" href="https://docs.slatejs.org" target="_blank">Docs</a>
     <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
   </header>
   <div style="display: flex;height: calc(100% - 50px);">
