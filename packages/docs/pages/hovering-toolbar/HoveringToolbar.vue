@@ -1,9 +1,9 @@
 <template>
   <Teleport to="body">
     <div ref="menuRef" data-testid="menu" :style="menuStyle" @mousedown="onMouseDown">
-      <Button :reversed="true" @click="toggleMark('bold')" :active="isMarkActive('bold')">format_bold</Button>
-      <Button :reversed="true" @click="toggleMark('italic')" :active="isMarkActive('italic')">format_italic</Button>
-      <Button :reversed="true" @click="toggleMark('underlined')"
+      <Button :reversed="true" @click="toggleMark('bold', $event)" :active="isMarkActive('bold')">format_bold</Button>
+      <Button :reversed="true" @click="toggleMark('italic', $event)" :active="isMarkActive('italic')">format_italic</Button>
+      <Button :reversed="true" @click="toggleMark('underlined', $event)"
         :active="isMarkActive('underlined')">format_underlined</Button>
     </div>
   </Teleport>
@@ -22,7 +22,8 @@ const isMarkActive = (format: 'bold' | 'italic' | 'underlined') => {
   const marks: any = Editor.marks(editor)
   return marks ? marks[format] === true : false
 }
-const toggleMark = (format: 'bold' | 'italic' | 'underlined') => {
+const toggleMark = (format: 'bold' | 'italic' | 'underlined', event: Event) => {
+  event.preventDefault()
   const isActive = isMarkActive(format)
   if (isActive) {
     Editor.removeMark(editor, format)
@@ -53,7 +54,7 @@ const menuStyle = computed(() => {
   const domSelection = window.getSelection()
   if (
     !selection ||
-    !inFocus ||
+    !inFocus.value ||
     Range.isCollapsed(selection) ||
     Editor.string(editor, selection) === ''
   ) {

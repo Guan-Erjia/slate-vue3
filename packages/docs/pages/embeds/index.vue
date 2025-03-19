@@ -8,9 +8,10 @@
 import { Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, useInheritRef } from 'slate-vue3';
 import { h } from 'vue';
 import VideoElement from './VideoElement.vue'
-import { DOMEditor, withDOM } from 'slate-vue3/dom';
+import { withDOM } from 'slate-vue3/dom';
 import { withHistory } from 'slate-vue3/history';
 import { createEditor, Descendant } from 'slate-vue3/core';
+import { CustomEditor } from '../../custom-types';
 
 const initialValue: Descendant[] = [
   {
@@ -37,7 +38,7 @@ const initialValue: Descendant[] = [
 ]
 
 
-const withEmbeds = (editor: DOMEditor) => {
+const withEmbeds = (editor: CustomEditor) => {
   const isVoid = editor.isVoid
   editor.isVoid = element => (element.type === 'video' ? true : isVoid(element))
   return editor

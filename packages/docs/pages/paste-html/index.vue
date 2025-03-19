@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Slate, Editable, defaultRenderPlaceHolder, } from "slate-vue3"
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
-import { jsx } from 'slate-hyperscript'
+import { jsx } from 'slate-vue3/hyperscript'
 import { h } from "vue";
 import ImageElement from "./ImageElement.vue";
 import { withDOM } from "slate-vue3/dom";
