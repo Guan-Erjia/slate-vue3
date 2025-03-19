@@ -8,21 +8,15 @@ import { withHistory } from "slate-vue3/history";
 const initialValue: Descendant[] = [
   {
     type: 'paragraph',
-    children: [
-      { text: 'This is editable plain text, just like a <textarea>!' },
-    ],
+    children: [{ text: 'The front and back of the cursor will have two colors' }]
   },
   {
     type: 'paragraph',
-    children: [
-      { text: 'This is editable plain text, just like a <textarea>!' },
-    ],
+    children: [{ text: 'The front and back of the cursor will have two colors' }]
   },
   {
     type: 'paragraph',
-    children: [
-      { text: 'This is editable plain text, just like a <textarea>!' },
-    ],
+    children: [{ text: 'The front and back of the cursor will have two colors' }]
   }
 ]
 

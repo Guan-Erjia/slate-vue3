@@ -41,7 +41,7 @@ const handleContainerClick = () => {
 
 <template>
   <header class="header">
-    <span>SlateVue3 Examples</span>
+    <span>slate-vue3 examples</span>
     <div style="flex-grow: 1;min-width: 0;"></div>
     <div v-if="isMobileDevice" @click="isFold = !isFold"
       style="margin-right: 12px; cursor: default;font-size: 13px;font-weight: 500;" :style="{
