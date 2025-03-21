@@ -61,6 +61,10 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@liveblocks/client": "^2.21.0",
+    "@liveblocks/yjs": "^2.21.0",
+    "@slate-yjs/core": "^1.0.2",
+    "yjs": "^13.6.24",
     "@faker-js/faker": "^9.6.0",
     "@playwright/test": "^1.50.1",
     "@testing-library/vue": "^8.1.0",

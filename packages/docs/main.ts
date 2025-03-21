@@ -16,6 +16,10 @@ export const ExampleOptions = [
     name: "check-lists",
     component: () => import("./pages/check-lists/index.vue"),
   },
+  // {
+  //   name: "liveblocks",
+  //   component: () => import("./pages/liveblocks/index.vue"),
+  // },
   {
     name: "editable-voids",
     component: () => import("./pages/editable-voids/index.vue"),
