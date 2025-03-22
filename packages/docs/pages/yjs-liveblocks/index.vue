@@ -17,15 +17,25 @@ const connected = ref(false)
 
 const connectchange = (e: boolean) => connected.value = e
 const startConnect = () => {
-  const info = createClient({
-    publicApiKey: publicApiKey.value,
-  }).enterRoom('my-room')
-  const provider = getYjsProviderForRoom(info.room)
-  provider.on('sync', connectchange)
+  try {
+    const info = createClient({
+      publicApiKey: publicApiKey.value,
+    }).enterRoom('my-room')
+    const provider = getYjsProviderForRoom(info.room)
+    provider.on('sync', connectchange)
 
-  roomInfo.value = info
-  yProvider.value = provider
-  sharedType.value = provider.getYDoc().get("slate", XmlText)
+    roomInfo.value = info
+    yProvider.value = provider
+    sharedType.value = provider.getYDoc().get("slate", XmlText)
+  } catch (error) {
+    alert(error)
+    router.push({
+      name: 'yjs-liveblocks',
+      params: {
+        publicApiKey: ''
+      },
+    })
+  }
 }
 
 const deposeConnect = () => {
@@ -45,11 +55,16 @@ onMounted(() => {
 })
 onUnmounted(() => {
   deposeConnect()
-
 })
 const onKeyup = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
-    router.push(`/yjs-liveblocks/${publicApiKey.value}`)
+    router.push({
+      name: 'yjs-liveblocks',
+      params: {
+        publicApiKey: publicApiKey.value
+      },
+    })
+    startConnect()
   }
 }
 </script>
@@ -57,9 +72,10 @@ const onKeyup = (event: KeyboardEvent) => {
 <template>
   <div style="font-size: 20px;color: red;margin-bottom: 12px;">This is not avaliable</div>
   <a href="https://liveblocks.io/dashboard" style="margin-bottom: 12px; display: block;" target="_blank">
-    👉 Click it and get a publicApiKey from liveblocks </a>
+    👉 Click it and get a publicApiKey from liveblocks</a>
   <div style="display: flex;width: 100%;">
-    <input v-model="publicApiKey" @keyup="onKeyup" placeholder="plaase paste your liveblocks publicApiKey, and press Enter to connect"
+    <input v-model="publicApiKey" @keyup="onKeyup"
+      placeholder="paste your liveblocks publicApiKey, and press Enter to connect"
       style="width: 100%;margin-bottom: 10px;">
   </div>
   <YjsEditor v-if="sharedType && connected" :sharedType="sharedType" />
