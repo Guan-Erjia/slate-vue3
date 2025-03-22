@@ -54,7 +54,7 @@ const handleContainerClick = () => {
   </header>
   <div style="display: flex;height: calc(100% - 50px);">
     <ol v-show="!isFold" :style="olStyle">
-      <RouterLink :to="{ name: item.name }" v-for="item in ROUTES_RECORD">
+      <RouterLink :to="{ name: item.name }" v-for="item in ROUTES_RECORD.slice(0, -2)">
         <li style="text-decoration: none;margin: 10px 0;" :style="{
           color: item.name === route.name ? '#0366d6' : undefined,
           fontWeight: item.name === route.name ? 500 : undefined,
