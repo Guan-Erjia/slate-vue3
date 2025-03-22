@@ -1,0 +1,1 @@
+import{_ as o,b as t,f as r,p as s}from"./index-IM7Crm3-.js";const n={},a={style:{position:"relative","padding-bottom":"8px","margin-bottom":"10px","border-bottom":"2px solid #eee"},"data-test-id":"menu"};function c(e,d){return t(),r("div",a,[s(e.$slots,"default")])}const l=o(n,[["render",c]]);export{l as T};

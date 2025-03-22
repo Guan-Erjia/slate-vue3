@@ -1,0 +1,1 @@
+import{B as o}from"./editable-CDhnIf51.js";import{E as s}from"./index-IM7Crm3-.js";const r=()=>{const e=s(o);if(e===void 0)throw new Error("The `useFocused` hook must be used inside the <Slate> component's context.");return e};export{r as u};
