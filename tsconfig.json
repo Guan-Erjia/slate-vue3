@@ -21,6 +21,7 @@
       "slate-vue": ["./packages/slate-vue/index.ts"],
       "slate-history": ["./packages/slate-history/index.ts"],
       "slate-hyperscript": ["./packages/slate-hyperscript/index.ts"],
+      "slate-yjs": ["./packages/slate-yjs/index.ts"],
       "slate-dom": ["./packages/slate-dom/index.ts"],
       "slate": ["./packages/slate/index.ts"],
       "share-tools": ["./packages/share-tools/index.ts"],

@@ -17,6 +17,7 @@
       "slate-vue3/dom": ["../slate-dom/index.ts"],
       "slate-vue3/history": ["../slate-history/index.ts"],
       "slate-vue3/hyperscript": ["../slate-hyperscript/index.ts"],
+      "slate-vue3/yjs": ["../slate-yjs/index.ts"],
       "slate-vue3": ["../slate-vue/index.ts"]
     }
   }

@@ -2,7 +2,7 @@
 import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { CSSProperties, h, nextTick, onMounted, onUnmounted } from "vue";
 import { CustomElement } from "../../custom-types";
-import { withYjs, YjsEditor } from "../../../slate-yjs/index";
+import { withYjs, YjsEditor } from "slate-vue3/yjs";
 import { withDOM } from "slate-vue3/dom";
 import { createEditor, Editor, Transforms } from "slate-vue3/core";
 import { XmlText } from "yjs";
