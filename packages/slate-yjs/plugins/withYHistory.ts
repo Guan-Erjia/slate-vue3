@@ -1,4 +1,4 @@
-import { Editor, Transforms } from 'slate';
+import { Editor, Location, Transforms } from 'slate';
 import * as Y from 'yjs';
 import { HistoryStackItem, RelativeRange } from '../model/types';
 import {
@@ -144,8 +144,9 @@ export function withYHistory<T extends YjsEditor>(
     if (!selection) {
       return;
     }
-
-    Transforms.select(e, selection);
+    if(Location.isLocation(selection)) {
+      Transforms.select(e, selection);
+    }
   };
 
   const { connect, disconnect } = e;

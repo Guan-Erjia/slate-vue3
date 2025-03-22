@@ -205,7 +205,7 @@ export function withCursors<
   };
 
   const awarenessChangeListener: RemoteCursorChangeEventListener = (yEvent) => {
-    const listeners = CURSOR_CHANGE_EVENT_LISTENERS.get(e);
+    const listeners: Set<RemoteCursorChangeEventListener> = CURSOR_CHANGE_EVENT_LISTENERS.get(e);
     if (!listeners) {
       return;
     }
