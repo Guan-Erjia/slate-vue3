@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, CSSProperties, ref } from 'vue';
-import { ExampleOptions } from './main'
+import { ROUTES_RECORD } from './main'
 import { RouterView, RouterLink, useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -54,7 +54,7 @@ const handleContainerClick = () => {
   </header>
   <div style="display: flex;height: calc(100% - 50px);">
     <ol v-show="!isFold" :style="olStyle">
-      <RouterLink :to="item.name" v-for="item in ExampleOptions">
+      <RouterLink :to="{ name: item.name }" v-for="item in ROUTES_RECORD">
         <li style="text-decoration: none;margin: 10px 0;" :style="{
           color: item.name === route.name ? '#0366d6' : undefined,
           fontWeight: item.name === route.name ? 500 : undefined,

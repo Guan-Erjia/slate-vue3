@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
-import { CSSProperties, h, onMounted, onUnmounted, ref } from "vue";
+import { CSSProperties, h, nextTick, onMounted, onUnmounted } from "vue";
+import { CustomElement } from "../../custom-types";
+import { withYjs, YjsEditor } from "../../../slate-yjs/index";
+import { withDOM } from "slate-vue3/dom";
+import { createEditor, Editor, Transforms } from "slate-vue3/core";
+import { XmlText } from "yjs";
 import Toolbar from '../../components/Toolbar.vue'
 import MarkButton from "../rich-text/MarkButton.vue";
 import BlockButton from "../rich-text/BlockButton.vue";
-import { CustomElement } from "../../custom-types";
-import { withYjs, YjsEditor } from "@slate-yjs/core";
-import { withDOM } from "slate-vue3/dom";
-import { createEditor, Editor, Transforms } from "slate-vue3/core";
-import { createClient } from "@liveblocks/client";
-import { getYjsProviderForRoom } from "@liveblocks/yjs";
-import * as Y from "yjs";
-
 
 const initialValue: CustomElement[] = [
   {
@@ -75,25 +72,12 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
     children
   )
 }
-const client = createClient({
-  publicApiKey: "",
-});
-const info = client.enterRoom("my-room");
-const yProvider = getYjsProviderForRoom(info.room);
-const sharedType = yProvider.getYDoc().get("slate", Y.XmlText) as Y.XmlText;;
-const connected = ref(false)
 
-onMounted(() => {
-  yProvider.on('sync', (e: boolean) => connected.value = e)
-  YjsEditor.connect(editor);
-})
-onUnmounted(() => {
-  info.leave()
-  yProvider.off('sync', (e: boolean) => connected.value = e)
-  YjsEditor.disconnect(editor);
-})
+const props = defineProps<{
+  sharedType: XmlText;
+}>()
 
-const editor = withYjs(withDOM(createEditor(initialValue) as any), sharedType)
+const editor = withYjs(withDOM(createEditor(initialValue)), props.sharedType)
 const { normalizeNode } = editor;
 editor.normalizeNode = (entry: [any]) => {
   const [node] = entry;
@@ -101,17 +85,23 @@ editor.normalizeNode = (entry: [any]) => {
   if (!Editor.isEditor(node) || node.children.length > 0) {
     return normalizeNode(entry);
   }
-
-  Transforms.insertNodes(editor, {
-    type: "paragraph",
-    children: [{ text: "" }],
-  }, { at: [0] });
+  // 必须更新 DOM 后才执行 insertNodes，更新太快 shareRoot 来不及反应会报错
+  nextTick(() => {
+    Transforms.insertNodes(editor, initialValue[0], { at: [0] });
+  })
 };
+
+onMounted(() => {
+  YjsEditor.connect(editor);
+})
+onUnmounted(() => {
+  YjsEditor.disconnect(editor);
+})
 </script>
 
 <template>
-  <Slate v-if="connected && sharedType && yProvider" :editor="editor" :render-element="renderElement"
-    :render-leaf="renderLeaf" :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
+    :render-placeholder="defaultRenderPlaceHolder">
     <Toolbar>
       <MarkButton format="bold" icon="format_bold" />
       <MarkButton format="italic" icon="format_italic" />
