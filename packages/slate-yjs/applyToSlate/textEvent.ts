@@ -7,8 +7,9 @@ import {
   getSlatePath,
   yOffsetToSlateOffsets,
 } from '../utils/location';
-import { deepEquals, omitNullEntries, pick } from '../utils/object';
+import { deepEquals, omitNullEntries } from '../utils/object';
 import { getProperties } from '../utils/slate';
+import { pick } from 'lodash-es';
 
 function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
   const ops: Operation[] = [];
@@ -54,10 +55,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         }
 
         const newProperties = change.attributes;
-        const properties = pick(
-          node,
-          ...(Object.keys(change.attributes) as Array<keyof Element>)
-        );
+        const properties = pick(node, ...(Object.keys(change.attributes)));
 
         if (pathOffset === startPathOffset || pathOffset === endPathOffset) {
           const start = pathOffset === startPathOffset ? startTextOffset : 0;

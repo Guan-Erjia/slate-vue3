@@ -1,5 +1,5 @@
 import { BaseText, Descendant, Text } from 'slate';
-import { omit } from './object';
+import { omit } from 'lodash-es';
 
 export function getProperties<TNode extends Descendant>(
   node: TNode

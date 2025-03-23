@@ -66,25 +66,7 @@ export function deepEquals(
   return true;
 }
 
-export function pick<TObj, TKeys extends keyof TObj>(
-  obj: TObj,
-  ...keys: TKeys[]
-): Pick<TObj, TKeys> {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => keys.includes(key as TKeys))
-  ) as Pick<TObj, TKeys>;
-}
-
-export function omit<TObj, TKeys extends keyof TObj>(
-  obj: TObj,
-  ...keys: TKeys[]
-): Omit<TObj, TKeys> {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([key]) => !keys.includes(key as TKeys))
-  ) as Omit<TObj, TKeys>;
-}
-
-export function omitNullEntries<TObj>(obj: TObj): {
+export function omitNullEntries<TObj extends object>(obj: TObj): {
   [K in keyof TObj]: TObj[K] extends null ? never : K;
 } {
   return Object.fromEntries(
