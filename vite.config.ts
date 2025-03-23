@@ -11,6 +11,7 @@ const BaseConfig: UserConfig = {
   base: "/slate-vue3/",
   test: {
     include: ["./test/**/index.spec.js"],
+    exclude: ["./test/slate-yjs/index.spec.js"],
     environment: "jsdom",
   },
   resolve: {

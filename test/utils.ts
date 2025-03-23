@@ -7,6 +7,7 @@ export {
   getWordDistance,
 } from "../packages/slate/utils/string";
 export { isDeepEqual } from "../packages/slate/utils/deep-equal";
+export { Transforms } from "../packages/slate";
 
 /**
  * 给编辑器对象添加测试相关的扩展方法
@@ -55,3 +56,14 @@ export const resolveModules = async (
   );
 
 export const E2E_BASE_URL = "http://localhost:5173/slate-vue3/";
+
+export const jsxYjs = createHyperscript({
+  elements: {
+    unstyled: { type: 'unstyled' },
+    h1: { type: 'header-one' },
+    ul: { type: 'unordered-list' },
+    'ul-li': { type: 'unordered-list-item' },
+    link: { type: 'link' },
+    'note-link': { type: 'note-link' },
+  },
+});
