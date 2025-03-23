@@ -5,8 +5,8 @@ import { withDOM, DOMEditor } from "slate-dom";
 import VueEditor from "../VueEditor.vue";
 import { nextTick } from "vue";
 
-describe("slate-react", () => {
-  describe("ReactEditor", () => {
+describe("slate-vue", () => {
+  describe("VueEditor", () => {
     describe(".focus", () => {
       test("should set focus in top of document with no editor selection", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
