@@ -23,7 +23,7 @@ export function mergeNode(
     Path.previous(op.path.slice(-1))
   );
 
-  if (!toRaw(target.yTarget)  !== !toRaw(prev.yTarget)) {
+  if (!toRaw(target.yTarget) !== !toRaw(prev.yTarget)) {
     throw new Error('Cannot merge y text with y element');
   }
 
