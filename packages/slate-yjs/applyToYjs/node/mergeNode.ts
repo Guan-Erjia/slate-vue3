@@ -9,6 +9,7 @@ import {
   restoreStoredPositionsWithDeltaAbsolute,
 } from '../../utils/position';
 import { getProperties } from '../../utils/slate';
+import { toRaw } from 'vue';
 
 export function mergeNode(
   sharedRoot: Y.XmlText,
@@ -22,7 +23,7 @@ export function mergeNode(
     Path.previous(op.path.slice(-1))
   );
 
-  if (!target.yTarget !== !prev.yTarget) {
+  if (!toRaw(target.yTarget)  !== !toRaw(prev.yTarget)) {
     throw new Error('Cannot merge y text with y element');
   }
 
