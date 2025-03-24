@@ -242,25 +242,23 @@ export function withYjs<T extends Editor>(
 
     // Group local changes by origin so we can apply them in the correct order
     // with the correct origin with a minimal amount of transactions.
-    const txGroups: LocalChange[][] = [];
+    const txGroups: LocalChange[] = [];
     localChanges.forEach((change) => {
       const currentGroup = txGroups[txGroups.length - 1];
-      if (currentGroup && currentGroup[0].origin === change.origin) {
-        return currentGroup.push(change);
+      if (currentGroup?.origin === change.origin) {
+        return txGroups.push(change);
       }
 
-      txGroups.push([change]);
+      txGroups.push(change);
     });
 
     txGroups.forEach((txGroup) => {
       assertDocumentAttachment(e.sharedRoot);
 
       e.sharedRoot.doc.transact(() => {
-        txGroup.forEach((change) => {
-          assertDocumentAttachment(e.sharedRoot);
-          applySlateOp(e.sharedRoot, { children: change.doc }, change.op);
-        });
-      }, txGroup[0].origin);
+        assertDocumentAttachment(e.sharedRoot);
+        applySlateOp(e.sharedRoot, { children: txGroup.doc }, txGroup.op);
+      }, txGroup.origin);
     });
   };
 
