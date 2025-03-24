@@ -34,9 +34,7 @@ export function getYTarget(
   const [pathOffset, ...childPath] = path;
 
   const yOffset = slatePathOffsetToYOffset(slateRoot, pathOffset);
-  // fixme 这里的逻辑有问题，pathOffset会超出范围， 不知道哪个地方的指针连在一起了
-  const slateRootChildrenLength = slateRoot.children.length;
-  const targetNode = slateRoot.children[pathOffset >= slateRootChildrenLength ? slateRootChildrenLength - 1 : pathOffset];
+  const targetNode = slateRoot.children[pathOffset];
 
   const delta = yTextToInsertDelta(yRoot);
   const targetLength = getSlateNodeYLength(targetNode);
