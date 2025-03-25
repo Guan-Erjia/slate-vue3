@@ -267,8 +267,11 @@ export function withYjs<T extends Editor>(
     if (YjsEditor.connected(e) && YjsEditor.isLocal(e)) {
       YjsEditor.storeLocalChange(e, op);
     }
-
-    apply(op);
+    if(op.type === 'merge_node') {
+      queueMicrotask(() => apply(op));
+    } else {
+      apply(op);
+    }
   };
 
   e.onChange = () => {
