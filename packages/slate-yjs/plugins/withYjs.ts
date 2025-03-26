@@ -1,4 +1,4 @@
-import { BaseEditor, Descendant, Editor, Operation, Point } from 'slate';
+import { BaseEditor, Descendant, Editor, Operation, Point, Text } from 'slate';
 import * as Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
 import { applySlateOp } from '../applyToYjs';
@@ -13,6 +13,7 @@ import {
 } from '../utils/position';
 import { assertDocumentAttachment } from '../utils/yjs';
 import { toRawWeakMap as WeakMap } from 'share-tools';
+import { getSlateNodeYLength, getYTarget } from '../utils/location';
 
 type LocalChange = {
   op: Operation;
@@ -229,6 +230,17 @@ export function withYjs<T extends Editor>(
   };
 
   e.storeLocalChange = (op) => {
+    if (op.type === "split_node") {
+      const target = getYTarget(sharedRoot, editor, op.path);
+      if (!Text.isText(target.slateTarget) && target.slateTarget?.children) {
+        const length = target.slateTarget.children.reduce(
+          (current, child) => current + getSlateNodeYLength(child),
+          0
+        );
+        // @ts-ignore 因为没有使用 immer 锁定 editor，这里需要提前计算分割长度
+        op.splitlength = length
+      }
+    }
     LOCAL_CHANGES.set(e, [
       ...YjsEditor.localChanges(e),
       { op, doc: editor.children, origin: YjsEditor.origin(e) },

@@ -60,7 +60,8 @@ export function splitNode(
   const splitDelta = sliceInsertDelta(
     yTextToInsertDelta(target.yTarget),
     ySplitOffset,
-    length - ySplitOffset
+    // @ts-ignore 需要从 operation 中获取分割长度
+    op.splitlength || ySplitOffset - ySplitOffset
   );
   const clonedDelta = cloneInsertDeltaDeep(splitDelta);
 
