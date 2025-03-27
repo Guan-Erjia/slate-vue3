@@ -43,12 +43,13 @@ export default defineConfig(({ command, mode }) => {
             dom: "./packages/slate-dom/index.ts",
             history: "./packages/slate-history/index.ts",
             hyperscript: "./packages/slate-hyperscript/index.ts",
+            yjs: "./packages/slate-yjs/index.ts",
           },
           name: "slate-vue3",
           formats: ["es"],
         },
         rollupOptions: {
-          external: ["vue"],
+          external: ["vue", 'y-protocols', 'yjs'],
         },
       },
       plugins: [
