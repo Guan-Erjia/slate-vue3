@@ -112,7 +112,8 @@ export function getSlatePath(
   yText: Y.XmlText
 ): Path {
   const yNodePath = [yText];
-  while (yNodePath[0] !== toRaw(sharedRoot) ) {
+  // fixme 这里的判断可能有问题，代理对象的原始指针，和 yjs 指针不一定相同
+  while (yNodePath[0] !== toRaw(sharedRoot)) {
     const { parent: yParent } = yNodePath[0];
 
     if (!yParent) {
