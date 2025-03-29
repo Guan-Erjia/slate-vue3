@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, CSSProperties, ref } from 'vue';
-import { ROUTES_RECORD } from './main'
+import { ROUTES_RECORD } from './routes'
 import { RouterView, RouterLink, useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -26,7 +26,7 @@ const olStyle = computed<CSSProperties>(() => ({
   width: '200px',
   paddingInlineStart: '30px',
   overflowY: 'auto',
-  marginTop: 0,
+  margin: 0,
   backgroundColor: 'white',
   zIndex: 999,
   position: isMobileDevice.value ? 'absolute' : 'static',

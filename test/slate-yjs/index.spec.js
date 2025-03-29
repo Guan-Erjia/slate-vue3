@@ -8,7 +8,7 @@ import {
 import * as Y from "yjs";
 import { Editor, createEditor, Element, Transforms } from "slate";
 
-const modules = await resolveModules(import.meta.glob("./moveNode/**/*.jsx"));
+const modules = await resolveModules(import.meta.glob("./**/*.jsx"));
 
 const INLINE_ELEMENTS = ["note-link", "link"];
 

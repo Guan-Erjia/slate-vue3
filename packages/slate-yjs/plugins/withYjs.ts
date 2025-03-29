@@ -1,4 +1,4 @@
-import { BaseEditor, Descendant, Editor, Operation, Point, Text } from 'slate';
+import { BaseEditor, Descendant, Editor, Operation, Point } from 'slate';
 import * as Y from 'yjs';
 import { applyYjsEvents } from '../applyToSlate';
 import { applySlateOp } from '../applyToYjs';
@@ -14,7 +14,6 @@ import {
 import { assertDocumentAttachment } from '../utils/yjs';
 import { toRawWeakMap as WeakMap } from 'share-tools';
 import { cloneDeep } from 'lodash-es';
-import { toRaw } from 'vue';
 
 type LocalChange = {
   op: Operation;
@@ -238,7 +237,7 @@ export function withYjs<T extends Editor>(
       // flushLocalChanges 时，由于 slate-vue3 没有使用 immer 锁定，children 已随着更新
       // 需要使用深拷贝切断指针，有性能问题
       // 后续需要使用浅拷贝，只切断部分指针
-      { op, doc: cloneDeep(toRaw(editor.children)), origin: YjsEditor.origin(e) },
+      { op, doc: cloneDeep(editor.children), origin: YjsEditor.origin(e) },
     ]);
   };
 

@@ -7,9 +7,8 @@ import {
   getSlatePath,
   yOffsetToSlateOffsets,
 } from '../utils/location';
-import { deepEquals, omitNullEntries } from '../utils/object';
+import { deepEquals, omitNullEntries, pick } from '../utils/object';
 import { getProperties } from '../utils/slate';
-import { pick } from 'lodash-es';
 
 function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
   const ops: Operation[] = [];
@@ -55,7 +54,10 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         }
 
         const newProperties = change.attributes;
-        const properties = pick(node, ...(Object.keys(change.attributes)));
+        const properties = pick(
+          node,
+          ...(Object.keys(change.attributes) as Array<keyof Element>)
+        );
 
         if (pathOffset === startPathOffset || pathOffset === endPathOffset) {
           const start = pathOffset === startPathOffset ? startTextOffset : 0;
@@ -187,7 +189,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
          */
         if (
           typeof change.insert === 'string' &&
-          deepEquals(change.attributes ?? {}, currentProps) &&
+          deepEquals(change.attributes ?? {}, currentProps as any) &&
           Path.equals(childPath, lastPath)
         ) {
           return ops.push({
@@ -264,7 +266,7 @@ export function translateYTextEvent(
     );
 
     const properties = Object.fromEntries(
-      keyChanges.map(([key]) => [key, targetElement[key]])
+      keyChanges.map(([key]) => [key, targetElement[key as keyof typeof targetElement]])
     );
 
     ops.push({ type: 'set_node', newProperties, properties, path: slatePath });
