@@ -60,7 +60,7 @@ const onKeyup = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
     router.push({
       name: 'yjs-liveblocks',
-      params: {
+      query: {
         publicApiKey: publicApiKey.value
       },
     })
