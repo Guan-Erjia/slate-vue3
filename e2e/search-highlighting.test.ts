@@ -4,7 +4,7 @@ import { E2E_BASE_URL } from '../test/utils'
 test.describe('search highlighting', () => {
   test.beforeEach(
     async ({ page }) =>
-      await page.goto(`${E2E_BASE_URL}#/search-highlighting`)
+      await page.goto(`${E2E_BASE_URL}search-highlighting`)
   )
 
   test('highlights the searched text', async ({ page }) => {

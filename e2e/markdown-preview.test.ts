@@ -6,7 +6,7 @@ test.describe('markdown preview', () => {
   const markdown = 'span[data-slate-string="true"]'
 
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${E2E_BASE_URL}#/markdown-preview`)
+    await page.goto(`${E2E_BASE_URL}markdown-preview`)
   })
 
   test('checks for markdown', async ({ page }) => {

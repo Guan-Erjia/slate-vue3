@@ -5,7 +5,7 @@ test.describe('selection', () => {
   const slateEditor = '[data-slate-node="element"]'
   test.beforeEach(
     async ({ page }) =>
-      await page.goto(`${E2E_BASE_URL}#/richtext`)
+      await page.goto(`${E2E_BASE_URL}richtext`)
   )
   test('select the correct block when triple clicking', async ({ page }) => {
     // triple clicking the second block (paragraph) shouldn't highlight the

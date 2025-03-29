@@ -3,7 +3,7 @@ import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('images example', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${E2E_BASE_URL}#/images`)
+    await page.goto(`${E2E_BASE_URL}images`)
   })
 
   test('contains image', async ({ page }) => {

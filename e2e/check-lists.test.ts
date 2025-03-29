@@ -3,7 +3,7 @@ import { E2E_BASE_URL } from "../test/utils";
 
 test.describe("Check-lists example", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${E2E_BASE_URL}#/check-lists`);
+    await page.goto(`${E2E_BASE_URL}check-lists`);
   })
 
   test('checks the bullet when clicked', async ({ page }) => {

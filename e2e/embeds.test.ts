@@ -5,7 +5,7 @@ test.describe('embeds example', () => {
   const slateEditor = 'div[data-slate-editor="true"]'
 
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${E2E_BASE_URL}#/embeds`)
+    await page.goto(`${E2E_BASE_URL}embeds`)
   })
 
   test('contains embeded', async ({ page }) => {

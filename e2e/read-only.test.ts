@@ -3,7 +3,7 @@ import { E2E_BASE_URL } from '../test/utils'
 
 test.describe('readonly editor', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${E2E_BASE_URL}#/read-only`)
+    await page.goto(`${E2E_BASE_URL}read-only`)
   })
 
   test('should not be editable', async ({ page }) => {

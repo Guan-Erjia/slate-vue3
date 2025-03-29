@@ -4,7 +4,7 @@ import { E2E_BASE_URL } from '../test/utils'
 test.describe('paste html example', () => {
   test.beforeEach(
     async ({ page }) =>
-      await page.goto(`${E2E_BASE_URL}#/paste-html`)
+      await page.goto(`${E2E_BASE_URL}paste-html`)
   )
 
   const pasteHtml = async (page: Page, htmlContent: string) => {

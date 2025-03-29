@@ -4,7 +4,7 @@ import { E2E_BASE_URL } from '../test/utils'
 test.describe('shadow-dom example', () => {
   test.beforeEach(
     async ({ page }) =>
-      await page.goto(`${E2E_BASE_URL}#/shadow-dom`)
+      await page.goto(`${E2E_BASE_URL}shadow-dom`)
   )
 
   test('renders slate editor inside nested shadow', async ({ page }) => {

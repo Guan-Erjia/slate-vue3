@@ -9,7 +9,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute()
 const router = useRouter()
 
-const publicApiKey = ref(route.params.publicApiKey as string || '')
+const publicApiKey = ref(route.query.publicApiKey as string || '')
 const roomInfo = ref()
 const yProvider = ref();
 const sharedType = ref()
@@ -31,7 +31,7 @@ const startConnect = () => {
     alert(error)
     router.push({
       name: 'yjs-liveblocks',
-      params: {
+      query: {
         publicApiKey: ''
       },
     })
@@ -60,7 +60,7 @@ const onKeyup = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
     router.push({
       name: 'yjs-liveblocks',
-      params: {
+      query: {
         publicApiKey: publicApiKey.value
       },
     })

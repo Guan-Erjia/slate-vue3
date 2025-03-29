@@ -8,7 +8,7 @@ test.describe('forced layout example', () => {
   ]
 
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${E2E_BASE_URL}#/forced-layout`)
+    await page.goto(`${E2E_BASE_URL}forced-layout`)
   })
 
   test('checks for the elements', async ({ page }) => {

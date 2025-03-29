@@ -4,7 +4,7 @@ import { E2E_BASE_URL } from '../test/utils'
 test.describe('mentions example', () => {
   test.beforeEach(
     async ({ page }) =>
-      await page.goto(`${E2E_BASE_URL}#/mentions`)
+      await page.goto(`${E2E_BASE_URL}mentions`)
   )
 
   test('renders mention element', async ({ page }) => {

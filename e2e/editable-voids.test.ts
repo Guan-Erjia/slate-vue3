@@ -10,7 +10,7 @@ test.describe('editable voids', () => {
   ]
 
   test.beforeEach(async ({ page }) => {
-    await page.goto(`${E2E_BASE_URL}#/editable-voids`)
+    await page.goto(`${E2E_BASE_URL}editable-voids`)
   })
 
   test('checks for the elements', async ({ page }) => {
