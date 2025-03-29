@@ -26,7 +26,7 @@ const olStyle = computed<CSSProperties>(() => ({
   width: '200px',
   paddingInlineStart: '30px',
   overflowY: 'auto',
-  marginTop: 0,
+  margin: 0,
   backgroundColor: 'white',
   zIndex: 999,
   position: isMobileDevice.value ? 'absolute' : 'static',
