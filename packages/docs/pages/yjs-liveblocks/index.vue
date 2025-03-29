@@ -40,7 +40,7 @@ const startConnect = () => {
 
 const deposeConnect = () => {
   roomInfo.value?.leave()
-  yProvider.value.off('sync', connectchange)
+  yProvider.value?.off('sync', connectchange)
   roomInfo.value = undefined
   yProvider.value = undefined
   sharedType.value = undefined
