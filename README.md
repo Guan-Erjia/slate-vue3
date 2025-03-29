@@ -209,9 +209,7 @@ const selection = useSelection()
 ## [useInheritRef](https://github.com/Guan-Erjia/slate-vue3/blob/master/packages/slate-vue/src/hooks/use-inherit-ref.ts)
 > Automatically bind ref to the real node when the component is mounted，This is important when rendering element nodes directly
 ```typescript
-const useInheritRef: (attribute: VNodeProps) => VNodeProps & {
-    inheritRef?: VNodeRef
-};
+const useInheritRef: (attribute: VNodeProps) => VNodeProps
 
 const renderElement = (props: RenderElementProps) => {
   const { attributes, children, element } = props
