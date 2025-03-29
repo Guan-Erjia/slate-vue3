@@ -1,6 +1,6 @@
 {
   "name": "slate-vue3",
-  "version": "0.0.41",
+  "version": "0.1.0",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -39,6 +39,12 @@
       "import": {
         "types": "./dist/slate-hyperscript/index.d.ts",
         "default": "./dist/hyperscript.js"
+      }
+    },
+    "./yjs": {
+      "import": {
+        "types": "./dist/slate-yjs/index.d.ts",
+        "default": "./dist/yjs.js"
       }
     }
   },

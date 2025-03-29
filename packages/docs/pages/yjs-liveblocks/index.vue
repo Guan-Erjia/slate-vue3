@@ -70,7 +70,6 @@ const onKeyup = (event: KeyboardEvent) => {
 </script>
 
 <template>
-  <div style="font-size: 20px;color: red;margin-bottom: 12px;">This is not avaliable</div>
   <a href="https://liveblocks.io/dashboard" style="margin-bottom: 12px; display: block;" target="_blank">
     👉 Click it and get a publicApiKey from liveblocks</a>
   <div style="display: flex;width: 100%;">
