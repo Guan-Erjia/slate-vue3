@@ -168,14 +168,12 @@ export function withYHistory<T extends YjsEditor>(
 
   e.undo = () => {
     if (YjsEditor.connected(e)) {
-      YjsEditor.flushLocalChanges(e);
       e.undoManager.undo();
     }
   };
 
   e.redo = () => {
     if (YjsEditor.connected(e)) {
-      YjsEditor.flushLocalChanges(e);
       e.undoManager.redo();
     }
   };
