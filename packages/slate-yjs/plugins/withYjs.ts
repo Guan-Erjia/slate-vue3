@@ -205,22 +205,11 @@ export function withYjs<T extends Editor>(
   e.apply = (op) => {
     if (YjsEditor.connected(e) && YjsEditor.isLocal(e)) {
       assertDocumentAttachment(e.sharedRoot);
-      const localChanges =
-        // fixme
-        // 这里的调度顺序有问题
-        // flushLocalChanges 时，由于 slate-vue3 没有使用 immer 锁定，children 已随着更新
-        // 需要使用深拷贝切断指针，有性能问题
-        // 后续需要使用浅拷贝，只切断部分指针
-        { op, doc: editor.children, origin: YjsEditor.origin(e) };
 
       e.sharedRoot.doc.transact(() => {
         assertDocumentAttachment(e.sharedRoot);
-        applySlateOp(
-          e.sharedRoot,
-          { children: localChanges.doc },
-          localChanges.op
-        );
-      }, localChanges.origin);
+        applySlateOp(e.sharedRoot, editor, op);
+      }, YjsEditor.origin(e));
     }
     apply(op);
   };
