@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, CSSProperties, ref } from 'vue';
-import { ROUTES_RECORD } from './main'
+import { ROUTES_RECORD } from './routes'
 import { RouterView, RouterLink, useRoute } from 'vue-router'
 
 const route = useRoute()
