@@ -13,7 +13,8 @@ import {
 } from '../utils/position';
 import { assertDocumentAttachment } from '../utils/yjs';
 import { toRawWeakMap as WeakMap } from 'share-tools';
-import { getSlateNodeYLength, getYTarget } from '../utils/location';
+import { cloneDeep } from 'lodash-es';
+import { toRaw } from 'vue';
 
 type LocalChange = {
   op: Operation;
@@ -230,20 +231,14 @@ export function withYjs<T extends Editor>(
   };
 
   e.storeLocalChange = (op) => {
-    if (op.type === "split_node") {
-      const target = getYTarget(sharedRoot, editor, op.path);
-      if (!Text.isText(target.slateTarget) && target.slateTarget?.children) {
-        const length = target.slateTarget.children.reduce(
-          (current, child) => current + getSlateNodeYLength(child),
-          0
-        );
-        // @ts-ignore 因为没有使用 immer 锁定 editor，这里需要提前计算分割长度
-        op.splitlength = length
-      }
-    }
     LOCAL_CHANGES.set(e, [
       ...YjsEditor.localChanges(e),
-      { op, doc: editor.children, origin: YjsEditor.origin(e) },
+      // fixme
+      // 这里的调度顺序有问题
+      // flushLocalChanges 时，由于 slate-vue3 没有使用 immer 锁定，children 已随着更新
+      // 需要使用深拷贝切断指针，有性能问题
+      // 后续需要使用浅拷贝，只切断部分指针
+      { op, doc: cloneDeep(toRaw(editor.children)), origin: YjsEditor.origin(e) },
     ]);
   };
 
@@ -279,11 +274,7 @@ export function withYjs<T extends Editor>(
     if (YjsEditor.connected(e) && YjsEditor.isLocal(e)) {
       YjsEditor.storeLocalChange(e, op);
     }
-    if(op.type === 'merge_node') {
-      queueMicrotask(() => apply(op));
-    } else {
-      apply(op);
-    }
+    apply(op);
   };
 
   e.onChange = () => {
