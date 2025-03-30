@@ -1,4 +1,4 @@
-import { Range } from "slate";
+import { Editor, Range } from "slate";
 import { IS_ANDROID, isDOMNode, type DOMEditor } from "slate-dom";
 import scrollIntoView from "scroll-into-view-if-needed";
 import type { RenderLeafProps, RenderPlaceholderProps } from "../utils/interface";
@@ -7,7 +7,7 @@ import { h } from "vue";
  * Check if an event is overrided by a handler.
  */
 export const isEventHandled = <EventType extends Event>(
-  event: any,
+  event: EventType,
   handler?: (event: EventType) => void | boolean
 ) => {
   if (!handler) {
@@ -20,7 +20,7 @@ export const isEventHandled = <EventType extends Event>(
   if (shouldTreatEventAsHandled != null) {
     return shouldTreatEventAsHandled;
   }
-  return event.defaultPrevented || event.cancelBubble;
+  return event.defaultPrevented || !event.bubbles;
 };
 
 /**
@@ -54,6 +54,23 @@ export const isDOMEventHandled = <E extends Event>(
   }
 
   return event.defaultPrevented;
+};
+
+export const handleNativeHistoryEvents = (editor: Editor, event: InputEvent) => {
+  if (
+    event.inputType === "historyUndo" &&
+    "undo" in editor &&
+    typeof editor.undo === "function"
+  ) {
+    editor.undo();
+  }
+  if (
+    event.inputType === "historyRedo" &&
+    "redo" in editor &&
+    typeof editor.redo === "function"
+  ) {
+    editor.redo();
+  }
 };
 
 /**

@@ -45,6 +45,7 @@ import type { CSSProperties, HTMLAttributes } from "vue";
 import { ChildrenFC } from "./children";
 import {
   defaultScrollSelectionIntoView,
+  handleNativeHistoryEvents,
   isDOMEventHandled,
   isDOMEventTargetInput,
   isEventHandled,
@@ -102,7 +103,6 @@ export const Editable = defineComponent({
     const editor = useEditor();
     const attributes: HTMLAttributes = useAttrs();
     const isComposing = useComposing();
-
 
     const isReadOnly = useReadOnly();
     watch(
@@ -394,6 +394,7 @@ export const Editable = defineComponent({
         return;
       }
       if (HAS_BEFORE_INPUT_SUPPORT) {
+        handleNativeHistoryEvents(editor, event);
         const el = DOMEditor.toDOMNode(editor, editor);
         const root = el.getRootNode();
 
@@ -738,23 +739,7 @@ export const Editable = defineComponent({
       // This means undo can be triggered even when the div is not focused,
       // and it only triggers the input event for the node. (2024/10/09)
       if (!DOMEditor.isFocused(editor)) {
-        const maybeHistoryEditor: any = editor;
-        if (
-          "inputType" in event &&
-          event.inputType === "historyUndo" &&
-          typeof maybeHistoryEditor.undo === "function"
-        ) {
-          maybeHistoryEditor.undo();
-          return;
-        }
-        if (
-          "inputType" in event &&
-          event.inputType === "historyRedo" &&
-          typeof maybeHistoryEditor.redo === "function"
-        ) {
-          maybeHistoryEditor.redo();
-          return;
-        }
+        handleNativeHistoryEvents(editor, event);
       }
     };
 
