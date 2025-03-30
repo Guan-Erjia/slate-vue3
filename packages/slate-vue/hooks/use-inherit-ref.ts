@@ -1,8 +1,7 @@
-import { Ref, VNode, VNodeProps } from "vue";
+import { VNode, VNodeProps } from "vue";
 
 export const useInheritRef = (attribute: VNodeProps) => {
   attribute.onVnodeMounted = (vNode: VNode) => {
-    console.log(typeof attribute.ref);
     if (attribute.ref && typeof attribute.ref === "object") {
       attribute.ref.value = vNode.el;
     }
