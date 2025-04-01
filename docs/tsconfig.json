@@ -13,12 +13,12 @@
     "target": "esnext",
     "verbatimModuleSyntax": false,
     "paths": {
-      "slate-vue3/core": ["../slate/index.ts"],
-      "slate-vue3/dom": ["../slate-dom/index.ts"],
-      "slate-vue3/history": ["../slate-history/index.ts"],
-      "slate-vue3/hyperscript": ["../slate-hyperscript/index.ts"],
-      "slate-vue3/yjs": ["../slate-yjs/index.ts"],
-      "slate-vue3": ["../slate-vue/index.ts"]
+      "slate-vue3/core": ["../packages/slate/index.ts"],
+      "slate-vue3/dom": ["../packages/slate-dom/index.ts"],
+      "slate-vue3/history": ["../packages/slate-history/index.ts"],
+      "slate-vue3/hyperscript": ["../packages/slate-hyperscript/index.ts"],
+      "slate-vue3/yjs": ["../packages/slate-yjs/index.ts"],
+      "slate-vue3": ["../packages/slate-vue/index.ts"]
     }
   }
 }
