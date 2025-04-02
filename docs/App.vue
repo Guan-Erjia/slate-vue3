@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, CSSProperties, ref } from 'vue';
-import { ROUTES_RECORD } from './routes'
-import { RouterView, RouterLink, useRoute } from 'vue-router'
+import { computed, provide, ref } from 'vue';
+import { RouterView } from 'vue-router'
+import Header from './components/Header.vue'
+import Menu from './components/Menu.vue'
 
-const route = useRoute()
 const isMobileDevice = computed(() => {
   const ua = window.navigator.userAgent;
 
@@ -19,18 +19,7 @@ const isMobileDevice = computed(() => {
 
 const isFold = ref(false)
 
-const olStyle = computed<CSSProperties>(() => ({
-  flexShrink: 0,
-  boxSizing: 'border-box',
-  height: 'calc(100%-32px)',
-  width: '200px',
-  paddingInlineStart: '30px',
-  overflowY: 'auto',
-  margin: 0,
-  backgroundColor: 'white',
-  zIndex: 999,
-  position: isMobileDevice.value ? 'absolute' : 'static',
-}))
+provide("IS_FOLD", isFold)
 
 const handleContainerClick = () => {
   if (isMobileDevice.value) {
@@ -40,61 +29,20 @@ const handleContainerClick = () => {
 </script>
 
 <template>
-  <header class="header">
-    <span>slate-vue3 examples</span>
-    <div style="flex-grow: 1;min-width: 0;"></div>
-    <div v-if="isMobileDevice" @click="isFold = !isFold"
-      style="margin-right: 12px; cursor: default;font-size: 13px;font-weight: 500;" :style="{
-        color: isFold ? 'white' : '#aaaaaa',
-      }">
-      {{ isFold ? 'Expand' : 'Fold' }} Menu
-    </div>
-    <a v-if="!isMobileDevice" style="margin-right: 20px;" href="https://docs.slatejs.org" target="_blank">Docs</a>
-    <a href="https://github.com/Guan-Erjia/slate-vue3" target="_blank">GitHub</a>
-  </header>
+  <Header />
   <div style="display: flex;height: calc(100% - 50px);">
-    <ol v-show="!isFold" :style="olStyle">
-      <RouterLink :to="{ name: item.name }" v-for="item in ROUTES_RECORD.slice(0, -2)">
-        <li style="text-decoration: none;margin: 10px 0;" :style="{
-          color: item.name === route.name ? '#0366d6' : undefined,
-          fontWeight: item.name === route.name ? 500 : undefined,
-        }">{{ item.name }}</li>
-      </RouterLink>
-    </ol>
+    <Menu />
     <div class="scroll-container" @click="handleContainerClick">
-      <header style="display: flex; padding-top: 20px;">
-        <span style="cursor: default;font-size: 20px;"> {{ route.name }} </span>
-        <div style="flex-grow: 1;"></div>
-        <a target="_blank"
-          :href="`https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/docs/pages${route.path}`">
-          view code</a>
-      </header>
-      <div style="margin-top: 10px; padding: 10px;box-sizing: border-box;background-color: white;position: relative;">
-        <RouterView />
-      </div>
+      <RouterView />
     </div>
   </div>
 </template>
 <style scoped>
-.header {
-  box-sizing: border-box;
-  padding: 0 20px;
-  background-color: black;
-  display: flex;
-  width: 100%;
-  color: #aaaaaa;
-  height: 50px;
-  align-items: center;
-  box-sizing: border-box;
-}
-
 .scroll-container {
   min-width: 0;
   flex-grow: 1;
-  padding: 0 20px 20px 20px;
   height: 100%;
   overflow-y: auto;
   box-sizing: border-box;
-  scroll-behavior: smooth;
 }
 </style>
