@@ -22,7 +22,7 @@ export const COMPONENTS_RECORD: RouteRecordRaw[] = [
   {
     name: "<Editable />",
     path: "editable",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/comps/editable.vue"),
   },
 ];
 

@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { Descendant, BaseEditor, BaseRange } from "slate-vue3/core";
 import { DOMEditor } from "slate-vue3/dom";
 
@@ -180,4 +181,9 @@ declare module "slate-vue3/core" {
       [key: string]: unknown;
     };
   }
+}
+
+declare module '*.md' {
+  const src: string
+  export default src
 }

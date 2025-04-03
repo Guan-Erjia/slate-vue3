@@ -72,8 +72,7 @@ export default defineConfig(({ command, mode }) => {
           "slate-vue3/yjs": path.resolve(__dirname, "./packages/slate-yjs/index.ts"),
           "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
         }
-      }
+      },
     })
   }
-  return BaseConfig;
 });

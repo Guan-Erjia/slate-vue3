@@ -1,4 +1,7 @@
 <template>
-    <div>3242134</div>
+  <MarkButton :content="content" />
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MarkButton from '../../components/Markdown.vue';
+import content from './slate.md?raw'
+</script>

@@ -67,11 +67,9 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.6.0",
     "@liveblocks/client": "^2.21.0",
     "@liveblocks/yjs": "^2.21.0",
-    "y-protocols": "^1.0.6",
-    "yjs": "^13.6.24",
-    "@faker-js/faker": "^9.6.0",
     "@playwright/test": "^1.50.1",
     "@testing-library/vue": "^8.1.0",
     "@types/is-hotkey": "^0.1.10",
@@ -84,11 +82,17 @@
     "is-url": "^1.2.4",
     "jsdom": "^26.0.0",
     "prismjs": "^1.30.0",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-slate-transformer": "^0.9.0",
     "typescript": "~5.8.2",
+    "unified": "^11.0.5",
     "vite": "^6.2.3",
     "vite-plugin-dts": "^4.5.0",
     "vitest": "^3.0.5",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "y-protocols": "^1.0.6",
+    "yjs": "^13.6.24"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

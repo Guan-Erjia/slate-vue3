@@ -1,6 +1,6 @@
 {
   "include": ["./packages/**/*", "./test/**/*"],
-  "exclude": ["./packages/docs/**/*"],
+  "exclude": ["./docs/**/*"],
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "composite": false,

@@ -1,7 +1,7 @@
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
-    <Editable placeholder="Write some markdown..." spellcheck @beforeinput="onDomBeforeInput" />
+    <Editable placeholder="Write some markdown..." spellcheck />
   </Slate>
 </template>
 <script lang="ts" setup>
@@ -64,7 +64,4 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
                     'p', attributes, children)
 }
 
-const onDomBeforeInput = (e: Event) => {
-
-}
 </script>
