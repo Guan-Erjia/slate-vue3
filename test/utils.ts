@@ -55,7 +55,7 @@ export const resolveModules = async (
     })
   );
 
-export const E2E_BASE_URL = "http://localhost:5173/slate-vue3/";
+export const E2E_BASE_URL = "http://localhost:5173/slate-vue3/examples/";
 
 export const jsxYjs = createHyperscript({
   elements: {
