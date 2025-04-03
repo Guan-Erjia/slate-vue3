@@ -122,6 +122,7 @@ export type CodeBlockElement = {
 export type CodeElement = {
   type: "code";
   language: string;
+  lang: string;
   children: Descendant[];
 };
 

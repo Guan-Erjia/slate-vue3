@@ -1,11 +1,6 @@
 <template>
-  <div style="padding: 15px;">
-    <header style="display: flex;;">
-      <span style="cursor: default;font-size: 20px;"> {{ route.name }} </span>
-    </header>
-    <div style="margin-top: 10px; padding: 10px;box-sizing: border-box;background-color: white;position: relative;">
-      <RouterView />
-    </div>
+  <div style="margin: 15px; padding: 10px;box-sizing: border-box;background-color: white;position: relative;">
+    <RouterView />
   </div>
 </template>
 <script setup lang="ts">

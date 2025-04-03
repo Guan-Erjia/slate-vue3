@@ -10,6 +10,21 @@ It can do this because all of its logic is implemented with a series of plugins,
 
 ## Why?
 
+```typescript
+import { BaseEditor, Descendant } from 'slate'
+import { DOMEditor } from 'slate-dom'
+
+type CustomElement = { type: 'paragraph'; children: CustomText[] }
+type CustomText = { text: string }
+
+declare module 'slate' {
+  interface CustomTypes {
+    Editor: BaseEditor & DOMEditor
+    Element: CustomElement
+    Text: CustomText
+  }
+}
+```
 Why create Slate? Well... _\(Beware: this section has a few of_ [_my_](https://github.com/ianstormtaylor) _opinions!\)_
 
 Before creating Slate, I tried a lot of the other rich text libraries out there—[**Draft.js**](https://facebook.github.io/draft-js/), [**Prosemirror**](http://prosemirror.net/), [**Quill**](http://quilljs.com/), etc. What I found was that while getting simple examples to work was easy enough, once you started trying to build something like [Medium](https://medium.com/), [Dropbox Paper](https://www.dropbox.com/paper) or [Google Docs](https://www.google.com/docs/about/), you ran into deeper issues...
