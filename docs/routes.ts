@@ -3,92 +3,92 @@ import { RouteRecordRaw } from "vue-router";
 export const INTRODUCTION_RECORD: RouteRecordRaw[] = [
   {
     name: "get-start",
-    path: "/get-start",
-    component: () => import("./pages/comp-slate/index.vue"),
+    path: "get-start",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "what-difference",
-    path: "/what-difference",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "what-difference",
+    component: () => import("./pages/comps/slate.vue"),
   },
 ];
 
 export const COMPONENTS_RECORD: RouteRecordRaw[] = [
   {
     name: "<Slate />",
-    path: "/comp-slate",
-    component: () => import("./pages/comp-slate/index.vue"),
+    path: "slate",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "<Editable />",
-    path: "/comp-editable",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "editable",
+    component: () => import("./pages/comps/slate.vue"),
   },
 ];
 
 export const HOOKS_RECORD: RouteRecordRaw[] = [
   {
     name: "use-composing",
-    path: "/use-composing",
-    component: () => import("./pages/comp-slate/index.vue"),
+    path: "use-composing",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "use-focused",
-    path: "/use-focused",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "use-focused",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "use-read-only",
-    path: "/use-read-only",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "use-read-only",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "use-selected",
-    path: "/use-selected",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "use-selected",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "use-editor",
-    path: "/use-editor",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "use-editor",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "use-selection",
-    path: "/use-selection",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "use-selection",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "use-inherit-ref",
-    path: "/use-inherit-ref",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "use-inherit-ref",
+    component: () => import("./pages/comps/slate.vue"),
   },
 ];
 
 export const PACKAGES_RECORD: RouteRecordRaw[] = [
   {
     name: "slate-vue3/core",
-    path: "/core",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "core",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "slate-vue3/dom",
-    path: "/dom",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "dom",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "slate-vue3/history",
-    path: "/history",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "history",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "slate-vue3/yjs",
-    path: "/yjs",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "yjs",
+    component: () => import("./pages/comps/slate.vue"),
   },
   {
     name: "slate-vue3/hyperscript",
-    path: "/hyperscript",
-    component: () => import("./pages/comp-editable/index.vue"),
+    path: "hyperscript",
+    component: () => import("./pages/comps/slate.vue"),
   },
 ];
 
@@ -218,10 +218,10 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
 export const ROUTES_RECORD: RouteRecordRaw[] = [
   {
     path: "/",
-    redirect: "/rich-text",
+    redirect: "/examples/rich-text",
   },
   {
     path: "/:catchAll(.*)",
-    redirect: "/rich-text",
+    redirect: "/examples/rich-text",
   },
 ];

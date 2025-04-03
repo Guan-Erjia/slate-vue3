@@ -14,10 +14,30 @@ import {
 export const router = createRouter({
   history: createWebHistory("/slate-vue3"),
   routes: [
-    ...INTRODUCTION_RECORD,
-    ...COMPONENTS_RECORD,
-    ...HOOKS_RECORD,
-    ...PACKAGES_RECORD,
+    {
+      name: "introduction",
+      path: "/introduction",
+      component: () => import("./pages/introduction/index.vue"),
+      children: INTRODUCTION_RECORD,
+    },
+    {
+      name: "comps",
+      path: "/comps",
+      component: () => import("./pages/comps/index.vue"),
+      children: COMPONENTS_RECORD,
+    },
+    {
+      name: "hooks",
+      path: "/hooks",
+      component: () => import("./pages/hooks/index.vue"),
+      children: HOOKS_RECORD,
+    },
+    {
+      name: "pkgs",
+      path: "/pkgs",
+      component: () => import("./pages/pkgs/index.vue"),
+      children: PACKAGES_RECORD,
+    },
     {
       name: "examples",
       path: "/examples",
