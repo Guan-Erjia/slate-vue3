@@ -17,6 +17,7 @@ import { remarkToSlate, } from "remark-slate-transformer";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-bash'
 import Prism from 'prismjs'
 import { CodeElement } from '../custom-types';
 import { normalizeTokens } from '../utils/normalize-tokens'
@@ -49,13 +50,15 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
     case 'heading':
       return h('h' + element.depth, attributes, children);
     case 'code':
-      return h(CodeBlock, {...useInheritRef(attributes), element}, () => children)
+      return h(CodeBlock, { ...useInheritRef(attributes), element }, () => children)
     case 'list':
       return h(element.ordered ? 'ol' : 'ul', attributes, children)
     case 'listItem':
       return h('li', attributes, children)
     case 'link':
       return h('a', { href: (element as any).url, target: '_blank' }, children)
+    case 'blockquote':
+      return h('blockquote', attributes, children)
     default:
       return h('p', attributes, children);
   }
@@ -147,7 +150,7 @@ const decorate = ([node]: any) => {
 }
 </script>
 <style>
-.slate-markdown *{
+.slate-markdown * {
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans
 }
 
@@ -186,5 +189,8 @@ const decorate = ([node]: any) => {
   border-bottom: 1px solid rgba(209, 217, 224, 0.7);
 }
 
-
+.slate-markdown h4 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
 </style>

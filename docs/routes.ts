@@ -4,12 +4,12 @@ export const INTRODUCTION_RECORD: RouteRecordRaw[] = [
   {
     name: "get-start",
     path: "get-start",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/introduction/get-start.vue"),
   },
   {
     name: "what-difference",
     path: "what-difference",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/introduction/what-difference.vue"),
   },
 ];
 

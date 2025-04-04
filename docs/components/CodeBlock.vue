@@ -43,6 +43,7 @@ const handleCopy = () => {
   margin: 0;
   block-size: auto;
   padding: 10px;
+  margin-top: 15px;
 }
 
 code[class*="language-"],
