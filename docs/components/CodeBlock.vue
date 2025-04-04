@@ -17,6 +17,9 @@ const handleCopy = () => {
 }
 </script>
 <style>
+.slate-markdown * {
+  line-height: 1.6;
+}
 .slate-markdown .copy-btn {
   position: absolute;
   right: 10px;
@@ -24,7 +27,7 @@ const handleCopy = () => {
   cursor: pointer;
   border: 1px solid gainsboro;
   border-radius: 4px;
-  padding: 2px 6px;
+  padding: 0 6px;
 }
 
 .slate-markdown .copy-btn:hover {

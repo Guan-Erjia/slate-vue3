@@ -76,7 +76,7 @@ menu {
   background-color: white;
   margin: 0;
   z-index: 999;
-  padding-top: 10px;
+  padding: 10px 0;
 }
 
 ul {
