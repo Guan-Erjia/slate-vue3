@@ -1,5 +1,5 @@
 <template>
-  <header style="display: flex;">
+  <header style="display: flex;margin: 20px;">
     <span style="cursor: default;font-size: 20px;"> {{ route.name }} </span>
     <div style="flex-grow: 1;"></div>
     <a :href="`https://github.com/Guan-Erjia/slate-vue3/tree/master${route.path.replace('pkgs', 'packages')}`"
@@ -15,9 +15,3 @@
 import { useRoute } from 'vue-router';
 const route = useRoute()
 </script>
-
-<style scoped>
-header {
-  margin: 20px;
-}
-</style>

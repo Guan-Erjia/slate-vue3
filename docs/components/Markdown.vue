@@ -6,7 +6,7 @@
 </template>
 <script lang="ts" setup>
 import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef, } from 'slate-vue3';
-import { CSSProperties, h, toRaw, } from 'vue';
+import { CSSProperties, h, } from 'vue';
 import "prismjs";
 import 'prismjs/components/prism-markdown'
 import { createEditor, Editor, Element, NodeEntry, Node, Range } from 'slate-vue3/core';
@@ -156,7 +156,7 @@ const decorate = ([node]: any) => {
 </script>
 <style>
 .slate-markdown * {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Noto Sans
+  font-family: 'Roboto', sans-serif
 }
 
 .slate-markdown a {

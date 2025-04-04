@@ -12,8 +12,10 @@
 </template>
 <script setup lang="ts">
 import { useFocused, useSelected } from 'slate-vue3';
-import { IS_MAC } from '../../../utils/environment';
 import { computed } from 'vue';
+
+const IS_MAC =
+  typeof navigator !== "undefined" && /Mac OS X/.test(navigator.userAgent);
 const selected = useSelected()
 const focused = useFocused()
 const props = defineProps<{
