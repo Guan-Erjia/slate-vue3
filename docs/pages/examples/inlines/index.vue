@@ -150,7 +150,8 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
     }
   }, children)
 }
-const editor = withHistory(withInlines(withDOM(createEditor(initialValue))))
+const editor = withHistory(withInlines(withDOM(createEditor())))
+editor.children = initialValue;
 const onKeyDown = (event: KeyboardEvent) => {
   // Default left/right behavior is unit:'character'.
   // This fails to distinguish between two cursor positions, such as

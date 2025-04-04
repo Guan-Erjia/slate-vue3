@@ -23,7 +23,8 @@ const initialValue: Descendant[] = [
 const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)
 }
-const editor = withHistory(withDOM(createEditor(initialValue)))
+const editor = withHistory(withDOM(createEditor()))
+editor.children = initialValue;
 </script>
 
 <template>

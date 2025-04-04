@@ -41,7 +41,8 @@ const initialValue: Descendant[] = [
   },
 ]
 
-const editor = withHistory(withDOM(createEditor(initialValue)))
+const editor = withHistory(withDOM(createEditor()))
+editor.children = initialValue
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'editable-void':

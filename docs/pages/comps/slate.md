@@ -24,7 +24,8 @@ const initialValue: Descendant[] = [
     children: [{ text: "" }],
   },
 ];
-const editor = createEditor(initialValue);
+const editor = createEditor();
+editor.children = initialValue;
 ```
 
 ## renderElement

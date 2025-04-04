@@ -10,15 +10,17 @@ const renderElement = ({ attributes, children }: RenderElementProps) => {
   return h('p', attributes, children)
 }
 
-const editor1 = withHistory(withDOM(createEditor([{
+const editor1 = withHistory(withDOM(createEditor()))
+editor1.children = [{
   type: 'paragraph',
   children: [{ text: 'This editor is styled using the style prop.' }],
-}])))
+}]
 
-const editor2 = withHistory(withDOM(createEditor([{
+const editor2 = withHistory(withDOM(createEditor()))
+editor2.children = [{
   type: 'paragraph',
   children: [{ text: 'This editor is styled using the className prop.' }],
-}])))
+}]
 </script>
 
 <template>

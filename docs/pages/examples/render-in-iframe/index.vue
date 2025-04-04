@@ -68,7 +68,8 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h('span', attributes, _children)
 }
 
-const editor = withHistory(withDOM(createEditor(initialValue)))
+const editor = withHistory(withDOM(createEditor()))
+editor.children = initialValue;
 const HOTKEYS = {
   'mod+b': 'bold',
   'mod+i': 'italic',

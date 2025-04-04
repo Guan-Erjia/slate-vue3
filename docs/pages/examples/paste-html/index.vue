@@ -7,7 +7,7 @@ import ImageElement from "./ImageElement.vue";
 import { withDOM } from "slate-vue3/dom";
 import { createEditor, Descendant, Transforms } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
-import { CustomEditor } from "../../custom-types";
+import { CustomEditor } from "../../../custom-types";
 
 const allowedSchemes = ['http:', 'https:', 'mailto:', 'tel:']
 const ELEMENT_TAGS = {
@@ -181,7 +181,8 @@ const renderLeaf = (props: RenderLeafProps) => {
   return h('span', attributes, children)
 }
 
-const editor = withHistory(withHtml(withDOM(createEditor(initialValue)))) 
+const editor = withHistory(withHtml(withDOM(createEditor()))) 
+editor.children = initialValue;
 </script>
 
 <template>

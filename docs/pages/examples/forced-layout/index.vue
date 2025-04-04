@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, type RenderElementProps, } from "slate-vue3"
 import { h } from "vue";
-import { TitleElement, ParagraphElement, CustomEditor } from "../../custom-types";
+import { TitleElement, ParagraphElement, CustomEditor } from "../../../custom-types";
 import { withDOM } from "slate-vue3/dom";
 import { Editor, Transforms, Node, Element, Descendant, createEditor } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
@@ -81,7 +81,8 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
       return h('p', attributes, children)
   }
 }
-const editor = withHistory(withLayout(withDOM(createEditor(initialValue)))) 
+const editor = withHistory(withLayout(withDOM(createEditor())))
+editor.children = initialValue;
 </script>
 
 <template>

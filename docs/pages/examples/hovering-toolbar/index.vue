@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { CSSProperties, h } from "vue";
-import { TitleElement, ParagraphElement, CustomEditor } from "../../custom-types";
+import { TitleElement, ParagraphElement, CustomEditor } from "../../../custom-types";
 import HoveringToolbar from "./HoveringToolbar.vue";
 import { withDOM } from "slate-vue3/dom";
 import { Editor, Transforms, Node, Element, createEditor, Descendant } from "slate-vue3/core";
@@ -103,7 +103,8 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h('span', { ...attributes, style }, children)
 }
 
-const editor = withHistory(withLayout(withDOM(createEditor(initialValue))))
+const editor = withHistory(withLayout(withDOM(createEditor())))
+editor.children = initialValue;
 
 
 const onBeforeInput = (event: Event) => {

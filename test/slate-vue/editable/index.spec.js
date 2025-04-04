@@ -10,7 +10,8 @@ describe("slate-react", () => {
     describe("NODE_TO_KEY logic", () => {
       test("should not unmount the node that gets split on a split_node operation", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor(initialValue));
+        const editor = withDOM(createEditor());
+        editor.children = initialValue
         const mounts = vi.fn();
 
         render(VueEditor, {
@@ -31,7 +32,8 @@ describe("slate-react", () => {
           { type: "block", children: [{ text: "te" }] },
           { type: "block", children: [{ text: "st" }] },
         ];
-        const editor = withDOM(createEditor(initialValue));
+        const editor = withDOM(createEditor());
+        editor.children = initialValue
         const mounts = vi.fn();
 
         render(VueEditor, {
@@ -50,7 +52,8 @@ describe("slate-react", () => {
           { type: "block", children: [{ text: "te" }] },
           { type: "block", children: [{ text: "st" }] },
         ];
-        const editor = withDOM(createEditor(initialValue));
+        const editor = withDOM(createEditor());
+        editor.children = initialValue
 
         const onChange = vi.fn();
         const onValueChange = vi.fn();
@@ -72,7 +75,8 @@ describe("slate-react", () => {
 
       test("calls onValueChange when editor children change", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor(initialValue));
+        const editor = withDOM(createEditor());
+        editor.children = initialValue
         const onChange = vi.fn();
         const onValueChange = vi.fn();
         const onSelectionChange = vi.fn();
@@ -92,7 +96,8 @@ describe("slate-react", () => {
 
       test("calls onValueChange when editor setNodes", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor(initialValue));
+        const editor = withDOM(createEditor());
+        editor.children = initialValue
         const onChange = vi.fn();
         const onValueChange = vi.fn();
         const onSelectionChange = vi.fn();
@@ -121,7 +126,8 @@ describe("slate-react", () => {
 
       test("calls onValueChange when editor children change", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor(initialValue));
+        const editor = withDOM(createEditor());
+        editor.children = initialValue
         const onChange = vi.fn();
         const onValueChange = vi.fn();
         const onSelectionChange = vi.fn();

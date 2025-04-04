@@ -50,7 +50,8 @@ const initialValue: Descendant[] = [
 ]
 
 
-const editor = withHistory(withShortcuts(withDOM(createEditor(initialValue))))
+const editor = withHistory(withShortcuts(withDOM(createEditor())))
+editor.children = initialValue;
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   return h(element.type === 'block-quote' ? 'blockquote' :
     element.type === "bulleted-list" ? 'ul' :

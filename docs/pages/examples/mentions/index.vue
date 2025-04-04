@@ -100,7 +100,8 @@ const renderLeaf = (props: RenderLeafProps) => {
   return h('span', attributes, children)
 }
 
-const editor = withHistory(withMentions(withDOM(createEditor(initialValue))))
+const editor = withHistory(withMentions(withDOM(createEditor())))
+editor.children = initialValue;
 const target = ref<Range>()
 const index = ref(0)
 const search = ref('')

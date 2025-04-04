@@ -20,7 +20,8 @@ const renderPlaceholder = ({ children, attributes }: RenderPlaceholderProps) => 
       h('pre', null, 'Use the renderPlaceholder prop to customize rendering of the placeholder')
     ])
 }
-const editor = withHistory(withDOM(createEditor(initialValue))) 
+const editor = withHistory(withDOM(createEditor()))
+editor.children = initialValue;
 </script>
 
 <template>

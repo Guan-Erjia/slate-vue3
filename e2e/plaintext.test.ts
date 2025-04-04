@@ -4,7 +4,7 @@ import { E2E_BASE_URL } from '../test/utils'
 test.describe('plaintext example', () => {
   test.beforeEach(
     async ({ page }) =>
-      await page.goto(`${E2E_BASE_URL}plaintext`)
+      await page.goto(`${E2E_BASE_URL}plain-text`)
   )
 
   test('inserts text when typed', async ({ page }) => {

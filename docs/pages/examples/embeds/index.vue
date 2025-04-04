@@ -11,7 +11,7 @@ import VideoElement from './VideoElement.vue'
 import { withDOM } from 'slate-vue3/dom';
 import { withHistory } from 'slate-vue3/history';
 import { createEditor, Descendant } from 'slate-vue3/core';
-import { CustomEditor } from '../../custom-types';
+import { CustomEditor } from '../../../custom-types';
 
 const initialValue: Descendant[] = [
   {
@@ -40,11 +40,12 @@ const initialValue: Descendant[] = [
 
 const withEmbeds = (editor: CustomEditor) => {
   const isVoid = editor.isVoid
-  editor.isVoid = element => (element.type === 'video' ? true : isVoid(element))
+  editor.isVoid = (element) => (element.type === 'video' ? true : isVoid(element))
   return editor
 }
 
-const editor = withHistory(withEmbeds(withDOM(createEditor(initialValue))))
+const editor = withHistory(withEmbeds(withDOM(createEditor())))
+editor.children = initialValue
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'video':

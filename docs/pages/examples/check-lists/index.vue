@@ -64,7 +64,8 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 }
 
 
-const editor = withHistory(withChecklists(withDOM(createEditor(initialValue)))) 
+const editor = withHistory(withChecklists(withDOM(createEditor())))
+editor.children = initialValue
 </script>
 
 <template>

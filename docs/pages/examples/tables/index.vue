@@ -5,7 +5,7 @@ import { withDOM } from "slate-vue3/dom";
 import { h } from "vue";
 import { Editor, Range, Element, Point, Descendant, createEditor } from 'slate-vue3/core'
 import { withHistory } from "slate-vue3/history";
-import { CustomEditor } from "../../custom-types";
+import { CustomEditor } from "../../../custom-types";
 
 const withTables = (editor: CustomEditor) => {
   const { deleteBackward, deleteForward, insertBreak } = editor
@@ -169,7 +169,8 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h('bold' in leaf ? 'strong' : 'span', attributes, children)
 }
 
-const editor = withHistory(withTables(withDOM(createEditor(initialValue)))) 
+const editor = withHistory(withTables(withDOM(createEditor()))) 
+editor.children = initialValue;
 </script>
 
 <template>

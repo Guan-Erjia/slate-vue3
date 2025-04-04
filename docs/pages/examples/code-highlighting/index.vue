@@ -96,7 +96,8 @@ declare module 'slate' {
   },
 ]
 
-const editor = withHistory(withDOM(createEditor(initialValue)))
+const editor = withHistory(withDOM(createEditor()))
+editor.children = initialValue
 
 const renderLeaf = (props: RenderLeafProps) => {
   const { attributes, children, leaf } = props

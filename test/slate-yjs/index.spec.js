@@ -45,7 +45,8 @@ async function withTestingElements(editor, doc = new Y.Doc()) {
 }
 
 async function normalizedSlateDoc(sharedRoot) {
-  const editor = createEditor(yTextToSlateElement(sharedRoot).children);
+  const editor = createEditor();
+  editor.children = yTextToSlateElement(sharedRoot).children
   const e = await withTestingElements(editor);
   Editor.normalize(e, { force: true });
   return e.children;

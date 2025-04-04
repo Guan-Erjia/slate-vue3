@@ -89,7 +89,8 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   return ranges
 }
 
-const editor = withHistory(withDOM(createEditor(initialValue)))
+const editor = withHistory(withDOM(createEditor()))
+editor.children = initialValue;
 const search = ref('')
 </script>
 

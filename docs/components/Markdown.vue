@@ -44,7 +44,8 @@ slateDescendant.filter(i => i.type === 'code').forEach(code => {
   code.children = toCodeLines(code.children[0].text)
 })
 
-const editor = withHistory(withDOM(createEditor(slateDescendant)))
+const editor = withHistory(withDOM(createEditor()))
+editor.children = slateDescendant
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch ((element as any).type) {
     case 'heading':

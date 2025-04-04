@@ -118,7 +118,8 @@ const withImages = (editor: CustomEditor) => {
   return editor
 }
 
-const editor = withHistory(withImages(withDOM(createEditor(initialValue))))
+const editor = withHistory(withImages(withDOM(createEditor())))
+editor.children = initialValue;
 const onMouseDown = (event: Event) => {
   event.preventDefault()
   const url = window.prompt('Enter the URL of the image:')

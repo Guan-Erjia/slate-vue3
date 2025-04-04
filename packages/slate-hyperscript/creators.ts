@@ -210,7 +210,7 @@ export function createText(
  */
 
 export const createEditor =
-  (makeEditor: (desc: Descendant[]) => Editor) =>
+  (makeEditor: () => Editor) =>
   (
     tagName: string,
     attributes: { [key: string]: any },
@@ -229,7 +229,7 @@ export const createEditor =
 
     const descendants = resolveDescendants(otherChildren)
     const selection: Partial<Range> = {}
-    const editor = makeEditor(descendants)
+    const editor = makeEditor()
     Object.assign(editor, attributes)
     editor.children = descendants
 

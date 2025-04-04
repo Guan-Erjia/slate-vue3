@@ -77,7 +77,8 @@ const props = defineProps<{
   sharedType: XmlText;
 }>()
 
-const editor = withYjs(withDOM(createEditor(initialValue)), props.sharedType)
+const editor = withYjs(withDOM(createEditor()), props.sharedType)
+editor.children = initialValue;
 const { normalizeNode } = editor;
 editor.normalizeNode = (entry: [any]) => {
   const [node] = entry;

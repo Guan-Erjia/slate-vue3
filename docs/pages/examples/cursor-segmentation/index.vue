@@ -29,7 +29,8 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => h('span'
   }
 }, children)
 
-const editor = withHistory(withDOM(createEditor(initialValue)))
+const editor = withHistory(withDOM(createEditor()))
+editor.children = initialValue
 const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   const ranges: DecoratedRange[] = []
   if ('children' in node && Array.isArray(node.children) && node.children.every(Text.isText) && editor.selection) {

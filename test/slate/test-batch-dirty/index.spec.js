@@ -23,7 +23,8 @@ describe("slate-transforms-insert-nodes", () => {
   modules1.forEach((module) => {
     const { input, run, path } = module;
     test(path, async () => {
-      const input2 = createEditor(cloneDeep(input.children));
+      const input2 = createEditor();
+      input2.children = cloneDeep(input.children)
       input2.selection = cloneDeep(input.selection);
 
       const dirties1 = [];
@@ -45,8 +46,10 @@ describe("slate-transforms-insert-fragment", () => {
     const { input, run, path } = module;
 
     test(path, async () => {
-      const input1 = createEditor(cloneDeep(input.children));
-      const input2 = createEditor(cloneDeep(input.children));
+      const input1 = createEditor();
+      input1.children = cloneDeep(input.children)
+      const input2 = createEditor();
+      input2.children = cloneDeep(input.children)
       input1.selection = cloneDeep(input.selection);
       input2.selection = cloneDeep(input.selection);
 

@@ -90,9 +90,9 @@ import { reactive, type Reactive } from "vue";
 /**
  * Create a new Slate `Editor` object.
  */
-export const createEditor = (children: Descendant[]): Editor => {
+export const createEditor = (): Editor => {
   const editor: Reactive<Editor> = reactive<Editor>({
-    children,
+    children: [],
     operations: [],
     selection: null,
     marks: null,

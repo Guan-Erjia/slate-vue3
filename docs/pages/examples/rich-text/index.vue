@@ -99,7 +99,8 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
   )
 }
 
-const editor = withHistory(withDOM(createEditor(initialValue))) 
+const editor = withHistory(withDOM(createEditor())) 
+editor.children = initialValue
 </script>
 
 <template>

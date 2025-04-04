@@ -35,7 +35,8 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
       return h('p', attributes, children)
   }
 }
-const editor = withHistory(withDOM(createEditor(initialValue))) 
+const editor = withHistory(withDOM(createEditor()))
+editor.children = initialValue;
 </script>
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
