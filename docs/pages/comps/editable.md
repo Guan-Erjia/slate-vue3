@@ -47,7 +47,11 @@ Define the HTML tags for rendering the root node
 You can add event listeners at this node to override the internal behavior of **Editable** components
 
 ```html
-const handleClick = () => { alert('clicked'!); }
+<script setup lang="ts">
+  const handleClick = () => {
+    alert("clicked"!);
+  };
+</script>
 <template>
   <Slate :editor="editor">
     <Editable @click="handleClick" />

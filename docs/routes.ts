@@ -28,39 +28,39 @@ export const COMPONENTS_RECORD: RouteRecordRaw[] = [
 
 export const HOOKS_RECORD: RouteRecordRaw[] = [
   {
+    name: "use-editor",
+    path: "use-editor",
+    component: () => import("./pages/hooks/use-editor.vue"),
+  },
+  {
     name: "use-composing",
     path: "use-composing",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/hooks/use-composing.vue"),
   },
   {
     name: "use-focused",
     path: "use-focused",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/hooks/use-focused.vue"),
   },
   {
     name: "use-read-only",
     path: "use-read-only",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/hooks/use-read-only.vue"),
   },
   {
     name: "use-selected",
     path: "use-selected",
-    component: () => import("./pages/comps/slate.vue"),
-  },
-  {
-    name: "use-editor",
-    path: "use-editor",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/hooks/use-selected.vue"),
   },
   {
     name: "use-selection",
     path: "use-selection",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/hooks/use-selection.vue"),
   },
   {
     name: "use-inherit-ref",
     path: "use-inherit-ref",
-    component: () => import("./pages/comps/slate.vue"),
+    component: () => import("./pages/hooks/use-inherit-ref.vue"),
   },
 ];
 

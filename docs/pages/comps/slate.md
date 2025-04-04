@@ -94,3 +94,21 @@ export interface RenderPlaceholderProps {
 }
 function renderPlaceholder(props: RenderPlaceholderProps): VNode {}
 ```
+
+## @change
+> any change in slate will trigger it
+```typescript
+const onchange: (event: { operation?: Operation }) => void
+```
+
+## @valuechange
+> slate children change in slate will trigger it
+```typescript
+const onvaluechange: (event: { operation?: Operation }) => void
+```
+
+## @selectionchange
+> slate selection change in slate will trigger it
+```typescript
+const onselectionchange: (event: { operation?: Operation }) => void
+```
