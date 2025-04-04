@@ -1,0 +1,1 @@
+The integration of [slate-yjs](https://github.com/BitPhinix/slate-yjs#readme)

@@ -33,9 +33,9 @@ export const router = createRouter({
       children: HOOKS_RECORD,
     },
     {
-      name: "pkgs",
-      path: "/pkgs",
-      component: () => import("./pages/pkgs/index.vue"),
+      name: "packages",
+      path: "/packages",
+      component: () => import("./pages/packages/index.vue"),
       children: PACKAGES_RECORD,
     },
     {
