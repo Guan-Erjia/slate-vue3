@@ -1,4 +1,4 @@
-// This package has made modifications to slave yjs
+// This package has made modifications to slate yjs
 // https://github.com/BitPhinix/slate-yjs
 
 import { type RelativeRange } from "./model/types";

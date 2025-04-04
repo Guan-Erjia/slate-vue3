@@ -45,7 +45,7 @@ Now we can proceed with enjoyable development
 
 1. requiring the introduction of React.js
 2. configuring JSX compilation (if you don't want to directly use createElement api)
-3. establish a message channel between slave react and existing projects
+3. establish a message channel between slate react and existing projects
 
 #### However, doing these things does not bring a better development experience
 
