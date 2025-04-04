@@ -218,10 +218,10 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
 export const ROUTES_RECORD: RouteRecordRaw[] = [
   {
     path: "/",
-    redirect: "/examples/rich-text",
+    redirect: "/introduction/get-start",
   },
   {
     path: "/:catchAll(.*)",
-    redirect: "/examples/rich-text",
+    redirect: "/introduction/get-start",
   },
 ];
