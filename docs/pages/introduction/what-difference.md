@@ -34,7 +34,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 
 > The h function can already cover the vast majority of scenarios and is concise enough. It is not recommended to add additional jsx
 
-**The rendering function must be passed into the Slate component, and its behavior needs to be clearly defined. We also provide default rendering functions for use**
+**！！！The rendering function must be passed into the Slate component, and its behavior needs to be clearly defined. We also provide default rendering functions for use**
 
 ## REACTIVE
 
