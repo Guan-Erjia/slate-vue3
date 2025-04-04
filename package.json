@@ -101,6 +101,7 @@
     "type": "git",
     "url": "git+https://github.com/Guan-Erjia/slate-vue3.git"
   },
+  "homepage": "https://guan-erjia.github.io/slate-vue3",
   "keywords": [
     "slate-vue3",
     "slate-vue",
