@@ -6,7 +6,7 @@
 </template>
 <script lang="ts" setup>
 import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef, } from 'slate-vue3';
-import { CSSProperties, h, } from 'vue';
+import { CSSProperties, h, toRaw, } from 'vue';
 import "prismjs";
 import 'prismjs/components/prism-markdown'
 import { createEditor, Editor, Element, NodeEntry, Node, Range } from 'slate-vue3/core';
@@ -77,6 +77,10 @@ const renderLeaf = ({ text, attributes, children, leaf }: RenderLeafProps) => {
     style.backgroundColor = 'rgb(246, 247, 250)'
     style.border = '1px solid rgb(229, 231, 235'
     style.borderRadius = '4px'
+    style.padding = '0 2px'
+  }
+  if(text.delete) {
+    style.textDecoration = 'line-through'
   }
   const { text: _text, ...rest } = leaf
   return h("span", { ...attributes, style, class: Object.keys(rest).join(' ') }, children)

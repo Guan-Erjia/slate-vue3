@@ -34,7 +34,7 @@ export const router = createRouter({
     },
     {
       name: "packages",
-      path: "/packages",
+      path: "/pkgs",
       component: () => import("./pages/packages/index.vue"),
       children: PACKAGES_RECORD,
     },

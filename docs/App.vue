@@ -32,17 +32,9 @@ const handleContainerClick = () => {
   <Header />
   <div style="display: flex;height: calc(100% - 50px);">
     <Menu />
-    <div class="scroll-container" @click="handleContainerClick">
+    <div style="min-width: 0;flex-grow: 1;height: 100%;overflow-y: auto;box-sizing: border-box;"
+      @click="handleContainerClick">
       <RouterView />
     </div>
   </div>
 </template>
-<style scoped>
-.scroll-container {
-  min-width: 0;
-  flex-grow: 1;
-  height: 100%;
-  overflow-y: auto;
-  box-sizing: border-box;
-}
-</style>
