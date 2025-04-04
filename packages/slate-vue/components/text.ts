@@ -19,7 +19,7 @@ import {
 import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
-import { useParentDescoration, useRenderLeaf } from "../hooks/use-render";
+import { useRenderLeaf } from "../hooks/use-render";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -33,9 +33,9 @@ export const TextComp = defineComponent({
     const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
 
-    const parentDs = useParentDescoration();
-    const decorations = computed<DecoratedRange[]>(() => {
-      const ds = parentDs.value;
+    const leaves = computed(() => {
+      const elemPath = DOMEditor.findPath(editor, element);
+      const elemDs = decorate([element, elemPath]);
       if (
         editor.selection &&
         Range.isCollapsed(editor.selection) &&
@@ -50,7 +50,7 @@ export const TextComp = defineComponent({
           const unset = Object.fromEntries(
             Object.keys(rest).map((mark) => [mark, null])
           );
-          ds.push({
+          elemDs.push({
             [MARK_PLACEHOLDER_SYMBOL]: true,
             ...unset,
             ...editor.marks,
@@ -60,17 +60,14 @@ export const TextComp = defineComponent({
           });
         }
       }
-      return ds;
-    });
 
-    const leaves = computed(() => {
-      const path = DOMEditor.findPath(editor, text);
-      const range = Editor.range(editor, path);
-      const ds = decorate([text, path]);
-      decorations.value.forEach((dec) => {
-        ds.push(Range.intersection(dec, range)!);
+      const textPath = DOMEditor.findPath(editor, text);
+      const range = Editor.range(editor, textPath);
+      const textDs = decorate([text, textPath]);
+      elemDs.forEach((dec) => {
+        textDs.push(Range.intersection(dec, range)!);
       });
-      const filterDs = ds.filter(Boolean);
+      const filterDs = textDs.filter(Boolean);
       return Text.decorations(text, filterDs.length ? filterDs : []);
     });
 

@@ -35,7 +35,6 @@ import {
   h,
   onMounted,
   onUnmounted,
-  provide,
   reactive,
   ref,
   useAttrs,
@@ -55,8 +54,6 @@ import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
 import { useChangeEffect } from "../hooks/use-render";
 import { PlaceholderComp } from "./placeholder";
-import { useDecorate } from "../hooks/use-decorate";
-import { SLATE_INNER_DESCORATION } from "../utils/constants";
 import {
   AndroidManager,
   useAndroidManager,
@@ -1412,10 +1409,6 @@ export const Editable = defineComponent({
         ? attributes.autocapitalize
         : undefined
     );
-
-    const decorate = useDecorate();
-    const descProvide = computed(() => decorate([editor, []]));
-    provide(SLATE_INNER_DESCORATION, descProvide);
 
     return () =>
       h(
