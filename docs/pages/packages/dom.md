@@ -16,17 +16,19 @@ Provides the same interface as the **slate-dom** library, removed some useless *
 
 ### The remove type are as follows
 
-1. ~~`DOMElement`~~
+1. ~~`DOMElement`~~ => `globalThis.Element`
 
-2. ~~`DOMNode`~~
+2. ~~`DOMNode`~~ => `globalThis.Node`
 
-3. ~~`DOMRange`~~
+3. ~~`DOMRange`~~ => `globalThis.Range`
 
-4. ~~`DOMSelection`~~
+4. ~~`DOMSelection`~~ => `globalThis.Selection`
 
-5. ~~`DOMStaticRange`~~
+5. ~~`DOMStaticRange`~~ => `globalThis.StaticRange`
 
-6. ~~`DOMText`~~
+6. ~~`DOMText`~~ => `globalThis.Text`
+`
+7. ~~`DOMPoint`~~ => `[globalThis.Node, number]`
 
 > #### To avoid exposing conflicts with native interface names, they can be obtained through GlobalThis during development, and there is no need to specifically expose them
 

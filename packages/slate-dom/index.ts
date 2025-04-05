@@ -20,7 +20,6 @@ export {
   isTrackedMutation,
   normalizeDOMPoint,
 } from './utils/dom'
-export type { DOMPoint } from './utils/dom'
 
 export {
   CAN_USE_DOM,

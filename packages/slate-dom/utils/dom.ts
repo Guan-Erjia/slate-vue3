@@ -17,7 +17,6 @@ declare global {
   }
 }
 
-export type DOMPoint = [Node, number]
 
 /**
  * Returns the host window of a DOM node
@@ -92,6 +91,7 @@ export const isPlainTextOnlyPaste = (event: ClipboardEvent) => {
  * Normalize a DOM point so that it always refers to a text node.
  */
 
+type DOMPoint = [DOMNode, number]
 export const normalizeDOMPoint = (domPoint: DOMPoint): DOMPoint => {
   let [node, offset] = domPoint
 

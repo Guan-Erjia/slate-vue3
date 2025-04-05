@@ -10,7 +10,6 @@ import {
   Transforms,
 } from "slate";
 import {
-  DOMPoint,
   getSelection,
   hasShadowRoot,
   isAfter,
@@ -41,14 +40,12 @@ type DOMNode = globalThis.Node;
 type DOMRange = globalThis.Range;
 type DOMSelection = globalThis.Selection;
 type DOMStaticRange = globalThis.StaticRange;
-/**
- * A DOM-specific version of the `Editor` interface.
- */
+type DOMPoint = [globalThis.Node, number]
 
 // compact vue3, get the real node element when renderList in firefox
 // (https://github.com/vuejs/core/issues/8444#issuecomment-1577843668)
 // (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
-function getFirefoxNodeEl(node: DOMNode, offset: number): [DOMNode, number] {
+function getFirefoxNodeEl([node, offset]: DOMPoint): DOMPoint {
   if (node.nodeType !== 3 || node.textContent !== "") {
     return [node, offset];
   } else {
@@ -66,6 +63,9 @@ function getFirefoxNodeEl(node: DOMNode, offset: number): [DOMNode, number] {
   }
 }
 
+/**
+ * A DOM-specific version of the `Editor` interface.
+ */
 export interface DOMEditor extends BaseEditor {
   hasEditableTarget: (
     editor: DOMEditor,
@@ -942,12 +942,12 @@ export const DOMEditor: DOMEditorInterface = {
             focusOffset = focusNode?.textContent?.length || 0;
           } else {
             if (anchorNode) {
-              const [el, offset] = getFirefoxNodeEl(anchorNode, anchorOffset);
+              const [el, offset] = getFirefoxNodeEl([anchorNode, anchorOffset]);
               anchorNode = el;
               anchorOffset = offset;
             }
             if (focusNode) {
-              const [el, offset] = getFirefoxNodeEl(focusNode, focusOffset);
+              const [el, offset] = getFirefoxNodeEl([focusNode, focusOffset]);
               focusNode = el;
               focusOffset = offset;
             }
@@ -977,12 +977,12 @@ export const DOMEditor: DOMEditorInterface = {
         isCollapsed = domRange.collapsed;
         if (IS_FIREFOX) {
           if (anchorNode) {
-            const [el, offset] = getFirefoxNodeEl(anchorNode, anchorOffset);
+            const [el, offset] = getFirefoxNodeEl([anchorNode, anchorOffset]);
             anchorNode = el;
             anchorOffset = offset;
           }
           if (focusNode) {
-            const [el, offset] = getFirefoxNodeEl(focusNode, focusOffset);
+            const [el, offset] = getFirefoxNodeEl([focusNode, focusOffset]);
             focusNode = el;
             focusOffset = offset;
           }
