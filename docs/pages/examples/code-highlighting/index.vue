@@ -138,7 +138,7 @@ const node2Decorations = computed(() => {
     match: n => Element.isElement(n) && n.type === 'code-block',
   })
 
-  blockEntries.forEach(([
+  Array.from(blockEntries).forEach(([
     block,
     blockPath,
   ]: NodeEntry<CodeBlockElement>) => {

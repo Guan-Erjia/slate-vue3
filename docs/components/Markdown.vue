@@ -93,13 +93,13 @@ const node2Decorations = computed(() => {
     match: n => Element.isElement(n) && n.type === 'code',
   })
 
-  blockEntries.forEach(([
-    block,
-    blockPath,
-  ]: NodeEntry<CodeElement>) => {
-    const text = block.children.map(line => Node.string(line)).join('\n')
-    const tokens = Prism.tokenize(text, Prism.languages[block.lang])
-    const normalizedTokens = normalizeTokens(tokens) // make tokens flat and grouped by line
+Array.from(blockEntries).forEach(([
+  block,
+  blockPath,
+]: NodeEntry<CodeElement>) => {
+  const text = block.children.map(line => Node.string(line)).join('\n')
+  const tokens = Prism.tokenize(text, Prism.languages[block.lang])
+  const normalizedTokens = normalizeTokens(tokens) // make tokens flat and grouped by line
 
     for (let index = 0; index < normalizedTokens.length; index++) {
       const tokens = normalizedTokens[index]

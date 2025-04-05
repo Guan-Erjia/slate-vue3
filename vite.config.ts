@@ -5,6 +5,7 @@ import path from "path";
 import { UserConfig } from "vite";
 import dts from "vite-plugin-dts";
 import { mergeConfig } from "vite";
+import babel from "vite-plugin-babel";
 
 const BaseConfig: UserConfig = {
   plugins: [vue()],
@@ -73,6 +74,13 @@ export default defineConfig(({ command, mode }) => {
           "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
         }
       },
+      plugins: [
+        babel({
+          babelConfig: {
+            plugins: [["babel-plugin-transform-regex", { removeImport: true }]],
+          },
+        }),
+      ],
     })
   }
 });
