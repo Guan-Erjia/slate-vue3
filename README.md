@@ -81,6 +81,6 @@ This ensures that your rich text is as expected, and slate-vue3 provides some de
 
 Of coures yes, but we do not recommend it unless you have already configured jsx in the project, as a branch, using the h function directly is already simple enough
 
-### 3. Why do rendering functions not use Vue components ?
+### 3. Why do rendering functions not use vue components ?
 
 Vue uses lazy updates, rendering with components generates additional state, which can cause unexpected results during updates, it would be better to use functions as branches directly

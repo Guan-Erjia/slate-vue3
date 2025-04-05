@@ -1,7 +1,7 @@
 <template>
     <header>
         <a href="https://docs.slatejs.org" target="_blank" style="color: white;">Slate</a>
-        <a href="https://cn.vuejs.org/" target="_blank" style="color: #35eb9a;">-Vue3</a>
+        <a href="https://vuejs.org" target="_blank" style="color: #35eb9a;">-Vue3</a>
         <div style="flex-grow: 1;min-width: 0;"></div>
         <button v-if="isMobileDevice" @click="isFold = !isFold" :style="{
             color: isFold ? 'white' : '#aaaaaa',

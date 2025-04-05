@@ -1,7 +1,7 @@
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
-    <Editable class="slate-markdown" :read-only="true" placeholder="Write some markdown..." spellcheck />
+    <Editable class="slate-markdown" :read-only="true" spellcheck />
   </Slate>
 </template>
 <script lang="ts" setup>
@@ -21,6 +21,7 @@ import { unified } from "unified";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import { remarkToSlate } from "remark-slate-transformer";
+import { withDOM } from 'slate-vue3/dom';
 
 const props = defineProps<{
   content: string;
@@ -43,7 +44,7 @@ slateDescendant.filter(i => i.type === 'code').forEach(code => {
   code.children = toCodeLines(code.children[0].text)
 })
 
-const editor = createEditor()
+const editor = withDOM(createEditor())
 editor.children = slateDescendant
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch ((element as any).type) {

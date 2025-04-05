@@ -10,7 +10,7 @@ You need to pay attention to the parameter changes of the components. Some param
 
 The rendering functions of Slate include renderElement and renderLeaf, which implement branch judgment operations without state. 
 
-Since Vue does not provide jsx by default, the h function is used to implement them, as shown below
+Since vue does not provide jsx by default, the h function is used to implement them, as shown below
 ```typescript
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch ((element as any).type) {
@@ -38,17 +38,17 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 
 ## REACTIVE
 
-Due to the fact that Vue's rendering relies on variable response data, the children of the editor are a responsive proxy. You can directly manipulate the editor by modifying the children property of the editor
+Due to the fact that vue's rendering relies on variable response data, the children of the editor are a responsive proxy. You can directly manipulate the editor by modifying the children property of the editor
 
 > We do not recommend doing so. Each Transform operation is a collection of operations, which may cause cursor loss or other unexpected situations
 
 ## SYNA DATA
 
-Vue can provide a stable lifecycle, and all reactive data is synchronized without the need to poll and listen for child nodes.
+vue can provide a stable lifecycle, and all reactive data is synchronized without the need to poll and listen for child nodes.
 
 Therefore, some asynchronous operations such as timeouts have been removed.
 
-This change covers the rendering implementation of DOM and Vue packages, and some useless interfaces have also been removed from YJS packages
+This change covers the rendering implementation of DOM and vue packages, and some useless interfaces have also been removed from YJS packages
 
 ## PACKAGES
 

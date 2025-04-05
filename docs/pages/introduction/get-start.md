@@ -55,9 +55,9 @@ editor.children = initialValue
 
 Now we can proceed with enjoyable development
 
-## why you shoule need it
+## why you should need it
 
-#### If you want to use Slate in a Vue project, the process can be quite cumbersome, you need to do the following things:
+#### If you want to use [**slate**](https://docs.slatejs.org) in a [**vue**](https://vuejs.org) project, the process can be quite cumbersome, you need to do the following things:
 
 1. requiring the introduction of react.js
 2. configuring jsx compilation (if you don't want to directly use createElement api)
@@ -67,4 +67,4 @@ Now we can proceed with enjoyable development
 
 - react will result in additional package size
 - maintaining two front-end frameworks is also difficult
-- it is even more impossible to integrate Vue logic at rendering granularity
+- it is even more impossible to integrate vue logic at rendering granularity
