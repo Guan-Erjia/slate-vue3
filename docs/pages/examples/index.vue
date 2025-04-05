@@ -4,7 +4,7 @@
             <span style="cursor: default;font-size: 20px;"> {{ route.name }} </span>
             <div style="flex-grow: 1;"></div>
             <a target="_blank"
-                :href="`https://github.com/Guan-Erjia/slate-vue3/tree/master/packages/docs/pages/examples/${route.path}`">
+                :href="`https://github.com/Guan-Erjia/slate-vue3/tree/master/docs/pages${route.path}`">
                 view code</a>
         </header>
         <div style="margin-top: 10px; padding: 10px;box-sizing: border-box;background-color: white;position: relative;">
