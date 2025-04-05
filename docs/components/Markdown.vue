@@ -7,21 +7,20 @@
 <script lang="ts" setup>
 import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef, } from 'slate-vue3';
 import { CSSProperties, h, } from 'vue';
+import Prism from 'prismjs'
 import "prismjs";
 import 'prismjs/components/prism-markdown'
-import { createEditor, Editor, Element, NodeEntry, Node, Range } from 'slate-vue3/core';
-import { withHistory } from 'slate-vue3/history';
-import { withDOM } from 'slate-vue3/dom';
-import remarkGfm from "remark-gfm";
-import { remarkToSlate, } from "remark-slate-transformer";
-import remarkParse from "remark-parse";
-import { unified } from "unified";
 import 'prismjs/components/prism-typescript'
 import 'prismjs/components/prism-bash'
-import Prism from 'prismjs'
+import { createEditor, Editor, Element, NodeEntry, Node, Range } from 'slate-vue3/core';
+import CodeBlock from './CodeBlock.vue';
 import { CodeElement } from '../custom-types';
 import { normalizeTokens } from '../utils/normalize-tokens'
-import CodeBlock from './CodeBlock.vue';
+
+import { unified } from "unified";
+import remarkGfm from "remark-gfm";
+import remarkParse from "remark-parse";
+import { remarkToSlate } from "remark-slate-transformer";
 
 const props = defineProps<{
   content: string;
@@ -44,7 +43,7 @@ slateDescendant.filter(i => i.type === 'code').forEach(code => {
   code.children = toCodeLines(code.children[0].text)
 })
 
-const editor = withHistory(withDOM(createEditor()))
+const editor = createEditor()
 editor.children = slateDescendant
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch ((element as any).type) {
@@ -79,30 +78,34 @@ const renderLeaf = ({ text, attributes, children, leaf }: RenderLeafProps) => {
     style.borderRadius = '4px'
     style.padding = '0 2px'
   }
-  if(text.delete) {
+  if (text.delete) {
     style.textDecoration = 'line-through'
   }
   const { text: _text, ...rest } = leaf
   return h("span", { ...attributes, style, class: Object.keys(rest).join(' ') }, children)
 }
 
-const getChildNodeToDecorations = ([
+const decorationsMap = new Map()
+const blockEntries = Editor.nodes(editor, {
+  at: [],
+  mode: 'highest',
+  match: n => Element.isElement(n) && n.type === 'code',
+})
+
+blockEntries.forEach(([
   block,
   blockPath,
 ]: NodeEntry<CodeElement>) => {
-  const nodeToDecorations = new Map<Element, Range[]>()
   const text = block.children.map(line => Node.string(line)).join('\n')
-  const language = block.lang
-  const tokens = Prism.tokenize(text, Prism.languages[language])
+  const tokens = Prism.tokenize(text, Prism.languages[block.lang])
   const normalizedTokens = normalizeTokens(tokens) // make tokens flat and grouped by line
-  const blockChildren = block.children as Element[]
 
   for (let index = 0; index < normalizedTokens.length; index++) {
     const tokens = normalizedTokens[index]
-    const element = blockChildren[index]
+    const element = block.children[index]
 
-    if (!nodeToDecorations.has(element)) {
-      nodeToDecorations.set(element, [])
+    if (!decorationsMap.has(element)) {
+      decorationsMap.set(element, [])
     }
 
     let start = 0
@@ -122,34 +125,17 @@ const getChildNodeToDecorations = ([
         ...Object.fromEntries(token.types.map(type => [type, true])),
       }
 
-      nodeToDecorations.get(element)!.push(range)
+      decorationsMap.get(element)!.push(range)
 
       start = end
     }
   }
 
-  return nodeToDecorations
-}
-
-const blockEntries = Array.from(
-  Editor.nodes(editor, {
-    at: [],
-    mode: 'highest',
-    match: n => Element.isElement(n) && n.type === 'code',
-  })
-)
-
-const node2Decorations = new Map()
-for (const m of blockEntries.map(getChildNodeToDecorations)) {
-  for (const item of m) {
-    node2Decorations.set(...item)
-  }
-}
+})
 
 const decorate = ([node]: any) => {
   if (Element.isElement(node) && node.type === 'code-line') {
-    const ranges = node2Decorations.get(node) || []
-    return ranges
+    return decorationsMap.get(node) || []
   }
   return []
 }

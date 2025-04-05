@@ -11,6 +11,7 @@
 </template>
 <script lang="ts" setup>
 import "prismjs";
+import Prism from 'prismjs'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/components/prism-jsx'
 import 'prismjs/components/prism-typescript'
@@ -21,6 +22,9 @@ import 'prismjs/components/prism-php'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-java'
 import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef } from 'slate-vue3';
+import { withHistory } from "slate-vue3/history";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { createEditor, Editor, Element, NodeEntry, Transforms, Node, Range } from "slate-vue3/core";
 import { computed, h } from 'vue';
 import LanguageSelect from './LanguageSelect.vue'
 import Toolbar from '../../../components/Toolbar.vue';
@@ -28,10 +32,6 @@ import Button from '../../../components/Button.vue';
 import isHotkey from "is-hotkey";
 import { CodeBlockElement } from "../../../custom-types";
 import { normalizeTokens } from '../../../utils/normalize-tokens'
-import Prism from 'prismjs'
-import { withHistory } from "slate-vue3/history";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
-import { createEditor, Editor, Element, NodeEntry, Transforms, Node, Range } from "slate-vue3/core";
 
 const toChildren = (content: string) => [{ text: content }]
 const toCodeLines = (content: string): Element[] =>
@@ -57,10 +57,11 @@ const initialValue = [
 ]
 
 const App = () => {
-  const [editor] = useState(() => withReact(createEditor()))
+  const editor = withDOM(createEditor())
+  editor.children = initialValue
 
   return (
-    <Slate editor={editor} initialValue={initialValue}>
+    <Slate editor={editor}>
       <Editable />
     </Slate>
   )
@@ -76,8 +77,8 @@ const App = () => {
     type: 'code-block',
     language: 'typescript',
     children: toCodeLines(`// TypeScript users only add this code
-import { BaseEditor, Descendant } from 'slate'
-import { DOMEditor } from 'slate-dom'
+import { BaseEditor, Descendant } from 'slate-vue3/core'
+import { DOMEditor } from 'slate-vue3/dom'
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] }
 type CustomText = { text: string }
@@ -129,98 +130,79 @@ const onKeydown = (e: KeyboardEvent) => {
   }
 }
 
-const mergeMaps = <K, V>(...maps: Map<K, V>[]) => {
-  const map = new Map<K, V>()
-  for (const m of maps) {
-    for (const item of m) {
-      map.set(...item)
-    }
-  }
-  return map
-}
-
-const getChildNodeToDecorations = ([
-  block,
-  blockPath,
-]: NodeEntry<CodeBlockElement>) => {
-  const nodeToDecorations = new Map<Element, Range[]>()
-  const text = block.children.map(line => Node.string(line)).join('\n')
-  const language = block.language
-  const tokens = Prism.tokenize(text, Prism.languages[language])
-  const normalizedTokens = normalizeTokens(tokens) // make tokens flat and grouped by line
-  const blockChildren = block.children as Element[]
-
-  for (let index = 0; index < normalizedTokens.length; index++) {
-    const tokens = normalizedTokens[index]
-    const element = blockChildren[index]
-
-    if (!nodeToDecorations.has(element)) {
-      nodeToDecorations.set(element, [])
-    }
-
-    let start = 0
-    for (const token of tokens) {
-      const length = token.content.length
-      if (!length) {
-        continue
-      }
-
-      const end = start + length
-
-      const path = [...blockPath, index, 0]
-      const range: Range = {
-        anchor: { path, offset: start },
-        focus: { path, offset: end },
-        token: true,
-        ...Object.fromEntries(token.types.map(type => [type, true])),
-      }
-
-      nodeToDecorations.get(element)!.push(range)
-
-      start = end
-    }
-  }
-
-  return nodeToDecorations
-}
-
-const blockEntries = computed(() => Array.from(
-  Editor.nodes(editor, {
+const node2Decorations = computed(() => {
+  const decorationsMap = new Map()
+  const blockEntries = Editor.nodes(editor, {
     at: [],
     mode: 'highest',
     match: n => Element.isElement(n) && n.type === 'code-block',
   })
-))
 
-const node2Decorations = computed(() => mergeMaps(
-  ...blockEntries.value.map(getChildNodeToDecorations)
-))
+  blockEntries.forEach(([
+    block,
+    blockPath,
+  ]: NodeEntry<CodeBlockElement>) => {
+    const text = block.children.map(line => Node.string(line)).join('\n')
+    const tokens = Prism.tokenize(text, Prism.languages[block.language])
+    const normalizedTokens = normalizeTokens(tokens) // make tokens flat and grouped by line
 
-const decorate = computed(() => ([node, path]: any) => {
-  if (Element.isElement(node) && node.type === 'code-line') {
-    const ranges = node2Decorations.value.get(node) || []
-    return ranges
-  }
-  return []
+    for (let index = 0; index < normalizedTokens.length; index++) {
+      const tokens = normalizedTokens[index]
+      const element = block.children[index]
+
+      if (!decorationsMap.has(element)) {
+        decorationsMap.set(element, [])
+      }
+
+      let start = 0
+      for (const token of tokens) {
+        const length = token.content.length
+        if (!length) {
+          continue
+        }
+
+        const end = start + length
+
+        const path = [...blockPath, index, 0]
+        const range: Range = {
+          anchor: { path, offset: start },
+          focus: { path, offset: end },
+          token: true,
+          ...Object.fromEntries(token.types.map(type => [type, true])),
+        }
+
+        decorationsMap.get(element)!.push(range)
+
+        start = end
+      }
+    }
+
+  })
+
+  return decorationsMap
 })
 
-const ParagraphType = 'paragraph'
-const CodeBlockType = 'code-block'
-const CodeLineType = 'code-line'
+const decorate = ([node]: [Node]) => {
+  if (Element.isElement(node) && node.type === 'code-line') {
+    return node2Decorations.value.get(node) || []
+  }
+  return []
+}
+
 const onMouseDown = (event: MouseEvent) => {
   event.preventDefault()
   Transforms.wrapNodes(
     editor,
-    { type: CodeBlockType, language: 'html', children: [] },
+    { type: 'code-block', language: 'html', children: [] },
     {
-      match: n => Element.isElement(n) && n.type === ParagraphType,
+      match: n => Element.isElement(n) && n.type === 'paragraph',
       split: true,
     }
   )
   Transforms.setNodes(
     editor,
-    { type: CodeLineType as any },
-    { match: n => Element.isElement(n) && n.type === ParagraphType }
+    { type: 'code-line' as any },
+    { match: n => Element.isElement(n) && n.type === 'paragraph' }
   )
 }
 </script>
@@ -266,6 +248,7 @@ code[class*="language-"] ::selection {
 }
 
 @media print {
+
   code[class*="language-"],
   pre[class*="language-"] {
     text-shadow: none;
