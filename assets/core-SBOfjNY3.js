@@ -1,0 +1,2 @@
+import{_ as t}from"./Markdown.vue_vue_type_style_index_0_lang-CsiC0Gg0.js";import{d as e,o,f as n,u as r}from"./index-DhaRwmOb.js";import"./editable-BcgLmpPp.js";import"./use-inherit-ref-lmEEbD6_.js";import"./prism-markdown-DvSGSIu-.js";import"./normalize-tokens-Bcdb6Sh1.js";const s=`Provides the same interface as the [**slate**](https://docs.slatejs.org/concepts) library
+`,d=e({__name:"core",setup(a){return(c,p)=>(o(),n(t,{content:r(s)},null,8,["content"]))}});export{d as default};

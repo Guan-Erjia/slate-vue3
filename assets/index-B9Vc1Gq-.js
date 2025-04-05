@@ -1,0 +1,1 @@
+import{_ as o,c as t,a as n,o as r,r as c}from"./index-DhaRwmOb.js";const s={},a={style:{margin:"15px",padding:"10px","padding-bottom":"30px","box-sizing":"border-box","background-color":"white",position:"relative"}};function i(d,_){const e=c("RouterView");return r(),t("div",a,[n(e)])}const x=o(s,[["render",i]]);export{x as default};
