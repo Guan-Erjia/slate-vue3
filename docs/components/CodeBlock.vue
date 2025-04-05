@@ -17,12 +17,13 @@ const handleCopy = () => {
 }
 </script>
 <style>
-.slate-markdown code *{
+.slate-markdown code * {
   line-height: 1.6;
-  font-family: monospace;
+  font-family: monospace, 'Roboto', sans-serif;
   font-weight: 500;
   font-size: 16px;
 }
+
 .slate-markdown .copy-btn {
   position: absolute;
   right: 10px;
