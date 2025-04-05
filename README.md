@@ -20,8 +20,8 @@
 # Why use it?
 
 1. :sparkles: Highly customizable features, use slate core at the bottom level
-2. :zap: The latest version of the core, use vue to reduce the number of re-renderings
-3. :coffee: This library provides the same usage as slate-react, design tends to be stable
+2. :zap: Use vue3 for high-performance rendering, and later connect to vapor mode
+3. :coffee: The latest version of the core, design tends to be stable
 4. :point_right: Check out the [**live demo**](https://guan-erjia.github.io/slate-vue3/examples) of all of the examples
 
 # How to use?
@@ -84,24 +84,3 @@ Of coures yes, but we do not recommend it unless you have already configured jsx
 ### 3. Why do rendering functions not use Vue components ?
 
 Vue uses lazy updates, rendering with components generates additional state, which can cause unexpected results during updates, it would be better to use functions as branches directly
-
-# Compact Slate
-
-**reactive implement**
-
-1. packages/slate/src/interfaces/text.ts 115:115
-2. packages/slate/src/create-editor.ts 94:94
-3. packages/slate/src/transforms-node/set-nodes.ts 18:18
-4. packages/slate/src/interfaces/text.ts 116:116
-
-**remove immer**
-
-1. packages/slate/src/interfaces/node.ts 365:365
-2. packages/slate/src/interfaces/point.ts 103:103
-3. packages/slate/src/interfaces/range.ts 224:224
-4. packages/slate/src/interfaces/transforms/general.ts 322:333
-
-**other compact**
-
-1. packages/slate/src/core/normalize-node.ts
-2. packages/slate-dom/src/plugin/dom-editor.ts 421:441

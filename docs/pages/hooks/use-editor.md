@@ -3,7 +3,7 @@
 ```typescript
 import { useEditor } from "slate-vue3";
 
-const useEditor: ( ) => DOMEditor;
+const useEditor: () => DOMEditor;
 
 const editor = useEditor();
 ```

@@ -3,7 +3,7 @@
 ```typescript
 import { useFocused } from "slate-vue3";
 
-const useFocused: ( ) => Ref<boolean, boolean>;
+const useFocused: () => Ref<boolean, boolean>;
 
 const focused = useFocused();
 ```

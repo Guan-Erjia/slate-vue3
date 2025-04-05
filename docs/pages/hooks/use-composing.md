@@ -3,7 +3,7 @@
 ```typescript
 import { useComposing } from "slate-vue3";
 
-const useComposing: ( ) => Ref<boolean, boolean>;
+const useComposing: () => Ref<boolean, boolean>;
 
 const composing = useComposing();
 ```

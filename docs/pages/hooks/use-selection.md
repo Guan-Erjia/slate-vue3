@@ -3,7 +3,7 @@
 ```typescript
 import { useSelection } from "slate-vue3";
 
-const useSelection: ( ) => ComputedRef<BaseSelection>;
+const useSelection: () => ComputedRef<BaseSelection>;
 
 const selection = useSelection();
 ```

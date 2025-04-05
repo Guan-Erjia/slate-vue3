@@ -1,8 +1,23 @@
 # introduction
 
-Slate-vue3 is a rich text rendering engine based on slate implementation
+**Slate-vue3 is a rich text rendering engine based on slate implementation**
 
-Based on slate's excellent design, slate-vue3 can also meet high customization requirements in projects
+**Based on slate's excellent design, slate-vue3 can also meet high customization requirements in projects:**
+
+1. ✍️ markdown-shortcuts
+2. 🔨 code-highlighting
+3. 🚀 collaborative-editing
+4. 🎤 sing, jump, rap, basketball...... [click and see more example](/slate-vue3/examples/rich-text)
+
+⠀⠀⠀⠀⠰⢷⢿⠄
+⠀⠀⠀⠀⠀⣼⣷⣄
+⠀⠀⣤⣿⣇⣿⣿⣧⣿⡄
+⢴⠾⠋⠀⠀⠻⣿⣷⣿⣿⡀
+🏀 ⠀⢀⣿⣿⡿⢿⠈⣿
+⠀⠀⠀⢠⣿⡿⠁⠀⡊⠀⠙
+⠀⠀⠀⢿⣿⠀⠀⠹⣿
+⠀⠀⠀⠀⠹⣷⡀⠀⣿⡄
+⠀⠀⠀⠀⣀⣼⣿⠀⢈⣧
 
 ## install
 
@@ -44,12 +59,12 @@ Now we can proceed with enjoyable development
 
 #### If you want to use Slate in a Vue project, the process can be quite cumbersome, you need to do the following things:
 
-1. requiring the introduction of React.js
-2. configuring JSX compilation (if you don't want to directly use createElement api)
+1. requiring the introduction of react.js
+2. configuring jsx compilation (if you don't want to directly use createElement api)
 3. establish a message channel between slate react and existing projects
 
 #### However, doing these things does not bring a better development experience
 
-- React will result in additional package size
-- and maintaining two front-end frameworks is also difficult
-- It is even more impossible to integrate Vue logic at rendering granularity
+- react will result in additional package size
+- maintaining two front-end frameworks is also difficult
+- it is even more impossible to integrate Vue logic at rendering granularity
