@@ -66,7 +66,6 @@ export interface TextInterface {
   decorations: (node: Text, decorations: DecoratedRange[]) => Text[]
 }
 
-// eslint-disable-next-line no-redeclare
 export const Text: TextInterface = {
   equals(text: Text, another: Text, options: TextEqualsOptions = {}): boolean {
     const { loose = false } = options
