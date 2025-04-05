@@ -7,7 +7,7 @@
 1. ✍️ markdown-shortcuts
 2. 🔨 code-highlighting
 3. 🚀 collaborative-editing
-4. 🎤 sing, jump, rap, basketball...... [click and see more example](/slate-vue3/examples/rich-text)
+4. 🎤 sing, dance, rap, basketball...... [click and see more example](/slate-vue3/examples/rich-text)
 
 ⠀⠀⠀⠀⠰⢷⢿⠄
 ⠀⠀⠀⠀⠀⣼⣷⣄
