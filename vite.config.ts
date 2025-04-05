@@ -62,25 +62,41 @@ export default defineConfig(({ command, mode }) => {
         }),
       ],
     } as UserConfig);
-  } else {
-    return mergeConfig(BaseConfig, {
-      resolve: {
-        alias: {
-          "slate-vue3/core": path.resolve(__dirname, "./packages/slate/index.ts"),
-          "slate-vue3/dom": path.resolve(__dirname,"./packages/slate-dom/index.ts"),
-          "slate-vue3/hyperscript": path.resolve(__dirname, "./packages/slate-hyperscript/index.ts"),
-          "slate-vue3/history": path.resolve(__dirname, "./packages/slate-history/index.ts"),
-          "slate-vue3/yjs": path.resolve(__dirname, "./packages/slate-yjs/index.ts"),
-          "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
-        }
-      },
-      plugins: [
-        babel({
-          babelConfig: {
-            plugins: [["babel-plugin-transform-regex", { removeImport: true }]],
-          },
-        }),
-      ],
-    })
   }
+  const mergedConfig = mergeConfig(BaseConfig, {
+    resolve: {
+      alias: {
+        "slate-vue3/core": path.resolve(__dirname, "./packages/slate/index.ts"),
+        "slate-vue3/dom": path.resolve(
+          __dirname,
+          "./packages/slate-dom/index.ts"
+        ),
+        "slate-vue3/hyperscript": path.resolve(
+          __dirname,
+          "./packages/slate-hyperscript/index.ts"
+        ),
+        "slate-vue3/history": path.resolve(
+          __dirname,
+          "./packages/slate-history/index.ts"
+        ),
+        "slate-vue3/yjs": path.resolve(
+          __dirname,
+          "./packages/slate-yjs/index.ts"
+        ),
+        "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
+      },
+    },
+  });
+
+  if (mode === "build") {
+    mergedConfig.plugins = [
+      babel({
+        babelConfig: {
+          plugins: [["babel-plugin-transform-regex"]],
+        },
+      }),
+    ];
+  }
+
+  return mergedConfig;
 });
