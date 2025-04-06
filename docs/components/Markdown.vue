@@ -86,13 +86,12 @@ const renderLeaf = ({ text, attributes, children, leaf }: RenderLeafProps) => {
   return h("span", { ...attributes, style, class: Object.keys(rest).join(' ') }, children)
 }
 
-const node2Decorations = computed(() => {
-  const decorationsMap = new Map()
-  const blockEntries = Editor.nodes(editor, {
-    at: [],
-    mode: 'highest',
-    match: n => Element.isElement(n) && n.type === 'code',
-  })
+const decorationsMap = new Map()
+const blockEntries = Editor.nodes(editor, {
+  at: [],
+  mode: 'highest',
+  match: n => Element.isElement(n) && n.type === 'code',
+})
 
 Array.from(blockEntries).forEach(([
   block,
@@ -102,44 +101,42 @@ Array.from(blockEntries).forEach(([
   const tokens = Prism.tokenize(text, Prism.languages[block.lang])
   const normalizedTokens = normalizeTokens(tokens) // make tokens flat and grouped by line
 
-    for (let index = 0; index < normalizedTokens.length; index++) {
-      const tokens = normalizedTokens[index]
-      const element = block.children[index]
+  for (let index = 0; index < normalizedTokens.length; index++) {
+    const tokens = normalizedTokens[index]
+    const element = block.children[index]
 
-      if (!decorationsMap.has(element)) {
-        decorationsMap.set(element, [])
-      }
-
-      let start = 0
-      for (const token of tokens) {
-        const length = token.content.length
-        if (!length) {
-          continue
-        }
-
-        const end = start + length
-
-        const path = [...blockPath, index, 0]
-        const range: Range = {
-          anchor: { path, offset: start },
-          focus: { path, offset: end },
-          token: true,
-          ...Object.fromEntries(token.types.map(type => [type, true])),
-        }
-
-        decorationsMap.get(element)!.push(range)
-
-        start = end
-      }
+    if (!decorationsMap.has(element)) {
+      decorationsMap.set(element, [])
     }
 
-  })
-  return decorationsMap
+    let start = 0
+    for (const token of tokens) {
+      const length = token.content.length
+      if (!length) {
+        continue
+      }
+
+      const end = start + length
+
+      const path = [...blockPath, index, 0]
+      const range: Range = {
+        anchor: { path, offset: start },
+        focus: { path, offset: end },
+        token: true,
+        ...Object.fromEntries(token.types.map(type => [type, true])),
+      }
+
+      decorationsMap.get(element)!.push(range)
+
+      start = end
+    }
+  }
+
 })
 
 const decorate = ([node]: any) => {
   if (Element.isElement(node) && node.type === 'code-line') {
-    return node2Decorations.value.get(node) || []
+    return decorationsMap.get(node) || []
   }
   return []
 }

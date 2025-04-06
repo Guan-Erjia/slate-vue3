@@ -10,14 +10,14 @@ import { useEditor } from "../hooks/use-editor";
 
 export const StringComp = defineComponent({
   name: "slate-string",
-  props: ["isLast", "leaf", "element", "text"],
+  props: ["leaf", "text", "element", "isLast"],
   setup(props: {
-    isLast: boolean;
-    text: Text;
     leaf: Text;
+    text: Text;
     element: Element;
+    isLast: boolean;
   }) {
-    const { isLast, leaf, element, text } = props;
+    const { leaf, text, element,isLast, } = props;
     const editor = useEditor();
 
     const getTextContent = computed(() => {
@@ -33,7 +33,7 @@ export const StringComp = defineComponent({
       const pathParent = Path.parent(DOMEditor.findPath(editor, text));
       return (
         leaf.text === "" &&
-        element.children[element.children.length - 1] === text &&
+        element.children.at(-1) === text &&
         !editor.isInline(element) &&
         Editor.string(editor, pathParent) === ""
       );

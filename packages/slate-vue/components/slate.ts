@@ -13,6 +13,7 @@ import {
   SLATE_INNER_RENDER_ELEMENT,
   SLATE_INNER_RENDER_LEAF,
   SLATE_INNER_RENDER_PLACEHOLDER,
+  SLATE_INNER_MARK_PLACEHOLDER,
   SLATE_STATE_COMPOSING,
   SLATE_STATE_FOCUS,
   SLATE_STATE_READ_ONLY,
@@ -20,13 +21,13 @@ import {
   SLATE_USE_DECORATE,
   SLATE_USE_EDITOR,
 } from "../utils/constants";
-import { DecoratedRange, Node, NodeEntry, Operation, Scrubber } from "slate";
+import { DecoratedRange, Node, NodeEntry, Operation, Scrubber, Text, Range } from "slate";
 import type {
   RenderElementProps,
   RenderLeafProps,
   RenderPlaceholderProps,
 } from "../utils/interface";
-import { DOMEditor, EDITOR_TO_ON_CHANGE } from "slate-dom";
+import { DOMEditor, EDITOR_TO_ON_CHANGE, MARK_PLACEHOLDER_SYMBOL } from "slate-dom";
 
 export const Slate = defineComponent({
   name: "slate-editor",
@@ -92,6 +93,34 @@ export const Slate = defineComponent({
     // 记数用，触发 changeEffect
     const changeEffect = ref(0);
     provide(SLATE_INNER_CHANGE_EFFECT_INJECT, changeEffect);
+
+    const markPlaceholder = computed(() => {
+      if (
+        editor.selection &&
+        Range.isCollapsed(editor.selection) &&
+        editor.marks
+      ) {
+        const anchor = editor.selection.anchor;
+        const leaf = Node.leaf(editor, anchor.path);
+        const { text, ...rest } = leaf;
+        // While marks isn't a 'complete' text, we can still use loose Text.equals
+        // here which only compares marks anyway.
+        if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
+          const unset = Object.fromEntries(
+            Object.keys(rest).map((mark) => [mark, null])
+          );
+          return {
+            [MARK_PLACEHOLDER_SYMBOL]: true,
+            ...unset,
+            ...editor.marks,
+            anchor,
+            focus: anchor,
+          };
+        }
+      }
+      return null
+    });
+    provide(SLATE_INNER_MARK_PLACEHOLDER, markPlaceholder)
 
     onMounted(() => {
       document.addEventListener("focusin", focusCb);

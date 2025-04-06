@@ -27,7 +27,7 @@ Provides the same interface as the **slate-dom** library, removed some useless *
 5. ~~`DOMStaticRange`~~ => `globalThis.StaticRange`
 
 6. ~~`DOMText`~~ => `globalThis.Text`
-`
+
 7. ~~`DOMPoint`~~ => `[globalThis.Node, number]`
 
 > #### To avoid exposing conflicts with native interface names, they can be obtained through GlobalThis during development, and there is no need to specifically expose them
