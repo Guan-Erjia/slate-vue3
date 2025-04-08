@@ -508,8 +508,8 @@ export const DOMEditor: DOMEditorInterface = {
   },
 
   hasSelectableTarget: (editor, target) =>
-    DOMEditor.hasEditableTarget(editor, target) &&
-    !DOMEditor.isTargetInsideNonReadonlyVoid(editor, target),
+    DOMEditor.hasEditableTarget(editor, target) ||
+    DOMEditor.isTargetInsideNonReadonlyVoid(editor, target),
 
   hasTarget: (editor, target): target is DOMNode =>
     isDOMNode(target) && DOMEditor.hasDOMNode(editor, target),

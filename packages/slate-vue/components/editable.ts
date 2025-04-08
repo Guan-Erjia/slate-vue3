@@ -853,7 +853,10 @@ export const Editable = defineComponent({
     };
 
     const onCompositionend = (event: CompositionEvent) => {
-      if (!DOMEditor.hasSelectableTarget(editor, event.target)) {
+      if (
+        !DOMEditor.hasEditableTarget(editor, event.target) ||
+        DOMEditor.isTargetInsideNonReadonlyVoid(editor, event.target)
+      ) {
         return;
       }
 
