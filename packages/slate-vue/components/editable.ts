@@ -77,7 +77,7 @@ export const Editable = defineComponent({
     scrollSelectionIntoView: {
       type: Function,
       required: false,
-      default: () => defaultScrollSelectionIntoView,
+      default: defaultScrollSelectionIntoView,
     },
     placeholder: { type: String },
     readOnly: {
