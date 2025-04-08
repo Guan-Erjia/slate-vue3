@@ -40,7 +40,7 @@ type DOMNode = globalThis.Node;
 type DOMRange = globalThis.Range;
 type DOMSelection = globalThis.Selection;
 type DOMStaticRange = globalThis.StaticRange;
-type DOMPoint = [globalThis.Node, number]
+type DOMPoint = [globalThis.Node, number];
 
 // compact vue3, get the real node element when renderList in firefox
 // (https://github.com/vuejs/core/issues/8444#issuecomment-1577843668)
@@ -54,9 +54,11 @@ function getFirefoxNodeEl([node, offset]: DOMPoint): DOMPoint {
     while (el?.firstChild) {
       el = isLeft ? el.firstChild : el.lastChild;
     }
-    if(!el) {
+    if (!el) {
       throw new Error(
-          `Compact on Firefox: Failed to find adjacent nodes: ${Scrubber.stringify(node)}`
+        `Compact on Firefox: Failed to find adjacent nodes: ${Scrubber.stringify(
+          node
+        )}`
       );
     }
     return [el, isLeft ? 0 : el.textContent?.length || 0];
@@ -94,7 +96,6 @@ export interface DOMEditor extends BaseEditor {
 }
 
 export interface DOMEditorInterface {
-
   /**
    * Blur the editor.
    */
@@ -277,7 +278,6 @@ export interface DOMEditorInterface {
 
 // eslint-disable-next-line no-redeclare
 export const DOMEditor: DOMEditorInterface = {
-
   blur: (editor) => {
     const el = DOMEditor.toDOMNode(editor, editor);
     const root = DOMEditor.findDocumentOrShadowRoot(editor);
@@ -429,7 +429,6 @@ export const DOMEditor: DOMEditorInterface = {
       return;
     }
     // 使用 Vue 的 nextTick，无需检查是否渲染完成
-  
 
     const el = DOMEditor.toDOMNode(editor, editor);
     const root = DOMEditor.findDocumentOrShadowRoot(editor);
@@ -509,8 +508,8 @@ export const DOMEditor: DOMEditorInterface = {
   },
 
   hasSelectableTarget: (editor, target) =>
-    DOMEditor.hasEditableTarget(editor, target) ||
-    DOMEditor.isTargetInsideNonReadonlyVoid(editor, target),
+    DOMEditor.hasEditableTarget(editor, target) &&
+    !DOMEditor.isTargetInsideNonReadonlyVoid(editor, target),
 
   hasTarget: (editor, target): target is DOMNode =>
     isDOMNode(target) && DOMEditor.hasDOMNode(editor, target),

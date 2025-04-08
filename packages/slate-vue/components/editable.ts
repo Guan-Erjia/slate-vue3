@@ -853,37 +853,39 @@ export const Editable = defineComponent({
     };
 
     const onCompositionend = (event: CompositionEvent) => {
-      if (DOMEditor.hasSelectableTarget(editor, event.target)) {
-        if (DOMEditor.isComposing(editor)) {
-          isComposing.value = false;
-          IS_COMPOSING.set(editor, false);
-        }
+      if (!DOMEditor.hasSelectableTarget(editor, event.target)) {
+        return;
+      }
 
-        if (IS_ANDROID || isEventHandled(event, attributes.onCompositionend)) {
-          return;
-        }
+      if (DOMEditor.isComposing(editor)) {
+        isComposing.value = false;
+        IS_COMPOSING.set(editor, false);
+      }
 
-        // COMPAT: In Chrome, `beforeinput` events for compositions
-        // aren't correct and never fire the "insertFromComposition"
-        // type that we need. So instead, insert whenever a composition
-        // ends since it will already have been committed to the DOM.
-        if (
-          !IS_WEBKIT &&
-          !IS_FIREFOX_LEGACY &&
-          !IS_IOS &&
-          !IS_WECHATBROWSER &&
-          !IS_UC_MOBILE &&
-          event.data
-        ) {
-          // Ensure we insert text with the marks the user was actually seeing
+      if (IS_ANDROID || isEventHandled(event, attributes.onCompositionend)) {
+        return;
+      }
 
-          Editor.insertText(editor, event.data);
+      // COMPAT: In Chrome, `beforeinput` events for compositions
+      // aren't correct and never fire the "insertFromComposition"
+      // type that we need. So instead, insert whenever a composition
+      // ends since it will already have been committed to the DOM.
+      if (
+        !IS_WEBKIT &&
+        !IS_FIREFOX_LEGACY &&
+        !IS_IOS &&
+        !IS_WECHATBROWSER &&
+        !IS_UC_MOBILE &&
+        event.data
+      ) {
+        // Ensure we insert text with the marks the user was actually seeing
 
-          const userMarks = EDITOR_TO_USER_MARKS.get(editor);
-          EDITOR_TO_USER_MARKS.delete(editor);
-          if (userMarks !== undefined) {
-            editor.marks = userMarks;
-          }
+        Editor.insertText(editor, event.data);
+
+        const userMarks = EDITOR_TO_USER_MARKS.get(editor);
+        EDITOR_TO_USER_MARKS.delete(editor);
+        if (userMarks !== undefined) {
+          editor.marks = userMarks;
         }
       }
     };
