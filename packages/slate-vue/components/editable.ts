@@ -37,6 +37,7 @@ import {
   onUnmounted,
   reactive,
   ref,
+  toRaw,
   useAttrs,
   watch,
 } from "vue";
@@ -816,7 +817,7 @@ export const Editable = defineComponent({
         // because onClick handlers can change the document before we get here.
         // Therefore we must check that this path actually exists,
         // and that it still refers to the same node.
-        if (!Editor.hasPath(editor, path) || Node.get(editor, path) !== node) {
+        if (!Editor.hasPath(editor, path) || toRaw(Node.get(editor, path)) !== node) {
           return;
         }
 
