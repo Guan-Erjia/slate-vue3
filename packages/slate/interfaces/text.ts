@@ -2,7 +2,6 @@ import { isPlainObject } from 'share-tools'
 import { Range } from '..'
 import { ExtendedType } from '../types/custom-types'
 import { isDeepEqual } from '../utils/deep-equal'
-import { cloneDeep } from 'lodash-es'
 
 /**
  * `Text` objects represent the nodes that contain the actual text content of a
@@ -112,7 +111,7 @@ export const Text: TextInterface = {
   },
 
   decorations(node: Text, decorations: DecoratedRange[]): Text[] {
-    let leaves: Text[] = [cloneDeep(node)]
+    let leaves: Text[] = [{...node}]
 
     for (const dec of decorations) {
       const { anchor, focus, merge: mergeDecoration, ...rest } = dec
@@ -124,9 +123,8 @@ export const Text: TextInterface = {
       const merge = mergeDecoration ?? Object.assign
 
       for (const leaf of leaves) {
-        const { length } = leaf.text
         const leafStart = leafEnd
-        leafEnd += length
+        leafEnd += leaf.text.length
 
         // If the range encompasses the entire leaf, add the range.
         if (decorationStart <= leafStart && leafEnd <= decorationEnd) {
