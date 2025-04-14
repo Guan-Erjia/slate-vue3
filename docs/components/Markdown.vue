@@ -6,7 +6,7 @@
 </template>
 <script lang="ts" setup>
 import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef, } from 'slate-vue3';
-import { computed, CSSProperties, h, } from 'vue';
+import { CSSProperties, h, } from 'vue';
 import Prism from 'prismjs'
 import "prismjs";
 import 'prismjs/components/prism-markdown'
@@ -134,7 +134,7 @@ Array.from(blockEntries).forEach(([
 
 })
 
-const decorate = ([node]: any) => {
+const decorate = ([node]: [Node]) => {
   if (Element.isElement(node) && node.type === 'code-line') {
     return decorationsMap.get(node) || []
   }

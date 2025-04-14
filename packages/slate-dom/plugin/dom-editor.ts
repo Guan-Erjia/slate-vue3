@@ -428,7 +428,6 @@ export const DOMEditor: DOMEditorInterface = {
     if (IS_FOCUSED.get(editor)) {
       return;
     }
-    // 使用 Vue 的 nextTick，无需检查是否渲染完成
 
     const el = DOMEditor.toDOMNode(editor, editor);
     const root = DOMEditor.findDocumentOrShadowRoot(editor);

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
-import { CSSProperties, h, nextTick, onMounted, onUnmounted } from "vue";
+import { CSSProperties, h, onMounted, onUnmounted } from "vue";
 import { CustomElement } from "../../../custom-types";
 import { withYjs, YjsEditor } from "slate-vue3/yjs";
 import { withDOM } from "slate-vue3/dom";
-import { createEditor, Editor, Transforms } from "slate-vue3/core";
+import { createEditor, Editor, Node, Transforms } from "slate-vue3/core";
 import { XmlText } from "yjs";
 import Toolbar from '../../../components/Toolbar.vue'
 import MarkButton from "../rich-text/MarkButton.vue";
@@ -80,16 +80,13 @@ const props = defineProps<{
 const editor = withYjs(withDOM(createEditor()), props.sharedType)
 editor.children = initialValue;
 const { normalizeNode } = editor;
-editor.normalizeNode = (entry: [any]) => {
+editor.normalizeNode = (entry: [Node]) => {
   const [node] = entry;
 
   if (!Editor.isEditor(node) || node.children.length > 0) {
     return normalizeNode(entry);
   }
-  // 必须更新 DOM 后才执行 insertNodes，更新太快 shareRoot 来不及反应会报错
-  nextTick(() => {
-    Transforms.insertNodes(editor, initialValue[0], { at: [0] });
-  })
+  Transforms.insertNodes(editor, initialValue[0], { at: [0] });
 };
 
 onMounted(() => {
