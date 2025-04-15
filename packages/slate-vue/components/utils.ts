@@ -46,7 +46,8 @@ export const isDOMEventHandled = <E extends Event>(
   if (!handler) {
     return false;
   }
-
+  // 使用 attributes 上的 handler 调用，禁止模版绑定的 handler 重复调用
+  event.stopImmediatePropagation()
   // The custom event handler may return a boolean to specify whether the event
   // shall be treated as being handled or not.
   const shouldTreatEventAsHandled = handler(event);

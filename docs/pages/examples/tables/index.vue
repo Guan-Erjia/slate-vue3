@@ -156,7 +156,11 @@ const initialValue: Descendant[] = [
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'table':
-      return h('table', null, h('tbody', attributes, children))
+      return h('table', {
+        style: {
+          position: 'relative',
+        }
+      }, h('tbody', attributes, children))
     case 'table-row':
       return h('tr', attributes, children)
     case 'table-cell':
@@ -166,10 +170,13 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
   }
 }
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
-  return h('bold' in leaf ? 'strong' : 'span', attributes, children)
+  if ('bold' in leaf) {
+    return h('span', attributes, h('strong', null, children))
+  }
+  return h('span', attributes, children)
 }
 
-const editor = withHistory(withTables(withDOM(createEditor()))) 
+const editor = withHistory(withTables(withDOM(createEditor())));
 editor.children = initialValue;
 </script>
 
