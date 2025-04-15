@@ -45,7 +45,7 @@ type DOMPoint = [globalThis.Node, number];
 // compact vue3, get the real node element when renderList in firefox
 // (https://github.com/vuejs/core/issues/8444#issuecomment-1577843668)
 // (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
-function getFirefoxNodeEl([node, offset]: DOMPoint): DOMPoint {
+function compatEmptyNode([node, offset]: DOMPoint): DOMPoint {
   if (node.nodeType !== 3 || node.textContent !== "") {
     return [node, offset];
   } else {
@@ -56,7 +56,7 @@ function getFirefoxNodeEl([node, offset]: DOMPoint): DOMPoint {
     }
     if (!el) {
       throw new Error(
-        `Compact on Firefox: Failed to find adjacent nodes: ${Scrubber.stringify(
+        `Compact on vue3 empty childNode: Failed to find adjacent nodes: ${Scrubber.stringify(
           node
         )}`
       );
@@ -684,9 +684,9 @@ export const DOMEditor: DOMEditorInterface = {
     }
   ): T extends true ? Point | null : Point => {
     const { exactMatch, suppressThrow, searchDirection = "backward" } = options;
-    const [nearestNode, nearestOffset] = exactMatch
-      ? domPoint
-      : normalizeDOMPoint(domPoint);
+    const [nearestNode, nearestOffset] = compatEmptyNode(
+      exactMatch ? domPoint : normalizeDOMPoint(domPoint)
+    );
     const parentNode = nearestNode.parentNode as DOMElement;
     let textNode: DOMElement | null = null;
     let offset = 0;
@@ -940,12 +940,12 @@ export const DOMEditor: DOMEditorInterface = {
             focusOffset = focusNode?.textContent?.length || 0;
           } else {
             if (anchorNode) {
-              const [el, offset] = getFirefoxNodeEl([anchorNode, anchorOffset]);
+              const [el, offset] = compatEmptyNode([anchorNode, anchorOffset]);
               anchorNode = el;
               anchorOffset = offset;
             }
             if (focusNode) {
-              const [el, offset] = getFirefoxNodeEl([focusNode, focusOffset]);
+              const [el, offset] = compatEmptyNode([focusNode, focusOffset]);
               focusNode = el;
               focusOffset = offset;
             }
@@ -975,12 +975,12 @@ export const DOMEditor: DOMEditorInterface = {
         isCollapsed = domRange.collapsed;
         if (IS_FIREFOX) {
           if (anchorNode) {
-            const [el, offset] = getFirefoxNodeEl([anchorNode, anchorOffset]);
+            const [el, offset] = compatEmptyNode([anchorNode, anchorOffset]);
             anchorNode = el;
             anchorOffset = offset;
           }
           if (focusNode) {
-            const [el, offset] = getFirefoxNodeEl([focusNode, focusOffset]);
+            const [el, offset] = compatEmptyNode([focusNode, focusOffset]);
             focusNode = el;
             focusOffset = offset;
           }
