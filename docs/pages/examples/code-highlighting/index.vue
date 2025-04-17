@@ -33,17 +33,16 @@ import isHotkey from "is-hotkey";
 import { CodeBlockElement } from "../../../custom-types";
 import { normalizeTokens } from '../../../utils/normalize-tokens'
 
-const toChildren = (content: string) => [{ text: content }]
 const toCodeLines = (content: string): Element[] =>
   content
     .split('\n')
-    .map(line => ({ type: 'code-line', children: toChildren(line) }))
+    .map(text => ({ type: 'code-line', children: [{ text }] }))
 const initialValue: Element[] = [
   {
     type: 'paragraph',
-    children: toChildren(
-      "Here's one containing a single paragraph block with some text in it:"
-    ),
+    children: [{
+      text: "Here's one containing a single paragraph block with some text in it:"
+    }],
   },
   {
     type: 'code-block',
@@ -69,9 +68,9 @@ const App = () => {
   },
   {
     type: 'paragraph',
-    children: toChildren(
-      'If you are using TypeScript, you will also need to extend the Editor with ReactEditor and add annotations as per the documentation on TypeScript. The example below also includes the custom types required for the rest of this example.'
-    ),
+    children: [{
+      text: 'If you are using TypeScript, you will also need to extend the Editor with ReactEditor and add annotations as per the documentation on TypeScript. The example below also includes the custom types required for the rest of this example.'
+    }],
   },
   {
     type: 'code-block',
@@ -93,7 +92,9 @@ declare module 'slate' {
   },
   {
     type: 'paragraph',
-    children: toChildren('There you have it!'),
+    children: [{
+      text: 'There you have it!'
+    }],
   },
 ]
 
