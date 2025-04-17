@@ -19,6 +19,7 @@ import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
 import { useRenderLeaf, useMarkPlaceholder } from "../hooks/use-render";
+import { DEFAULT_DECORATE_FN } from "./utils";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -31,6 +32,9 @@ export const TextComp = defineComponent({
     const markPlaceholder = useMarkPlaceholder();
 
     const leaves = computed(() => {
+      if (decorate === DEFAULT_DECORATE_FN) {
+        return [text];
+      }
       const elemPath = DOMEditor.findPath(editor, element);
       const textPath = DOMEditor.findPath(editor, text);
       const textDs = decorate([text, textPath]);

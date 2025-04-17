@@ -28,6 +28,7 @@ import type {
   RenderPlaceholderProps,
 } from "../utils/interface";
 import { DOMEditor, EDITOR_TO_ON_CHANGE, MARK_PLACEHOLDER_SYMBOL } from "slate-dom";
+import { DEFAULT_DECORATE_FN } from "./utils";
 
 export const Slate = defineComponent({
   name: "slate-editor",
@@ -39,7 +40,7 @@ export const Slate = defineComponent({
     },
     decorate: {
       type: Function,
-      default: () => [],
+      default: DEFAULT_DECORATE_FN,
     },
     renderElement: {
       type: Function,

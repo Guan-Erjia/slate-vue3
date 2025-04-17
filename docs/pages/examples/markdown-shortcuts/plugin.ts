@@ -1,3 +1,4 @@
+import { nextTick } from "vue";
 import { BulletedListElement, CustomEditor } from "../../../custom-types";
 import { Range, Element, Editor, Transforms, Point } from "slate-vue3/core";
 
@@ -17,7 +18,7 @@ export const SHORTCUTS = {
 export const withShortcuts = (editor: CustomEditor) => {
   const { deleteBackward, insertText } = editor;
 
-  editor.insertText = (text) => {
+  editor.insertText = async (text) => {
     const { selection } = editor;
 
     if (text.endsWith(" ") && selection && Range.isCollapsed(selection)) {
@@ -38,6 +39,7 @@ export const withShortcuts = (editor: CustomEditor) => {
           Transforms.delete(editor);
         }
 
+        await nextTick();
         const newProperties: Partial<Element> = {
           type,
         };

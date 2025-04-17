@@ -115,3 +115,5 @@ export const defaultRenderPlaceHolder = ({ attributes, children }: RenderPlaceho
     IS_ANDROID ? h('br') : undefined
   ])
 }
+
+export const DEFAULT_DECORATE_FN = () => []
