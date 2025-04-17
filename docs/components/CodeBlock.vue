@@ -32,6 +32,7 @@ const handleCopy = () => {
   border: 1px solid gainsboro;
   border-radius: 4px;
   padding: 0 6px;
+  line-height: 1.4;
 }
 
 .slate-markdown .copy-btn:hover {

@@ -1,4 +1,4 @@
-Provides the same interface as the **slate-dom** library, removed some useless **APIs**
+Provides the same interface as the **`slate-dom`** library, removed some useless **APIs**
 
 ### The removed interfaces are as follows
 

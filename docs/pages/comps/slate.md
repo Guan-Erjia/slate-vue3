@@ -1,6 +1,6 @@
 # Slate
 
-The **Slate** component is used to provide necessary rendering context and is a component without real DOM node
+The `Slate` component is used to provide necessary rendering context and is a component without real DOM node
 
 ```typescript
 interface SlateComponentProps {
@@ -14,7 +14,7 @@ interface SlateComponentProps {
 
 ## editor
 
-You need to create a slate instance through the creatEditor API and pass it into the component for context sharing through the top-level component
+You need to create a slate instance through the `creatEditor` API and pass it into the component for context sharing through the **`top-level`** component
 
 ```typescript
 import { createEditor, Descendant } from "slate-vue3/core";
@@ -30,7 +30,7 @@ editor.children = initialValue;
 
 ## renderElement
 
-Rendering the control function of Element nodes, making branch judgments based on node data, and returning the corresponding VNode
+Rendering the control function of `Element` nodes, making branch judgments based on node data, and returning the corresponding `VNode`
 
 ```typescript
 export interface RenderElementProps {
@@ -49,7 +49,7 @@ function renderElement(props: RenderElementProps): VNode {}
 
 ## renderLeaf
 
-Render leaf nodes and return Vnode based on the passed text and leaf parameters
+Render leaf nodes and return `VNode` based on the passed text and leaf parameters
 
 ```typescript
 export interface RenderLeafProps {
@@ -65,9 +65,9 @@ function renderLeaf(props: RenderLeafProps): VNode {}
 
 ## decorate
 
-**The parameters are the current node and path, returning the node interval and modifying attributes**
+The parameters are the current `node` and `path`, returning the node interval and modifying attributes
 
-Perform final modifications on existing leaf nodes, including adding attributes and splitting nodes
+Perform final modifications on existing leaf nodes, including **adding attributes** and **splitting nodes**
 
 > In most scenarios, rendering is done in conjunction with the renderLeaf function
 
@@ -82,7 +82,7 @@ You can see the usage in:
 
 ## renderPlaceholder
 
-Customize placeholder rendering, accept placeholder parameters, and return a Vnode
+Customize placeholder rendering, accept placeholder parameters, and return a `VNode`
 
 ```typescript
 export interface RenderPlaceholderProps {

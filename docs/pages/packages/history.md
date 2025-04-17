@@ -1,16 +1,16 @@
-Provides the same interface as the [**slate-history**](https://docs.slatejs.org/libraries/slate-history) library
+Provides the same interface as the [**`slate-history`**](https://docs.slatejs.org/libraries/slate-history) library
 
 ## withHistory
 
-The **withHistory** plugin adds the **HistoryEditor** to an **Editor** instance and keeps track of the operation history of a Slate editor as operations are applied to it, using undo and redo stacks.
+The `withHistory` plugin adds the `HistoryEditor` to an `Editor` instance and keeps track of the operation history of a Slate editor as operations are applied to it, using undo and redo stacks.
 
 ```typescript
 withHistory<T extends Editor>(editor: T): T & HistoryEditor
 ```
 
-Add **HistoryEditor** interface to an instance of any **Editor**.
+Add `HistoryEditor` interface to an instance of any `Editor`.
 
-When used with **withReact**, **withHistory** should be applied inside. For example:
+When used with `withDOM`, `withHistory` should be applied inside. For example:
 
 ```typescript
 const editor = withDOM(withHistory(createEditor()));
@@ -18,13 +18,13 @@ const editor = withDOM(withHistory(createEditor()));
 
 ## History Editor
 
-The **HistoryEditor** interface is added to the **Editor** when it is instantiated using the **withHistory** method.
+The `HistoryEditor` interface is added to the `Editor` when it is instantiated using the `withHistory` method.
 
 ```typescript
 const editor = withDOM(withHistory(createEditor()));
 ```
 
-This adds properties to **editor** that enables undo and redo in Slate.
+This adds properties to `editor` that enables undo and redo in Slate.
 
 There are also static methods for working with the Editor's undo/redo history.
 
@@ -59,7 +59,7 @@ Undo to the previous saved state.
 HistoryEditor.withMerging(editor: HistoryEditor, fn: () => void): void
 ```
 
-Apply a series of changes inside a synchronous **fn**, These operations will
+Apply a series of changes inside a synchronous `fn`, These operations will
 be merged into the previous history.
 
 ```typescript
@@ -90,7 +90,7 @@ their operations into the history.
 HistoryEditor.isHistoryEditor(value: any): value is HistoryEditor
 ```
 
-Check if a value is a **HistoryEditor** (i.e. it has the **HistoryEditor** interface).
+Check if a value is a `HistoryEditor` (i.e. it has the `HistoryEditor` interface).
 
 ```typescript
 HistoryEditor.isMerging(editor: HistoryEditor): boolean | undefined
@@ -122,15 +122,15 @@ Redo the last undone batch of operations
 writeHistory(stack: 'undos'| 'redos', batch: any) => void
 ```
 
-Push a batch of operations as either **undos** or **redos** onto **editor.undos** or **editor.redos**
+Push a batch of operations as either `undos` or `redos` onto `editor.undos` or `editor.redos`
 
 ## History
 
-The **History** object contains the undo and redo history for the editor.
+The `History` object contains the undo and redo history for the editor.
 
-It can be accessed from an **Editor** instance as the property **history**.
+It can be accessed from an `Editor` instance as the property `history`.
 
-This property is only available on the **Editor** if the editor was instantiated using the **withHistory** method which adds undo/redo functionality to the Slate editor.
+This property is only available on the `Editor` if the editor was instantiated using the `withHistory` method which adds undo/redo functionality to the Slate editor.
 
 ```typescript
 export interface History {
@@ -149,4 +149,4 @@ interface Batch {
 ```typescript
 History.isHistory(value: any): value is History
 ```
-Returns true if the passed in value is a History object and also acts as a type guard for **History**.
+Returns true if the passed in value is a History object and also acts as a type guard for `History`.

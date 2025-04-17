@@ -21,7 +21,7 @@ import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-php'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-java'
-import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef } from 'slate-vue3';
+import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef, toRawWeakMap } from 'slate-vue3';
 import { withHistory } from "slate-vue3/history";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { createEditor, Editor, Element, NodeEntry, Transforms, Node, Range } from "slate-vue3/core";
@@ -132,7 +132,7 @@ const onKeydown = (e: KeyboardEvent) => {
 }
 
 const node2Decorations = computed(() => {
-  const decorationsMap = new Map()
+  const decorationsMap = new toRawWeakMap()
   const blockEntries = Editor.nodes(editor, {
     at: [],
     mode: 'highest',
@@ -145,10 +145,8 @@ const node2Decorations = computed(() => {
   ]: NodeEntry<CodeBlockElement>) => {
     const text = block.children.map(line => Node.string(line)).join('\n')
     const tokens = Prism.tokenize(text, Prism.languages[block.language])
-    const normalizedTokens = normalizeTokens(tokens) // make tokens flat and grouped by line
-
-    for (let index = 0; index < normalizedTokens.length; index++) {
-      const tokens = normalizedTokens[index]
+    // make tokens flat and grouped by line
+    normalizeTokens(tokens).forEach((tokens, index) => {
       const element = block.children[index]
 
       if (!decorationsMap.has(element)) {
@@ -156,14 +154,12 @@ const node2Decorations = computed(() => {
       }
 
       let start = 0
-      for (const token of tokens) {
+      tokens.forEach(token => {
         const length = token.content.length
         if (!length) {
-          continue
+          return
         }
-
         const end = start + length
-
         const path = [...blockPath, index, 0]
         const range: Range = {
           anchor: { path, offset: start },
@@ -171,13 +167,10 @@ const node2Decorations = computed(() => {
           token: true,
           ...Object.fromEntries(token.types.map(type => [type, true])),
         }
-
-        decorationsMap.get(element)!.push(range)
-
+        decorationsMap.get(element).push(range)
         start = end
-      }
-    }
-
+      })
+    })
   })
 
   return decorationsMap
@@ -185,7 +178,7 @@ const node2Decorations = computed(() => {
 
 const decorate = ([node]: [Node]) => {
   if (Element.isElement(node) && node.type === 'code-line') {
-    return node2Decorations.value.get(node) || []
+    return node2Decorations.value.get(node)
   }
   return []
 }

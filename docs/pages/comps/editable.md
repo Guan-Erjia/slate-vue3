@@ -1,6 +1,6 @@
 # Editable
 
-**Editable** Create a real DOM root node, where the core logic of slate and user interaction is implemented.
+`Editable` Create a real DOM root node, where the core logic of slate and user interaction is implemented.
 
 > This component collects user operations and maps them to the slate
 
@@ -28,7 +28,7 @@ Prevent editing when set to `true`
 
 ## placeholder
 
-Placeholder text when the editor is empty
+Placeholder text when the editor is **empty**
 
 ## scrollSelectionIntoView
 
@@ -36,15 +36,15 @@ Replace the default behavior of `scrollSelectionIntoView`
 
 ## style
 
-Overwrite the default style
+Overwrite the default `style`
 
 ## is
 
-Define the HTML tags for rendering the root node
+Define the `HTML` tags for rendering the root node
 
 ## Event Listener
 
-You can add event listeners at this node to override the internal behavior of **Editable** components
+You can add event listeners at this node to override the internal behavior of `Editable` components
 
 ```html
 <script setup lang="ts">

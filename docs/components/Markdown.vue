@@ -74,10 +74,10 @@ const renderLeaf = ({ text, attributes, children, leaf }: RenderLeafProps) => {
     style.fontStyle = 'italic'
   }
   if (text.inlineCode) {
-    style.backgroundColor = 'rgb(246, 247, 250)'
+    style.backgroundColor = 'rgb(234 234 235)'
     style.border = '1px solid rgb(229, 231, 235'
     style.borderRadius = '4px'
-    style.padding = '0 2px'
+    style.padding = '0 4px'
   }
   if (text.delete) {
     style.textDecoration = 'line-through'
