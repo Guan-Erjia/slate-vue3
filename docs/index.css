@@ -2,7 +2,15 @@
   font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src: url(/1.woff2) format("woff2");
+  src: url(/material.woff2) format("woff2");
+}
+
+@font-face {
+  font-family: __Consolas;
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/consolas.ttf);
 }
 
 html,
@@ -28,7 +36,7 @@ pre {
 }
 
 :not(pre) > code {
-  font-family: monospace;
+  font-family: __Consolas;
   background-color: #eee;
   padding: 3px;
 }

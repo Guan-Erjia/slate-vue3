@@ -19,9 +19,9 @@ const handleCopy = () => {
 <style>
 .slate-markdown code * {
   line-height: 1.6;
-  font-family: monospace, 'Roboto', sans-serif;
+  font-family: __Consolas;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .slate-markdown .copy-btn {
@@ -47,7 +47,7 @@ const handleCopy = () => {
   position: relative;
   display: block;
   background-color: rgb(246, 248, 250);
-  font-family: Consolas;
+  font-family: __Consolas;
   margin: 0;
   block-size: auto;
   padding: 10px;
@@ -59,7 +59,7 @@ pre[class*="language-"] {
   color: black;
   background: none;
   text-shadow: 0 1px white;
-  font-family: monospace, Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono';
+  font-family: __Consolas;
   font-size: 1em;
   text-align: left;
   white-space: pre;

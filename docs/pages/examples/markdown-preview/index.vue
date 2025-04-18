@@ -110,7 +110,7 @@ const renderLeaf = (props: RenderLeafProps & {
     style.fontStyle = 'italic'
   }
   if (leaf.code) {
-    style.fontFamily = 'monospace'
+    style.fontFamily = '__Consolas'
     style.backgroundColor = '#eee'
     style.padding = '3px'
   }
