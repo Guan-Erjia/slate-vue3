@@ -12,7 +12,7 @@ import { CustomEditor } from "../../../custom-types";
 const allowedSchemes = ['http:', 'https:', 'mailto:', 'tel:']
 const ELEMENT_TAGS = {
   A: (el: HTMLLinkElement) => ({ type: 'link', url: el.getAttribute('href') }),
-  BLOCKQUOTE: () => ({ type: 'block' }),
+  BLOCKQUOTE: () => ({ type: 'block-quote' }),
   H1: () => ({ type: 'heading-one' }),
   H2: () => ({ type: 'heading-two' }),
   H3: () => ({ type: 'heading-three' }),
@@ -23,7 +23,7 @@ const ELEMENT_TAGS = {
   LI: () => ({ type: 'list-item' }),
   OL: () => ({ type: 'numbered-list' }),
   P: () => ({ type: 'paragraph' }),
-  PRE: () => ({ type: 'code' }),
+  PRE: () => ({ type: 'code-block' }),
   UL: () => ({ type: 'bulleted-list' }),
 }
 
@@ -135,9 +135,9 @@ const renderElement = (props: RenderElementProps) => {
   switch (element.type) {
     default:
       return h('p', attributes, children)
-    case 'block':
+    case 'block-quote':
       return h('blockquote', attributes, children)
-    case 'code':
+    case 'code-block':
       return h('pre', null, h('code', attributes, children))
     case 'bulleted-list':
       return h('ul', attributes, children)

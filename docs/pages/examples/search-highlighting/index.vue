@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder } from "slate-vue3"
+import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { h, ref } from "vue";
-import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import Toolbar from "../../../components/Toolbar.vue";
-import { createEditor, DecoratedRange, Descendant, NodeEntry, Text } from "slate-vue3/core";
+import { createEditor, DecoratedRange, Descendant, NodeEntry, Text, Element } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
@@ -43,7 +42,7 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   const ranges = []
   if (
     search.value &&
-    'children' in node &&
+    Element.isElement(node) &&
     Array.isArray(node.children) &&
     node.children.every(Text.isText)
   ) {

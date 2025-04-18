@@ -59,7 +59,7 @@ pre[class*="language-"] {
   color: black;
   background: none;
   text-shadow: 0 1px white;
-  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  font-family: monospace, Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono';
   font-size: 1em;
   text-align: left;
   white-space: pre;

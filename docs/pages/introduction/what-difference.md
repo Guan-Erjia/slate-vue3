@@ -1,12 +1,12 @@
 # what-difference
 
-## USAGE
+## Usage
 
 We have retained the vast majority of `slate-react` operations and only modified the parameters and rendering implementation of some components
 
 You need to pay attention to the parameter changes of the `Components`. Some parameters have been elevated to the `<Slate/>` component for ease of use in the editor context
 
-## RENDER FUNCTION
+## Render Function
 
 The rendering functions of `slate` include renderElement and renderLeaf, which implement `switch branch` judgment operations without state.
 
@@ -36,23 +36,23 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 
 ！！！The rendering function must be passed into the Slate component, and its behavior needs to be clearly defined. We also provide `default rendering functions` for use
 
-## REACTIVE
+## Reactive
 
 Due to the fact that `vue`'s rendering relies on variable response data, the children of the slate instance are a `responsive proxy`. You can directly manipulate the `editor` by modifying the children property of the `editor`
 
 > We do not recommend doing so. Each Transform operation is a collection of operations, which may cause cursor loss or other unexpected situations
 
-## SYNA DATA
+## Sync Data
 
-vue can provide a stable lifecycle, and all reactive data is synchronized without the need to poll and listen for child nodes.
+`Vue` can provide a stable lifecycle, and all reactive data is synchronized without the need to poll and listen for child nodes.
 
-Therefore, some asynchronous operations such as timeouts have been removed.
+Therefore, some asynchronous operations such as `setTimeout` have been removed.
 
-This change covers the rendering implementation of **`slate-vue3/dom`** and **`slate-vue3`**, and some useless interfaces have also been removed from YJS packages
+This change covers the rendering implementation of `slate-vue3/dom` and `slate-vue3`, and some useless interfaces have also been removed from YJS packages
 
-## PACKAGES
+## Packages
 
-There are many changes made, and almost every package in Slate has been modified. Changing the name of each package and sending it again is obviously unreasonable.
+There are many changes made, and almost every package in `slate-react` has been modified. Changing the name of each package and publishing it again is obviously unreasonable.
 
 We have consolidated all the packages in `slate-vue3` and introduced them as needed through diagonal lines,
 

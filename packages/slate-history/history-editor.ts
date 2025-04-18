@@ -121,7 +121,10 @@ export const HistoryEditor = {
   withoutSaving(editor: HistoryEditor, fn: () => void): void {
     const prev = HistoryEditor.isSaving(editor);
     SAVING.set(editor, false);
-    fn();
-    SAVING.set(editor, prev);
+    try {
+      fn()
+    } finally {
+      SAVING.set(editor, prev)
+    }
   },
 };
