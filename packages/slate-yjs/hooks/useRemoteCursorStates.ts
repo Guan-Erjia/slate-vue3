@@ -26,16 +26,6 @@ export function useRemoteCursorStates<
     unsubscribe?.();
   });
 
-  // 使用 watchEffect 确保在订阅变化时重新订阅
-  watchEffect(() => {
-    // 如果订阅函数变化，先取消旧的订阅
-    const oldUnsubscribe = unsubscribe;
-    unsubscribe = subscribe(handleStoreChange);
-    return () => {
-      oldUnsubscribe?.();
-    };
-  });
-
   return snapshot;
 }
 

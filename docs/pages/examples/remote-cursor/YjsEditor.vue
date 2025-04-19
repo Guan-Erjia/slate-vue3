@@ -14,18 +14,6 @@ import { faker } from '@faker-js/faker';
 import { Awareness } from "y-protocols/awareness";
 import RemoteOverlay from './RemoteOverlay.vue'
 
-function randomCursorData(): {
-  name: string;
-  color: string;
-} {
-  return {
-    color: 'red',
-    name: `${firstName()} ${lastName()}`,
-  };
-}
-const {
-  person: { firstName, lastName },
-} = faker;
 
 const initialValue: CustomElement[] = [
   {
@@ -99,7 +87,11 @@ const editor = withCursors(
   withYHistory(withYjs(withDOM(createEditor()), props.sharedType)),
   props.provider.awareness as unknown as Awareness,
   {
-    data: randomCursorData(),
+    data: {
+      name: `${faker.person.firstName()} ${faker.person.lastName()}`
+      // color: ...
+      // can add other remote data
+    },
   }
 )
 editor.children = initialValue;

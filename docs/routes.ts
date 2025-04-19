@@ -213,11 +213,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     path: "custom-placeholder",
     component: () => import("./pages/examples/custom-placeholder/index.vue"),
   },
-  // {
-  //   name: "remote-cursor",
-  //   path: "remote-cursor",
-  //   component: () => import("./pages/examples/remote-cursor/index.vue"),
-  // },
+  {
+    name: "remote-cursor",
+    path: "remote-cursor",
+    component: () => import("./pages/examples/remote-cursor/index.vue"),
+  },
 ];
 
 export const ROUTES_RECORD: RouteRecordRaw[] = [

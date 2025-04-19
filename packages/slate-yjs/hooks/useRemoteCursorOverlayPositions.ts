@@ -11,12 +11,13 @@ import {
 } from "./utils";
 import { useRemoteCursorEditor } from "./useRemoteCursorEditor";
 import { useRemoteCursorStates } from "./useRemoteCursorStates";
+import { toRawWeakMap as WeakMap } from "share-tools";
 
 const FROZEN_EMPTY_ARRAY = Object.freeze([]);
 
 export type UseRemoteCursorOverlayPositionsOptions<T extends HTMLElement> = {
-  shouldGenerateOverlay?: NodeMatch<Text>;
   containerRef: Ref<T>;
+  shouldGenerateOverlay?: NodeMatch<Text>;
 };
 
 export type CursorOverlayData<TCursorData extends Record<string, unknown>> =
@@ -36,33 +37,33 @@ export function useRemoteCursorOverlayPositions<
   const editor = useRemoteCursorEditor<TCursorData>();
   const cursorStates = useRemoteCursorStates<TCursorData>();
   const proxy = getCurrentInstance();
-  const requestRerender = proxy?.update;
 
   const overlayPositionCache = ref(new WeakMap<BaseRange, OverlayPosition>());
   const overlayPositions = ref<Record<string, OverlayPosition>>({});
 
   useOnResize(containerRef, () => {
     overlayPositionCache.value = new WeakMap();
-    requestRerender?.();
+    proxy?.update();
   });
 
   // Update selection rects after paint
   onUpdated(() => {
     // We have a container ref but the ref is null => container
     // isn't mounted to we can't calculate the selection rects.
-    if (containerRef && !containerRef.value) {
+    if (!containerRef.value) {
       return;
     }
 
-    const containerRect = containerRef?.value?.getBoundingClientRect();
+    const containerRect = containerRef.value.getBoundingClientRect();
     const xOffset = containerRect?.x ?? 0;
     const yOffset = containerRect?.y ?? 0;
 
     let overlayPositionsChanged =
-      Object.keys(overlayPositions).length !== Object.keys(cursorStates).length;
+      Object.keys(overlayPositions.value).length !==
+      Object.keys(cursorStates.value).length;
 
     const updated = Object.fromEntries(
-      Object.entries(cursorStates).map(([key, state]) => {
+      Object.entries(cursorStates.value).map(([key, state]) => {
         const range = state.relativeSelection && getCursorRange(editor, state);
 
         if (!range) {
@@ -91,7 +92,7 @@ export function useRemoteCursorOverlayPositions<
   });
 
   const overlayData = computed<CursorOverlayData<TCursorData>[]>(() =>
-    Object.entries(cursorStates).map(([clientId, state]) => {
+    Object.entries(cursorStates.value).map(([clientId, state]) => {
       const range = state.relativeSelection && getCursorRange(editor, state);
       const overlayPosition = overlayPositions.value[clientId];
 
@@ -106,7 +107,7 @@ export function useRemoteCursorOverlayPositions<
 
   const refresh = () => {
     overlayPositionCache.value = new WeakMap();
-    requestRerender?.();
+    proxy?.update?.();
   };
 
   return [overlayData, refresh] as const;

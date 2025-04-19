@@ -3,26 +3,19 @@ import { Editor, Path, Range, Text, Descendant } from "slate";
 import { DOMEditor } from "slate-dom";
 import { CursorEditor, CursorState } from "../plugins/withCursors";
 import { relativeRangeToSlateRange } from "../utils/position";
+import { toRawWeakMap as WeakMap } from "share-tools";
 
 export function useOnResize<T extends HTMLElement>(
   _ref: Ref<T>,
   onResize: () => void
 ) {
-  const onResizeRef = ref(onResize);
-  onResizeRef.value = onResize;
-
-  const observer = ref(
-    new ResizeObserver(() => {
-      onResizeRef.value();
-    })
-  );
+  const observer = new ResizeObserver(onResize);
 
   onMounted(() => {
-    _ref?.value && observer.value.observe(_ref.value);
+    _ref?.value && observer.observe(_ref.value);
   });
-
   onUnmounted(() => {
-    _ref?.value && observer.value.unobserve(_ref.value);
+    _ref?.value && observer.unobserve(_ref.value);
   });
 }
 
