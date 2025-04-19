@@ -99,9 +99,9 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/rich-text/index.vue"),
   },
   {
-    name: "yjs-liveblocks",
-    path: "yjs-liveblocks",
-    component: () => import("./pages/examples/yjs-liveblocks/index.vue"),
+    name: "remote-simple",
+    path: "remote-simple",
+    component: () => import("./pages/examples/remote-simple/index.vue"),
   },
   {
     name: "check-lists",
@@ -213,6 +213,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     path: "custom-placeholder",
     component: () => import("./pages/examples/custom-placeholder/index.vue"),
   },
+  // {
+  //   name: "remote-cursor",
+  //   path: "remote-cursor",
+  //   component: () => import("./pages/examples/remote-cursor/index.vue"),
+  // },
 ];
 
 export const ROUTES_RECORD: RouteRecordRaw[] = [

@@ -8,4 +8,4 @@ The integration of [**slate-yjs**](https://github.com/BitPhinix/slate-yjs), incl
 
 > Due to the absence of asynchronous rendering scenes, this type of API is no longer needed
 
-[**Click**](/slate-vue3/examples/yjs-liveblocks) and view liveblocks collaborative editing examples
+[**Click**](/slate-vue3/examples/remote-simple) and view liveblocks collaborative editing examples

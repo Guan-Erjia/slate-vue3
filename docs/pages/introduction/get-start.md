@@ -6,7 +6,7 @@ Based on `slate` excellent design, `slate-vue3` can also meet high customization
 
 1. ✍️ [markdown-shortcuts](/slate-vue3/examples/markdown-shortcuts)
 2. 🔨 [code-highlighting](/slate-vue3/examples/code-highlighting)
-3. 🚀 [collaborative-editing](/slate-vue3/examples/yjs-liveblocks)
+3. 🚀 [collaborative-editing](/slate-vue3/examples/remote-simple)
 4. ......
 
 ## install

@@ -2,13 +2,30 @@
 import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { CSSProperties, h, onMounted, onUnmounted } from "vue";
 import { CustomElement } from "../../../custom-types";
-import { withYjs, YjsEditor } from "slate-vue3/yjs";
+import { withCursors, withYHistory, withYjs, YjsEditor } from "slate-vue3/yjs";
 import { withDOM } from "slate-vue3/dom";
 import { createEditor, Editor, Node, Transforms } from "slate-vue3/core";
 import { XmlText } from "yjs";
 import Toolbar from '../../../components/Toolbar.vue'
 import MarkButton from "../rich-text/MarkButton.vue";
 import BlockButton from "../rich-text/BlockButton.vue";
+import { LiveblocksYjsProvider } from "@liveblocks/yjs";
+import { faker } from '@faker-js/faker';
+import { Awareness } from "y-protocols/awareness";
+import RemoteOverlay from './RemoteOverlay.vue'
+
+function randomCursorData(): {
+  name: string;
+  color: string;
+} {
+  return {
+    color: 'red',
+    name: `${firstName()} ${lastName()}`,
+  };
+}
+const {
+  person: { firstName, lastName },
+} = faker;
 
 const initialValue: CustomElement[] = [
   {
@@ -75,9 +92,16 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
 
 const props = defineProps<{
   sharedType: XmlText;
+  provider: LiveblocksYjsProvider
 }>()
 
-const editor = withYjs(withDOM(createEditor()), props.sharedType)
+const editor = withCursors(
+  withYHistory(withYjs(withDOM(createEditor()), props.sharedType)),
+  props.provider.awareness as unknown as Awareness,
+  {
+    data: randomCursorData(),
+  }
+)
 editor.children = initialValue;
 const { normalizeNode } = editor;
 editor.normalizeNode = (entry: [Node]) => {
@@ -100,21 +124,23 @@ onUnmounted(() => {
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
     :render-placeholder="defaultRenderPlaceHolder">
-    <Toolbar>
-      <MarkButton format="bold" icon="format_bold" />
-      <MarkButton format="italic" icon="format_italic" />
-      <MarkButton format="underline" icon="format_underlined" />
-      <MarkButton format="code" icon="code" />
-      <BlockButton format="heading-one" icon="looks_one" />
-      <BlockButton format="heading-two" icon="looks_two" />
-      <BlockButton format="block-quote" icon="format_quote" />
-      <BlockButton format="numbered-list" icon="format_list_numbered" />
-      <BlockButton format="bulleted-list" icon="format_list_bulleted" />
-      <BlockButton format="left" icon="format_align_left" />
-      <BlockButton format="center" icon="format_align_center" />
-      <BlockButton format="right" icon="format_align_right" />
-      <BlockButton format="justify" icon="format_align_justify" />
-    </Toolbar>
-    <Editable placeholder="Enter some rich text…" spellcheck />
+    <RemoteOverlay>
+      <Toolbar>
+        <MarkButton format="bold" icon="format_bold" />
+        <MarkButton format="italic" icon="format_italic" />
+        <MarkButton format="underline" icon="format_underlined" />
+        <MarkButton format="code" icon="code" />
+        <BlockButton format="heading-one" icon="looks_one" />
+        <BlockButton format="heading-two" icon="looks_two" />
+        <BlockButton format="block-quote" icon="format_quote" />
+        <BlockButton format="numbered-list" icon="format_list_numbered" />
+        <BlockButton format="bulleted-list" icon="format_list_bulleted" />
+        <BlockButton format="left" icon="format_align_left" />
+        <BlockButton format="center" icon="format_align_center" />
+        <BlockButton format="right" icon="format_align_right" />
+        <BlockButton format="justify" icon="format_align_justify" />
+      </Toolbar>
+      <Editable placeholder="Enter some rich text…" spellcheck />
+    </RemoteOverlay>
   </Slate>
 </template>

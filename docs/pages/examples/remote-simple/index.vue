@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from "vue";
 import YjsEditor from "./YjsEditor.vue";
-import { createClient } from "@liveblocks/client";
-import { getYjsProviderForRoom } from "@liveblocks/yjs";
+import { BaseMetadata, BaseUserMeta, createClient, Json, JsonObject, LsonObject, Room } from "@liveblocks/client";
+import { getYjsProviderForRoom, LiveblocksYjsProvider } from "@liveblocks/yjs";
 import { XmlText } from "yjs";
 import { useRoute, useRouter } from "vue-router";
 
@@ -10,9 +10,12 @@ const route = useRoute()
 const router = useRouter()
 
 const publicApiKey = ref(route.query.publicApiKey as string || '')
-const roomInfo = ref()
-const yProvider = ref();
-const sharedType = ref()
+const roomInfo = ref<{
+  room: Room<JsonObject, LsonObject, BaseUserMeta, Json, BaseMetadata>;
+  leave: () => void;
+}>()
+const yProvider = ref<LiveblocksYjsProvider>();
+const sharedType = ref<XmlText>()
 const connected = ref(false)
 
 const connectchange = (e: boolean) => connected.value = e
@@ -20,7 +23,7 @@ const startConnect = () => {
   try {
     const info = createClient({
       publicApiKey: publicApiKey.value,
-    }).enterRoom('my-room')
+    }).enterRoom('remote-simple')
     const provider = getYjsProviderForRoom(info.room)
     provider.on('sync', connectchange)
 
@@ -30,7 +33,7 @@ const startConnect = () => {
   } catch (error) {
     alert(error)
     router.push({
-      name: 'yjs-liveblocks',
+      name: 'remote-simple',
       query: {
         publicApiKey: ''
       },
@@ -59,7 +62,7 @@ onUnmounted(() => {
 const onKeyup = (event: KeyboardEvent) => {
   if (event.key === 'Enter') {
     router.push({
-      name: 'yjs-liveblocks',
+      name: 'remote-simple',
       query: {
         publicApiKey: publicApiKey.value
       },
