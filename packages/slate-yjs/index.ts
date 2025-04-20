@@ -34,7 +34,6 @@ import {
 } from "./hooks/useDecorateRemoteCursors";
 
 import {
-  useRemoteCursorStatesSelector,
   useRemoteCursorStates,
 } from "./hooks/useRemoteCursorStates";
 import { useUnsetCursorPositionOnBlur } from "./hooks/useUnsetCursorPositionOnBlur";
@@ -83,7 +82,6 @@ export {
   relativeRangeToSlateRange,
   slatePointToRelativePosition,
   relativePositionToSlatePoint,
-  useRemoteCursorStatesSelector,
   useRemoteCursorStates,
   useUnsetCursorPositionOnBlur,
   getCursorRange,

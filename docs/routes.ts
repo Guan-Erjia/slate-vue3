@@ -218,6 +218,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     path: "remote-cursor",
     component: () => import("./pages/examples/remote-cursor/index.vue"),
   },
+  // {
+  //   name: "remote-decoration",
+  //   path: "remote-decoration",
+  //   component: () => import("./pages/examples/remote-decoration/index.vue"),
+  // },
 ];
 
 export const ROUTES_RECORD: RouteRecordRaw[] = [
