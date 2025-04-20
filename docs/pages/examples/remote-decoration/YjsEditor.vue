@@ -137,7 +137,7 @@ onMounted(() => {
 onUnmounted(() => {
   YjsEditor.disconnect(editor);
 })
-const decorate = useDecorateRemoteCursors();
+const decorate = useDecorateRemoteCursors(editor);
 </script>
 
 <template>

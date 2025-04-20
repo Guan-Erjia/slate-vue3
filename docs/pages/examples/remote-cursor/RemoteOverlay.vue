@@ -28,9 +28,7 @@ import { ref } from 'vue';
 const containerRef = ref()
 const [cursors] = useRemoteCursorOverlayPositions<{
   name: string;
-}>({
-  containerRef,
-});
+}>(containerRef);
 </script>
 
 <style scoped>

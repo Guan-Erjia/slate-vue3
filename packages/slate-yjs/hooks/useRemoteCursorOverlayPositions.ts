@@ -15,11 +15,6 @@ import { toRawWeakMap as WeakMap } from "share-tools";
 
 const FROZEN_EMPTY_ARRAY = Object.freeze([]);
 
-export type UseRemoteCursorOverlayPositionsOptions<T extends HTMLElement> = {
-  containerRef: Ref<T>;
-  shouldGenerateOverlay?: NodeMatch<Text>;
-};
-
 export type CursorOverlayData<TCursorData extends Record<string, unknown>> =
   CursorState<TCursorData> & {
     range: BaseRange | null;
@@ -30,10 +25,7 @@ export type CursorOverlayData<TCursorData extends Record<string, unknown>> =
 export function useRemoteCursorOverlayPositions<
   TCursorData extends Record<string, unknown>,
   TContainer extends HTMLElement = HTMLDivElement
->({
-  containerRef,
-  shouldGenerateOverlay,
-}: UseRemoteCursorOverlayPositionsOptions<TContainer>) {
+>(containerRef: Ref<TContainer>, shouldGenerateOverlay?: NodeMatch<Text>) {
   const editor = useRemoteCursorEditor<TCursorData>();
   const cursorStates = useRemoteCursorStates<TCursorData>();
   const proxy = getCurrentInstance();

@@ -14,7 +14,7 @@ export type CursorStore<
 
 const EDITOR_TO_CURSOR_STORE: WeakMap<BaseEditor, CursorStore> = new WeakMap();
 
-function createRemoteCursorStateStore<
+export function createRemoteCursorStateStore<
   TCursorData extends Record<string, unknown>
 >(editor: CursorEditor<TCursorData>): CursorStore<TCursorData> {
   let cursors: Record<string, CursorState<TCursorData>> = {};

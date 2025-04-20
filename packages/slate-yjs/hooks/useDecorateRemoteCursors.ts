@@ -1,9 +1,9 @@
-import { ref } from "vue";
-import { CursorState } from "../plugins/withCursors";
+import { onMounted, onUnmounted } from "vue";
+import { CursorEditor, CursorState } from "../plugins/withCursors";
 import { BaseRange, BaseText, NodeEntry, Range } from "slate";
 import { getCursorRange } from "./utils";
-import { useRemoteCursorEditor } from "./useRemoteCursorEditor";
-import { useRemoteCursorStates } from "./useRemoteCursorStates";
+import { createRemoteCursorStateStore } from "./useRemoteCursorStateStore";
+import { DOMEditor } from "slate-dom";
 
 export const REMOTE_CURSOR_DECORATION_PREFIX = "remote-cursor-";
 export const REMOTE_CURSOR_CARET_DECORATION_PREFIX = "remote-caret-";
@@ -56,10 +56,6 @@ export function getRemoteCaretsOnLeaf<
     .map(([, data]) => data);
 }
 
-export type UseDecorateRemoteCursorsOptions = {
-  carets?: boolean;
-};
-
 function getDecoration<
   TCursorData extends Record<string, unknown>,
   TCaret extends boolean
@@ -84,12 +80,32 @@ function getDecoration<
   };
 }
 
-export function useDecorateRemoteCursors<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
->({ carets = true }: UseDecorateRemoteCursorsOptions = {}) {
-  const editor = useRemoteCursorEditor<TCursorData>();
-  const cursors = useRemoteCursorStates<TCursorData>();
-  const cursorsRef = ref(cursors);
+export function useDecorateRemoteCursors(
+  editor: DOMEditor & CursorEditor,
+  carets: boolean = true
+) {
+  const store = createRemoteCursorStateStore(editor);
+
+  const [subscribe, getSnapshot] = store;
+
+  let cursors = getSnapshot();
+
+  const handleStoreChange = () => {
+    cursors = getSnapshot();
+  };
+
+  // 设置订阅
+  let unsubscribe: () => void;
+
+  onMounted(() => {
+    unsubscribe = subscribe(handleStoreChange);
+    // 初始获取快照
+    handleStoreChange();
+  });
+
+  onUnmounted(() => {
+    unsubscribe?.();
+  });
 
   return (entry: NodeEntry) => {
     const [, path] = entry;
@@ -97,7 +113,7 @@ export function useDecorateRemoteCursors<
       return [];
     }
 
-    return Object.entries(cursorsRef.value).flatMap(([clientId, state]) => {
+    return Object.entries(cursors).flatMap(([clientId, state]) => {
       const range = getCursorRange(editor, state);
       if (!range) {
         return [];

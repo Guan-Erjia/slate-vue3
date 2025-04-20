@@ -27,21 +27,17 @@ import {
   RemoteCaretDecoration,
   RemoteCaretDecoratedRange,
   TextWithRemoteCursors,
-  UseDecorateRemoteCursorsOptions,
   getRemoteCursorsOnLeaf,
   getRemoteCaretsOnLeaf,
   useDecorateRemoteCursors,
 } from "./hooks/useDecorateRemoteCursors";
 
-import {
-  useRemoteCursorStates,
-} from "./hooks/useRemoteCursorStates";
+import { useRemoteCursorStates } from "./hooks/useRemoteCursorStates";
 import { useUnsetCursorPositionOnBlur } from "./hooks/useUnsetCursorPositionOnBlur";
 import { getCursorRange } from "./hooks/utils";
 
 import {
   CursorOverlayData,
-  UseRemoteCursorOverlayPositionsOptions,
   useRemoteCursorOverlayPositions,
 } from "./hooks/useRemoteCursorOverlayPositions";
 
@@ -63,9 +59,7 @@ export type {
   RemoteCaretDecoration,
   RemoteCaretDecoratedRange,
   TextWithRemoteCursors,
-  UseDecorateRemoteCursorsOptions,
   CursorOverlayData,
-  UseRemoteCursorOverlayPositionsOptions,
 };
 
 export {
