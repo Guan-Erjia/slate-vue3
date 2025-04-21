@@ -108,7 +108,6 @@ export const CursorEditor = {
       data: TCursorData;
       selection: RelativeRange | null;
     };
-    console.log(state);
     if (!state) {
       return null;
     }
