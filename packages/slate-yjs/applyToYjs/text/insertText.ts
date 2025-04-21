@@ -1,10 +1,10 @@
-import { InsertTextOperation, Node, Text } from 'slate';
-import * as Y from 'yjs';
-import { getYTarget } from '../../utils/location';
-import { getProperties } from '../../utils/slate';
+import { InsertTextOperation, Node, Text } from "slate";
+import { XmlText } from "yjs";
+import { getYTarget } from "../../utils/location";
+import { getProperties } from "../../utils/slate";
 
 export function insertText(
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   slateRoot: Node,
   op: InsertTextOperation
 ): void {
@@ -16,7 +16,7 @@ export function insertText(
 
   const targetNode = Node.get(slateRoot, op.path);
   if (!Text.isText(targetNode)) {
-    throw new Error('Cannot insert text into non-text node');
+    throw new Error("Cannot insert text into non-text node");
   }
 
   target.insert(

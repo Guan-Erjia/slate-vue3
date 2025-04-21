@@ -1,18 +1,18 @@
-import { MergeNodeOperation, Node, Path, Text } from 'slate';
-import * as Y from 'yjs';
-import { Delta } from '../../model/types';
-import { cloneInsertDeltaDeep } from '../../utils/clone';
-import { yTextToInsertDelta } from '../../utils/delta';
-import { getYTarget } from '../../utils/location';
+import { toRaw } from "vue";
+import { MergeNodeOperation, Node, Path, Text } from "slate";
+import { XmlText } from "yjs";
+import { Delta } from "../../model/types";
+import { cloneInsertDeltaDeep } from "../../utils/clone";
+import { yTextToInsertDelta } from "../../utils/delta";
+import { getYTarget } from "../../utils/location";
 import {
   getStoredPositionsInDeltaAbsolute,
   restoreStoredPositionsWithDeltaAbsolute,
-} from '../../utils/position';
-import { getProperties } from '../../utils/slate';
-import { toRaw } from 'vue';
+} from "../../utils/position";
+import { getProperties } from "../../utils/slate";
 
 export function mergeNode(
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   slateRoot: Node,
   op: MergeNodeOperation
 ): void {
@@ -24,18 +24,18 @@ export function mergeNode(
   );
 
   if (!toRaw(target.yTarget) !== !toRaw(prev.yTarget)) {
-    throw new Error('Cannot merge y text with y element');
+    throw new Error("Cannot merge y text with y element");
   }
 
   if (!prev.yTarget || !target.yTarget) {
     const { yParent: parent, textRange, slateTarget } = target;
     if (!slateTarget) {
-      throw new Error('Expected Slate target node for merge op.');
+      throw new Error("Expected Slate target node for merge op.");
     }
 
     const prevSibling = Node.get(slateRoot, Path.previous(op.path));
     if (!Text.isText(prevSibling)) {
-      throw new Error('Path points to Y.Text but not a Slate text node.');
+      throw new Error("Path points to Y.Text but not a Slate text node.");
     }
 
     const targetProps = getProperties(slateTarget);

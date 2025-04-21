@@ -1,9 +1,9 @@
-import { Node, SetNodeOperation } from 'slate';
-import * as Y from 'yjs';
-import { getYTarget } from '../../utils/location';
+import { Node, SetNodeOperation } from "slate";
+import { getYTarget } from "../../utils/location";
+import { XmlText } from "yjs";
 
 export function setNode(
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   slateRoot: Node,
   op: SetNodeOperation
 ): void {

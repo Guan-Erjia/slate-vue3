@@ -1,9 +1,9 @@
-import { Node, RemoveTextOperation } from 'slate';
-import * as Y from 'yjs';
-import { getYTarget } from '../../utils/location';
+import { Node, RemoveTextOperation } from "slate";
+import { XmlText } from "yjs";
+import { getYTarget } from "../../utils/location";
 
 export function removeText(
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   slateRoot: Node,
   op: RemoveTextOperation
 ): void {

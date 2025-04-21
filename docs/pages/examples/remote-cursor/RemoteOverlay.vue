@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" style="position: relative;">
+  <div ref="overlayRef" style="position: relative;">
     <slot></slot>
     <template v-for="cursor in cursors">
       <div class="selection" v-for="(position, index) in cursor.selectionRects" :style="{
@@ -14,9 +14,7 @@
         top: cursor.caretPosition.top + 'px',
         left: cursor.caretPosition.left + 'px',
       }">
-        <div class="label">
-          {{ cursor.data.name }}
-        </div>
+        <div class="label"> {{ cursor.data.name }} </div>
       </div>
     </template>
   </div>
@@ -25,10 +23,10 @@
 import { useRemoteCursorOverlayPositions } from 'slate-vue3/yjs';
 import { ref } from 'vue';
 
-const containerRef = ref()
+const overlayRef = ref()
 const [cursors] = useRemoteCursorOverlayPositions<{
   name: string;
-}>(containerRef);
+}>(overlayRef);
 </script>
 
 <style scoped>

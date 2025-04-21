@@ -1,27 +1,27 @@
-import { Node, SplitNodeOperation, Text } from 'slate';
-import * as Y from 'yjs';
-import { cloneInsertDeltaDeep } from '../../utils/clone';
-import { sliceInsertDelta, yTextToInsertDelta } from '../../utils/delta';
-import { getSlateNodeYLength, getYTarget } from '../../utils/location';
+import { Node, SplitNodeOperation, Text } from "slate";
+import { XmlText } from "yjs";
+import { cloneInsertDeltaDeep } from "../../utils/clone";
+import { sliceInsertDelta, yTextToInsertDelta } from "../../utils/delta";
+import { getSlateNodeYLength, getYTarget } from "../../utils/location";
 import {
   getStoredPositionsInDeltaAbsolute,
   restoreStoredPositionsWithDeltaAbsolute,
-} from '../../utils/position';
+} from "../../utils/position";
 
 export function splitNode(
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   slateRoot: Node,
   op: SplitNodeOperation
 ): void {
   const target = getYTarget(sharedRoot, slateRoot, op.path);
 
   if (!target.slateTarget) {
-    throw new Error('Y target without corresponding slate node');
+    throw new Error("Y target without corresponding slate node");
   }
 
   if (!target.yTarget) {
     if (!Text.isText(target.slateTarget)) {
-      throw new Error('Mismatch node type between y target and slate node');
+      throw new Error("Mismatch node type between y target and slate node");
     }
 
     const unset: Record<string, null> = {};
@@ -41,7 +41,7 @@ export function splitNode(
   }
 
   if (Text.isText(target.slateTarget)) {
-    throw new Error('Mismatch node type between y target and slate node');
+    throw new Error("Mismatch node type between y target and slate node");
   }
 
   const splitTarget = getYTarget(target.yTarget, target.slateTarget, [
@@ -71,7 +71,7 @@ export function splitNode(
     ySplitOffset
   );
 
-  const toInsert = new Y.XmlText();
+  const toInsert = new XmlText();
   toInsert.applyDelta(clonedDelta, {
     sanitize: false,
   });

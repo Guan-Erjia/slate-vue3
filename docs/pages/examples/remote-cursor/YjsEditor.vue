@@ -14,7 +14,6 @@ import { faker } from '@faker-js/faker';
 import { Awareness } from "y-protocols/awareness";
 import RemoteOverlay from './RemoteOverlay.vue'
 
-
 const initialValue: CustomElement[] = [
   {
     type: 'paragraph',
@@ -85,7 +84,7 @@ const props = defineProps<{
 
 const editor = withCursors(
   withYHistory(withYjs(withDOM(createEditor()), props.sharedType)),
-  props.provider.awareness as unknown as Awareness,
+  props.provider.awareness,
   {
     data: {
       name: `${faker.person.firstName()} ${faker.person.lastName()}`

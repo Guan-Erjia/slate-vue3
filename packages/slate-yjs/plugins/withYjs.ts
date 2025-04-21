@@ -1,5 +1,6 @@
 import { BaseEditor, Editor, Point } from "slate";
-import * as Y from "yjs";
+import { RelativePosition, Transaction, XmlText, YEvent } from "yjs";
+import { toRawWeakMap as WeakMap } from "share-tools";
 import { applyYjsEvents } from "../applyToSlate";
 import { applySlateOp } from "../applyToYjs";
 import { yTextToSlateElement } from "../utils/convert";
@@ -12,7 +13,6 @@ import {
   slatePointToRelativePosition,
 } from "../utils/position";
 import { assertDocumentAttachment } from "../utils/yjs";
-import { toRawWeakMap as WeakMap } from "share-tools";
 
 const DEFAULT_LOCAL_ORIGIN = Symbol("slate-yjs-operation");
 const DEFAULT_POSITION_STORAGE_ORIGIN = Symbol("slate-yjs-position-storage");
@@ -21,12 +21,12 @@ const ORIGIN: WeakMap<Editor, unknown> = new WeakMap();
 const CONNECTED: WeakSet<Editor> = new WeakSet();
 
 export type YjsEditor = BaseEditor & {
-  sharedRoot: Y.XmlText;
+  sharedRoot: XmlText;
 
   localOrigin: unknown;
   positionStorageOrigin: unknown;
 
-  applyRemoteEvents: (events: Y.YEvent<Y.XmlText>[], origin: unknown) => void;
+  applyRemoteEvents: (events: YEvent<XmlText>[], origin: unknown) => void;
 
   isLocalOrigin: (origin: unknown) => boolean;
 
@@ -38,7 +38,7 @@ export const YjsEditor = {
   isYjsEditor(value: unknown): value is YjsEditor {
     return (
       Editor.isEditor(value) &&
-      (value as YjsEditor).sharedRoot instanceof Y.XmlText &&
+      (value as YjsEditor).sharedRoot instanceof XmlText &&
       "localOrigin" in value &&
       "positionStorageOrigin" in value &&
       typeof (value as YjsEditor).applyRemoteEvents === "function" &&
@@ -50,7 +50,7 @@ export const YjsEditor = {
 
   applyRemoteEvents(
     editor: YjsEditor,
-    events: Y.YEvent<Y.XmlText>[],
+    events: YEvent<XmlText>[],
     origin: unknown
   ): void {
     editor.applyRemoteEvents(events, origin);
@@ -113,9 +113,7 @@ export const YjsEditor = {
     return relativePositionToSlatePoint(editor.sharedRoot, editor, position);
   },
 
-  storedPositionsRelative(
-    editor: YjsEditor
-  ): Record<string, Y.RelativePosition> {
+  storedPositionsRelative(editor: YjsEditor): Record<string, RelativePosition> {
     return getStoredPositions(editor.sharedRoot);
   },
 };
@@ -132,7 +130,7 @@ export type WithYjsOptions = {
 
 export function withYjs<T extends Editor>(
   editor: T,
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   {
     localOrigin,
     positionStorageOrigin,
@@ -158,8 +156,8 @@ export function withYjs<T extends Editor>(
   e.isLocalOrigin = (origin) => origin === e.localOrigin;
 
   const handleYEvents = (
-    events: Y.YEvent<Y.XmlText>[],
-    transaction: Y.Transaction
+    events: YEvent<XmlText>[],
+    transaction: Transaction
   ) => {
     if (e.isLocalOrigin(transaction.origin)) {
       return;

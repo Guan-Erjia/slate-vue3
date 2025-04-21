@@ -1,10 +1,10 @@
-import { Editor, Range } from 'slate';
-import { Awareness } from 'y-protocols/awareness';
-import * as Y from 'yjs';
-import { RelativeRange } from '../model/types';
-import { slateRangeToRelativeRange } from '../utils/position';
-import { YjsEditor } from './withYjs';
-import { toRawWeakMap as WeakMap } from 'share-tools';
+import { Editor, Range } from "slate";
+import { toRawWeakMap as WeakMap } from "share-tools";
+import { compareRelativePositions } from "yjs";
+import { Awareness } from "y-protocols/awareness";
+import { RelativeRange } from "../model/types";
+import { slateRangeToRelativeRange } from "../utils/position";
+import { YjsEditor } from "./withYjs";
 
 export type CursorStateChangeEvent = {
   added: number[];
@@ -46,10 +46,10 @@ export const CursorEditor = {
     return (
       YjsEditor.isYjsEditor(value) &&
       (value as CursorEditor).awareness &&
-      typeof (value as CursorEditor).cursorDataField === 'string' &&
-      typeof (value as CursorEditor).selectionStateField === 'string' &&
-      typeof (value as CursorEditor).sendCursorPosition === 'function' &&
-      typeof (value as CursorEditor).sendCursorData === 'function'
+      typeof (value as CursorEditor).cursorDataField === "string" &&
+      typeof (value as CursorEditor).selectionStateField === "string" &&
+      typeof (value as CursorEditor).sendCursorPosition === "function" &&
+      typeof (value as CursorEditor).sendCursorData === "function"
     );
   },
 
@@ -69,10 +69,10 @@ export const CursorEditor = {
 
   on<TCursorData extends Record<string, unknown>>(
     editor: CursorEditor<TCursorData>,
-    event: 'change',
+    event: "change",
     handler: RemoteCursorChangeEventListener
   ) {
-    if (event !== 'change') {
+    if (event !== "change") {
       return;
     }
 
@@ -83,10 +83,10 @@ export const CursorEditor = {
 
   off<TCursorData extends Record<string, unknown>>(
     editor: CursorEditor<TCursorData>,
-    event: 'change',
+    event: "change",
     listener: RemoteCursorChangeEventListener
   ) {
-    if (event !== 'change') {
+    if (event !== "change") {
       return;
     }
 
@@ -165,8 +165,8 @@ export function withCursors<
   editor: TEditor,
   awareness: Awareness,
   {
-    cursorStateField: selectionStateField = 'selection',
-    cursorDataField = 'data',
+    cursorStateField: selectionStateField = "selection",
+    cursorDataField = "data",
     autoSend = true,
     data,
   }: WithCursorsOptions<TCursorData> = {}
@@ -197,15 +197,16 @@ export function withCursors<
 
     if (
       !currentRange ||
-      !Y.compareRelativePositions(anchor, currentRange) ||
-      !Y.compareRelativePositions(focus, currentRange)
+      !compareRelativePositions(anchor, currentRange) ||
+      !compareRelativePositions(focus, currentRange)
     ) {
       e.awareness.setLocalStateField(e.selectionStateField, { anchor, focus });
     }
   };
 
   const awarenessChangeListener: RemoteCursorChangeEventListener = (yEvent) => {
-    const listeners: Set<RemoteCursorChangeEventListener> = CURSOR_CHANGE_EVENT_LISTENERS.get(e);
+    const listeners: Set<RemoteCursorChangeEventListener> =
+      CURSOR_CHANGE_EVENT_LISTENERS.get(e);
     if (!listeners) {
       return;
     }
@@ -230,7 +231,7 @@ export function withCursors<
   e.connect = () => {
     connect();
 
-    e.awareness.on('change', awarenessChangeListener);
+    e.awareness.on("change", awarenessChangeListener);
 
     awarenessChangeListener({
       removed: [],
@@ -255,7 +256,7 @@ export function withCursors<
   };
 
   e.disconnect = () => {
-    e.awareness.off('change', awarenessChangeListener);
+    e.awareness.off("change", awarenessChangeListener);
 
     awarenessChangeListener({
       removed: Array.from(e.awareness.getStates().keys()),

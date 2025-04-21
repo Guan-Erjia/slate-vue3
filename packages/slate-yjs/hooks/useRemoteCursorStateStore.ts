@@ -1,12 +1,13 @@
+import { BaseEditor } from "slate";
+import { useEditor } from "slate-vue";
+import { DOMEditor } from "slate-dom";
+import { toRawWeakMap as WeakMap } from "share-tools";
+import { Store } from "./utils";
 import {
   CursorEditor,
   CursorState,
   RemoteCursorChangeEventListener,
 } from "../plugins/withCursors";
-import { BaseEditor } from "slate";
-import { Store } from "./utils";
-import { useRemoteCursorEditor } from "./useRemoteCursorEditor";
-import { toRawWeakMap as WeakMap } from "share-tools";
 
 export type CursorStore<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
@@ -72,7 +73,7 @@ export function createRemoteCursorStateStore<
 export function useRemoteCursorStateStore<
   TCursorData extends Record<string, unknown> = Record<string, unknown>
 >() {
-  const editor = useRemoteCursorEditor<TCursorData>();
+  const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
 
   const existing = EDITOR_TO_CURSOR_STORE.get(editor);
   if (existing) {

@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref, Ref } from "vue";
+import { onMounted, onUnmounted, Ref } from "vue";
 import { Editor, Path, Range, Text, Descendant } from "slate";
 import { DOMEditor } from "slate-dom";
 import { CursorEditor, CursorState } from "../plugins/withCursors";

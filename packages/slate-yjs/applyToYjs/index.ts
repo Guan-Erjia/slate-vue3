@@ -1,5 +1,5 @@
 import { Node, Operation } from "slate";
-import * as Y from "yjs";
+import { XmlText } from "yjs";
 import { NODE_MAPPER } from "./node";
 import { TEXT_MAPPER } from "./text";
 import { ApplyFunc, OpMapper } from "./types";
@@ -15,7 +15,7 @@ const opMappers: OpMapper = {
 };
 
 export function applySlateOp(
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   slateRoot: Node,
   op: Operation
 ): void {

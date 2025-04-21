@@ -1,10 +1,10 @@
 import { onMounted, onUnmounted, watch } from "vue";
-import { useFocused } from "slate-vue";
+import { DOMEditor } from "slate-dom";
+import { useEditor, useFocused } from "slate-vue";
 import { CursorEditor } from "../plugins/withCursors";
-import { useRemoteCursorEditor } from "./useRemoteCursorEditor";
 
 export function useUnsetCursorPositionOnBlur() {
-  const editor = useRemoteCursorEditor();
+  const editor = useEditor() as CursorEditor & DOMEditor;
   const isFocused = useFocused();
 
   const sendCursorPosition = (focus?: boolean) => {

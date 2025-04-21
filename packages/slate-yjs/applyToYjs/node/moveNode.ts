@@ -1,16 +1,16 @@
-import { MoveNodeOperation, Node, Path, Text } from 'slate';
-import * as Y from 'yjs';
-import { Delta } from '../../model/types';
-import { cloneInsertDeltaDeep } from '../../utils/clone';
-import { getInsertDeltaLength, yTextToInsertDelta } from '../../utils/delta';
-import { getYTarget } from '../../utils/location';
+import { MoveNodeOperation, Node, Path, Text } from "slate";
+import { XmlText } from "yjs";
+import { Delta } from "../../model/types";
+import { cloneInsertDeltaDeep } from "../../utils/clone";
+import { getInsertDeltaLength, yTextToInsertDelta } from "../../utils/delta";
+import { getYTarget } from "../../utils/location";
 import {
   getStoredPositionsInDeltaAbsolute,
   restoreStoredPositionsWithDeltaAbsolute,
-} from '../../utils/position';
+} from "../../utils/position";
 
 export function moveNode(
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   slateRoot: Node,
   op: MoveNodeOperation
 ): void {
@@ -18,7 +18,7 @@ export function moveNode(
   const newPathOffset = op.newPath[op.newPath.length - 1];
   const parent = Node.get(slateRoot, newParentPath);
   if (Text.isText(parent)) {
-    throw new Error('Cannot move slate node into text element');
+    throw new Error("Cannot move slate node into text element");
   }
   const normalizedNewPath = [
     ...newParentPath,

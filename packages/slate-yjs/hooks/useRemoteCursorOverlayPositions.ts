@@ -1,6 +1,8 @@
-import { computed, getCurrentInstance, onUpdated, ref, Ref } from "vue";
+import { computed, onUpdated, ref, Ref } from "vue";
 import { BaseRange, NodeMatch, Text } from "slate";
-import { CursorState } from "../plugins/withCursors";
+import { DOMEditor } from "slate-dom";
+import { useEditor } from "slate-vue";
+import { CursorEditor, CursorState } from "../plugins/withCursors";
 import {
   CaretPosition,
   getOverlayPosition,
@@ -9,7 +11,6 @@ import {
   useOnResize,
   getCursorRange,
 } from "./utils";
-import { useRemoteCursorEditor } from "./useRemoteCursorEditor";
 import { useRemoteCursorStates } from "./useRemoteCursorStates";
 import { toRawWeakMap as WeakMap } from "share-tools";
 
@@ -26,17 +27,13 @@ export function useRemoteCursorOverlayPositions<
   TCursorData extends Record<string, unknown>,
   TContainer extends HTMLElement = HTMLDivElement
 >(containerRef: Ref<TContainer>, shouldGenerateOverlay?: NodeMatch<Text>) {
-  const editor = useRemoteCursorEditor<TCursorData>();
+  const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
   const cursorStates = useRemoteCursorStates<TCursorData>();
-  const proxy = getCurrentInstance();
 
   const overlayPositionCache = ref(new WeakMap<BaseRange, OverlayPosition>());
   const overlayPositions = ref<Record<string, OverlayPosition>>({});
 
-  useOnResize(containerRef, () => {
-    overlayPositionCache.value = new WeakMap();
-    proxy?.update();
-  });
+  useOnResize(containerRef, () => (overlayPositionCache.value = new WeakMap()));
 
   // Update selection rects after paint
   onUpdated(() => {
@@ -97,10 +94,7 @@ export function useRemoteCursorOverlayPositions<
     })
   );
 
-  const refresh = () => {
-    overlayPositionCache.value = new WeakMap();
-    proxy?.update?.();
-  };
+  const refresh = () => (overlayPositionCache.value = new WeakMap());
 
   return [overlayData, refresh] as const;
 }
