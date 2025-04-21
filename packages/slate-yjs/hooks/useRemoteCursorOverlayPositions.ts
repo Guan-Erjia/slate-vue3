@@ -34,10 +34,7 @@ export function useRemoteCursorOverlayPositions<
   const overlayPositionCache = ref(new WeakMap<BaseRange, OverlayPosition>());
   const overlayPositions = ref<Record<string, OverlayPosition>>({});
 
-  useOnResize(containerRef, () => (overlayPositionCache.value = new WeakMap()));
-
-  // Update selection rects after paint
-  onUpdated(() => {
+  const flushOverlayCursor = () => {
     // We have a container ref but the ref is null => container
     // isn't mounted to we can't calculate the selection rects.
     if (!containerRef.value) {
@@ -79,7 +76,14 @@ export function useRemoteCursorOverlayPositions<
     if (overlayPositionsChanged) {
       overlayPositions.value = updated;
     }
-  });
+  };
+
+  const refresh = () => {
+    overlayPositionCache.value = new WeakMap();
+    flushOverlayCursor();
+  };
+  useOnResize(containerRef, refresh);
+  onUpdated(flushOverlayCursor);
 
   const overlayData = computed<CursorOverlayData<TCursorData>[]>(() =>
     Object.entries(cursorStates.value).map(([clientId, state]) => {
@@ -94,8 +98,6 @@ export function useRemoteCursorOverlayPositions<
       };
     })
   );
-
-  const refresh = () => (overlayPositionCache.value = new WeakMap());
 
   return [overlayData, refresh] as const;
 }

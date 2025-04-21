@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, Ref, ref } from "vue";
+import { onMounted, onUnmounted, Ref } from "vue";
 import { JsonObject } from "@liveblocks/client";
 import { CursorState } from "../plugins/withCursors";
 import { useRemoteCursorStateStore } from "./useRemoteCursorStateStore";

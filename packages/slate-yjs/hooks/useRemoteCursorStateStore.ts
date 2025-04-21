@@ -22,19 +22,19 @@ export function useRemoteCursorStateStore<
 >() {
   const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
   const cursors = ref<Record<string, CursorState<TCursorData>>>({});
-  const changed = ref(new Set<number>());
+  const changed = new Set<number>();
 
-  const addChanged = changed.value.add.bind(changed.value);
+  const addChanged = changed.add.bind(changed);
 
   const changeHandler: RemoteCursorChangeEventListener | null = (event) => {
     event.added.forEach(addChanged);
     event.removed.forEach(addChanged);
     event.updated.forEach(addChanged);
-    if (changed.value.size === 0) {
+    if (changed.size === 0) {
       return cursors;
     }
 
-    changed.value.forEach((clientId) => {
+    changed.forEach((clientId) => {
       const state = CursorEditor.cursorState(editor, clientId);
       if (state === null) {
         delete cursors.value[clientId.toString()];
@@ -44,7 +44,7 @@ export function useRemoteCursorStateStore<
       cursors.value[clientId] = state;
     });
 
-    changed.value.clear();
+    changed.clear();
   };
 
   const subscribe = () => {
