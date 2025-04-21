@@ -1,9 +1,10 @@
 import { onMounted, onUnmounted, Ref, ref } from "vue";
+import { JsonObject } from "@liveblocks/client";
 import { CursorState } from "../plugins/withCursors";
 import { useRemoteCursorStateStore } from "./useRemoteCursorStateStore";
 
 export function useRemoteCursorStates<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends JsonObject = JsonObject
 >(): Ref<Record<string, CursorState<TCursorData>>> {
   const [subscribe, getSnapshot] = useRemoteCursorStateStore<TCursorData>();
 

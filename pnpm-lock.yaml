@@ -102,9 +102,6 @@ importers:
       vue-router:
         specifier: ^4.5.0
         version: 4.5.0(vue@3.5.13(typescript@5.8.2))
-      y-protocols:
-        specifier: ^1.0.6
-        version: 1.0.6(yjs@13.6.24)
       yjs:
         specifier: ^13.6.24
         version: 13.6.24
@@ -2061,12 +2058,6 @@ packages:
 
   y-indexeddb@9.0.12:
     resolution: {integrity: sha512-9oCFRSPPzBK7/w5vOkJBaVCQZKHXB/v6SIT+WYhnJxlEC61juqG0hBrAf+y3gmSMLFLwICNH9nQ53uscuse6Hg==}
-    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
-    peerDependencies:
-      yjs: ^13.0.0
-
-  y-protocols@1.0.6:
-    resolution: {integrity: sha512-vHRF2L6iT3rwj1jub/K5tYcTT/mEYDUppgNPXwp8fmLpui9f7Yeq3OEtTLVF012j39QnV+KEQpNqoN7CWU7Y9Q==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
     peerDependencies:
       yjs: ^13.0.0
@@ -4277,11 +4268,6 @@ snapshots:
   xmlchars@2.2.0: {}
 
   y-indexeddb@9.0.12(yjs@13.6.24):
-    dependencies:
-      lib0: 0.2.99
-      yjs: 13.6.24
-
-  y-protocols@1.0.6(yjs@13.6.24):
     dependencies:
       lib0: 0.2.99
       yjs: 13.6.24

@@ -49,7 +49,7 @@ export default defineConfig(({ command, mode }) => {
           formats: ["es"],
         },
         rollupOptions: {
-          external: ["vue", 'y-protocols', 'yjs'],
+          external: ["vue", 'yjs'],
         },
       },
       plugins: [

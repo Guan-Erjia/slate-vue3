@@ -11,7 +11,6 @@ import MarkButton from "../rich-text/MarkButton.vue";
 import BlockButton from "../rich-text/BlockButton.vue";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
 import { faker } from '@faker-js/faker';
-import { Awareness } from "y-protocols/awareness";
 import RemoteOverlay from './RemoteOverlay.vue'
 
 const initialValue: CustomElement[] = [

@@ -1,7 +1,8 @@
 import { Editor, Range } from "slate";
 import { toRawWeakMap as WeakMap } from "share-tools";
 import { compareRelativePositions } from "yjs";
-import { Awareness } from "y-protocols/awareness";
+import { LiveblocksYjsProvider } from "@liveblocks/yjs";
+import { JsonObject } from "@liveblocks/client";
 import { RelativeRange } from "../model/types";
 import { slateRangeToRelativeRange } from "../utils/position";
 import { YjsEditor } from "./withYjs";
@@ -21,25 +22,21 @@ const CURSOR_CHANGE_EVENT_LISTENERS: WeakMap<
   Set<RemoteCursorChangeEventListener>
 > = new WeakMap();
 
-export type CursorState<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
-> = {
-  relativeSelection: RelativeRange | null;
+export type CursorState<TCursorData extends JsonObject = JsonObject> = {
+  selection: RelativeRange | null;
   data?: TCursorData;
-  clientId: number;
 };
 
-export type CursorEditor<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
-> = YjsEditor & {
-  awareness: Awareness;
+export type CursorEditor<TCursorData extends JsonObject = JsonObject> =
+  YjsEditor & {
+    awareness: LiveblocksYjsProvider["awareness"];
 
-  cursorDataField: string;
-  selectionStateField: string;
+    cursorDataField: string;
+    selectionStateField: string;
 
-  sendCursorPosition: (range: Range | null) => void;
-  sendCursorData: (data: TCursorData) => void;
-};
+    sendCursorPosition: (range: Range | null) => void;
+    sendCursorData: (data: TCursorData) => void;
+  };
 
 export const CursorEditor = {
   isCursorEditor(value: unknown): value is CursorEditor {
@@ -53,21 +50,21 @@ export const CursorEditor = {
     );
   },
 
-  sendCursorPosition<TCursorData extends Record<string, unknown>>(
+  sendCursorPosition<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
     range: Range | null = editor.selection
   ) {
     editor.sendCursorPosition(range);
   },
 
-  sendCursorData<TCursorData extends Record<string, unknown>>(
+  sendCursorData<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
     data: TCursorData
   ) {
     editor.sendCursorData(data);
   },
 
-  on<TCursorData extends Record<string, unknown>>(
+  on<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
     event: "change",
     handler: RemoteCursorChangeEventListener
@@ -81,7 +78,7 @@ export const CursorEditor = {
     CURSOR_CHANGE_EVENT_LISTENERS.set(editor, listeners);
   },
 
-  off<TCursorData extends Record<string, unknown>>(
+  off<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
     event: "change",
     listener: RemoteCursorChangeEventListener
@@ -96,58 +93,61 @@ export const CursorEditor = {
     }
   },
 
-  cursorState<TCursorData extends Record<string, unknown>>(
+  cursorState<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
     clientId: number
   ): CursorState<TCursorData> | null {
     if (
-      clientId === editor.awareness.clientID ||
+      clientId === editor.sharedRoot.doc?.clientID ||
       !YjsEditor.connected(editor)
     ) {
       return null;
     }
 
-    const state = editor.awareness.getStates().get(clientId);
+    const state = editor.awareness.getStates().get(clientId) as {
+      data: TCursorData;
+      selection: RelativeRange | null;
+    };
+    console.log(state);
     if (!state) {
       return null;
     }
 
     return {
-      relativeSelection: state[editor.selectionStateField] ?? null,
-      data: state[editor.cursorDataField],
-      clientId,
+      selection: state.selection ?? null,
+      data: state.data,
     };
   },
 
-  cursorStates<TCursorData extends Record<string, unknown>>(
+  cursorStates<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>
   ): Record<string, CursorState<TCursorData>> {
     if (!YjsEditor.connected(editor)) {
       return {};
     }
-
     return Object.fromEntries(
-      Array.from(editor.awareness.getStates().entries(), ([id, state]) => {
-        // Ignore own state
-        if (id === editor.awareness.clientID || !state) {
-          return null;
-        }
+      Array.from(
+        (editor.awareness.getStates() as Map<number, CursorState>).entries(),
+        ([id, state]) => {
+          // Ignore own state
+          if (id === editor.sharedRoot.doc?.clientID || !state) {
+            return null;
+          }
 
-        return [
-          id,
-          {
-            relativeSelection: state[editor.selectionStateField],
-            data: state[editor.cursorDataField],
-          },
-        ];
-      }).filter(Array.isArray)
+          return [
+            id,
+            {
+              selection: state.selection,
+              data: state.data,
+            },
+          ];
+        }
+      ).filter(Array.isArray)
     );
   },
 };
 
-export type WithCursorsOptions<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
-> = {
+export type WithCursorsOptions<TCursorData extends JsonObject = JsonObject> = {
   // Local state field used to store the user selection
   cursorStateField?: string;
 
@@ -159,11 +159,11 @@ export type WithCursorsOptions<
 };
 
 export function withCursors<
-  TCursorData extends Record<string, unknown>,
+  TCursorData extends JsonObject,
   TEditor extends YjsEditor
 >(
   editor: TEditor,
-  awareness: Awareness,
+  awareness: LiveblocksYjsProvider["awareness"],
   {
     cursorStateField: selectionStateField = "selection",
     cursorDataField = "data",
@@ -177,13 +177,13 @@ export function withCursors<
   e.cursorDataField = cursorDataField;
   e.selectionStateField = selectionStateField;
 
-  e.sendCursorData = (cursorData: TCursorData) => {
+  e.sendCursorData = (cursorData: JsonObject) => {
     e.awareness.setLocalStateField(e.cursorDataField, cursorData);
   };
 
   e.sendCursorPosition = (range) => {
-    const localState = e.awareness.getLocalState();
-    const currentRange = localState?.[selectionStateField];
+    const localState = e.awareness.getLocalState() as CursorState;
+    const currentRange = localState.selection;
 
     if (!range) {
       if (currentRange) {
@@ -193,14 +193,17 @@ export function withCursors<
       return;
     }
 
-    const { anchor, focus } = slateRangeToRelativeRange(e.sharedRoot, e, range);
+    const relativeRange = slateRangeToRelativeRange(e.sharedRoot, e, range);
 
     if (
       !currentRange ||
-      !compareRelativePositions(anchor, currentRange) ||
-      !compareRelativePositions(focus, currentRange)
+      !compareRelativePositions(relativeRange.anchor, currentRange.anchor) ||
+      !compareRelativePositions(relativeRange.focus, currentRange.focus)
     ) {
-      e.awareness.setLocalStateField(e.selectionStateField, { anchor, focus });
+      e.awareness.setLocalStateField(
+        e.selectionStateField,
+        relativeRange as unknown as JsonObject
+      );
     }
   };
 
@@ -211,7 +214,7 @@ export function withCursors<
       return;
     }
 
-    const localId = e.awareness.clientID;
+    const localId = e.sharedRoot.doc?.clientID;
     const event = {
       added: yEvent.added.filter((id) => id !== localId),
       removed: yEvent.removed.filter((id) => id !== localId),

@@ -2,6 +2,7 @@ import { BaseEditor } from "slate";
 import { useEditor } from "slate-vue";
 import { DOMEditor } from "slate-dom";
 import { toRawWeakMap as WeakMap } from "share-tools";
+import { JsonObject } from "@liveblocks/client";
 import { Store } from "./utils";
 import {
   CursorEditor,
@@ -9,15 +10,15 @@ import {
   RemoteCursorChangeEventListener,
 } from "../plugins/withCursors";
 
-export type CursorStore<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
-> = Store<Record<string, CursorState<TCursorData>>>;
+export type CursorStore<TCursorData extends JsonObject = JsonObject> = Store<
+  Record<string, CursorState<TCursorData>>
+>;
 
 const EDITOR_TO_CURSOR_STORE: WeakMap<BaseEditor, CursorStore> = new WeakMap();
 
-export function createRemoteCursorStateStore<
-  TCursorData extends Record<string, unknown>
->(editor: CursorEditor<TCursorData>): CursorStore<TCursorData> {
+export function createRemoteCursorStateStore<TCursorData extends JsonObject>(
+  editor: CursorEditor<TCursorData>
+): CursorStore<TCursorData> {
   let cursors: Record<string, CursorState<TCursorData>> = {};
 
   const changed = new Set<number>();
@@ -71,7 +72,7 @@ export function createRemoteCursorStateStore<
 }
 
 export function useRemoteCursorStateStore<
-  TCursorData extends Record<string, unknown> = Record<string, unknown>
+  TCursorData extends JsonObject = JsonObject
 >() {
   const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
 

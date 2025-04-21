@@ -2,6 +2,8 @@ import { computed, onUpdated, ref, Ref } from "vue";
 import { BaseRange, NodeMatch, Text } from "slate";
 import { DOMEditor } from "slate-dom";
 import { useEditor } from "slate-vue";
+import { toRawWeakMap as WeakMap } from "share-tools";
+import { JsonObject } from "@liveblocks/client";
 import { CursorEditor, CursorState } from "../plugins/withCursors";
 import {
   CaretPosition,
@@ -12,11 +14,10 @@ import {
   getCursorRange,
 } from "./utils";
 import { useRemoteCursorStates } from "./useRemoteCursorStates";
-import { toRawWeakMap as WeakMap } from "share-tools";
 
 const FROZEN_EMPTY_ARRAY = Object.freeze([]);
 
-export type CursorOverlayData<TCursorData extends Record<string, unknown>> =
+export type CursorOverlayData<TCursorData extends JsonObject> =
   CursorState<TCursorData> & {
     range: BaseRange | null;
     caretPosition: CaretPosition | null;
@@ -24,7 +25,7 @@ export type CursorOverlayData<TCursorData extends Record<string, unknown>> =
   };
 
 export function useRemoteCursorOverlayPositions<
-  TCursorData extends Record<string, unknown>,
+  TCursorData extends JsonObject,
   TContainer extends HTMLElement = HTMLDivElement
 >(containerRef: Ref<TContainer>, shouldGenerateOverlay?: NodeMatch<Text>) {
   const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
@@ -53,7 +54,7 @@ export function useRemoteCursorOverlayPositions<
 
     const updated = Object.fromEntries(
       Object.entries(cursorStates.value).map(([key, state]) => {
-        const range = state.relativeSelection && getCursorRange(editor, state);
+        const range = state.selection && getCursorRange(editor, state);
 
         if (!range) {
           return [key, FROZEN_EMPTY_ARRAY];
@@ -82,7 +83,7 @@ export function useRemoteCursorOverlayPositions<
 
   const overlayData = computed<CursorOverlayData<TCursorData>[]>(() =>
     Object.entries(cursorStates.value).map(([clientId, state]) => {
-      const range = state.relativeSelection && getCursorRange(editor, state);
+      const range = state.selection && getCursorRange(editor, state);
       const overlayPosition = overlayPositions.value[clientId];
 
       return {
