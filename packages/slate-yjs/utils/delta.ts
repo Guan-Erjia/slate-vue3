@@ -1,4 +1,4 @@
-import * as Y from 'yjs';
+import { XmlText } from 'yjs';
 import { DeltaInsert, InsertDelta } from '../model/types';
 import { deepEquals } from './object';
 
@@ -36,7 +36,7 @@ export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
   return normalized;
 }
 
-export function yTextToInsertDelta(yText: Y.XmlText): InsertDelta {
+export function yTextToInsertDelta(yText: XmlText): InsertDelta {
   return normalizeInsertDelta(yText.toDelta());
 }
 

@@ -1,10 +1,10 @@
 import { Element, Node, Text } from 'slate';
-import * as Y from 'yjs';
 import { DeltaInsert, InsertDelta } from '../model/types';
 import { yTextToInsertDelta } from './delta';
 import { getProperties } from './slate';
+import { XmlText } from 'yjs';
 
-export function yTextToSlateElement(yText: Y.XmlText): Element {
+export function yTextToSlateElement(yText: XmlText): Element {
   const delta = yTextToInsertDelta(yText);
 
   const children =
@@ -36,8 +36,8 @@ export function slateNodesToInsertDelta(nodes: Node[]): InsertDelta {
 export function slateElementToYText({
   children,
   ...attributes
-}: Element): Y.XmlText {
-  const yElement = new Y.XmlText();
+}: Element): XmlText {
+  const yElement = new XmlText();
 
   Object.entries(attributes).forEach(([key, value]) => {
     yElement.setAttribute(key, value);

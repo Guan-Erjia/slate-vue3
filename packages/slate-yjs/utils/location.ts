@@ -1,8 +1,8 @@
 import { Element, Node, Path, Text } from 'slate';
-import * as Y from 'yjs';
 import { YTarget } from '../model/types';
 import { sliceInsertDelta, yTextToInsertDelta } from './delta';
 import { toRaw } from 'vue';
+import { XmlText } from 'yjs';
 
 export function getSlateNodeYLength(node: Node | undefined): number {
   if (!node) {
@@ -19,7 +19,7 @@ export function slatePathOffsetToYOffset(element: Element, pathOffset: number) {
 }
 
 export function getYTarget(
-  yRoot: Y.XmlText,
+  yRoot: XmlText,
   slateRoot: Node,
   path: Path
 ): YTarget {
@@ -46,7 +46,7 @@ export function getYTarget(
 
   const yTarget = targetDelta[0]?.insert;
   if (childPath.length > 0) {
-    if (!(yTarget instanceof Y.XmlText)) {
+    if (!(yTarget instanceof XmlText)) {
       throw new Error(
         "Path doesn't match yText, cannot descent into non-yText"
       );
@@ -58,7 +58,7 @@ export function getYTarget(
   return {
     yParent: yRoot,
     textRange: { start: yOffset, end: yOffset + targetLength },
-    yTarget: yTarget instanceof Y.XmlText ? yTarget : undefined,
+    yTarget: yTarget instanceof XmlText ? yTarget : undefined,
     slateParent: slateRoot,
     slateTarget: targetNode,
     targetDelta,
@@ -107,9 +107,9 @@ export function yOffsetToSlateOffsets(
 }
 
 export function getSlatePath(
-  sharedRoot: Y.XmlText,
+  sharedRoot: XmlText,
   slateRoot: Node,
-  yText: Y.XmlText
+  yText: XmlText
 ): Path {
   const yNodePath = [yText];
   // 必须获取原始指针
@@ -120,7 +120,7 @@ export function getSlatePath(
       throw new Error("yText isn't a descendant of root element");
     }
 
-    if (!(yParent instanceof Y.XmlText)) {
+    if (!(yParent instanceof XmlText)) {
       throw new Error('Unexpected y parent type');
     }
 
