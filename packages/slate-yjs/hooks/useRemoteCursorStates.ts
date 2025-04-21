@@ -6,23 +6,19 @@ import { useRemoteCursorStateStore } from "./useRemoteCursorStateStore";
 export function useRemoteCursorStates<
   TCursorData extends JsonObject = JsonObject
 >(): Ref<Record<string, CursorState<TCursorData>>> {
-  const [subscribe, getSnapshot] = useRemoteCursorStateStore<TCursorData>();
+  const [subscribe, cursors] = useRemoteCursorStateStore<TCursorData>();
 
-  const snapshot = ref(getSnapshot());
-
-  const handleStoreChange = () => (snapshot.value = getSnapshot());
   // 设置订阅
   let unsubscribe: () => void;
 
   onMounted(() => {
-    unsubscribe = subscribe(handleStoreChange);
+    unsubscribe = subscribe();
     // 初始获取快照
-    handleStoreChange();
   });
 
   onUnmounted(() => {
     unsubscribe?.();
   });
 
-  return snapshot;
+  return cursors;
 }
