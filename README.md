@@ -22,7 +22,6 @@
 1. :sparkles: Highly customizable features, use slate core at the bottom level
 2. :zap: Use `vue3` for high-performance rendering, and later connect to vapor mode
 3. :coffee: The **latest** version of the core, design tends to be stable
-4. :point_right: Check out the [**live demo**](https://guan-erjia.github.io/slate-vue3/examples/rich-text) of all of the examples
 
 <br />
 
@@ -125,7 +124,7 @@ Due to the complexity of maintaining multiple packages and the lack of reusabili
 
 Welcome to provide suggestions on the issue, it would be even better if **`PR`** could be mentioned along with it
 
-slate-vue3 is [MIT-licensed](./License.md).
+`slate-vue3` is [MIT-licensed](./License.md).
 
 <br/>
 
