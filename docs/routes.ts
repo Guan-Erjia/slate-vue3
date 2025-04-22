@@ -104,6 +104,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/remote-simple/index.vue"),
   },
   {
+    name: "remote-cursor",
+    path: "remote-cursor",
+    component: () => import("./pages/examples/remote-cursor/index.vue"),
+  },
+  {
     name: "check-lists",
     path: "check-lists",
     component: () => import("./pages/examples/check-lists/index.vue"),
@@ -212,11 +217,6 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     name: "custom-placeholder",
     path: "custom-placeholder",
     component: () => import("./pages/examples/custom-placeholder/index.vue"),
-  },
-  {
-    name: "remote-cursor",
-    path: "remote-cursor",
-    component: () => import("./pages/examples/remote-cursor/index.vue"),
   },
 ];
 
