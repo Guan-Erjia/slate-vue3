@@ -1,10 +1,11 @@
 import { onMounted, onUnmounted, watch } from "vue";
 import { DOMEditor } from "slate-dom";
 import { useEditor, useFocused } from "slate-vue";
+import { JsonObject } from "@liveblocks/client";
 import { CursorEditor } from "../plugins/withCursors";
 
-export function useUnsetCursorPositionOnBlur() {
-  const editor = useEditor() as CursorEditor & DOMEditor;
+export function useUnsetCursorPositionOnBlur<TCursor extends JsonObject>() {
+  const editor = useEditor() as CursorEditor<TCursor> & DOMEditor;
   const isFocused = useFocused();
 
   const sendCursorPosition = (focus?: boolean) => {

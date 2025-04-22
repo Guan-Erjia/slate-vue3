@@ -21,7 +21,7 @@ import {
   slateRangeToRelativeRange,
 } from "./utils/position";
 
-import { useRemoteCursorStates } from "./hooks/useRemoteCursorStates";
+import { CursorStore, useRemoteCursorStates } from "./hooks/useRemoteCursorStates";
 import { useUnsetCursorPositionOnBlur } from "./hooks/useUnsetCursorPositionOnBlur";
 import { getCursorRange } from "./hooks/utils";
 
@@ -36,14 +36,15 @@ export type {
   YHistoryEditor,
   WithYHistoryOptions,
   // Base cursor plugin
-  CursorEditor,
-  WithCursorsOptions,
   CursorState,
+  CursorStore,
+  CursorEditor,
+  CursorOverlayData,
+  WithCursorsOptions,
   RemoteCursorChangeEventListener,
   CursorStateChangeEvent,
   // Utils
   RelativeRange,
-  CursorOverlayData,
 };
 
 export {
@@ -59,6 +60,6 @@ export {
   relativePositionToSlatePoint,
   useRemoteCursorStates,
   useUnsetCursorPositionOnBlur,
-  getCursorRange,
   useRemoteCursorOverlayPositions,
+  getCursorRange,
 };
