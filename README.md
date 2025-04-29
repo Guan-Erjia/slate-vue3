@@ -6,7 +6,6 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/slate-vue3?activeTab=code">
-    <img src="https://img.shields.io/npm/unpacked-size/slate-vue3">
     <img src="https://img.shields.io/bundlephobia/min/slate-vue3">
   </a>
   <a href="https://join.slack.com/t/slate-js/shared_invite/zt-f8t986ip-7dA1DyiqPpzootz1snKXkw">
@@ -113,11 +112,11 @@ Due to the complexity of maintaining multiple packages and the lack of reusabili
 
 | **Package**                                              |                                                                       **Version** | **Description**                                  |
 | :------------------------------------------------------- | --------------------------------------------------------------------------------: | :----------------------------------------------- |
-| [`slate-vue3/core`](./packages/slate)                    | ![](https://img.shields.io/npm/v/slate-vue3.svg?maxAge=3600&label=&colorB=007ec6) | slate's core data model logic.                   |
-| [`slate-vue3/dom`](./packages/slate)                     | ![](https://img.shields.io/npm/v/slate-vue3.svg?maxAge=3600&label=&colorB=007ec6) | DOM implementation of slate                      |
-| [`slate-vue3/history`](./packages/slate-history)         | ![](https://img.shields.io/npm/v/slate-vue3.svg?maxAge=3600&label=&colorB=007ec6) | a plugin that adds undo/redo history to slate.   |
-| [`slate-vue3/hyperscript`](./packages/slate-hyperscript) | ![](https://img.shields.io/npm/v/slate-vue3.svg?maxAge=3600&label=&colorB=007ec6) | a hyperscript tool to write JSX slate documents! |
-| [`slate-vue3/yjs`](./packages/slate-yjs)                 | ![](https://img.shields.io/npm/v/slate-vue3.svg?maxAge=3600&label=&colorB=007ec6) | integration of `slate-yjs`                       |
+| [`slate-vue3/core`](./packages/slate)                    | ![](https://img.shields.io/npm/v/slate.svg?maxAge=3600&label=&colorB=007ec6) | slate's core data model logic.                   |
+| [`slate-vue3/dom`](./packages/slate-dom)                     | ![](https://img.shields.io/npm/v/slate-dom.svg?maxAge=3600&label=&colorB=007ec6) | DOM implementation of slate                      |
+| [`slate-vue3/history`](./packages/slate-history)         | ![](https://img.shields.io/npm/v/slate-history.svg?maxAge=3600&label=&colorB=007ec6) | a plugin that adds undo/redo history to slate.   |
+| [`slate-vue3/hyperscript`](./packages/slate-hyperscript) | ![](https://img.shields.io/npm/v/slate-hyperscript.svg?maxAge=3600&label=&colorB=007ec6) | a hyperscript tool to write JSX slate documents! |
+| [`slate-vue3/yjs`](./packages/slate-yjs)                 | ![](https://img.shields.io/npm/v/slate-yjs.svg?maxAge=3600&label=&colorB=007ec6) | integration of `slate-yjs`                       |
 
 <br />
 
