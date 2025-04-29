@@ -109,6 +109,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/remote-cursor/index.vue"),
   },
   {
+    name: "remote-decorate-cursor",
+    path: "remote-decorate-cursor",
+    component: () => import("./pages/examples/remote-decorate-cursor/index.vue"),
+  },
+  {
     name: "check-lists",
     path: "check-lists",
     component: () => import("./pages/examples/check-lists/index.vue"),

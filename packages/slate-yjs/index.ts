@@ -29,6 +29,7 @@ import {
   CursorOverlayData,
   useRemoteCursorOverlayPositions,
 } from "./hooks/useRemoteCursorOverlayPositions";
+import { getRemoteCaretsOnLeaf, getRemoteCursorsOnLeaf, REMOTE_CURSOR_CARET_DECORATION_PREFIX, REMOTE_CURSOR_DECORATION_PREFIX, RemoteCaretDecoratedRange, RemoteCaretDecoration, RemoteCursorDecoratedRange, RemoteCursorDecoration, TextWithRemoteCursors, useDecorateRemoteCursors, UseDecorateRemoteCursorsOptions } from "./hooks/useDecorateRemoteCursors";
 
 export type {
   WithYjsOptions,
@@ -45,6 +46,13 @@ export type {
   CursorStateChangeEvent,
   // Utils
   RelativeRange,
+  UseDecorateRemoteCursorsOptions,
+  RemoteCursorDecoration,
+  RemoteCaretDecoration,
+  RemoteCursorDecoratedRange,
+  RemoteCaretDecoratedRange,
+  TextWithRemoteCursors,
+  
 };
 
 export {
@@ -62,4 +70,9 @@ export {
   useUnsetCursorPositionOnBlur,
   useRemoteCursorOverlayPositions,
   getCursorRange,
+  getRemoteCursorsOnLeaf,
+  getRemoteCaretsOnLeaf,
+  useDecorateRemoteCursors,
+  REMOTE_CURSOR_DECORATION_PREFIX,
+  REMOTE_CURSOR_CARET_DECORATION_PREFIX
 };
