@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { Slate, Editable, } from "slate-vue3"
-import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { h, ref } from "vue";
-import Toolbar from '../../../components/Toolbar.vue'
-import isHotkey from "is-hotkey";
-import Button from '../../../components/Button.vue'
+import { Slate, Editable, type RenderLeafProps } from "slate-vue3"
+import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { createEditor, Descendant, Editor } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import isHotkey from "is-hotkey";
+import Toolbar from '../../../components/Toolbar.vue'
+import Button from '../../../components/Button.vue'
 
 const initialValue: Descendant[] = [
   {
@@ -50,16 +49,16 @@ const initialValue: Descendant[] = [
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   let _children = children
   if ('bold' in leaf) {
-    _children = h('span', attributes, h('strong', null, _children))
+    _children = h('strong', null, _children)
   }
   if ('code' in leaf) {
-    _children = h('span', attributes, h('code', null, _children))
+    _children = h('code', null, _children)
   }
   if ('italic' in leaf) {
-    _children = h('span', attributes, h('em', null, _children))
+    _children = h('em', null, _children)
   }
   if ('underline' in leaf) {
-    _children = h('span', attributes, h('u', null, _children))
+    _children = h('u', null, _children)
   }
   return h('span', attributes, _children)
 }
@@ -103,9 +102,7 @@ const handleLoad = (e: Event) => {
   }
 }
 
-const onBlur = () => {
-  DOMEditor.deselect(editor)
-}
+const onBlur = () => DOMEditor.deselect(editor)
 </script>
 
 <template>

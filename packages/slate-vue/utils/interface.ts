@@ -1,5 +1,5 @@
 import type { Text, Element, LeafPosition } from "slate";
-import type { HTMLAttributes, VNode, VNodeProps } from "vue";
+import type { HTMLAttributes, VNode, VNodeChild, VNodeProps, VNodeRef } from "vue";
 
 /**
  * The props that get passed to renderPlaceholder
@@ -44,7 +44,7 @@ export interface RenderElementProps {
     "data-slate-inline"?: true;
     "data-slate-void"?: true;
     dir?: "rtl";
-    ref: any;
+    ref: VNodeRef;
   };
 }
 
@@ -53,9 +53,9 @@ export interface RenderElementProps {
  */
 export interface RenderTextProps {
   text: Text
-  children: VNode;
+  children: VNodeChild[];
   attributes: {
     'data-slate-node': 'text'
-    ref: any
+    ref: VNodeRef
   }
 }

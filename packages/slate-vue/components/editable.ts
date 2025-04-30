@@ -386,11 +386,7 @@ export const Editable = defineComponent({
     });
 
     const deferredOperations = ref<Array<() => void>>([]);
-    const onBeforeinput = (event: Event) => {
-      const isInputEvent = event instanceof InputEvent;
-      if (!isInputEvent) {
-        return;
-      }
+    const onBeforeinput = (event: InputEvent) => {
       if (HAS_BEFORE_INPUT_SUPPORT) {
         handleNativeHistoryEvents(editor, event);
         const el = DOMEditor.toDOMNode(editor, editor);

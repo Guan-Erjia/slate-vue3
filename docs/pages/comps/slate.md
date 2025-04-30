@@ -42,7 +42,7 @@ export interface RenderElementProps {
     "data-slate-inline"?: true;
     "data-slate-void"?: true;
     dir?: "rtl";
-    ref: any;
+    ref: VNodeRef;
   };
 }
 function renderElement(props: RenderElementProps): VNode {}
@@ -74,7 +74,7 @@ export interface RenderTextProps {
   children: VNode;
   attributes: {
     "data-slate-node": "text";
-    ref: any;
+    ref: VNodeRef;
   };
 }
 function renderText(props: RenderTextProps): VNode {}

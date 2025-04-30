@@ -20,6 +20,7 @@ import {
   onUnmounted,
   provide,
   ref,
+  VNodeRef,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_SELECTED } from "../utils/constants";
@@ -31,7 +32,7 @@ interface ElementAttributes extends HTMLAttributes {
   "data-slate-void"?: true;
   "data-slate-inline"?: true;
   dir?: "rtl";
-  ref: any;
+  ref: VNodeRef;
 }
 
 const VOID_CHILDREN_ATTRS = {
