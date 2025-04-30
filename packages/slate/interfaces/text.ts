@@ -11,6 +11,7 @@ import { isDeepEqual } from '../utils/deep-equal'
 
 export interface BaseText {
   text: string
+  decoration?: number[]
 }
 
 export type Text = ExtendedType<'Text', BaseText>

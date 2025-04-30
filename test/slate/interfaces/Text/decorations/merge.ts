@@ -1,4 +1,4 @@
-import { Text } from 'slate'
+import { DecoratedRange, Text } from 'slate'
 
 const merge = (leaf: Text, dec: { decoration: number[] }) => {
   const { decoration, ...rest } = dec
@@ -32,23 +32,32 @@ export const input = [
     decoration: [4, 5, 6],
   },
 ]
-export const test = decorations => {
+export const test = (decorations: DecoratedRange[]) => {
   return Text.decorations({ text: 'abc', mark: 'mark' }, decorations)
 }
 export const output = [
   {
-    text: 'a',
-    mark: 'mark',
-    decoration: [1, 2, 3],
+    leaf: {
+      text: 'a',
+      mark: 'mark',
+      decoration: [1, 2, 3],
+    },
+    position: { start: 0, end: 1, isFirst: true },
   },
   {
-    text: 'b',
-    mark: 'mark',
-    decoration: [1, 2, 3, 4, 5, 6],
+    leaf: {
+      text: 'b',
+      mark: 'mark',
+      decoration: [1, 2, 3, 4, 5, 6],
+    },
+    position: { start: 1, end: 2 },
   },
   {
-    text: 'c',
-    mark: 'mark',
-    decoration: [4, 5, 6],
+    leaf: {
+      text: 'c',
+      mark: 'mark',
+      decoration: [4, 5, 6],
+    },
+    position: { start: 2, end: 3, isLast: true },
   },
 ]
