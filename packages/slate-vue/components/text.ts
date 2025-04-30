@@ -18,7 +18,11 @@ import {
 import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
-import { useRenderLeaf, useMarkPlaceholder } from "../hooks/use-render";
+import {
+  useRenderLeaf,
+  useMarkPlaceholder,
+  useRenderText,
+} from "../hooks/use-render";
 import { DEFAULT_DECORATE_FN } from "./utils";
 
 export const TextComp = defineComponent({
@@ -33,7 +37,7 @@ export const TextComp = defineComponent({
 
     const leaves = computed(() => {
       if (decorate === DEFAULT_DECORATE_FN) {
-        return [text];
+        return [{leaf: text}];
       }
       const elemPath = DOMEditor.findPath(editor, element);
       const textPath = DOMEditor.findPath(editor, text);
@@ -82,25 +86,27 @@ export const TextComp = defineComponent({
     });
 
     const renderLeaf = useRenderLeaf();
+    const renderText = useRenderText();
 
     return () =>
-      h(
-        "span",
-        { "data-slate-node": "text", ref: spanRef },
-        renderList(leaves.value, (leaf, i) =>
+      renderText({
+        text,
+        attributes: { "data-slate-node": "text", ref: spanRef },
+        children: renderList(leaves.value, (leaf, i) =>
           renderLeaf({
             text,
-            leaf,
+            leaf: leaf.leaf,
+            leafPosition: leaf.position,
             attributes: { "data-slate-leaf": true },
             children: h(StringComp, {
               text,
               element,
-              leaf,
+              leaf: leaf.leaf,
               isLast: isLastText.value && i === leaves.value.length - 1,
-              key: `${text.text}-${leaf.text}-${i}`,
+              key: `${text.text}-${leaf.leaf.text}-${i}`,
             }),
           })
-        )
-      );
+        ),
+      });
   },
 });

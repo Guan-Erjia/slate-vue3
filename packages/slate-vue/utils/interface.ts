@@ -1,4 +1,4 @@
-import type { Text, Element } from "slate";
+import type { Text, Element, LeafPosition } from "slate";
 import type { HTMLAttributes, VNode, VNodeProps } from "vue";
 
 /**
@@ -18,11 +18,19 @@ export interface RenderPlaceholderProps {
  */
 export interface RenderLeafProps {
   children: VNode;
+  /**
+   * The leaf node with any applied decorations.
+   * If no decorations are applied, it will be identical to the `text` property.
+   */
   leaf: Text;
   text: Text;
   attributes: HTMLAttributes & {
     "data-slate-leaf": true;
   };
+  /**
+   * The position of the leaf within the Text node, only present when the text node is split by decorations.
+   */
+  leafPosition?: LeafPosition
 }
 
 /**
@@ -38,4 +46,16 @@ export interface RenderElementProps {
     dir?: "rtl";
     ref: any;
   };
+}
+
+/**
+ * `RenderTextProps` are passed to the `renderText` handler.
+ */
+export interface RenderTextProps {
+  text: Text
+  children: any
+  attributes: {
+    'data-slate-node': 'text'
+    ref: any
+  }
 }

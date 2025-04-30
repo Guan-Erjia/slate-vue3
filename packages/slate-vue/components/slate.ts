@@ -1,6 +1,7 @@
 import {
   computed,
   defineComponent,
+  h,
   onMounted,
   onUnmounted,
   provide,
@@ -20,14 +21,28 @@ import {
   SLATE_STATE_SELECTION,
   SLATE_USE_DECORATE,
   SLATE_USE_EDITOR,
+  SLATE_INNER_RENDER_TEXT,
 } from "../utils/constants";
-import { DecoratedRange, Node, NodeEntry, Operation, Scrubber, Text, Range } from "slate";
+import {
+  DecoratedRange,
+  Node,
+  NodeEntry,
+  Operation,
+  Scrubber,
+  Text,
+  Range,
+} from "slate";
 import type {
   RenderElementProps,
   RenderLeafProps,
   RenderPlaceholderProps,
+  RenderTextProps,
 } from "../utils/interface";
-import { DOMEditor, EDITOR_TO_ON_CHANGE, MARK_PLACEHOLDER_SYMBOL } from "slate-dom";
+import {
+  DOMEditor,
+  EDITOR_TO_ON_CHANGE,
+  MARK_PLACEHOLDER_SYMBOL,
+} from "slate-dom";
 import { DEFAULT_DECORATE_FN } from "./utils";
 
 export const Slate = defineComponent({
@@ -54,6 +69,10 @@ export const Slate = defineComponent({
       type: Function,
       required: true,
     },
+    renderText: {
+      type: Function,
+      default: (props: RenderTextProps) => h("span", props.attributes, props.children)
+    }
   },
   setup(
     props: {
@@ -61,11 +80,12 @@ export const Slate = defineComponent({
       decorate: (entry: NodeEntry) => DecoratedRange[];
       renderElement: (props: RenderElementProps) => VNode;
       renderLeaf: (props: RenderLeafProps) => VNode;
+      renderText?: (props: RenderTextProps) => VNode;
       renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
     },
     { slots, emit }
   ) {
-    const { editor, decorate, renderElement, renderLeaf, renderPlaceholder } =
+    const { editor, decorate, renderElement, renderLeaf, renderPlaceholder, renderText } =
       props;
     if (!Node.isNodeList(editor.children)) {
       throw new Error(
@@ -78,6 +98,7 @@ export const Slate = defineComponent({
     provide(SLATE_USE_DECORATE, decorate);
     provide(SLATE_INNER_RENDER_ELEMENT, renderElement);
     provide(SLATE_INNER_RENDER_LEAF, renderLeaf);
+    provide(SLATE_INNER_RENDER_TEXT, renderText);
     provide(SLATE_INNER_RENDER_PLACEHOLDER, renderPlaceholder);
 
     const isFocus = ref(DOMEditor.isFocused(editor));
@@ -119,9 +140,9 @@ export const Slate = defineComponent({
           };
         }
       }
-      return null
+      return null;
     });
-    provide(SLATE_INNER_MARK_PLACEHOLDER, markPlaceholder)
+    provide(SLATE_INNER_MARK_PLACEHOLDER, markPlaceholder);
 
     onMounted(() => {
       document.addEventListener("focusin", focusCb);

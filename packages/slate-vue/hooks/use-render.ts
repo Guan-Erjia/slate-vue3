@@ -5,11 +5,13 @@ import {
   SLATE_INNER_RENDER_LEAF,
   SLATE_INNER_RENDER_PLACEHOLDER,
   SLATE_INNER_MARK_PLACEHOLDER,
+  SLATE_INNER_RENDER_TEXT,
 } from "../utils/constants";
 import type {
   RenderElementProps,
   RenderPlaceholderProps,
   RenderLeafProps,
+  RenderTextProps,
 } from "../utils/interface";
 import { BasePoint } from "slate";
 
@@ -47,6 +49,18 @@ export const useRenderPlaceholder = () => {
     );
   }
   return PLACEHOLDER_RENDER;
+};
+
+export const useRenderText = () => {
+  const TEXT_RENDER = inject<(props: RenderTextProps) => VNode>(
+    SLATE_INNER_RENDER_TEXT
+  );
+  if (TEXT_RENDER === undefined) {
+    throw new Error(
+      `The \`useRenderText\` hook must be used inside the <Slate> component's context.`
+    );
+  }
+  return TEXT_RENDER;
 };
 
 export const useChangeEffect = (fn: () => void) => {
