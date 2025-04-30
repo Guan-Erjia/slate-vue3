@@ -8,7 +8,7 @@ You need to pay attention to the parameter changes of the `Components`. Some par
 
 ## Render Function
 
-The rendering functions of `slate` include renderElement and renderLeaf, which implement `switch branch` judgment operations without state.
+The rendering functions of `slate` include `renderElement`、 `renderLeaf` and `renderText`, which provides the same functionality as [`slate-react`](https://docs.slatejs.org/libraries/slate-react/editable)
 
 Since vue does not provide `jsx` by default, the `h` function is used to implement them, as shown below
 ```typescript
@@ -32,9 +32,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
 }
 ```
 
-> The h function can already cover the vast majority of scenarios and is concise enough. It is not recommended to add additional jsx
-
-！！！The rendering function must be passed into the Slate component, and its behavior needs to be clearly defined. We also provide `default rendering functions` for use
+The `h` function can already cover the vast majority of scenarios and is concise enough. It is not recommended to add additional `jsx`
 
 ## Reactive
 
@@ -48,7 +46,7 @@ Due to the fact that `vue`'s rendering relies on variable response data, the chi
 
 Therefore, some asynchronous operations such as `setTimeout` have been removed.
 
-This change covers the rendering implementation of `slate-vue3/dom` and `slate-vue3`, and some useless interfaces have also been removed from YJS packages
+This change covers the rendering implementation of `slate-vue3/dom` and `slate-vue3`, and some useless interfaces have also been removed from `slate-vue3/yjs` packages
 
 ## Packages
 

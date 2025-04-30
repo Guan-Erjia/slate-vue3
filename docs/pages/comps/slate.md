@@ -8,6 +8,7 @@ interface SlateComponentProps {
   decorate: (entry: NodeEntry) => DecoratedRange[];
   renderElement: (props: RenderElementProps) => VNode;
   renderLeaf: (props: RenderLeafProps) => VNode;
+  renderText: (props: RenderTextProps) => VNode;
   renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
 }
 ```
@@ -63,22 +64,21 @@ export interface RenderLeafProps {
 function renderLeaf(props: RenderLeafProps): VNode {}
 ```
 
-## decorate
+## renderText
 
-The parameters are the current `node` and `path`, returning the node interval and modifying attributes
-
-Perform final modifications on existing leaf nodes, including **adding attributes** and **splitting nodes**
-
-> In most scenarios, rendering is done in conjunction with the renderLeaf function
+Control the rendering style of Text nodes, return `VNode` based on the passed text and leaf parameters
 
 ```typescript
-function decorate(entry: NodeEntry): DecoratedRange[] {}
+export interface RenderTextProps {
+  text: Text;
+  children: VNode;
+  attributes: {
+    "data-slate-node": "text";
+    ref: any;
+  };
+}
+function renderText(props: RenderTextProps): VNode {}
 ```
-
-You can see the usage in: 
-1. [**cursor segmentation**](/slate-vue3/examples/cursor-segmentation) (simple)
-2. [**code highlighting**](/slate-vue3/examples/code-highlighting) (complex)
-
 
 ## renderPlaceholder
 
@@ -96,20 +96,43 @@ export interface RenderPlaceholderProps {
 function renderPlaceholder(props: RenderPlaceholderProps): VNode {}
 ```
 
-## @change
-> any change in slate will trigger it
+## decorate
+
+The parameters are the current `node` and `path`, returning the node interval and modifying attributes
+
+Perform final modifications on existing leaf nodes, including **adding attributes** and **splitting nodes**
+
+> In most scenarios, rendering is done in conjunction with the renderLeaf function
+
 ```typescript
-const onchange: (event: { operation?: Operation }) => void
+function decorate(entry: NodeEntry): DecoratedRange[] {}
+```
+
+You can see the usage in:
+
+1. [**cursor segmentation**](/slate-vue3/examples/cursor-segmentation) (simple)
+2. [**code highlighting**](/slate-vue3/examples/code-highlighting) (complex)
+
+## @change
+
+> any change in slate will trigger it
+
+```typescript
+const onchange: (event: { operation?: Operation }) => void;
 ```
 
 ## @valuechange
+
 > slate children change in slate will trigger it
+
 ```typescript
-const onvaluechange: (event: { operation?: Operation }) => void
+const onvaluechange: (event: { operation?: Operation }) => void;
 ```
 
 ## @selectionchange
+
 > slate selection change in slate will trigger it
+
 ```typescript
-const onselectionchange: (event: { operation?: Operation }) => void
+const onselectionchange: (event: { operation?: Operation }) => void;
 ```

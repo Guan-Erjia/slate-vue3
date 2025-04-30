@@ -53,7 +53,7 @@ export interface RenderElementProps {
  */
 export interface RenderTextProps {
   text: Text
-  children: any
+  children: VNode;
   attributes: {
     'data-slate-node': 'text'
     ref: any

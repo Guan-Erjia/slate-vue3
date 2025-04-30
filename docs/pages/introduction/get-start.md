@@ -19,12 +19,7 @@ npm install slate-vue3
 
 ```html
 <script setup lang="ts">
-import {
-  Slate,
-  Editable,
-  defaultRenderLeaf,
-  defaultRenderPlaceHolder,
-} from "slate-vue3";
+import { Slate, Editable, } from "slate-vue3";
 import { createEditor } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
@@ -36,7 +31,6 @@ const initialValue = [{
 
 const editor = withHistory(withDOM(createEditor()));
 editor.children = initialValue;
-
 </script>
 
 <template>
