@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder } from "slate-vue3"
+import { Slate, Editable } from "slate-vue3"
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { withDOM } from "slate-vue3/dom";
 import { h } from "vue";
@@ -181,8 +181,7 @@ editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf">
     <Editable placeholder="Enter some plain text..." />
   </Slate>
 </template>

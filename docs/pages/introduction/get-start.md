@@ -19,7 +19,6 @@ npm install slate-vue3
 
 ```html
 <script setup lang="ts">
-import { h } from "vue";
 import {
   Slate,
   Editable,
@@ -35,20 +34,13 @@ const initialValue = [{
   children: [{ text: "Let's start" }],
 }];
 
-const renderElement = ({ attributes, children }) =>
-  h("p", attributes, children);
 const editor = withHistory(withDOM(createEditor()));
 editor.children = initialValue;
 
 </script>
 
 <template>
-  <Slate
-    :editor="editor"
-    :render-element="renderElement"
-    :render-leaf="defaultRenderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder"
-  >
+  <Slate :editor="editor">
     <Editable />
   </Slate>
 </template>

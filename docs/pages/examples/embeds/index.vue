@@ -1,11 +1,10 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :render-element="renderElement">
     <Editable placeholder="Enter some text..." />
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder, useInheritRef } from 'slate-vue3';
+import { Slate, Editable, RenderElementProps, useInheritRef } from 'slate-vue3';
 import { h } from 'vue';
 import VideoElement from './VideoElement.vue'
 import { withDOM } from 'slate-vue3/dom';

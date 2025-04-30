@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
+import { Slate, Editable, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { h, ref } from "vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import { createEditor, DecoratedRange, Descendant, NodeEntry, Text, Element } from "slate-vue3/core";
@@ -24,10 +24,6 @@ const initialValue: Descendant[] = [
     ],
   },
 ]
-
-const renderElement = ({ attributes, children }: RenderElementProps) => {
-  return h('p', attributes, children)
-}
 
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h('span', {
@@ -94,8 +90,7 @@ const search = ref('')
 </script>
 
 <template>
-  <Slate :editor="editor" :decorate="decorate" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :decorate="decorate" :render-leaf="renderLeaf">
     <Toolbar>
       <div style="position: relative;">
         <span

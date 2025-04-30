@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
+import { Slate, Editable, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { createEditor, Editor, Node, Transforms } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { getRemoteCaretsOnLeaf, getRemoteCursorsOnLeaf, useDecorateRemoteCursors, withCursors, withYHistory, withYjs, YjsEditor } from "slate-vue3/yjs";
@@ -138,7 +138,7 @@ const decorate = useDecorateRemoteCursors(editor, true);
 
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
+     :decorate="decorate">
     <Toolbar>
       <MarkButton format="bold" icon="format_bold" />
       <MarkButton format="italic" icon="format_italic" />

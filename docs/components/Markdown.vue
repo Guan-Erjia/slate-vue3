@@ -1,11 +1,10 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf" :decorate="decorate">
     <Editable class="slate-markdown" :read-only="true" spellcheck />
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef, } from 'slate-vue3';
+import { Slate, Editable, RenderElementProps, RenderLeafProps, useInheritRef, } from 'slate-vue3';
 import { CSSProperties, h, } from 'vue';
 import Prism from 'prismjs'
 import "prismjs";

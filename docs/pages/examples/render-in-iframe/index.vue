@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder, } from "slate-vue3"
+import { Slate, Editable, } from "slate-vue3"
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { h, ref } from "vue";
 import Toolbar from '../../../components/Toolbar.vue'
@@ -46,10 +46,6 @@ const initialValue: Descendant[] = [
   },
 ]
 
-
-const renderElement = ({ attributes, children }: RenderElementProps) => {
-  return h('p', attributes, children)
-}
 
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   let _children = children
@@ -113,8 +109,7 @@ const onBlur = () => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :render-leaf="renderLeaf">
     <Toolbar>
       <Button :active="isMarkActive('bold')" @mousedown="toggleMark('bold', $event)">
         format_bold

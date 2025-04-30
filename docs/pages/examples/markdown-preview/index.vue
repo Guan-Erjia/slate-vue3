@@ -1,11 +1,11 @@
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
+   :decorate="decorate">
     <Editable placeholder="Enter some text..." />
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, } from 'slate-vue3';
+import { Slate, Editable, RenderElementProps, RenderLeafProps, } from 'slate-vue3';
 import { CSSProperties, h } from 'vue';
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'

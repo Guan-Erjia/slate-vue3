@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, RenderLeafProps } from "slate-vue3"
+import { Slate, Editable, type RenderElementProps, RenderLeafProps } from "slate-vue3"
 import { h } from "vue";
 import { createEditor, Descendant, NodeEntry, DecoratedRange, Text,  Path } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
@@ -56,8 +56,8 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf" :decorate="decorate"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
+   :decorate="decorate">
     <Editable placeholder="Enter some plain text..." />
   </Slate>
 </template>

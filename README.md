@@ -37,13 +37,7 @@ npm install slate-vue3
 
 ```vue
 <script setup lang="ts">
-import { h } from "vue";
-import {
-  Slate,
-  Editable,
-  defaultRenderLeaf,
-  defaultRenderPlaceHolder,
-} from "slate-vue3";
+import { Slate, Editable, } from "slate-vue3";
 import { createEditor } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
@@ -54,19 +48,12 @@ const initialValue = [
     children: [{ text: "Let's start" }],
   },
 ];
-const renderElement = ({ attributes, children }) =>
-  h("p", attributes, children);
 const editor = withHistory(withDOM(createEditor()));
 editor.children = initialValue;
 </script>
 
 <template>
-  <Slate
-    :editor="editor"
-    :render-element="renderElement"
-    :render-leaf="defaultRenderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder"
-  >
+  <Slate :editor="editor">
     <Editable />
   </Slate>
 </template>
@@ -127,17 +114,3 @@ Welcome to provide suggestions on the issue, it would be even better if **`PR`**
 `slate-vue3` is [MIT-licensed](./License.md).
 
 <br/>
-
-### FAQ
-
-##### 1. Why do I have to pass renderFunction into <Slate /> component ?
-
-This ensures that your rich text is as expected, and slate-vue3 provides some default rendering functions, you can directly use the default rendering behavior
-
-##### 2. Can I use jsx in slate-vue3 ?
-
-Of coures yes, but we do not recommend it unless you have already configured jsx in the project, as a branch, using the h function directly is already simple enough
-
-##### 3. Why do rendering functions not use vue components ?
-
-Vue uses lazy updates, rendering with components generates additional state, which can cause unexpected results during updates, it would be better to use functions as branches directly

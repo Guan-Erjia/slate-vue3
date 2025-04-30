@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, type RenderElementProps, type RenderPlaceholderProps } from "slate-vue3"
+import { Slate, Editable, type RenderElementProps, type RenderPlaceholderProps } from "slate-vue3"
 import { h } from "vue";
 import { createEditor, Descendant } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
@@ -25,7 +25,7 @@ editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
+  <Slate :editor="editor" :render-element="renderElement"
     :render-placeholder="renderPlaceholder">
     <Editable style="padding: 0;" placeholder="Type something" />
   </Slate>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
+import { Slate, Editable, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
 import { CSSProperties, h } from "vue";
 import Toolbar from '../../../components/Toolbar.vue'
 import MarkButton from "./MarkButton.vue";
@@ -104,8 +104,7 @@ editor.children = initialValue
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf">
     <Toolbar>
       <MarkButton format="bold" icon="format_bold" />
       <MarkButton format="italic" icon="format_italic" />

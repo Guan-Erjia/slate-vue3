@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder, } from "slate-vue3"
+import { Slate, Editable, } from "slate-vue3"
 import { computed, CSSProperties, h, ref } from "vue";
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import Mention from "./Mention.vue";
@@ -201,7 +201,7 @@ const menuStyle = computed(() => {
 
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder" @change="onSlateChange">
+   @change="onSlateChange">
     <Editable @keydown="onKeyDown" placeholder="Enter some text..." spellcheck />
     <Teleport to="body">
       <div :style="menuStyle" data-cy="mentions-portal">

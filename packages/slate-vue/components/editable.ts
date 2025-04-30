@@ -44,7 +44,7 @@ import {
 import type { CSSProperties, HTMLAttributes } from "vue";
 import { ChildrenFC } from "./children";
 import {
-  defaultScrollSelectionIntoView,
+  DEFAULT_SCROLL_INTO_VIEW,
   handleNativeHistoryEvents,
   isDOMEventHandled,
   isDOMEventTargetInput,
@@ -78,7 +78,7 @@ export const Editable = defineComponent({
     scrollSelectionIntoView: {
       type: Function,
       required: false,
-      default: defaultScrollSelectionIntoView,
+      default: DEFAULT_SCROLL_INTO_VIEW,
     },
     placeholder: { type: String },
     readOnly: {

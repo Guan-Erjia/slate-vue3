@@ -7,8 +7,14 @@ export type {
 export { Slate } from "./components/slate";
 export { Editable } from "./components/editable";
 
-export { defaultRenderLeaf } from "./components/utils";
-export { defaultRenderPlaceHolder } from "./components/utils";
+export {
+  DEFAULT_ELEMENT_RENDER,
+  DEFAULT_LEAF_RENDER,
+  DEFAULT_TEXT_RENDER,
+  DEFAULT_PLACEHOLDER_RENDER,
+  DEFAULT_SCROLL_INTO_VIEW,
+  DEFAULT_DECORATE_FN,
+} from "./components/utils";
 
 // Hooks
 export { useComposing } from "./hooks/use-composing";
@@ -19,4 +25,4 @@ export { useEditor } from "./hooks/use-editor";
 export { useSelection } from "./hooks/use-selection";
 export { useInheritRef } from "./hooks/use-inherit-ref";
 
-export { toRawWeakMap } from 'share-tools'
+export { toRawWeakMap } from "share-tools";

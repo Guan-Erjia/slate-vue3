@@ -1,6 +1,6 @@
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder" :decorate="decorate">
+   :decorate="decorate">
     <Toolbar>
       <Button data-testid="code-block-button" active @mousedown="onMouseDown">
         code
@@ -21,7 +21,7 @@ import 'prismjs/components/prism-python'
 import 'prismjs/components/prism-php'
 import 'prismjs/components/prism-sql'
 import 'prismjs/components/prism-java'
-import { Slate, Editable, RenderElementProps, defaultRenderPlaceHolder, RenderLeafProps, useInheritRef, toRawWeakMap } from 'slate-vue3';
+import { Slate, Editable, RenderElementProps, RenderLeafProps, useInheritRef, toRawWeakMap } from 'slate-vue3';
 import { withHistory } from "slate-vue3/history";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { createEditor, Editor, Element, NodeEntry, Transforms, Node, Range } from "slate-vue3/core";

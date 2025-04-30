@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderPlaceHolder, useInheritRef } from "slate-vue3"
+import { Slate, Editable, useInheritRef } from "slate-vue3"
 import { computed, h } from "vue";
 import type { RenderElementProps, RenderLeafProps, } from "slate-vue3";
 import { ButtonElement, CustomEditor, LinkElement } from "../../../custom-types";
@@ -220,8 +220,7 @@ const onSmarkMouseDown = (event: MouseEvent) => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf">
     <Toolbar>
       <Button :active="isLinkActive" @mousedown="onLinkMouseDown">
         link

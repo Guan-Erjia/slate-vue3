@@ -1,7 +1,12 @@
 import { Editor, Range } from "slate";
 import { IS_ANDROID, isDOMNode, type DOMEditor } from "slate-dom";
 import scrollIntoView from "scroll-into-view-if-needed";
-import type { RenderLeafProps, RenderPlaceholderProps } from "../utils/interface";
+import type {
+  RenderElementProps,
+  RenderTextProps,
+  RenderLeafProps,
+  RenderPlaceholderProps,
+} from "../utils/interface";
 import { h } from "vue";
 /**
  * Check if an event is overrided by a handler.
@@ -14,7 +19,7 @@ export const isEventHandled = <EventType extends Event>(
     return false;
   }
   // 使用 attributes 上的 handler 调用，禁止模版绑定的 handler 重复调用
-  event.stopImmediatePropagation()
+  event.stopImmediatePropagation();
   // The custom event handler may return a boolean to specify whether the event
   // shall be treated as being handled or not.
   const shouldTreatEventAsHandled = handler(event);
@@ -47,7 +52,7 @@ export const isDOMEventHandled = <E extends Event>(
     return false;
   }
   // 使用 attributes 上的 handler 调用，禁止模版绑定的 handler 重复调用
-  event.stopImmediatePropagation()
+  event.stopImmediatePropagation();
   // The custom event handler may return a boolean to specify whether the event
   // shall be treated as being handled or not.
   const shouldTreatEventAsHandled = handler(event);
@@ -59,7 +64,10 @@ export const isDOMEventHandled = <E extends Event>(
   return event.defaultPrevented;
 };
 
-export const handleNativeHistoryEvents = (editor: Editor, event: InputEvent) => {
+export const handleNativeHistoryEvents = (
+  editor: Editor,
+  event: InputEvent
+) => {
   if (
     event.inputType === "historyUndo" &&
     "undo" in editor &&
@@ -79,7 +87,7 @@ export const handleNativeHistoryEvents = (editor: Editor, event: InputEvent) => 
 /**
  * A default implement to scroll dom range into view.
  */
-export const defaultScrollSelectionIntoView = (
+export const DEFAULT_SCROLL_INTO_VIEW = (
   editor: DOMEditor,
   domRange: globalThis.Range
 ) => {
@@ -101,19 +109,25 @@ export const defaultScrollSelectionIntoView = (
   }
 };
 
-export const defaultRenderLeaf = ({ attributes, children, }: RenderLeafProps) => {
-  return h(
-    "span",
-    attributes,
-    children
-  )
-}
+export const DEFAULT_ELEMENT_RENDER = ({
+  attributes,
+  children,
+}: RenderElementProps) => h("p", attributes, children);
 
-export const defaultRenderPlaceHolder = ({ attributes, children }: RenderPlaceholderProps) => {
-  return h('span', attributes, [
-    children,
-    IS_ANDROID ? h('br') : undefined
-  ])
-}
+export const DEFAULT_LEAF_RENDER = ({
+  attributes,
+  children,
+}: RenderLeafProps) => h("span", attributes, children);
 
-export const DEFAULT_DECORATE_FN = () => []
+export const DEFAULT_TEXT_RENDER = ({
+  attributes,
+  children,
+}: RenderTextProps) => h("span", attributes, children);
+
+export const DEFAULT_PLACEHOLDER_RENDER = ({
+  attributes,
+  children,
+}: RenderPlaceholderProps) =>
+  h("span", attributes, [children, IS_ANDROID ? h("br") : undefined]);
+
+export const DEFAULT_DECORATE_FN = () => [];

@@ -1,13 +1,12 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder" @change="onChange" @selectionchange="onSelectionChange"
+  <Slate :editor="editor" :render-element="renderElement" @change="onChange" @selectionchange="onSelectionChange"
     @valuechange="onValueChange">
     <Editable />
   </Slate>
 </template>
 <script lang="ts" setup>
 import { DOMEditor } from 'slate-dom';
-import { Slate, Editable, RenderElementProps, defaultRenderLeaf, defaultRenderPlaceHolder } from 'slate-vue'
+import { Slate, Editable, RenderElementProps} from 'slate-vue'
 import { h } from 'vue';
 
 const props = defineProps<{

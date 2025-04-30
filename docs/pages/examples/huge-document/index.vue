@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, type RenderElementProps, } from "slate-vue3"
+import { Slate, Editable, type RenderElementProps, } from "slate-vue3"
 import { h } from "vue";
 import { faker } from '@faker-js/faker'
 import { createEditor, Descendant } from "slate-vue3/core";
@@ -36,8 +36,7 @@ const editor = withHistory(withDOM(createEditor()))
 editor.children = initialValue;
 </script>
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor" :render-element="renderElement">
     <Editable placeholder="Enter a title…" spellcheck />
   </Slate>
 </template>

@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, } from "slate-vue3"
-import { h } from "vue";
-import type { RenderElementProps } from "slate-vue3";
+import { Slate, Editable, } from "slate-vue3"
 import { createEditor } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
-
-const renderElement = ({ attributes, children }: RenderElementProps) => {
-  return h('p', attributes, children)
-}
 
 const editor1 = withHistory(withDOM(createEditor()))
 editor1.children = [{
@@ -25,12 +19,10 @@ editor2.children = [{
 
 <template>
   <div style="display: flex; flex-direction: column; gap: 40px">
-    <Slate :editor="editor1" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
-      :render-placeholder="defaultRenderPlaceHolder">
+    <Slate :editor="editor1">
       <Editable style="background-color: rgb(255, 230, 156); min-height: 200px;outline: rgb(0, 128, 0) solid 2px" />
     </Slate>
-    <Slate :editor="editor2" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
-      :render-placeholder="defaultRenderPlaceHolder">
+    <Slate :editor="editor2">
       <Editable style="background-color: rgb(218, 225, 255);
           padding: 40px;
           font-size: 20px;

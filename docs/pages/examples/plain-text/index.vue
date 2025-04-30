@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, defaultRenderLeaf, defaultRenderPlaceHolder, type RenderElementProps } from "slate-vue3"
-import { h } from "vue";
+import { Slate, Editable } from "slate-vue3"
 import { createEditor, Descendant } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
@@ -14,16 +13,13 @@ const initialValue: Descendant[] = [
   }
 ]
 
-const renderElement = ({ attributes, children }: RenderElementProps) => {
-  return h('p', attributes, children)
-}
+
 const editor = withHistory(withDOM(createEditor())) 
 editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="defaultRenderLeaf"
-    :render-placeholder="defaultRenderPlaceHolder">
+  <Slate :editor="editor">
     <Editable placeholder="Enter some plain text..." />
   </Slate>
 </template>
