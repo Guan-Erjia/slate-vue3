@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { Slate, Editable, } from "slate-vue3"
 import { computed, CSSProperties, h, ref } from "vue";
-import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
+import { Slate, Editable, useInheritRef, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
+import { createEditor, Descendant, Editor, Range, Transforms } from "slate-vue3/core";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { withHistory } from "slate-vue3/history";
 import Mention from "./Mention.vue";
 import { CHARACTERS } from "./utils";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
-import { createEditor, Descendant, Editor, Range, Transforms } from "slate-vue3/core";
-import { withHistory } from "slate-vue3/history";
 import { CustomEditor } from "../../../custom-types";
 
 const withMentions = (editor: CustomEditor) => {
@@ -77,7 +76,7 @@ const renderElement = (props: RenderElementProps) => {
   const { attributes, children, element } = props
   switch (element.type) {
     case 'mention':
-      return h(Mention, { element }, () => children)
+      return h(Mention, { ...useInheritRef(attributes), element }, () => children)
     default:
       return h('p', attributes, children)
   }
@@ -200,8 +199,7 @@ const menuStyle = computed(() => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-   @change="onSlateChange">
+  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf" @change="onSlateChange">
     <Editable @keydown="onKeyDown" placeholder="Enter some text..." spellcheck />
     <Teleport to="body">
       <div :style="menuStyle" data-cy="mentions-portal">
