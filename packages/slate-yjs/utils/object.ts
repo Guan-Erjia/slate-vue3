@@ -1,4 +1,4 @@
-import { isPlainObject } from "share-tools";
+import { isObject } from "slate";
 
 type InspectableObject = Record<string | number | symbol, unknown>;
 
@@ -12,7 +12,7 @@ export function deepEquals(
     const a: any = node[key];
     const b: any = another[key];
 
-    if (isPlainObject(a) && isPlainObject(b)) {
+    if (isObject(a) && isObject(b)) {
       if (!deepEquals(a, b)) {
         return false;
       }

@@ -1,5 +1,4 @@
-import { isPlainObject } from 'share-tools'
-import { Operation, Range } from 'slate'
+import { isObject, Operation, Range } from 'slate'
 
 interface Batch {
   operations: Operation[]
@@ -24,7 +23,7 @@ export const History = {
 
   isHistory(value: any): value is History {
     return (
-      isPlainObject(value) &&
+      isObject(value) &&
       Array.isArray(value.redos) &&
       Array.isArray(value.undos) &&
       (value.redos.length === 0 ||

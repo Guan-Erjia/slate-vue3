@@ -1,5 +1,4 @@
-import { isPlainObject } from 'share-tools'
-import { ExtendedType, Operation, Path } from '..'
+import { ExtendedType, isObject, Operation, Path } from '..'
 import { TextDirection } from '../types/types'
 import { cloneDeep } from 'lodash-es'
 
@@ -89,7 +88,7 @@ export const Point: PointInterface = {
 
   isPoint(value: any): value is Point {
     return (
-      isPlainObject(value) &&
+      isObject(value) &&
       typeof value.offset === 'number' &&
       Path.isPath(value.path)
     )

@@ -1,5 +1,4 @@
-import { isPlainObject } from 'share-tools'
-import { Element, createEditor as makeEditor } from 'slate'
+import { Element, isObject, createEditor as makeEditor } from 'slate'
 import {
   createAnchor,
   createCursor,
@@ -86,7 +85,7 @@ const createFactory = <T extends HyperscriptCreators>(creators: T) => {
       attributes = {}
     }
 
-    if (!isPlainObject(attributes)) {
+    if (!isObject(attributes)) {
       children = [attributes].concat(children)
       attributes = {}
     }
