@@ -1,11 +1,10 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-   :decorate="decorate">
+  <Slate :editor="editor" :render-leaf="renderLeaf" :decorate="decorate">
     <Editable placeholder="Enter some text..." />
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderElementProps, RenderLeafProps, } from 'slate-vue3';
+import { Slate, Editable, RenderLeafProps, } from 'slate-vue3';
 import { CSSProperties, h } from 'vue';
 import Prism from 'prismjs'
 import 'prismjs/components/prism-markdown'
@@ -73,9 +72,6 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
 
 const editor = withHistory(withDOM(createEditor()))
 editor.children = initialValue;
-const renderElement = ({ attributes, children }: RenderElementProps) => {
-  return h('p', attributes, children)
-}
 
 const renderLeaf = (props: RenderLeafProps & {
   leaf: any

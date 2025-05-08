@@ -143,13 +143,12 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
       return h('p', attributes, children)
   }
 }
-const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
-  return h('span', {
-    ...attributes, style: {
-      paddingLeft: leaf.text === '' ? '0.1px' : ''
-    }
-  }, children)
-}
+const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => h('span', {
+  ...attributes, style: {
+    paddingLeft: leaf.text === '' ? '0.1px' : ''
+  }
+}, children)
+
 const editor = withHistory(withInlines(withDOM(createEditor())))
 editor.children = initialValue;
 const onKeyDown = (event: KeyboardEvent) => {

@@ -2,6 +2,7 @@ export type {
   RenderElementProps,
   RenderLeafProps,
   RenderPlaceholderProps,
+  RenderTextProps,
 } from "./utils/interface";
 
 export { Slate } from "./components/slate";
