@@ -18,8 +18,6 @@ export const input = (
 
 export const output = cloneDeep(input);
 
-export const skip = true // TODO: see https://github.com/ianstormtaylor/slate/pull/4188
-
 export const run = (editor) => {
   Transforms.delete(editor);
 };
