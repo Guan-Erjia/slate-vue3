@@ -11,20 +11,14 @@ import { useEditor } from "../hooks/use-editor";
 export const StringComp = defineComponent({
   name: "slate-string",
   props: ["leaf", "text", "element", "isLast"],
-  setup(props: {
-    leaf: Text;
-    text: Text;
-    element: Element;
-    isLast: boolean;
-  }) {
-    const { leaf, text, element,isLast, } = props;
+  setup(props: { leaf: Text; text: Text; element: Element; isLast: boolean }) {
+    const { leaf, text, element, isLast } = props;
     const editor = useEditor();
 
     const getTextContent = computed(() => {
-      const text = leaf.text
-      return (text ?? "") + (isLast && text.at(-1) === "\n" ? "\n" : "")
+      const text = leaf.text;
+      return (text ?? "") + (isLast && text.at(-1) === "\n" ? "\n" : "");
     });
-
 
     // COMPAT: If this is the last text node in an empty block, render a zero-
     // width space that will convert into a line break when copying and pasting
@@ -40,27 +34,28 @@ export const StringComp = defineComponent({
     });
 
     const zeroStringAttrs = computed(() => {
-      const length = Node.string(element).length || 0
-      const isMarkPlaceholder = Boolean(leaf[MARK_PLACEHOLDER_SYMBOL]) || false
+      const length = Node.string(element).length || 0;
+      const isMarkPlaceholder = Boolean(leaf[MARK_PLACEHOLDER_SYMBOL]) || false;
       // COMPAT: Render text inside void nodes with a zero-width space.
       // So the node can contain selection but the text is not visible.
-      const isVoidParent = editor.isVoid(element)
-      if (isVoidParent || isLineBreak.value || leaf.text === '') {
+      const isVoidParent = editor.isVoid(element);
+      if (isVoidParent || isLineBreak.value || leaf.text === "") {
         return {
           "data-slate-zero-width": isLineBreak.value ? "n" : "z",
           "data-slate-length": length,
           "data-slate-mark-placeholder": isMarkPlaceholder ? true : undefined,
-        }
+        };
       }
-      return null
-    })
+      return null;
+    });
 
-    return () => zeroStringAttrs.value ?
-      h('span', zeroStringAttrs.value, [
-        !(IS_ANDROID || IS_IOS) || !isLineBreak.value ? "\uFEFF" : null,
-        isLineBreak.value ? h('br') : null
-      ])
-      : h("span", { "data-slate-string": true }, getTextContent.value);
+    return () =>
+      zeroStringAttrs.value
+        ? h(
+            "span",
+            zeroStringAttrs.value,
+            (IS_ANDROID || IS_IOS) && isLineBreak.value ? h("br") : "\uFEFF"
+          )
+        : h("span", { "data-slate-string": true }, getTextContent.value);
   },
 });
-
