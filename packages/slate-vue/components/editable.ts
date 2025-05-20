@@ -35,6 +35,7 @@ import {
   h,
   onMounted,
   onUnmounted,
+  provide,
   reactive,
   ref,
   toRaw,
@@ -54,11 +55,11 @@ import { useEditor } from "../hooks/use-editor";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
 import { useChangeEffect } from "../hooks/use-render";
-import { PlaceholderComp } from "./placeholder";
 import {
   AndroidManager,
   useAndroidManager,
 } from "../hooks/use-android-manager";
+import { SLATE_INNER_PLACEHOLDER, SLATE_INNER_PLACEHOLDER_RESIZE, SLATE_INNER_PLACEHOLDER_SHOW } from "../utils/constants";
 
 interface EditableProps extends HTMLAttributes {
   role?: string;
@@ -1412,6 +1413,19 @@ export const Editable = defineComponent({
         : undefined
     );
 
+    const showPlaceholder = computed(
+      () =>
+        props.placeholder &&
+        editor.children?.length === 1 &&
+        Array.from(Node.texts(editor)).length === 1 &&
+        Node.string(editor) === "" &&
+        !isComposing.value
+    );
+
+    provide(SLATE_INNER_PLACEHOLDER, computed(() => placeholder));
+    provide(SLATE_INNER_PLACEHOLDER_SHOW, showPlaceholder);
+    provide(SLATE_INNER_PLACEHOLDER_RESIZE, onPlaceholderResize)
+
     return () =>
       h(
         is,
@@ -1445,13 +1459,7 @@ export const Editable = defineComponent({
           onKeydown,
           onPaste,
         },
-        [
-          ChildrenFC(editor, editor),
-          h(PlaceholderComp, {
-            placeholder,
-            onPlaceholderResize,
-          }),
-        ]
+        ChildrenFC(editor, editor)
       );
   },
 });

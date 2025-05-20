@@ -6,6 +6,9 @@ import {
   SLATE_INNER_RENDER_PLACEHOLDER,
   SLATE_INNER_MARK_PLACEHOLDER,
   SLATE_INNER_RENDER_TEXT,
+  SLATE_INNER_PLACEHOLDER,
+  SLATE_INNER_PLACEHOLDER_SHOW,
+  SLATE_INNER_PLACEHOLDER_RESIZE,
 } from "../utils/constants";
 import type {
   RenderElementProps,
@@ -91,4 +94,43 @@ export const useMarkPlaceholder = () => {
   }
 
   return MARK_PLACEHOLDER_INJECT;
+};
+
+export const usePlaceholder = () => {
+  const PLACEHOLDER_INJECT = inject<ComputedRef<string>>(
+    SLATE_INNER_PLACEHOLDER
+  );
+  if (PLACEHOLDER_INJECT === undefined) {
+    throw new Error(
+      `The \`usePlaceholder\` hook must be used inside the <Slate> component's context.`
+    );
+  }
+
+  return PLACEHOLDER_INJECT;
+};
+
+export const usePlaceholderShow = () => {
+  const PLACEHOLDER_SHOW_INJECT = inject<ComputedRef<boolean>>(
+    SLATE_INNER_PLACEHOLDER_SHOW
+  );
+  if (PLACEHOLDER_SHOW_INJECT === undefined) {
+    throw new Error(
+      `The \`usePlaceholderShow\` hook must be used inside the <Slate> component's context.`
+    );
+  }
+
+  return PLACEHOLDER_SHOW_INJECT;
+};
+
+export const usePlaceholderResize = () => {
+  const PLACEHOLDER_RESIZE_INJECT = inject<(height?: number) => {}>(
+    SLATE_INNER_PLACEHOLDER_RESIZE
+  );
+  if (PLACEHOLDER_RESIZE_INJECT === undefined) {
+    throw new Error(
+      `The \`usePlaceholderResize\` hook must be used inside the <Slate> component's context.`
+    );
+  }
+
+  return PLACEHOLDER_RESIZE_INJECT;
 };

@@ -1,5 +1,5 @@
 import type { Text, Element, LeafPosition, Editor } from "slate";
-import type { HTMLAttributes, VNode, VNodeChild, VNodeProps, VNodeRef } from "vue";
+import type { HTMLAttributes, VNode, VNodeArrayChildren, VNodeChild, VNodeProps, VNodeRef } from "vue";
 
 /**
  * The props that get passed to renderPlaceholder
@@ -17,7 +17,7 @@ export interface RenderPlaceholderProps {
  * `RenderLeafProps` are passed to the `renderLeaf` handler.
  */
 export interface RenderLeafProps {
-  children: VNode;
+  children: VNodeArrayChildren;
   /**
    * The leaf node with any applied decorations.
    * If no decorations are applied, it will be identical to the `text` property.

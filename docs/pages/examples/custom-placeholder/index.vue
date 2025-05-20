@@ -23,6 +23,6 @@ editor.children = initialValue;
 
 <template>
   <Slate :editor="editor" :render-placeholder="renderPlaceholder">
-    <Editable style="padding: 0;" placeholder="Type something" />
+    <Editable style="padding: 10px;" placeholder="Type something" />
   </Slate>
 </template>

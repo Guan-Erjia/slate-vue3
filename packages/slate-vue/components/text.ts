@@ -22,8 +22,10 @@ import {
   useRenderLeaf,
   useMarkPlaceholder,
   useRenderText,
+  usePlaceholderShow,
 } from "../hooks/use-render";
 import { DEFAULT_DECORATE_FN } from "./utils";
+import { PlaceholderComp } from "./placeholder";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -37,7 +39,7 @@ export const TextComp = defineComponent({
 
     const leaves = computed(() => {
       if (decorate === DEFAULT_DECORATE_FN) {
-        return [{leaf: text}];
+        return [{ leaf: text }];
       }
       const elemPath = DOMEditor.findPath(editor, element);
       const textPath = DOMEditor.findPath(editor, text);
@@ -87,6 +89,7 @@ export const TextComp = defineComponent({
 
     const renderLeaf = useRenderLeaf();
     const renderText = useRenderText();
+    const showPlaceholder = usePlaceholderShow();
 
     return () =>
       renderText({
@@ -98,13 +101,16 @@ export const TextComp = defineComponent({
             leaf: leaf.leaf,
             leafPosition: leaf.position,
             attributes: { "data-slate-leaf": true },
-            children: h(StringComp, {
-              text,
-              element,
-              leaf: leaf.leaf,
-              isLast: isLastText.value && i === leaves.value.length - 1,
-              key: `${text.text}-${leaf.leaf.text}-${i}`,
-            }),
+            children: [
+              showPlaceholder.value && h(PlaceholderComp),
+              h(StringComp, {
+                text,
+                element,
+                leaf: leaf.leaf,
+                isLast: isLastText.value && i === leaves.value.length - 1,
+                key: `${text.text}-${leaf.leaf.text}-${i}`,
+              }),
+            ],
           })
         ),
       });

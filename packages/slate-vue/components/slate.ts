@@ -106,9 +106,7 @@ export const Slate = defineComponent({
     provide(SLATE_STATE_FOCUS, isFocus);
 
     // 只用作上下文分享，在editable.tsx组件中修改 value
-    const isComposing = ref(false)
     provide(SLATE_STATE_COMPOSING, ref(false));
-    provide(SLATE_STATE_COMPOSING, isComposing);
     provide(SLATE_STATE_READ_ONLY, ref(false));
     provide(SLATE_STATE_SELECTION, selection);
 

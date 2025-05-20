@@ -1,9 +1,19 @@
-import { CSSProperties, defineComponent, VNode, ref, computed } from "vue";
-import { useRenderPlaceholder } from "../hooks/use-render";
-import { IS_WEBKIT } from "slate-dom";
+import {
+  CSSProperties,
+  defineComponent,
+  VNode,
+  ref,
+  computed,
+  onMounted,
+  nextTick,
+} from "vue";
+import {
+  usePlaceholder,
+  usePlaceholderResize,
+  useRenderPlaceholder,
+} from "../hooks/use-render";
+import { EDITOR_TO_ELEMENT, IS_WEBKIT } from "slate-dom";
 import { useEditor } from "../hooks/use-editor";
-import { Node } from "slate";
-import { useComposing } from "../hooks/use-composing";
 
 const style: CSSProperties = {
   position: "absolute",
@@ -21,24 +31,11 @@ const style: CSSProperties = {
 
 export const PlaceholderComp = defineComponent({
   name: "slate-placeholder",
-  props: ["placeholder", "onPlaceholderResize"],
-  setup(props: {
-    placeholder?: string;
-    onPlaceholderResize: (height?: number) => void;
-  }) {
-    const editor = useEditor();
+  setup() {
+    const placeholder = usePlaceholder();
+    const onPlaceholderResize = usePlaceholderResize();
+
     const placeholderResizeObserver = ref<ResizeObserver>();
-    const isComposing = useComposing();
-
-    const showPlaceholder = computed(
-      () =>
-        props.placeholder &&
-        editor.children?.length === 1 &&
-        Array.from(Node.texts(editor)).length === 1 &&
-        Node.string(editor) === "" &&
-        !isComposing.value
-    );
-
     const attributes = computed(() => ({
       "data-slate-placeholder": true,
       style,
@@ -46,9 +43,7 @@ export const PlaceholderComp = defineComponent({
       onVnodeMounted(vNode: VNode) {
         if (vNode.el) {
           placeholderResizeObserver.value = new ResizeObserver(() => {
-            props.onPlaceholderResize(
-              vNode.el?.getBoundingClientRect()?.height
-            );
+            onPlaceholderResize(vNode.el?.getBoundingClientRect()?.height);
           });
           placeholderResizeObserver.value.observe(vNode.el as HTMLElement);
         }
@@ -56,16 +51,35 @@ export const PlaceholderComp = defineComponent({
       onVnodeUnmounted() {
         placeholderResizeObserver.value?.disconnect();
         placeholderResizeObserver.value = undefined;
-        props.onPlaceholderResize();
+        onPlaceholderResize();
       },
     }));
 
     const renderPlaceholder = useRenderPlaceholder();
+    const editor = useEditor();
+
+    onMounted(() => {
+      nextTick(() => {
+        /*
+         * https://github.com/vuejs/core/issues/8444#issuecomment-1577843668
+         * 由于 vue3 渲染列表边界产生空节点问题，点击的时候会优先选中空节点
+         * 目前没想到好的方式解决，只能先用这种方法清除多余的空节点
+         * 尽管这个问题只在 firefox 出现，但由于性能开销比较小，所以不做浏览器判断
+         */
+        const element = EDITOR_TO_ELEMENT.get(editor).querySelector(
+          "[data-slate-node]"
+        ) as HTMLElement;
+        for (const node of element.childNodes) {
+          if (node.nodeType === 3 && node.textContent === "") {
+            element.removeChild(node);
+          }
+        }
+      });
+    });
 
     return () =>
-      showPlaceholder.value &&
       renderPlaceholder({
-        children: props.placeholder,
+        children: placeholder.value,
         attributes: attributes.value,
       });
   },
