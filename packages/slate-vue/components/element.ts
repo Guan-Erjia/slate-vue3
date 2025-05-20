@@ -8,6 +8,7 @@ import {
   NODE_TO_INDEX,
   NODE_TO_PARENT,
   DOMEditor,
+  IS_FIREFOX,
 } from "slate-dom";
 import { TextComp } from "./text";
 import {
@@ -18,6 +19,7 @@ import {
   HTMLAttributes,
   onMounted,
   onUnmounted,
+  onUpdated,
   provide,
   ref,
   VNodeRef,
@@ -117,13 +119,30 @@ export const ElementComp = defineComponent({
       return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { element, text }));
     });
 
+    onUpdated(() => {
+      if (!IS_FIREFOX) {
+        return;
+      }
+      const nodes = elementRef.value?.childNodes;
+      if (!nodes?.length) {
+        return;
+      }
+      const lastIndex = nodes.length - 1;
+      if (
+        nodes[lastIndex].nodeType === 3 &&
+        nodes[lastIndex].textContent !== ""
+      ) {
+        nodes[lastIndex].textContent = "";
+      }
+    });
+
     const renderElement = useRenderElement();
     return () =>
       renderElement({
         attributes: attributes.value,
         children: children.value,
         element,
-        editor
+        editor,
       });
   },
 });
