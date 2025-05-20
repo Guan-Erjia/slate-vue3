@@ -1,4 +1,4 @@
-import type { Text, Element, LeafPosition } from "slate";
+import type { Text, Element, LeafPosition, Editor } from "slate";
 import type { HTMLAttributes, VNode, VNodeChild, VNodeProps, VNodeRef } from "vue";
 
 /**
@@ -46,6 +46,7 @@ export interface RenderElementProps {
     dir?: "rtl";
     ref: VNodeRef;
   };
+  editor?: Editor
 }
 
 /**

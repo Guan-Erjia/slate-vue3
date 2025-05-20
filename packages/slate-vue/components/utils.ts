@@ -110,9 +110,23 @@ export const DEFAULT_SCROLL_INTO_VIEW = (
 };
 
 export const DEFAULT_ELEMENT_RENDER = ({
+  element,
   attributes,
   children,
-}: RenderElementProps) => h("p", attributes, children);
+  editor,
+}: RenderElementProps) => {
+  const tag = editor?.isInline(element) ? "span" : "div";
+  return h(
+    tag,
+    {
+      ...attributes,
+      style: {
+        position: "relative",
+      },
+    },
+    children
+  );
+};
 
 export const DEFAULT_LEAF_RENDER = ({
   attributes,

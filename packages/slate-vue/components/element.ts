@@ -123,6 +123,7 @@ export const ElementComp = defineComponent({
         attributes: attributes.value,
         children: children.value,
         element,
+        editor
       });
   },
 });
