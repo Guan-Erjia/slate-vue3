@@ -67,7 +67,7 @@ export const PlaceholderComp = defineComponent({
          * 尽管这个问题只在 firefox 出现，但由于性能开销比较小，所以不做浏览器判断
          */
         const element = EDITOR_TO_ELEMENT.get(editor).querySelector(
-          "[data-slate-node]"
+          "[data-slate-placeholder]"
         ) as HTMLElement;
         for (const node of element.childNodes) {
           if (node.nodeType === 3 && node.textContent === "") {
