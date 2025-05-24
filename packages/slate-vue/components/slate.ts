@@ -1,7 +1,6 @@
 import {
   computed,
   defineComponent,
-  h,
   onMounted,
   onUnmounted,
   provide,
@@ -15,11 +14,11 @@ import {
   SLATE_INNER_RENDER_LEAF,
   SLATE_INNER_RENDER_PLACEHOLDER,
   SLATE_INNER_MARK_PLACEHOLDER,
-  SLATE_STATE_COMPOSING,
-  SLATE_STATE_FOCUS,
-  SLATE_STATE_READ_ONLY,
-  SLATE_STATE_SELECTION,
-  SLATE_USE_DECORATE,
+  SLATE_USE_COMPOSING,
+  SLATE_USE_FOCUSED,
+  SLATE_USE_READ_ONLY,
+  SLATE_USE_SELECTION,
+  SLATE_INNER_RENDER_DECORATE,
   SLATE_USE_EDITOR,
   SLATE_INNER_RENDER_TEXT,
 } from "../utils/constants";
@@ -95,7 +94,7 @@ export const Slate = defineComponent({
       );
     }
     provide(SLATE_USE_EDITOR, editor);
-    provide(SLATE_USE_DECORATE, decorate);
+    provide(SLATE_INNER_RENDER_DECORATE, decorate);
     provide(SLATE_INNER_RENDER_ELEMENT, renderElement);
     provide(SLATE_INNER_RENDER_LEAF, renderLeaf);
     provide(SLATE_INNER_RENDER_TEXT, renderText);
@@ -103,12 +102,12 @@ export const Slate = defineComponent({
 
     const isFocus = ref(DOMEditor.isFocused(editor));
     const selection = computed(() => editor.selection);
-    provide(SLATE_STATE_FOCUS, isFocus);
+    provide(SLATE_USE_FOCUSED, isFocus);
 
     // 只用作上下文分享，在editable.tsx组件中修改 value
-    provide(SLATE_STATE_COMPOSING, ref(false));
-    provide(SLATE_STATE_READ_ONLY, ref(false));
-    provide(SLATE_STATE_SELECTION, selection);
+    provide(SLATE_USE_COMPOSING, ref(false));
+    provide(SLATE_USE_READ_ONLY, ref(false));
+    provide(SLATE_USE_SELECTION, selection);
 
     const focusCb = () => (isFocus.value = DOMEditor.isFocused(editor));
 
