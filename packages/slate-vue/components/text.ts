@@ -102,7 +102,6 @@ export const TextComp = defineComponent({
             leafPosition: leaf.position,
             attributes: { "data-slate-leaf": true },
             children: [
-              showPlaceholder.value && h(PlaceholderComp),
               h(StringComp, {
                 text,
                 element,
@@ -110,6 +109,7 @@ export const TextComp = defineComponent({
                 isLast: isLastText.value && i === leaves.value.length - 1,
                 key: `${text.text}-${leaf.leaf.text}-${i}`,
               }),
+              showPlaceholder.value && h(PlaceholderComp),
             ],
           })
         ),

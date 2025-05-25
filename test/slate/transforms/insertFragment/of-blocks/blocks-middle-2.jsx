@@ -5,33 +5,29 @@ import { jsx } from '@test-utils'
 export const run = (editor, options = {}) => {
   Transforms.insertFragment(
     editor,
-  <fragment>
-    <block>
-      <block>3</block>
-      <block>4</block>
-    </block>
-  </fragment>,
+    <fragment>
+      <block>one</block>
+      <block>two</block>
+    </fragment>,
     options
   )
 }
 export const input = (
   <editor>
     <block>
-      <block>1</block>
-      <block>
-        2<cursor />
-      </block>
+      wo
+      <cursor />
+      rd
     </block>
   </editor>
 )
 export const output = (
   <editor>
+    <block>woone</block>
     <block>
-      <block>1</block>
-      <block>23</block>
-      <block>
-        4<cursor />
-      </block>
+      two
+      <cursor />
+      rd
     </block>
   </editor>
 )

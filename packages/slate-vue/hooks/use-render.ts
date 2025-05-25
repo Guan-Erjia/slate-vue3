@@ -89,7 +89,7 @@ export const useMarkPlaceholder = () => {
   >(SLATE_INNER_MARK_PLACEHOLDER);
   if (MARK_PLACEHOLDER_INJECT === undefined) {
     throw new Error(
-      `The \`useChangeEffect\` hook must be used inside the <Slate> component's context.`
+      `The \`useMarkPlaceholder\` hook must be used inside the <Slate> component's context.`
     );
   }
 

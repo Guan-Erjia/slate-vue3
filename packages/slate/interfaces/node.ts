@@ -121,7 +121,7 @@ export interface NodeInterface {
   extractProps: (node: Node) => NodeProps
 
   /**
-   * Get the first node entry in a root node from a path.
+   * Get the first leaf node entry in a root node from a path.
    */
   first: (root: Node, path: Path) => NodeEntry
 
@@ -157,7 +157,7 @@ export interface NodeInterface {
   isNodeList: (value: any, options?: NodeIsNodeOptions) => value is Node[]
 
   /**
-   * Get the last node entry in a root node from a path.
+   * Get the last leaf node entry in a root node from a path.
    */
   last: (root: Node, path: Path) => NodeEntry
 

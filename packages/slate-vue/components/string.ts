@@ -1,7 +1,7 @@
 import { Editor, Path, Node, Element, Text } from "slate";
 import {
   IS_ANDROID,
-  IS_IOS,
+  IS_FIREFOX,
   DOMEditor,
   MARK_PLACEHOLDER_SYMBOL,
 } from "slate-dom";
@@ -49,13 +49,20 @@ export const StringComp = defineComponent({
       return null;
     });
 
+    // FIXME: Inserting the \uFEFF on iOS breaks capitalization at the start of an
+    // empty editor (https://github.com/ianstormtaylor/slate/issues/5199).
+    //
+    // However, not inserting the \uFEFF on iOS causes the editor to crash when
+    // inserting any text using an IME at the start of a block. This appears to
+    // be because accepting an IME suggestion when at the start of a block (no
+    // preceding \uFEFF) removes one or more DOM elements that `toSlateRange`
+    // depends on. (https://github.com/ianstormtaylor/slate/issues/5703)
     return () =>
       zeroStringAttrs.value
-        ? h(
-            "span",
-            zeroStringAttrs.value,
-            (IS_ANDROID || IS_IOS) && isLineBreak.value ? h("br") : "\uFEFF"
-          )
+        ? h("span", zeroStringAttrs.value, [
+            !IS_ANDROID || !isLineBreak ? "\uFEFF" : null,
+            isLineBreak && !IS_FIREFOX ? h("br") : null,
+          ])
         : h("span", { "data-slate-string": true }, getTextContent.value);
   },
 });
