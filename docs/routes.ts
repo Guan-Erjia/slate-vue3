@@ -231,6 +231,11 @@ export const ROUTES_RECORD: RouteRecordRaw[] = [
     redirect: "/introduction/get-start",
   },
   {
+    name: "android-test",
+    path: "/android-test",
+    component: () => import("./pages/android/index.vue"),
+  },
+  {
     path: "/:catchAll(.*)",
     redirect: "/introduction/get-start",
   },
