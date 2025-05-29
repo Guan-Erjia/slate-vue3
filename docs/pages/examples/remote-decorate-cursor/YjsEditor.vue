@@ -77,7 +77,7 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
 
   getRemoteCaretsOnLeaf<{ name: string }, Text>(leaf).forEach((caret) => {
     if (caret.data) {
-      style = { position: 'relative', fontWeight: 'normal' }
+      style = { position: 'absolute', fontWeight: 'normal' }
       _children = [
         h('span', {
           contenteditable: false,

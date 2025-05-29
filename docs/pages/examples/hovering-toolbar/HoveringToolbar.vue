@@ -3,7 +3,7 @@
     <div ref="menuRef" data-testid="menu" :style="menuStyle" @mousedown="onMouseDown">
       <Button :reversed="true" @click="toggleMark('bold', $event)" :active="isMarkActive('bold')">format_bold</Button>
       <Button :reversed="true" @click="toggleMark('italic', $event)" :active="isMarkActive('italic')">format_italic</Button>
-      <Button :reversed="true" @click="toggleMark('underlined', $event)"
+      <Button style="margin-right: 0;" :reversed="true" @click="toggleMark('underlined', $event)"
         :active="isMarkActive('underlined')">format_underlined</Button>
     </div>
   </Teleport>
@@ -48,7 +48,8 @@ const menuStyle = computed(() => {
     opacity: 0,
     backgroundColor: '#222',
     borderRadius: '4px',
-    transition: 'opacity 0.75s'
+    transition: 'opacity 0.75s',
+    lineHeight: 1
   }
   const selection = editor.selection
   const domSelection = window.getSelection()
