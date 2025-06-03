@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as r,g as s}from"./index-BMomhfDp.js";const n={},a={style:{position:"relative","padding-bottom":"8px","margin-bottom":"10px","border-bottom":"2px solid #eee"},"data-test-id":"menu"};function c(o,d){return r(),t("div",a,[s(o.$slots,"default")])}const l=e(n,[["render",c]]);export{l as T};
