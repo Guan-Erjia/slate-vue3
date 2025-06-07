@@ -17,45 +17,47 @@
  * return state
  */
 
-import { getCurrentInstance, ref } from "vue";
+import { computed, ComputedRef, getCurrentInstance, ref } from "vue";
 
 export function useGenericSelector<T>(
   selector: () => T,
   equalityFn: (a: T | null, b: T) => boolean
-): [state: T, update: () => void] {
+): [state: ComputedRef<T>, update: () => void] {
   const proxy = getCurrentInstance();
 
   const latestSubscriptionCallbackError = ref<Error | undefined>();
   const latestSelector = ref<() => T>(() => null as any);
   const latestSelectedState = ref<T | null>(null);
-  let selectedState: T;
+  const selectedState = computed<T>(() => {
+    let _selectedState: T;
+    try {
+      if (
+        selector !== latestSelector.value ||
+        latestSubscriptionCallbackError.value
+      ) {
+        const selectorResult = selector();
 
-  try {
-    if (
-      selector !== latestSelector.value ||
-      latestSubscriptionCallbackError.value
-    ) {
-      const selectorResult = selector();
-
-      if (equalityFn(latestSelectedState.value, selectorResult)) {
-        selectedState = latestSelectedState.value as T;
+        if (equalityFn(latestSelectedState.value, selectorResult)) {
+          _selectedState = latestSelectedState.value;
+        } else {
+          _selectedState = selectorResult;
+        }
       } else {
-        selectedState = selectorResult;
+        _selectedState = latestSelectedState.value;
       }
-    } else {
-      selectedState = latestSelectedState.value as T;
-    }
-  } catch (err) {
-    if (latestSubscriptionCallbackError.value && isError(err)) {
-      err.message += `\nThe error may be correlated with this previous error:\n${latestSubscriptionCallbackError.value.stack}\n\n`;
+    } catch (err) {
+      if (latestSubscriptionCallbackError.value && isError(err)) {
+        err.message += `\nThe error may be correlated with this previous error:\n${latestSubscriptionCallbackError.value.stack}\n\n`;
+      }
+
+      throw err;
     }
 
-    throw err;
-  }
-
-  latestSelector.value = selector;
-  latestSelectedState.value = selectedState;
-  latestSubscriptionCallbackError.value = undefined;
+    latestSelector.value = selector;
+    latestSelectedState.value = _selectedState;
+    latestSubscriptionCallbackError.value = undefined;
+    return _selectedState;
+  });
 
   const update = () => {
     try {

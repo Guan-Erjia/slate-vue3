@@ -1,8 +1,9 @@
-import { Editor, Text, Range, Element } from "slate";
+import { Editor, Text, Range, Element, DecoratedRange, Node } from "slate";
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
+  MARK_PLACEHOLDER_SYMBOL,
   NODE_TO_ELEMENT,
   NODE_TO_INDEX,
 } from "slate-dom";
@@ -19,13 +20,14 @@ import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
 import {
+  useParentDescoration,
   useRenderLeaf,
   useMarkPlaceholder,
   useRenderText,
   usePlaceholderShow,
 } from "../hooks/use-render";
-import { DEFAULT_DECORATE_FN } from "./utils";
 import { PlaceholderComp } from "./placeholder";
+import { useDecorations } from "../hooks/use-decorations";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -34,25 +36,23 @@ export const TextComp = defineComponent({
     const { text, element } = props;
     const editor = useEditor();
     const spanRef = ref<HTMLSpanElement>();
-    const decorate = useDecorate();
+    const { decorate } = useDecorate();
     const markPlaceholder = useMarkPlaceholder();
 
+    const parentDs = useParentDescoration();
+    const decorations = useDecorations(text, parentDs);
+
     const leaves = computed(() => {
-      if (decorate === DEFAULT_DECORATE_FN) {
-        return [{ leaf: text }];
-      }
-      const elemPath = DOMEditor.findPath(editor, element);
-      const textPath = DOMEditor.findPath(editor, text);
-      const textDs = decorate([text, textPath]);
-      const elemDs = decorate([element, elemPath]);
-      const range = Editor.range(editor, textPath);
-      elemDs.forEach((dec) => {
-        textDs.push(Range.intersection(dec, range)!);
+      const path = DOMEditor.findPath(editor, text);
+      const range = Editor.range(editor, path);
+      const ds = decorate([text, path]);
+      decorations.value.forEach((dec) => {
+        ds.push(Range.intersection(dec, range)!);
       });
       if (markPlaceholder.value) {
-        textDs.unshift(markPlaceholder.value);
+        ds.unshift(markPlaceholder.value);
       }
-      const filterDs = textDs.filter(Boolean);
+      const filterDs = ds.filter(Boolean);
       return Text.decorations(text, filterDs.length ? filterDs : []);
     });
 

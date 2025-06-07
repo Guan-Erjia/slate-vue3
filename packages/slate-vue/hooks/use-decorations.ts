@@ -16,7 +16,7 @@ import { useDecorate } from "./use-decorate";
 
 export const useDecorations = (
   node: Descendant,
-  parentDecorations: DecoratedRange[]
+  parentDs: ComputedRef<DecoratedRange[]>
 ): ComputedRef<DecoratedRange[]> => {
   const editor = useEditor();
   const { decorate, addEventListener } = useDecorate();
@@ -41,20 +41,18 @@ export const useDecorations = (
     unsubscribe();
   });
 
-  return computed(() => [...decorations, ...parentDecorations]);
+  return computed(() => [...decorations.value, ...parentDs.value]);
 };
 
 export const useDecorateContext = (
   decorateProp: (entry: NodeEntry) => DecoratedRange[]
 ) => {
   const eventListeners = ref(new Set<() => void>());
-
-  const latestDecorate = ref(decorateProp);
+  const latestDecorate = computed(() => decorateProp);
 
   watch(
-    () => decorateProp,
+    () => latestDecorate.value,
     () => {
-      latestDecorate.value = decorateProp;
       eventListeners.value.forEach((listener) => listener());
     }
   );
@@ -69,5 +67,5 @@ export const useDecorateContext = (
     };
   };
 
-  return computed(() => ({ decorate, addEventListener }));
+  return { decorate, addEventListener };
 };

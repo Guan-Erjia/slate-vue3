@@ -43,7 +43,7 @@ import {
   watch,
 } from "vue";
 import type { CSSProperties, HTMLAttributes } from "vue";
-import { ChildrenFC } from "./children";
+import useChildren from "../hooks/use-children";
 import {
   DEFAULT_SCROLL_INTO_VIEW,
   handleNativeHistoryEvents,
@@ -55,11 +55,17 @@ import { useEditor } from "../hooks/use-editor";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
 import { useChangeEffect } from "../hooks/use-render";
+import { useDecorate } from "../hooks/use-decorate";
+import { SLATE_INNER_DESCORATION } from "../utils/constants";
 import {
   AndroidManager,
   useAndroidManager,
 } from "../hooks/use-android-manager";
-import { SLATE_INNER_PLACEHOLDER, SLATE_INNER_PLACEHOLDER_RESIZE, SLATE_INNER_PLACEHOLDER_SHOW } from "../utils/constants";
+import {
+  SLATE_INNER_PLACEHOLDER,
+  SLATE_INNER_PLACEHOLDER_RESIZE,
+  SLATE_INNER_PLACEHOLDER_SHOW,
+} from "../utils/constants";
 
 interface EditableProps extends HTMLAttributes {
   role?: string;
@@ -814,7 +820,10 @@ export const Editable = defineComponent({
         // because onClick handlers can change the document before we get here.
         // Therefore we must check that this path actually exists,
         // and that it still refers to the same node.
-        if (!Editor.hasPath(editor, path) || toRaw(Node.get(editor, path)) !== node) {
+        if (
+          !Editor.hasPath(editor, path) ||
+          toRaw(Node.get(editor, path)) !== node
+        ) {
           return;
         }
 
@@ -1422,9 +1431,16 @@ export const Editable = defineComponent({
         !isComposing.value
     );
 
-    provide(SLATE_INNER_PLACEHOLDER, computed(() => placeholder));
+    provide(
+      SLATE_INNER_PLACEHOLDER,
+      computed(() => placeholder)
+    );
     provide(SLATE_INNER_PLACEHOLDER_SHOW, showPlaceholder);
-    provide(SLATE_INNER_PLACEHOLDER_RESIZE, onPlaceholderResize)
+    provide(SLATE_INNER_PLACEHOLDER_RESIZE, onPlaceholderResize);
+
+    const { decorate } = useDecorate();
+    const provideDs = computed(() => decorate([editor, []]));
+    provide(SLATE_INNER_DESCORATION, provideDs);
 
     return () =>
       h(
@@ -1459,7 +1475,11 @@ export const Editable = defineComponent({
           onKeydown,
           onPaste,
         },
-        ChildrenFC(editor, editor)
+        useChildren({
+          decorations: provideDs.value,
+          node: editor,
+          editor,
+        })
       );
   },
 });

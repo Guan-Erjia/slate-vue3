@@ -1,30 +1,28 @@
 import { Element } from "slate";
-import {
-  ChunkAncestor as TChunkAncestor,
-  ChunkTree as TChunkTree,
-} from "../../slate-dom/chunking";
-import { ComputedRef, defineComponent, h, renderList } from "vue";
-import { useRenderChunk, useRenderElement } from "../hooks/use-render";
+import { ChunkAncestor, ChunkTree } from "slate-dom";
+import { defineComponent, h, renderList, VNode } from "vue";
+import { useRenderChunk } from "../hooks/use-render";
+import { Key } from "slate-dom";
 
-export const ChunkTree = defineComponent({
-  props: {
-    root: {
-      type: Object,
-      require: true,
-    },
-  },
-  setup(props: { root: ComputedRef<TChunkTree> }) {
-    const root = props.root;
+export const ChunkComp = defineComponent({
+  props: ["root", "ancestor", "renderElement"],
+  setup(props: {
+    root: ChunkTree;
+    ancestor: ChunkAncestor;
+    renderElement: (node: Element, index: number, key: Key) => VNode;
+  }) {
+    const { root, ancestor, renderElement } = props;
     const renderChunk = useRenderChunk();
-    return renderList(root.value.children, (chunkNode) => {
+    return renderList(root.children, (chunkNode) => {
       if (chunkNode.type === "chunk") {
         const renderedChunk = renderChunk({
-          highest: true,
+          highest: root === ancestor,
           lowest: chunkNode.children.some((c) => c.type === "leaf"),
           attributes: { "data-slate-chunk": true },
-          children: h(ChunkTree, {
+          children: h(ChunkComp, {
             root,
             ancestor: chunkNode,
+            renderElement,
           }),
         });
 
@@ -32,8 +30,7 @@ export const ChunkTree = defineComponent({
       }
 
       // Only blocks containing no inlines are chunked
-      const element = chunkNode.node as Element;
-      return h(Element, { element });
+      return h(Element, { element: chunkNode.node });
     });
   },
 });

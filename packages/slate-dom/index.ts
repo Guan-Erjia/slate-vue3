@@ -1,10 +1,10 @@
 // Plugin
-export { DOMEditor, type DOMEditorInterface } from './plugin/dom-editor'
-export { withDOM } from './plugin/with-dom'
+export { DOMEditor, type DOMEditorInterface } from "./plugin/dom-editor";
+export { withDOM } from "./plugin/with-dom";
 
 // Utils
-export { applyStringDiff, normalizeStringDiff } from './utils/diff-text'
-export type { StringDiff, TextDiff } from './utils/diff-text'
+export { applyStringDiff, normalizeStringDiff } from "./utils/diff-text";
+export type { StringDiff, TextDiff } from "./utils/diff-text";
 
 export {
   getActiveElement,
@@ -19,7 +19,7 @@ export {
   isPlainTextOnlyPaste,
   isTrackedMutation,
   normalizeDOMPoint,
-} from './utils/dom'
+} from "./utils/dom";
 
 export {
   CAN_USE_DOM,
@@ -32,19 +32,23 @@ export {
   IS_WEBKIT,
   IS_UC_MOBILE,
   IS_WECHATBROWSER,
-} from './utils/environment'
+} from "./utils/environment";
 
-export { Hotkeys } from './utils/hotkeys'
+export { Hotkeys } from "./utils/hotkeys";
 
-export { Key } from './utils/key'
+export { Key } from "./utils/key";
 
 export {
   isElementDecorationsEqual,
   isTextDecorationsEqual,
   splitDecorationsByChild,
-} from './utils/range-list'
+} from "./utils/range-list";
 
-export { getChunkTreeForNode } from './chunking'
+export {
+  getChunkTreeForNode,
+  type ChunkAncestor,
+  type ChunkTree,
+} from "./chunking";
 
 export {
   EDITOR_TO_ELEMENT,
@@ -62,4 +66,4 @@ export {
   NODE_TO_INDEX,
   NODE_TO_KEY,
   NODE_TO_PARENT,
-} from './utils/weak-maps'
+} from "./utils/weak-maps";

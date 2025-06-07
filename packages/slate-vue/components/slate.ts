@@ -22,6 +22,7 @@ import {
   SLATE_USE_EDITOR,
   SLATE_INNER_RENDER_TEXT,
   SLATE_INNER_RENDER_CHUNK,
+  SLATE_USE_SELECTOR,
 } from "../utils/constants";
 import {
   DecoratedRange,
@@ -53,6 +54,7 @@ import {
   DEFAULT_TEXT_RENDER,
 } from "./utils";
 import { useDecorateContext } from "../hooks/use-decorations";
+import { useSelectorContext } from "../hooks/use-slate-selector";
 
 export const Slate = defineComponent({
   name: "slate-editor",
@@ -166,6 +168,9 @@ export const Slate = defineComponent({
     });
     provide(SLATE_INNER_MARK_PLACEHOLDER, markPlaceholder);
 
+    const { selectorContext, onChange: handleSelectorChange } =
+      useSelectorContext();
+    provide(SLATE_USE_SELECTOR, selectorContext);
     onMounted(() => {
       document.addEventListener("focusin", focusCb);
       document.addEventListener("focusout", focusCb);
@@ -179,6 +184,7 @@ export const Slate = defineComponent({
           default:
             emit("valuechange", options);
         }
+        handleSelectorChange();
       });
     });
     onUnmounted(() => {

@@ -1,6 +1,7 @@
 import { ComputedRef, inject, Ref, watch, type VNode } from "vue";
 import {
   SLATE_INNER_CHANGE_EFFECT_INJECT,
+  SLATE_INNER_DESCORATION,
   SLATE_INNER_RENDER_ELEMENT,
   SLATE_INNER_RENDER_LEAF,
   SLATE_INNER_RENDER_PLACEHOLDER,
@@ -19,6 +20,7 @@ import type {
   RenderChunkProps,
 } from "../utils/interface";
 import { BasePoint } from "slate";
+import { DecoratedRange } from "slate";
 
 export const useRenderElement = () => {
   const ELEMENT_RENDER = inject<(props: RenderElementProps) => VNode>(
@@ -147,4 +149,16 @@ export const usePlaceholderResize = () => {
   }
 
   return PLACEHOLDER_RESIZE_INJECT;
+};
+
+export const useParentDescoration = (): ComputedRef<DecoratedRange[]> => {
+  const PARENT_DESCORATION = inject<ComputedRef<DecoratedRange[]>>(
+    SLATE_INNER_DESCORATION
+  );
+  if (PARENT_DESCORATION === undefined) {
+    throw new Error(
+      `The \`useParentDescoration\` hook must be used inside the <Slate> component's context.`
+    );
+  }
+  return PARENT_DESCORATION;
 };

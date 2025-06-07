@@ -1,6 +1,6 @@
 import { direction } from "direction";
 import { Editor, Element, Node, Range } from "slate";
-import { ChildrenFC } from "./children";
+import useChildren from "../hooks/use-children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
@@ -25,9 +25,14 @@ import {
   VNodeRef,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
-import { SLATE_USE_ELEMENT, SLATE_USE_SELECTED } from "../utils/constants";
-import { useRenderElement } from "../hooks/use-render";
+import {
+  SLATE_USE_ELEMENT,
+  SLATE_INNER_DESCORATION,
+  SLATE_USE_SELECTED,
+} from "../utils/constants";
+import { useParentDescoration, useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
+import { useDecorations } from "../hooks/use-decorations";
 
 interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
@@ -112,9 +117,17 @@ export const ElementComp = defineComponent({
       return attr;
     });
 
+    const parentDs = useParentDescoration();
+    const provideDs = useDecorations(element, parentDs);
+    provide(SLATE_INNER_DESCORATION, provideDs);
+
     const children = computed(() => {
       if (!Editor.isVoid(editor, element)) {
-        return ChildrenFC(element, editor);
+        return useChildren({
+          node: element,
+          editor,
+          decorations: provideDs.value,
+        });
       }
       const [[text]] = Node.texts(element);
       NODE_TO_INDEX.set(text, 0);
