@@ -24,6 +24,7 @@ import {
   NODE_TO_KEY,
 } from '../utils/weak-maps'
 import { DOMEditor } from './dom-editor'
+import { getChunkTreeForNode } from '../chunking'
 
 /**
  * `withDOM` adds DOM specific behaviors to the editor.
@@ -292,6 +293,8 @@ export const withDOM = <T extends BaseEditor>(
     return false
   }
 
+  e.getChunkSize = () => null
+
   e.onChange = options => {
     const onContextChange = EDITOR_TO_ON_CHANGE.get(e)
 
@@ -300,6 +303,25 @@ export const withDOM = <T extends BaseEditor>(
     }
 
     onChange(options)
+  }
+
+  // On move_node, if the chunking optimization is enabled for the parent of the
+  // node being moved, add the moved node to the movedNodeKeys set of the
+  // parent's chunk tree.
+  e.apply = operation => {
+    if (operation.type === 'move_node') {
+      const parent = Node.parent(e, operation.path)
+      const chunking = !!e.getChunkSize(parent)
+
+      if (chunking) {
+        const node = Node.get(e, operation.path)
+        const chunkTree = getChunkTreeForNode(e, parent)
+        const key = DOMEditor.findKey(e, node)
+        chunkTree.movedNodeKeys.add(key)
+      }
+    }
+
+    apply(operation)
   }
 
   return e

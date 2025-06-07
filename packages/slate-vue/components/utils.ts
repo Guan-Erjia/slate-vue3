@@ -6,6 +6,7 @@ import type {
   RenderTextProps,
   RenderLeafProps,
   RenderPlaceholderProps,
+  RenderChunkProps,
 } from "../utils/interface";
 import { h } from "vue";
 /**
@@ -137,6 +138,10 @@ export const DEFAULT_TEXT_RENDER = ({
   attributes,
   children,
 }: RenderTextProps) => h("span", attributes, children);
+
+export const DEFAULT_CHUNK_RENDER = ({
+  children,
+}: RenderChunkProps) => children
 
 export const DEFAULT_PLACEHOLDER_RENDER = ({
   attributes,

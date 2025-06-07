@@ -41,8 +41,10 @@ export { Key } from './utils/key'
 export {
   isElementDecorationsEqual,
   isTextDecorationsEqual,
-  splitDecorationsByChild
+  splitDecorationsByChild,
 } from './utils/range-list'
+
+export { getChunkTreeForNode } from './chunking'
 
 export {
   EDITOR_TO_ELEMENT,

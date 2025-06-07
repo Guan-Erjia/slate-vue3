@@ -1,4 +1,5 @@
 import {
+  Ancestor,
   BaseEditor,
   Editor,
   Element,
@@ -93,6 +94,7 @@ export interface DOMEditor extends BaseEditor {
     data: DataTransfer,
     originEvent?: "drag" | "copy" | "cut"
   ) => void;
+  getChunkSize: (node: Ancestor) => number | null
 }
 
 export interface DOMEditorInterface {
