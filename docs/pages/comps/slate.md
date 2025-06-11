@@ -9,6 +9,7 @@ interface SlateComponentProps {
   renderElement: (props: RenderElementProps) => VNode;
   renderLeaf: (props: RenderLeafProps) => VNode;
   renderText: (props: RenderTextProps) => VNode;
+  renderChunk: (props: RenderChunkProps) => VNode;
   renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
 }
 ```
@@ -95,6 +96,23 @@ export interface RenderPlaceholderProps {
 }
 function renderPlaceholder(props: RenderPlaceholderProps): VNode {}
 ```
+
+## renderChunk
+
+After the editor is split into chunks, the rendering content of each chunk can be customized to improve performance when the editor content is too large.[**See the example**](https://guan-erjia.github.io/slate-vue3/examples/huge-document2)
+
+```typescript
+export interface RenderChunkProps {
+  highest: boolean
+  lowest: boolean
+  children: any
+  attributes: {
+    'data-slate-chunk': true
+  }
+}
+function renderChunk(props: RenderChunkProps): VNode {}
+```
+
 
 ## decorate
 

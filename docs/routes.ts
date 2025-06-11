@@ -33,6 +33,11 @@ export const HOOKS_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/hooks/use-editor.vue"),
   },
   {
+    name: "use-element",
+    path: "use-element",
+    component: () => import("./pages/hooks/use-element.vue"),
+  },
+  {
     name: "use-composing",
     path: "use-composing",
     component: () => import("./pages/hooks/use-composing.vue"),
