@@ -1,15 +1,20 @@
-import { type ComputedRef, inject } from "vue";
-import { SLATE_USE_SELECTED } from "../utils/constants";
+import { Editor, Range } from "slate";
+import { DOMEditor } from "slate-dom";
+import { computed, type ComputedRef } from "vue";
+import { useElementIf } from "./use-element";
+import { useEditor } from "./use-editor";
 
 /**
  * Get the current `selected` state of an element.
  */
 export const useSelected = (): ComputedRef<boolean> => {
-  const selected = inject<ComputedRef<boolean>>(SLATE_USE_SELECTED);
-  if (selected === undefined) {
-    throw new Error(
-      `The \`useFocused\` hook must be used inside the <Slate> component's context.`
-    );
-  }
-  return selected;
+  const element = useElementIf();
+  const editor = useEditor();
+
+  return computed(() => {
+    if (!editor.selection || !element?.value) return false;
+    const path = DOMEditor.findPath(editor, element.value);
+    const range = Editor.range(editor, path);
+    return !!Range.intersection(range, editor.selection);
+  });
 };

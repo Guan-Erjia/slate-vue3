@@ -2,8 +2,8 @@ import { render } from "@testing-library/vue";
 import { describe, test, expect, vi } from "vitest";
 import { createEditor, Transforms } from "slate";
 import { withDOM, DOMEditor } from "slate-dom";
-import VueEditor from "../VueEditor.vue";
 import { nextTick } from "vue";
+import VueEditor from "./components/VueEditor.vue";
 
 describe("slate-vue", () => {
   describe("VueEditor", () => {

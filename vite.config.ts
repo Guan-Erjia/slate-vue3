@@ -11,17 +11,29 @@ const BaseConfig: UserConfig = {
   plugins: [vue()],
   base: "/slate-vue3/",
   test: {
-    include: ["./test/**/index.spec.js"],
+    include: [
+      "./test/slate/**/index.spec.js",
+      "./test/slate-history/**/index.spec.js",
+      "./test/slate-hyperscript/**/index.spec.js",
+      "./test/slate-yjs/**/index.spec.js",
+      "./test/slate-vue/**/*.spec.[j|t]s",
+    ],
     environment: "jsdom",
   },
   resolve: {
     alias: {
       "slate-vue": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
-      "slate-hyperscript": path.resolve(__dirname, "./packages/slate-hyperscript/index.ts"),
-      "slate-history": path.resolve(__dirname, "./packages/slate-history/index.ts"),
-      "slate-yjs": path.resolve(__dirname,"./packages/slate-yjs/index.ts"),
+      "slate-hyperscript": path.resolve(
+        __dirname,
+        "./packages/slate-hyperscript/index.ts"
+      ),
+      "slate-history": path.resolve(
+        __dirname,
+        "./packages/slate-history/index.ts"
+      ),
+      "slate-yjs": path.resolve(__dirname, "./packages/slate-yjs/index.ts"),
       "slate-dom": path.resolve(__dirname, "./packages/slate-dom/index.ts"),
-      "slate": path.resolve(__dirname, "./packages/slate/index.ts"),
+      slate: path.resolve(__dirname, "./packages/slate/index.ts"),
       "share-tools": path.resolve(__dirname, "./packages/share-tools/index.ts"),
       "@test-utils": path.resolve(__dirname, "./test/utils.ts"),
     },
@@ -49,7 +61,7 @@ export default defineConfig(({ command, mode }) => {
           formats: ["es"],
         },
         rollupOptions: {
-          external: ["vue", 'yjs'],
+          external: ["vue", "yjs"],
         },
       },
       plugins: [

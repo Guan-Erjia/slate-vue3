@@ -1,9 +1,9 @@
 import { createEditor, Text, Transforms } from "slate";
-import { render } from "@testing-library/vue";
-import { describe, test, vi, expect } from "vitest";
 import { withDOM } from "slate-dom";
-import VueEditor from "../VueEditor.vue";
+import { render } from "@testing-library/vue";
 import { nextTick } from "vue";
+import { describe, test, vi, expect } from "vitest";
+import VueEditor from "./components/VueEditor.vue";
 
 describe("slate-react", () => {
   describe("Editable", () => {
