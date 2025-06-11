@@ -72,34 +72,28 @@
 
             <p>
                 Last keypress (ms):
-                {{ SUPPORTS_EVENT_TIMING
-                    ? lastKeyPressDuration ?? '-'
-                    : 'Not supported' }}
+                {{ SUPPORTS_EVENT_TIMING ? lastKeyPressDuration ?? '-' : 'Not supported' }}
             </p>
 
             <p>
                 Average of last 10 keypresses (ms):
-                {{ SUPPORTS_EVENT_TIMING
-                    ? averageKeyPressDuration ?? '-'
-                    : 'Not supported' }}
+                {{ SUPPORTS_EVENT_TIMING ? averageKeyPressDuration ?? '-' : 'Not supported' }}
             </p>
 
             <p>
                 Last long animation frame (ms):
-                {{ SUPPORTS_LOAF_TIMING
-                    ? lastLongAnimationFrameDuration ?? '-'
-                    : 'Not supported'
+                {{ SUPPORTS_LOAF_TIMING ? lastLongAnimationFrameDuration ?? '-' : 'Not supported'
                 }}
             </p>
 
-            <p v-if="SUPPORTS_EVENT_TIMING && lastKeyPressDuration === null">Events shorter than 16ms may not be
-                detected.</p>
+            <p v-if="SUPPORTS_EVENT_TIMING && lastKeyPressDuration === null">
+                Events shorter than 16ms may not be detected.</p>
         </details>
     </div>
     <div v-if="rendering">Rendering</div>
     <Slate v-else :editor="editor" :render-element="renderElement" :render-chunk="config.chunkDivs ?
         renderChunk : undefined">
-        <Editable placeholder="Enter some text…" spellCheck autoFocus />
+        <Editable placeholder="Enter some text…" spellcheck autoFocus />
     </Slate>
 </template>
 <script setup lang="ts">
@@ -111,9 +105,10 @@ import {
     RenderChunkProps,
     Slate,
 } from 'slate-vue3'
-import type { HeadingOneElement, ParagraphElement } from '../../../custom-types.d.ts'
 import { withDOM } from 'slate-vue3/dom'
+import { withHistory } from 'slate-vue3/history'
 import { computed, CSSProperties, h, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import type { HeadingOneElement, ParagraphElement } from '../../../custom-types.d.ts'
 import Heading from './heading.vue'
 
 interface Config {
@@ -162,9 +157,9 @@ const parseEnum = <T extends string>(
 }
 
 const initialConfig: Config = {
-    blocks: parseNumber('blocks', 10000),
+    blocks: parseNumber('blocks', 10),
     chunking: parseBoolean('chunking', true),
-    chunkSize: parseNumber('chunk_size', 1000),
+    chunkSize: parseNumber('chunk_size', 3),
     chunkDivs: parseBoolean('chunk_divs', true),
     chunkOutlines: parseBoolean('chunk_outlines', false),
     contentVisibilityMode: parseEnum(
@@ -220,8 +215,7 @@ const getInitialValue = (blocks: number) => {
 }
 
 const createEditor = (config: Config) => {
-    const editor = withDOM(slateCreateEditor())
-
+    const editor = withHistory(withDOM(slateCreateEditor()))
     editor.getChunkSize = node =>
         config.chunking && Editor.isEditor(node) ? config.chunkSize : null
     return editor
@@ -260,13 +254,6 @@ const averageKeyPressDuration = computed(() => keyPressDurations.length === 10
     ? Math.round(keyPressDurations.reduce((total, d) => total + d) / 10)
     : null)
 
-let afterOperation = false
-const { apply } = editor.value
-editor.value.apply = operation => {
-    apply(operation)
-    afterOperation = true
-}
-
 const observer = new PerformanceObserver(list => {
     list.getEntries().forEach(entry => {
         if (entry.name === 'keypress') {
@@ -282,17 +269,14 @@ const observer = new PerformanceObserver(list => {
 })
 const observer1 = new PerformanceObserver(list => {
     list.getEntries().forEach(entry => {
-        if (afterOperation) {
-            lastLongAnimationFrameDuration.value = Math.round(entry.duration)
-            afterOperation = false
-        }
+        lastLongAnimationFrameDuration.value = Math.round(entry.duration)
     })
 })
+
 onMounted(() => {
     // @ts-ignore Options type is missing durationThreshold
     observer.observe({ type: 'event', durationThreshold: 16 })
     observer1.observe({ type: 'long-animation-frame' })
-
 })
 onUnmounted(() => {
     observer.disconnect()
@@ -326,9 +310,10 @@ const renderChunk = ({ attributes, children, lowest }: RenderChunkProps) => {
     return h('div', { ...attributes, style }, children)
 }
 </script>
-<style scoped>
+<style>
 .performance-controls {
     padding: 20px;
+    margin: 0 -10px 20px -10px;
     background-color: white;
     position: sticky;
     top: 0;
@@ -352,5 +337,10 @@ const renderChunk = ({ attributes, children, lowest }: RenderChunkProps) => {
 
 details>summary {
     user-select: none;
+}
+
+[data-slate-editor]>*+*,
+[data-slate-chunk]>*+* {
+    margin-top: 1em;
 }
 </style>

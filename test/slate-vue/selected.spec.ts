@@ -98,7 +98,7 @@ describe("useSelected", () => {
       });
     });
 
-    it.skip("re-renders elements when it becomes true or false", async () => {
+    it("re-renders elements when it becomes true or false", async () => {
       clearRenders();
 
       Transforms.select(editor, [0, 0]);
@@ -128,7 +128,7 @@ describe("useSelected", () => {
       });
     });
 
-    it.skip("returns true for elements in the middle of the selection", async () => {
+    it("returns true for elements in the middle of the selection", async () => {
       clearRenders();
 
       Transforms.select(editor, {
@@ -187,7 +187,7 @@ describe("useSelected", () => {
     withChunking(false);
   });
 
-  describe.skip("with chunking", () => {
+  describe("with chunking", () => {
     withChunking(true);
   });
 });
