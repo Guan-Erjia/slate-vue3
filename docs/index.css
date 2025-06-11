@@ -71,7 +71,8 @@ td {
   border: 2px solid #ddd;
 }
 
-input {
+input[type='text'],
+input[type='search'] {
   box-sizing: border-box;
   font-size: 0.85em;
   width: 100%;
@@ -80,7 +81,8 @@ input {
   background: #fafafa;
 }
 
-input:focus {
+input[type='text']:focus,
+input[type='search']:focus {
   outline: 0;
   border-color: blue;
 }

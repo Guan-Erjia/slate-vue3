@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
+import { Slate, Editable, type RenderLeafProps } from "slate-vue3"
 import { h, ref } from "vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import { createEditor, DecoratedRange, Descendant, NodeEntry, Text, Element } from "slate-vue3/core";

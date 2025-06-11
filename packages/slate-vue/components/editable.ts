@@ -59,7 +59,11 @@ import {
   AndroidManager,
   useAndroidManager,
 } from "../hooks/use-android-manager";
-import { SLATE_INNER_PLACEHOLDER, SLATE_INNER_PLACEHOLDER_RESIZE, SLATE_INNER_PLACEHOLDER_SHOW } from "../utils/constants";
+import {
+  SLATE_INNER_PLACEHOLDER,
+  SLATE_INNER_PLACEHOLDER_RESIZE,
+  SLATE_INNER_PLACEHOLDER_SHOW,
+} from "../utils/constants";
 
 interface EditableProps extends HTMLAttributes {
   role?: string;
@@ -814,7 +818,10 @@ export const Editable = defineComponent({
         // because onClick handlers can change the document before we get here.
         // Therefore we must check that this path actually exists,
         // and that it still refers to the same node.
-        if (!Editor.hasPath(editor, path) || toRaw(Node.get(editor, path)) !== node) {
+        if (
+          !Editor.hasPath(editor, path) ||
+          toRaw(Node.get(editor, path)) !== node
+        ) {
           return;
         }
 
@@ -1422,9 +1429,12 @@ export const Editable = defineComponent({
         !isComposing.value
     );
 
-    provide(SLATE_INNER_PLACEHOLDER, computed(() => placeholder));
+    provide(
+      SLATE_INNER_PLACEHOLDER,
+      computed(() => placeholder)
+    );
     provide(SLATE_INNER_PLACEHOLDER_SHOW, showPlaceholder);
-    provide(SLATE_INNER_PLACEHOLDER_RESIZE, onPlaceholderResize)
+    provide(SLATE_INNER_PLACEHOLDER_RESIZE, onPlaceholderResize);
 
     return () =>
       h(

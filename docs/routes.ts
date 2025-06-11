@@ -111,7 +111,8 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
   {
     name: "remote-decorate-cursor",
     path: "remote-decorate-cursor",
-    component: () => import("./pages/examples/remote-decorate-cursor/index.vue"),
+    component: () =>
+      import("./pages/examples/remote-decorate-cursor/index.vue"),
   },
   {
     name: "check-lists",
@@ -152,6 +153,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     name: "huge-document",
     path: "huge-document",
     component: () => import("./pages/examples/huge-document/index.vue"),
+  },
+  {
+    name: "huge-document2",
+    path: "huge-document2",
+    component: () => import("./pages/examples/huge-document2/index.vue"),
   },
   {
     name: "images",
