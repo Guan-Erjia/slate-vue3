@@ -9,12 +9,14 @@ import {
   SLATE_INNER_PLACEHOLDER,
   SLATE_INNER_PLACEHOLDER_SHOW,
   SLATE_INNER_PLACEHOLDER_RESIZE,
+  SLATE_INNER_RENDER_CHUNK,
 } from "../utils/constants";
 import type {
   RenderElementProps,
   RenderPlaceholderProps,
   RenderLeafProps,
   RenderTextProps,
+  RenderChunkProps,
 } from "../utils/interface";
 import { BasePoint } from "slate";
 
@@ -64,6 +66,18 @@ export const useRenderText = () => {
     );
   }
   return TEXT_RENDER;
+};
+
+export const useRenderChunk = () => {
+  const CHUNK_RENDER = inject<(props: RenderChunkProps) => VNode>(
+    SLATE_INNER_RENDER_CHUNK
+  );
+  if (CHUNK_RENDER === undefined) {
+    throw new Error(
+      `The \`useRenderChunk\` hook must be used inside the <Slate> component's context.`
+    );
+  }
+  return CHUNK_RENDER;
 };
 
 export const useChangeEffect = (fn: () => void) => {

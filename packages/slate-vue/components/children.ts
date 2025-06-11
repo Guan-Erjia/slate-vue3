@@ -1,18 +1,80 @@
-import { Element } from "slate";
-import { ElementComp } from "./element";
-import { TextComp } from "./text";
-import { DOMEditor, NODE_TO_INDEX, NODE_TO_PARENT } from "slate-dom";
-import { h, renderList, VNode } from "vue";
+import { Ancestor, Editor, Element, Text } from "slate";
+import {
+  DOMEditor,
+  Key,
+  NODE_TO_INDEX,
+  NODE_TO_PARENT,
+  getChunkTreeForNode,
+} from "slate-dom";
+import { Fragment, h, VNode } from "vue";
+import { ElementComp } from "../components/element";
+import { TextComp } from "../components/text";
+import { ChunkComp } from "../components/chunk";
 
-export const ChildrenFC = (element: Element, editor: DOMEditor) =>
-  renderList(element.children, (child, i): VNode => {
-    // 这些逻辑不会触发多余渲染
-    const key = DOMEditor.findKey(editor, child);
-    // 组件直接传入索引将不会动态更新，必须通过 NODE_TO_INDEX 手动获取索引
-    NODE_TO_INDEX.set(child, i);
-    NODE_TO_PARENT.set(child, element);
+/**
+ * Children.
+ */
+export const ChildrenFC = (node: Ancestor, editor: DOMEditor): VNode => {
+  const isEditor = Editor.isEditor(node);
+  const isBlock =
+    !isEditor && Element.isElement(node) && !editor.isInline(node);
+  const isLeafBlock = isBlock && Editor.hasInlines(editor, node);
+  const chunkSize = isLeafBlock ? null : editor.getChunkSize(node);
+  const chunking = !!chunkSize;
 
-    return Element.isElement(child)
-      ? h(ElementComp, { element: child, key: key.id })
-      : h(TextComp, { text: child, element, key: key.id });
+  const renderChunkElement = (n: Element, i: number, cachedKey?: Key) => {
+    const key = cachedKey ?? DOMEditor.findKey(editor, n);
+    return h(ElementComp, {
+      element: n,
+      key: key.id,
+    });
+  };
+
+  const renderChunkText = (n: Text, i: number) => {
+    const key = DOMEditor.findKey(editor, n);
+
+    return h(TextComp, {
+      text: n,
+      element: node,
+      key: key.id,
+    });
+  };
+
+  if (!chunking) {
+    return h(
+      Fragment,
+      node.children.map((n, i) => {
+        // Update the index and parent of each child.
+        // PERF: If chunking is enabled, this is done while traversing the chunk tree
+        // instead to eliminate unnecessary weak map operations.
+        NODE_TO_INDEX.set(n, i);
+        NODE_TO_PARENT.set(n, node);
+        return Text.isText(n)
+          ? renderChunkText(n, i)
+          : renderChunkElement(n, i);
+      })
+    );
+  }
+
+  const chunkTree = getChunkTreeForNode(editor, node, {
+    reconcile: {
+      chunkSize,
+      onInsert: (n, i) => {
+        NODE_TO_INDEX.set(n, i);
+        NODE_TO_PARENT.set(n, node);
+      },
+      onUpdate: (n, i) => {
+        NODE_TO_INDEX.set(n, i);
+        NODE_TO_PARENT.set(n, node);
+      },
+      onIndexChange: (n, i) => {
+        NODE_TO_INDEX.set(n, i);
+      },
+    },
   });
+
+  return h(ChunkComp, {
+    root: chunkTree,
+    ancestor: chunkTree,
+  });
+};

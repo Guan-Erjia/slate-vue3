@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { Editor, Element, Node, Range } from "slate";
+import { Editor, Element, Node } from "slate";
 import { ChildrenFC } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -14,7 +14,6 @@ import { TextComp } from "./text";
 import {
   computed,
   defineComponent,
-  Fragment,
   h,
   HTMLAttributes,
   onMounted,
@@ -25,7 +24,7 @@ import {
   VNodeRef,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
-import { SLATE_USE_SELECTED } from "../utils/constants";
+import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
 
@@ -54,15 +53,10 @@ export const ElementComp = defineComponent({
     const element = props.element;
     const editor = useEditor();
 
-    const selected = computed(() => {
-      const path = DOMEditor.findPath(editor, element);
-      if (!editor.selection) {
-        return false;
-      }
-      return !!Range.intersection(Editor.range(editor, path), editor.selection);
-    });
-
-    provide(SLATE_USE_SELECTED, selected);
+    provide(
+      SLATE_USE_ELEMENT,
+      computed(() => element)
+    );
 
     const elementRef = ref<HTMLElement | null>(null);
     onMounted(() => {
@@ -110,7 +104,7 @@ export const ElementComp = defineComponent({
 
     const children = computed(() => {
       if (!Editor.isVoid(editor, element)) {
-        return h(Fragment, ChildrenFC(element, editor));
+        return ChildrenFC(element, editor);
       }
       const [[text]] = Node.texts(element);
       NODE_TO_INDEX.set(text, 0);
@@ -119,19 +113,20 @@ export const ElementComp = defineComponent({
       return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { element, text }));
     });
 
-    IS_FIREFOX && onUpdated(() => {
-      const nodes = elementRef.value?.childNodes;
-      if (!nodes?.length) {
-        return;
-      }
-      const lastIndex = nodes.length - 1;
-      if (
-        nodes[lastIndex].nodeType === 3 &&
-        nodes[lastIndex].textContent !== ""
-      ) {
-        nodes[lastIndex].textContent = "";
-      }
-    });
+    IS_FIREFOX &&
+      onUpdated(() => {
+        const nodes = elementRef.value?.childNodes;
+        if (!nodes?.length) {
+          return;
+        }
+        const lastIndex = nodes.length - 1;
+        if (
+          nodes[lastIndex].nodeType === 3 &&
+          nodes[lastIndex].textContent !== ""
+        ) {
+          nodes[lastIndex].textContent = "";
+        }
+      });
 
     const renderElement = useRenderElement();
     return () =>

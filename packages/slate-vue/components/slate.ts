@@ -21,6 +21,7 @@ import {
   SLATE_INNER_RENDER_DECORATE,
   SLATE_USE_EDITOR,
   SLATE_INNER_RENDER_TEXT,
+  SLATE_INNER_RENDER_CHUNK,
 } from "../utils/constants";
 import {
   DecoratedRange,
@@ -32,6 +33,7 @@ import {
   Range,
 } from "slate";
 import type {
+  RenderChunkProps,
   RenderElementProps,
   RenderLeafProps,
   RenderPlaceholderProps,
@@ -42,7 +44,14 @@ import {
   EDITOR_TO_ON_CHANGE,
   MARK_PLACEHOLDER_SYMBOL,
 } from "slate-dom";
-import { DEFAULT_DECORATE_FN, DEFAULT_ELEMENT_RENDER, DEFAULT_LEAF_RENDER, DEFAULT_PLACEHOLDER_RENDER, DEFAULT_TEXT_RENDER } from "./utils";
+import {
+  DEFAULT_CHUNK_RENDER,
+  DEFAULT_DECORATE_FN,
+  DEFAULT_ELEMENT_RENDER,
+  DEFAULT_LEAF_RENDER,
+  DEFAULT_PLACEHOLDER_RENDER,
+  DEFAULT_TEXT_RENDER,
+} from "./utils";
 
 export const Slate = defineComponent({
   name: "slate-editor",
@@ -62,15 +71,19 @@ export const Slate = defineComponent({
     },
     renderLeaf: {
       type: Function,
-      default: DEFAULT_LEAF_RENDER
+      default: DEFAULT_LEAF_RENDER,
     },
     renderText: {
       type: Function,
-      default: DEFAULT_TEXT_RENDER
+      default: DEFAULT_TEXT_RENDER,
+    },
+    renderChunk: {
+      type: Function,
+      default: DEFAULT_CHUNK_RENDER,
     },
     renderPlaceholder: {
       type: Function,
-      default: DEFAULT_PLACEHOLDER_RENDER
+      default: DEFAULT_PLACEHOLDER_RENDER,
     },
   },
   setup(
@@ -81,11 +94,19 @@ export const Slate = defineComponent({
       renderLeaf: (props: RenderLeafProps) => VNode;
       renderText?: (props: RenderTextProps) => VNode;
       renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
+      renderChunk?: (props: RenderChunkProps) => VNode;
     },
     { slots, emit }
   ) {
-    const { editor, decorate, renderElement, renderLeaf, renderPlaceholder, renderText } =
-      props;
+    const {
+      editor,
+      decorate,
+      renderElement,
+      renderLeaf,
+      renderPlaceholder,
+      renderText,
+      renderChunk,
+    } = props;
     if (!Node.isNodeList(editor.children)) {
       throw new Error(
         `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
@@ -99,6 +120,7 @@ export const Slate = defineComponent({
     provide(SLATE_INNER_RENDER_LEAF, renderLeaf);
     provide(SLATE_INNER_RENDER_TEXT, renderText);
     provide(SLATE_INNER_RENDER_PLACEHOLDER, renderPlaceholder);
+    provide(SLATE_INNER_RENDER_CHUNK, renderChunk);
 
     const isFocus = ref(DOMEditor.isFocused(editor));
     const selection = computed(() => editor.selection);

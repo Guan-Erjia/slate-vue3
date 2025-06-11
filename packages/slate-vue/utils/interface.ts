@@ -2,6 +2,18 @@ import type { Text, Element, LeafPosition, Editor } from "slate";
 import type { HTMLAttributes, VNode, VNodeArrayChildren, VNodeChild, VNodeProps, VNodeRef } from "vue";
 
 /**
+ * `RenderChunkProps` are passed to the `renderChunk` handler
+ */
+export interface RenderChunkProps {
+  highest: boolean
+  lowest: boolean
+  children: any
+  attributes: {
+    'data-slate-chunk': true
+  }
+}
+
+/**
  * The props that get passed to renderPlaceholder
  */
 export interface RenderPlaceholderProps {
