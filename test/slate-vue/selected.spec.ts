@@ -147,7 +147,7 @@ describe("useSelected", () => {
       });
     });
 
-    it.skip("remains true when the path changes", async () => {
+    it("remains true when the path changes", async () => {
       clearRenders();
 
       Transforms.select(editor, { path: [2, 0], offset: 0 });
