@@ -16,12 +16,11 @@ import {
   defineComponent,
   h,
   HTMLAttributes,
-  onMounted,
-  onUnmounted,
   onUpdated,
   provide,
   ref,
   VNodeRef,
+  watch,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
@@ -59,21 +58,22 @@ export const ElementComp = defineComponent({
     );
 
     const elementRef = ref<HTMLElement | null>(null);
-    onMounted(() => {
-      const key = DOMEditor.findKey(editor, element);
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-      if (elementRef.value) {
-        KEY_TO_ELEMENT?.set(key, elementRef.value);
-        NODE_TO_ELEMENT.set(element, elementRef.value);
-        ELEMENT_TO_NODE.set(elementRef.value, element);
+
+    watch(
+      () => elementRef.value,
+      (ref) => {
+        const key = DOMEditor.findKey(editor, element);
+        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
+        if (ref) {
+          KEY_TO_ELEMENT?.set(key, ref);
+          NODE_TO_ELEMENT.set(element, ref);
+          ELEMENT_TO_NODE.set(ref, element);
+        } else {
+          KEY_TO_ELEMENT?.delete(key);
+          NODE_TO_ELEMENT.delete(element);
+        }
       }
-    });
-    onUnmounted(() => {
-      const key = DOMEditor.findKey(editor, element);
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-      KEY_TO_ELEMENT?.delete(key);
-      NODE_TO_ELEMENT.delete(element);
-    });
+    );
 
     const isInline = computed(() => editor.isInline(element));
     const readOnly = useReadOnly();
