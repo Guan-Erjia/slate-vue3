@@ -6,7 +6,15 @@ import {
   NODE_TO_ELEMENT,
   NODE_TO_INDEX,
 } from "slate-dom";
-import { h, ref, computed, defineComponent, renderList, watch } from "vue";
+import {
+  h,
+  ref,
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  renderList,
+} from "vue";
 import { useDecorate } from "../hooks/use-decorate";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
@@ -25,7 +33,7 @@ export const TextComp = defineComponent({
   setup(props: { text: Text; element: Element }) {
     const { text, element } = props;
     const editor = useEditor();
-    const textRef = ref<HTMLSpanElement>();
+    const spanRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
     const markPlaceholder = useMarkPlaceholder();
 
@@ -48,20 +56,22 @@ export const TextComp = defineComponent({
       return Text.decorations(text, filterDs.length ? filterDs : []);
     });
 
-    watch(
-      () => textRef.value,
-      (ref) => {
-        const key = DOMEditor.findKey(editor, text);
-        if (ref) {
-          const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-          KEY_TO_ELEMENT?.set(key, ref);
-          ELEMENT_TO_NODE.set(ref, text);
-          NODE_TO_ELEMENT.set(text, ref);
-        } else {
-          NODE_TO_ELEMENT.delete(text);
-        }
+    onMounted(() => {
+      const key = DOMEditor.findKey(editor, text);
+      if (spanRef.value) {
+        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
+        KEY_TO_ELEMENT?.set(key, spanRef.value);
+        ELEMENT_TO_NODE.set(spanRef.value, text);
+        NODE_TO_ELEMENT.set(text, spanRef.value);
       }
-    );
+    });
+
+    onUnmounted(() => {
+      NODE_TO_ELEMENT.delete(text);
+      if (spanRef.value) {
+        ELEMENT_TO_NODE.delete(spanRef.value);
+      }
+    });
 
     const isLastText = computed(() => {
       const isVoid = Editor.isVoid(editor, element);
@@ -84,7 +94,7 @@ export const TextComp = defineComponent({
     return () =>
       renderText({
         text,
-        attributes: { "data-slate-node": "text", ref: textRef },
+        attributes: { "data-slate-node": "text", ref: spanRef },
         children: renderList(leaves.value, (leaf, i) =>
           renderLeaf({
             text,
