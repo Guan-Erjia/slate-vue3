@@ -22,24 +22,6 @@ export const ChildrenFC = (node: Ancestor, editor: DOMEditor): VNode => {
   const chunkSize = isLeafBlock ? null : editor.getChunkSize(node);
   const chunking = !!chunkSize;
 
-  const renderChunkElement = (n: Element, i: number, cachedKey?: Key) => {
-    const key = cachedKey ?? DOMEditor.findKey(editor, n);
-    return h(ElementComp, {
-      element: n,
-      key: key.id,
-    });
-  };
-
-  const renderChunkText = (n: Text, i: number) => {
-    const key = DOMEditor.findKey(editor, n);
-
-    return h(TextComp, {
-      text: n,
-      element: node,
-      key: key.id,
-    });
-  };
-
   if (!chunking) {
     return h(
       Fragment,
@@ -49,9 +31,17 @@ export const ChildrenFC = (node: Ancestor, editor: DOMEditor): VNode => {
         // instead to eliminate unnecessary weak map operations.
         NODE_TO_INDEX.set(n, i);
         NODE_TO_PARENT.set(n, node);
+        const key = DOMEditor.findKey(editor, n);
         return Text.isText(n)
-          ? renderChunkText(n, i)
-          : renderChunkElement(n, i);
+          ? h(TextComp, {
+              text: n,
+              element: node,
+              key: key.id,
+            })
+          : h(ElementComp, {
+              element: n,
+              key: key.id,
+            });
       })
     );
   }

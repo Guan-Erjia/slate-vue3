@@ -157,9 +157,9 @@ const parseEnum = <T extends string>(
 }
 
 const initialConfig: Config = {
-    blocks: parseNumber('blocks', 10),
+    blocks: parseNumber('blocks', 10000),
     chunking: parseBoolean('chunking', true),
-    chunkSize: parseNumber('chunk_size', 3),
+    chunkSize: parseNumber('chunk_size', 1000),
     chunkDivs: parseBoolean('chunk_divs', true),
     chunkOutlines: parseBoolean('chunk_outlines', false),
     contentVisibilityMode: parseEnum(

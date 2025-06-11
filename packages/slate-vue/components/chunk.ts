@@ -22,7 +22,7 @@ export const ChunkComp = defineComponent({
           });
         }
 
-        // Only blocks containing no inlines are chunked
+        // @ts-ignore Only blocks containing no inlines are chunked
         return h(ElementComp, { element: chunkNode.node });
       });
   },
