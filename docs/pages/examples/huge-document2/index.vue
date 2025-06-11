@@ -1,5 +1,6 @@
 <template>
     <div className="performance-controls">
+        <h3 style="color: red;position: absolute; right: 20px; top: 0;">Not stable yet</h3>
         <p>
             <label>
                 Blocks:
@@ -312,7 +313,7 @@ const renderChunk = ({ attributes, children, lowest }: RenderChunkProps) => {
 </script>
 <style>
 .performance-controls {
-    padding: 20px;
+    padding: 10px 20px;
     margin: 0 -10px 20px -10px;
     background-color: white;
     position: sticky;
