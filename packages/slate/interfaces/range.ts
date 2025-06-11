@@ -219,8 +219,7 @@ export const Range: RangeInterface = {
     op: Operation,
     options: RangeTransformOptions = {}
   ): Range | null {
-    let r = range
-      if (r === null) {
+      if (range === null) {
         return null
       }
       const { affinity = 'inward' } = options
@@ -231,8 +230,8 @@ export const Range: RangeInterface = {
         // If the range is collapsed, make sure to use the same affinity to
         // avoid the two points passing each other and expanding in the opposite
         // direction
-        const isCollapsed = Range.isCollapsed(r)
-        if (Range.isForward(r)) {
+        const isCollapsed = Range.isCollapsed(range)
+        if (Range.isForward(range)) {
           affinityAnchor = 'forward'
           affinityFocus = isCollapsed ? affinityAnchor : 'backward'
         } else {
@@ -240,7 +239,7 @@ export const Range: RangeInterface = {
           affinityFocus = isCollapsed ? affinityAnchor : 'forward'
         }
       } else if (affinity === 'outward') {
-        if (Range.isForward(r)) {
+        if (Range.isForward(range)) {
           affinityAnchor = 'backward'
           affinityFocus = 'forward'
         } else {
@@ -251,15 +250,13 @@ export const Range: RangeInterface = {
         affinityAnchor = affinity
         affinityFocus = affinity
       }
-      const anchor = Point.transform(r.anchor, op, { affinity: affinityAnchor })
-      const focus = Point.transform(r.focus, op, { affinity: affinityFocus })
+      const anchor = Point.transform(range.anchor, op, { affinity: affinityAnchor })
+      const focus = Point.transform(range.focus, op, { affinity: affinityFocus })
 
       if (!anchor || !focus) {
         return null
       }
 
-      r.anchor = anchor
-      r.focus = focus
-      return r
+      return { anchor, focus }
   },
 }

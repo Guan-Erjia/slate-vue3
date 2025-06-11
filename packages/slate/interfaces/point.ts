@@ -99,17 +99,17 @@ export const Point: PointInterface = {
     op: Operation,
     options: PointTransformOptions = {}
   ): Point | null {
-    let p = cloneDeep(point)
-      if (p === null) {
+      if (point === null) {
         return null
       }
       const { affinity = 'forward' } = options
-      const { path, offset } = p
+      let offset = point.offset
+      let path = cloneDeep(point.path) 
 
       switch (op.type) {
         case 'insert_node':
         case 'move_node': {
-          p.path = Path.transform(path, op, options)!
+          path = Path.transform(path, op, options)!
           break
         }
 
@@ -119,7 +119,7 @@ export const Point: PointInterface = {
             (op.offset < offset ||
               (op.offset === offset && affinity === 'forward'))
           ) {
-            p.offset += op.text.length
+            offset += op.text.length
           }
 
           break
@@ -127,16 +127,16 @@ export const Point: PointInterface = {
 
         case 'merge_node': {
           if (Path.equals(op.path, path)) {
-            p.offset += op.position
+            offset += op.position
           }
 
-          p.path = Path.transform(path, op, options)!
+          path = Path.transform(path, op, options)!
           break
         }
 
         case 'remove_text': {
           if (Path.equals(op.path, path) && op.offset <= offset) {
-            p.offset -= Math.min(offset - op.offset, op.text.length)
+            offset -= Math.min(offset - op.offset, op.text.length)
           }
 
           break
@@ -147,7 +147,7 @@ export const Point: PointInterface = {
             return null
           }
 
-          p.path = Path.transform(path, op, options)!
+          path = Path.transform(path, op, options)!
           break
         }
 
@@ -159,21 +159,23 @@ export const Point: PointInterface = {
               op.position < offset ||
               (op.position === offset && affinity === 'forward')
             ) {
-              p.offset -= op.position
+              offset -= op.position
 
-              p.path = Path.transform(path, op, {
+              path = Path.transform(path, op, {
                 ...options,
                 affinity: 'forward',
               })!
             }
           } else {
-            p.path = Path.transform(path, op, options)!
+            path = Path.transform(path, op, options)!
           }
 
           break
         }
+        default:
+          return point
       }
-      return p
+    return { path, offset }
   },
 }
 
