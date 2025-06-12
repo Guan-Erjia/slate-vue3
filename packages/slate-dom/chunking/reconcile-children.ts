@@ -26,7 +26,6 @@ export const reconcileChildren = (
     chunkTree,
     children,
     chunkSize,
-    rerenderChildren = [],
     onInsert,
     onUpdate,
     onIndexChange,
@@ -83,7 +82,7 @@ export const reconcileChildren = (
 
     // Make sure the chunk tree contains the most recent version of the Slate
     // node
-    if (treeLeaf.node !== toRaw(matchingChild)) {
+    if (toRaw(treeLeaf.node) !== toRaw(matchingChild)) {
       treeLeaf.node = matchingChild
       onUpdate?.(matchingChild, matchingChildIndex)
     }
@@ -92,11 +91,6 @@ export const reconcileChildren = (
     if (treeLeaf.index !== matchingChildIndex) {
       treeLeaf.index = matchingChildIndex
       onIndexChange?.(matchingChild, matchingChildIndex)
-    }
-
-    // Manually invalidate chunks containing specific children that we want to
-    // re-render
-    if (rerenderChildren.includes(matchingChildIndex)) {
     }
   }
 
