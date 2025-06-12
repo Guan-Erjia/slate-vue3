@@ -19,6 +19,8 @@ import {
   onUpdated,
   provide,
   ref,
+  VNode,
+  VNodeChild,
   VNodeRef,
   watch,
 } from "vue";
@@ -102,7 +104,7 @@ export const ElementComp = defineComponent({
       return attr;
     });
 
-    const children = computed(() => {
+    const children = computed<VNode | VNodeChild[]>(() => {
       if (!Editor.isVoid(editor, element)) {
         return ChildrenFC(element, editor);
       }

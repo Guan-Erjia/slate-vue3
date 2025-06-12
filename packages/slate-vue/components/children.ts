@@ -6,7 +6,7 @@ import {
   NODE_TO_PARENT,
   getChunkTreeForNode,
 } from "slate-dom";
-import { Fragment, h, VNode } from "vue";
+import { Fragment, h, renderList, VNode, VNodeChild } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
@@ -14,7 +14,10 @@ import { ChunkComp } from "../components/chunk";
 /**
  * Children.
  */
-export const ChildrenFC = (node: Ancestor, editor: DOMEditor): VNode => {
+export const ChildrenFC = (
+  node: Ancestor,
+  editor: DOMEditor
+): VNodeChild[] | VNode => {
   const isEditor = Editor.isEditor(node);
   const isBlock =
     !isEditor && Element.isElement(node) && !editor.isInline(node);
@@ -23,27 +26,24 @@ export const ChildrenFC = (node: Ancestor, editor: DOMEditor): VNode => {
   const chunking = !!chunkSize;
 
   if (!chunking) {
-    return h(
-      Fragment,
-      node.children.map((n, i) => {
-        // Update the index and parent of each child.
-        // PERF: If chunking is enabled, this is done while traversing the chunk tree
-        // instead to eliminate unnecessary weak map operations.
-        NODE_TO_INDEX.set(n, i);
-        NODE_TO_PARENT.set(n, node);
-        const key = DOMEditor.findKey(editor, n);
-        return Text.isText(n)
-          ? h(TextComp, {
-              text: n,
-              element: node,
-              key: key.id,
-            })
-          : h(ElementComp, {
-              element: n,
-              key: key.id,
-            });
-      })
-    );
+    return renderList(node.children, (n, i) => {
+      // Update the index and parent of each child.
+      // PERF: If chunking is enabled, this is done while traversing the chunk tree
+      // instead to eliminate unnecessary weak map operations.
+      NODE_TO_INDEX.set(n, i);
+      NODE_TO_PARENT.set(n, node);
+      const key = DOMEditor.findKey(editor, n);
+      return Text.isText(n)
+        ? h(TextComp, {
+            text: n,
+            element: node,
+            key: key.id,
+          })
+        : h(ElementComp, {
+            element: n,
+            key: key.id,
+          });
+    });
   }
 
   const chunkTree = getChunkTreeForNode(editor, node, {
