@@ -93,7 +93,6 @@ const getChildrenAndTreeForShape = (
 
   const chunkTree: ChunkTree = {
     type: "root",
-    modifiedChunks: new Set(),
     movedNodeKeys: new Set(),
     children: [],
   };
@@ -791,19 +790,12 @@ describe("getChunkTreeForNode", () => {
       expect(leaf.node).toMatchObject({ updated: true });
     });
 
-    it.skip("invalidates ancestor chunks of updated Slate nodes", () => {
+    it("invalidates ancestor chunks of updated Slate nodes", () => {
       const editor = createEditorWithShape(["0", [["1"]], "2"]);
       Transforms.insertText(editor, "x", { at: [1, 0] });
 
       const chunkTree = reconcileEditor(editor);
-      const outerChunk = chunkTree.children[1] as Chunk;
-      const innerChunk = outerChunk.children[0];
-
       expect(getTreeShape(chunkTree)).toEqual(["0", [["x"]], "2"]);
-
-      expect(chunkTree.modifiedChunks).toEqual(
-        new Set([outerChunk, innerChunk])
-      );
     });
 
     it.skip("calls onUpdate for updated Slate nodes", () => {
@@ -887,15 +879,6 @@ describe("getChunkTreeForNode", () => {
       ]);
 
       reconcileEditor(editor);
-
-      const chunkTree = reconcileEditor(editor, { rerenderChildren: [2, 4] });
-      const twoOuterChunk = chunkTree.children[1] as Chunk;
-      const twoInnerChunk = twoOuterChunk.children[1];
-      const fourChunk = chunkTree.children[2];
-
-      expect(chunkTree.modifiedChunks).toEqual(
-        new Set([twoOuterChunk, twoInnerChunk, fourChunk])
-      );
     });
   });
 

@@ -28,7 +28,6 @@ export const getChunkTreeForNode = (
     chunkTree = {
       type: "root",
       movedNodeKeys: new Set(),
-      modifiedChunks: new Set(),
       // fixme 这里必须二次代理，不然会丢失响应，无法更新 DOM
       children: reactive([]),
     };

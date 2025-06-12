@@ -269,21 +269,9 @@ export class ChunkTreeHelper {
     ) {
       this.exitChunk()
       this.remove()
-    } else {
-      this.invalidateChunk()
     }
 
     this.validateState()
-  }
-
-  /**
-   * Add the current chunk and all ancestor chunks to the list of modified
-   * chunks
-   */
-  public invalidateChunk() {
-    for (let c = this.pointerChunk; c.type === 'chunk'; c = c.parent) {
-      this.root.modifiedChunks.add(c)
-    }
   }
 
   /**
@@ -519,7 +507,6 @@ export class ChunkTreeHelper {
     this.pointerSiblings.splice(this.pointerIndex + 1, 0, ...chunks)
     this.pointerIndex += chunks.length
     this.cachedPointerNode = undefined
-    this.invalidateChunk()
     this.validateState()
   }
 

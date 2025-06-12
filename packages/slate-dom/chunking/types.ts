@@ -27,7 +27,6 @@ export interface ChunkTree {
    * Used to determine when the otherwise memoized React components for each
    * chunk should be re-rendered.
    */
-  modifiedChunks: Set<Chunk>
 }
 
 export interface Chunk {

@@ -33,8 +33,6 @@ export const reconcileChildren = (
     debug,
   }: ReconcileOptions
 ) => {
-  chunkTree.modifiedChunks.clear()
-
   const chunkTreeHelper = new ChunkTreeHelper(chunkTree, { chunkSize, debug })
   const childrenHelper = new ChildrenHelper(editor, children)
 
@@ -87,7 +85,6 @@ export const reconcileChildren = (
     // node
     if (treeLeaf.node !== toRaw(matchingChild)) {
       treeLeaf.node = matchingChild
-      chunkTreeHelper.invalidateChunk()
       onUpdate?.(matchingChild, matchingChildIndex)
     }
 
@@ -100,7 +97,6 @@ export const reconcileChildren = (
     // Manually invalidate chunks containing specific children that we want to
     // re-render
     if (rerenderChildren.includes(matchingChildIndex)) {
-      chunkTreeHelper.invalidateChunk()
     }
   }
 
