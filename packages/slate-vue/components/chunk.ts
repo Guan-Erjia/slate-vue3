@@ -1,12 +1,13 @@
-import { ChunkAncestor, ChunkTree } from "slate-dom";
+import { ChunkAncestor } from "slate-dom";
 import { defineComponent, h, renderList, VNode } from "vue";
-import { useRenderChunk } from "../hooks/use-render";
+import { useRenderChunk, useStaticChunk } from "../hooks/use-render";
 import { ElementComp } from "./element";
 
 export const ChunkComp = defineComponent({
-  props: ["root", "ancestor"],
-  setup(props: { root: ChunkTree; ancestor: ChunkAncestor }) {
-    const { root, ancestor } = props;
+  props: ["ancestor"],
+  setup(props: { ancestor: ChunkAncestor }) {
+    const ancestor = props.ancestor;
+    const root = useStaticChunk();
     const renderChunk = useRenderChunk();
     return () =>
       renderList(ancestor.children, (chunkNode): VNode => {
@@ -16,7 +17,6 @@ export const ChunkComp = defineComponent({
             lowest: chunkNode.children.some((c) => c.type === "leaf"),
             attributes: { "data-slate-chunk": true },
             children: h(ChunkComp, {
-              root,
               ancestor: chunkNode,
             }),
           });

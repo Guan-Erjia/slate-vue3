@@ -1,70 +1,84 @@
 import { Ancestor, Editor, Element, Text } from "slate";
 import {
   DOMEditor,
-  Key,
   NODE_TO_INDEX,
   NODE_TO_PARENT,
   getChunkTreeForNode,
 } from "slate-dom";
-import { Fragment, h, renderList, VNode, VNodeChild } from "vue";
+import { computed, defineComponent, h, provide, renderList, VNode } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
+import { useEditor } from "../hooks/use-editor";
+import { SLATE_INNER_STATIC_CHUNK } from "../utils/constants";
 
 /**
  * Children.
  */
-export const ChildrenFC = (
-  node: Ancestor,
-  editor: DOMEditor
-): VNodeChild[] | VNode => {
-  const isEditor = Editor.isEditor(node);
-  const isBlock =
-    !isEditor && Element.isElement(node) && !editor.isInline(node);
-  const isLeafBlock = isBlock && Editor.hasInlines(editor, node);
-  const chunkSize = isLeafBlock ? null : editor.getChunkSize(node);
-  const chunking = !!chunkSize;
+export const ChildrenComp = defineComponent({
+  props: ["element"],
+  setup(props: { element: Ancestor }) {
+    const element = props.element;
+    const editor = useEditor();
 
-  if (!chunking) {
-    return renderList(node.children, (n, i) => {
-      // Update the index and parent of each child.
-      // PERF: If chunking is enabled, this is done while traversing the chunk tree
-      // instead to eliminate unnecessary weak map operations.
-      NODE_TO_INDEX.set(n, i);
-      NODE_TO_PARENT.set(n, node);
-      const key = DOMEditor.findKey(editor, n);
-      return Text.isText(n)
-        ? h(TextComp, {
-            text: n,
-            element: node,
-            key: key.id,
-          })
-        : h(ElementComp, {
-            element: n,
-            key: key.id,
-          });
+    const chunkSize = computed(() => {
+      const isLeafBlock =
+        !Editor.isEditor(element) &&
+        Element.isElement(element) &&
+        !editor.isInline(element) &&
+        Editor.hasInlines(editor, element);
+      return isLeafBlock ? null : editor.getChunkSize(element);
     });
-  }
 
-  const chunkTree = getChunkTreeForNode(editor, node, {
-    reconcile: {
-      chunkSize,
-      onInsert: (n, i) => {
-        NODE_TO_INDEX.set(n, i);
-        NODE_TO_PARENT.set(n, node);
-      },
-      onUpdate: (n, i) => {
-        NODE_TO_INDEX.set(n, i);
-        NODE_TO_PARENT.set(n, node);
-      },
-      onIndexChange: (n, i) => {
-        NODE_TO_INDEX.set(n, i);
-      },
-    },
-  });
+    const chunkTree = computed(() => {
+      if (!chunkSize.value) {
+        return null;
+      }
+      return getChunkTreeForNode(editor, element, {
+        reconcile: {
+          chunkSize: chunkSize.value,
+          onInsert: (n, i) => {
+            NODE_TO_INDEX.set(n, i);
+            NODE_TO_PARENT.set(n, element);
+          },
+          onUpdate: (n, i) => {
+            NODE_TO_INDEX.set(n, i);
+            NODE_TO_PARENT.set(n, element);
+          },
+          onIndexChange: (n, i) => {
+            NODE_TO_INDEX.set(n, i);
+          },
+        },
+      });
+    });
 
-  return h(ChunkComp, {
-    root: chunkTree,
-    ancestor: chunkTree,
-  });
-};
+    provide(SLATE_INNER_STATIC_CHUNK, chunkTree.value);
+
+    return () => {
+      if (chunkSize.value === null) {
+        return renderList(element.children, (n, i): VNode => {
+          // Update the index and parent of each child.
+          // PERF: If chunking is enabled, this is done while traversing the chunk tree
+          // instead to eliminate unnecessary weak map operations.
+          NODE_TO_INDEX.set(n, i);
+          NODE_TO_PARENT.set(n, element);
+          const key = DOMEditor.findKey(editor, n);
+          return Text.isText(n)
+            ? h(TextComp, {
+                text: n,
+                element: element,
+                key: key.id,
+              })
+            : h(ElementComp, {
+                element: n,
+                key: key.id,
+              });
+        });
+      } else {
+        return h(ChunkComp, {
+          ancestor: chunkTree.value,
+        });
+      }
+    };
+  },
+});

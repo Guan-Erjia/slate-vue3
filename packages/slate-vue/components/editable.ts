@@ -43,7 +43,7 @@ import {
   watch,
 } from "vue";
 import type { CSSProperties, HTMLAttributes } from "vue";
-import { ChildrenFC } from "./children";
+import { ChildrenComp } from "./children";
 import {
   DEFAULT_SCROLL_INTO_VIEW,
   handleNativeHistoryEvents,
@@ -1469,7 +1469,7 @@ export const Editable = defineComponent({
           onKeydown,
           onPaste,
         },
-        ChildrenFC(editor, editor)
+        h(ChildrenComp, { element: editor })
       );
   },
 });

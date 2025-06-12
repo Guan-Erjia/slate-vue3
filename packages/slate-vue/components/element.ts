@@ -1,6 +1,6 @@
 import { direction } from "direction";
 import { Editor, Element, Node } from "slate";
-import { ChildrenFC } from "./children";
+import { ChildrenComp } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
@@ -106,7 +106,7 @@ export const ElementComp = defineComponent({
 
     const children = computed<VNode | VNodeChild[]>(() => {
       if (!Editor.isVoid(editor, element)) {
-        return ChildrenFC(element, editor);
+        return h(ChildrenComp, { element });
       }
       const [[text]] = Node.texts(element);
       NODE_TO_INDEX.set(text, 0);

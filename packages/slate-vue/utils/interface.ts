@@ -49,7 +49,7 @@ export interface RenderLeafProps {
  * `RenderElementProps` are passed to the `renderElement` handler.
  */
 export interface RenderElementProps {
-  children: VNode | VNodeChild;
+  children: VNode | VNodeChild[];
   element: Element;
   attributes: HTMLAttributes & {
     "data-slate-node": "element";
