@@ -18,17 +18,47 @@ import { SLATE_INNER_STATIC_CHUNK } from "../utils/constants";
 export const ChildrenComp = defineComponent({
   props: ["element"],
   setup(props: { element: Ancestor }) {
-    const element = props.element;
     const editor = useEditor();
+    const element =
+      Editor.isEditor(props.element) &&
+      editor.getChunkSize(props.element) !== null
+        ? { ...props.element }
+        : props.element;
 
-    const chunkSize = computed(() => {
-      const isLeafBlock =
-        !Editor.isEditor(element) &&
-        Element.isElement(element) &&
-        !editor.isInline(element) &&
-        Editor.hasInlines(editor, element);
-      return isLeafBlock ? null : editor.getChunkSize(element);
-    });
+    // 缓存 isBlock 计算结果，节点属性一般不可能改变
+    const isBlock =
+      !Editor.isEditor(element) &&
+      Element.isElement(element) &&
+      !editor.isInline(element);
+
+    const renderElementOrText = () =>
+      renderList(element.children, (n, i): VNode => {
+        // Update the index and parent of each child.
+        // PERF: If chunking is enabled, this is done while traversing the chunk tree
+        // instead to eliminate unnecessary weak map operations.
+        NODE_TO_INDEX.set(n, i);
+        NODE_TO_PARENT.set(n, element);
+        const key = DOMEditor.findKey(editor, n);
+        return Text.isText(n)
+          ? h(TextComp, {
+              text: n,
+              element: element,
+              key: key.id,
+            })
+          : h(ElementComp, {
+              element: n,
+              key: key.id,
+            });
+      });
+
+    // 不计算 chunkTree 提前返回
+    if (isBlock) {
+      return renderElementOrText;
+    }
+
+    const chunkSize = computed(() =>
+      Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element)
+    );
 
     const chunkTree = computed(() => {
       if (!chunkSize.value) {
@@ -36,7 +66,7 @@ export const ChildrenComp = defineComponent({
       }
       return getChunkTreeForNode(editor, element, {
         reconcile: {
-          chunkSize: chunkSize.value,
+          chunkSize: editor.getChunkSize(element) as number,
           onInsert: (n, i) => {
             NODE_TO_INDEX.set(n, i);
             NODE_TO_PARENT.set(n, element);
@@ -52,29 +82,12 @@ export const ChildrenComp = defineComponent({
       });
     });
 
-    provide(SLATE_INNER_STATIC_CHUNK, chunkTree.value);
+    provide(SLATE_INNER_STATIC_CHUNK, chunkTree?.value || null);
 
     return () => {
       if (chunkSize.value === null) {
-        return renderList(element.children, (n, i): VNode => {
-          // Update the index and parent of each child.
-          // PERF: If chunking is enabled, this is done while traversing the chunk tree
-          // instead to eliminate unnecessary weak map operations.
-          NODE_TO_INDEX.set(n, i);
-          NODE_TO_PARENT.set(n, element);
-          const key = DOMEditor.findKey(editor, n);
-          return Text.isText(n)
-            ? h(TextComp, {
-                text: n,
-                element: element,
-                key: key.id,
-              })
-            : h(ElementComp, {
-                element: n,
-                key: key.id,
-              });
-        });
-      } else {
+        return renderElementOrText();
+      } else if (chunkTree) {
         return h(ChunkComp, {
           ancestor: chunkTree.value,
         });
