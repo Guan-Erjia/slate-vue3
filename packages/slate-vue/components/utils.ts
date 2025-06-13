@@ -100,6 +100,25 @@ export const DEFAULT_SCROLL_INTO_VIEW = (
       (editor.selection && Range.isCollapsed(editor.selection)))
   ) {
     const leafEl = domRange.startContainer.parentElement!;
+
+    // COMPAT: In Chrome, domRange.getBoundingClientRect() can return zero dimensions for valid ranges (e.g. line breaks).
+    // When this happens, do not scroll like most editors do.
+    const domRect = domRange.getBoundingClientRect();
+    const isZeroDimensionRect =
+      domRect.width === 0 &&
+      domRect.height === 0 &&
+      domRect.x === 0 &&
+      domRect.y === 0;
+
+    if (isZeroDimensionRect) {
+      const leafRect = leafEl.getBoundingClientRect();
+      const leafHasDimensions = leafRect.width > 0 || leafRect.height > 0;
+
+      if (leafHasDimensions) {
+        return;
+      }
+    }
+    // Default behavior: use domRange's getBoundingClientRect
     leafEl.getBoundingClientRect =
       domRange.getBoundingClientRect.bind(domRange);
     scrollIntoView(leafEl, {
@@ -139,9 +158,8 @@ export const DEFAULT_TEXT_RENDER = ({
   children,
 }: RenderTextProps) => h("span", attributes, children);
 
-export const DEFAULT_CHUNK_RENDER = ({
-  children,
-}: RenderChunkProps) => children
+export const DEFAULT_CHUNK_RENDER = ({ children }: RenderChunkProps) =>
+  children;
 
 export const DEFAULT_PLACEHOLDER_RENDER = ({
   attributes,
