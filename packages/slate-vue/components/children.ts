@@ -5,7 +5,15 @@ import {
   NODE_TO_PARENT,
   getChunkTreeForNode,
 } from "slate-dom";
-import { computed, defineComponent, h, provide, renderList, VNode } from "vue";
+import {
+  computed,
+  defineComponent,
+  h,
+  provide,
+  renderList,
+  toRaw,
+  VNode,
+} from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
@@ -19,13 +27,9 @@ export const ChildrenComp = defineComponent({
   props: ["element"],
   setup(props: { element: Ancestor }) {
     const editor = useEditor();
-    const element =
-      Editor.isEditor(props.element) &&
-      editor.getChunkSize(props.element) !== null
-        ? { ...props.element }
-        : props.element;
-
     // 缓存 isBlock 计算结果，节点属性一般不可能改变
+    const element = props.element;
+    const _vector = toRaw(element);
     const isBlock =
       !Editor.isEditor(element) &&
       Element.isElement(element) &&
@@ -37,7 +41,7 @@ export const ChildrenComp = defineComponent({
         // PERF: If chunking is enabled, this is done while traversing the chunk tree
         // instead to eliminate unnecessary weak map operations.
         NODE_TO_INDEX.set(n, i);
-        NODE_TO_PARENT.set(n, element);
+        NODE_TO_PARENT.set(n, _vector);
         const key = DOMEditor.findKey(editor, n);
         return Text.isText(n)
           ? h(TextComp, {
@@ -56,24 +60,25 @@ export const ChildrenComp = defineComponent({
       return renderElementOrText;
     }
 
+    const _element = { ...element };
     const chunkSize = computed(() =>
-      Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element)
+      Editor.hasInlines(editor, _element) ? null : editor.getChunkSize(_vector)
     );
 
     const chunkTree = computed(() => {
       if (!chunkSize.value) {
         return null;
       }
-      return getChunkTreeForNode(editor, element, {
+      return getChunkTreeForNode(editor, _element, {
         reconcile: {
-          chunkSize: editor.getChunkSize(element) as number,
+          chunkSize: chunkSize.value,
           onInsert: (n, i) => {
             NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, element);
+            NODE_TO_PARENT.set(n, _vector);
           },
           onUpdate: (n, i) => {
             NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, element);
+            NODE_TO_PARENT.set(n, _vector);
           },
           onIndexChange: (n, i) => {
             NODE_TO_INDEX.set(n, i);
@@ -82,7 +87,7 @@ export const ChildrenComp = defineComponent({
       });
     });
 
-    provide(SLATE_INNER_STATIC_CHUNK, chunkTree?.value || null);
+    provide(SLATE_INNER_STATIC_CHUNK, chunkTree.value || null);
 
     return () => {
       if (chunkSize.value === null) {

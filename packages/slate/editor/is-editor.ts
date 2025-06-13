@@ -2,10 +2,7 @@ import { Editor, EditorInterface } from '../interfaces/editor'
 import { Range } from '../interfaces/range'
 import { Node } from '../interfaces/node'
 import { Operation } from '../interfaces/operation'
-import { toRawWeakMap as WeakMap } from 'share-tools'
 import { isObject } from '../utils'
-
-const IS_EDITOR_CACHE = new WeakMap<object, boolean>()
 
 export const isEditor: EditorInterface['isEditor'] = (
   value: any,

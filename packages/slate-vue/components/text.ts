@@ -74,17 +74,19 @@ export const TextComp = defineComponent({
     });
 
     const isLastText = computed(() => {
-      const isVoid = Editor.isVoid(editor, element);
-      const isLeafBlock =
-        Element.isElement(element) &&
-        !editor.isInline(element) &&
-        Editor.hasInlines(editor, element);
-
-      return (
-        !isVoid &&
-        isLeafBlock &&
-        NODE_TO_INDEX.get(text) === element.children.length - 1
-      );
+      if (Editor.isVoid(editor, element)) {
+        return false;
+      }
+      if (!Element.isElement(element)) {
+        return false;
+      }
+      if (editor.isInline(element)) {
+        return false;
+      }
+      if (!Editor.hasInlines(editor, element)) {
+        return false;
+      }
+      return NODE_TO_INDEX.get(text) === element.children.length - 1;
     });
 
     const renderLeaf = useRenderLeaf();
