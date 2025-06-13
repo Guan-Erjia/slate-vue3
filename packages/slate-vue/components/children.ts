@@ -24,6 +24,7 @@ import { SLATE_INNER_STATIC_CHUNK } from "../utils/constants";
  * Children.
  */
 export const ChildrenComp = defineComponent({
+  name: "slate-children",
   props: ["element"],
   setup(props: { element: Ancestor }) {
     const editor = useEditor();

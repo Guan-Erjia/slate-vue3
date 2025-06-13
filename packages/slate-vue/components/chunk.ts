@@ -4,6 +4,7 @@ import { useRenderChunk, useStaticChunk } from "../hooks/use-render";
 import { ElementComp } from "./element";
 
 export const ChunkComp = defineComponent({
+  name: "slate-chunk",
   props: ["ancestor"],
   setup(props: { ancestor: ChunkAncestor }) {
     const ancestor = props.ancestor;
