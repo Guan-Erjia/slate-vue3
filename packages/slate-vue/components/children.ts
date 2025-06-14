@@ -30,7 +30,6 @@ export const ChildrenComp = defineComponent({
     const editor = useEditor();
     // 缓存 isBlock 计算结果，节点属性一般不可能改变
     const element = props.element;
-    const _vector = toRaw(element);
     const isBlock =
       !Editor.isEditor(element) &&
       Element.isElement(element) &&
@@ -90,7 +89,7 @@ export const ChildrenComp = defineComponent({
     provide(SLATE_INNER_STATIC_CHUNK, chunkTree.value || null);
 
     return () => {
-      if (chunkSize.value !== null) {
+      if (chunkSize.value === null) {
         return renderElementOrText();
       } else if (chunkTree.value) {
         return h(ChunkComp, {

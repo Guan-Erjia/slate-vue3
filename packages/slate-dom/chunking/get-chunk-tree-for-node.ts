@@ -2,7 +2,7 @@ import { Ancestor } from "slate";
 import { DOMEditor, Key } from "slate-dom";
 import { ChunkTree } from "./types";
 import { ReconcileOptions, reconcileChildren } from "./reconcile-children";
-import { reactive } from "vue";
+import { Reactive, reactive } from "vue";
 
 export const KEY_TO_CHUNK_TREE = new WeakMap<Key, ChunkTree>();
 
@@ -24,12 +24,11 @@ export const getChunkTreeForNode = (
   const key = DOMEditor.findKey(editor, node);
   let chunkTree = KEY_TO_CHUNK_TREE.get(key);
   if (!chunkTree) {
-    chunkTree = {
+    chunkTree = reactive({
       type: "root",
       movedNodeKeys: new Set(),
-      // fixme 这里必须二次代理，不然会丢失响应，无法更新 DOM
-      children: reactive([]),
-    };
+      children: [],
+    }) as Reactive<ChunkTree>;
 
     KEY_TO_CHUNK_TREE.set(key, chunkTree);
   }
@@ -41,6 +40,5 @@ export const getChunkTreeForNode = (
       ...options.reconcile,
     });
   }
-
   return chunkTree;
 };
