@@ -67,17 +67,17 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
-    "@faker-js/faker": "^9.7.0",
-    "@liveblocks/client": "^2.24.1",
-    "@liveblocks/yjs": "^2.24.0",
-    "@playwright/test": "^1.52.0",
+    "@faker-js/faker": "^9.8.0",
+    "@liveblocks/client": "^2.24.3",
+    "@liveblocks/yjs": "^2.24.3",
+    "@playwright/test": "^1.53.0",
     "@testing-library/vue": "^8.1.0",
     "@types/is-hotkey": "^0.1.10",
     "@types/is-url": "^1.2.32",
     "@types/lodash-es": "^4.17.12",
-    "@types/node": "^22.15.3",
+    "@types/node": "^24.0.1",
     "@types/prismjs": "^1.26.5",
-    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue": "^5.2.4",
     "babel-plugin-transform-regex": "^6.0.1",
     "image-extensions": "^1.1.0",
     "is-url": "^1.2.4",
@@ -88,12 +88,12 @@
     "remark-slate-transformer": "^0.9.0",
     "typescript": "~5.8.3",
     "unified": "^11.0.5",
-    "vite": "^6.3.4",
+    "vite": "^6.3.5",
     "vite-plugin-babel": "^1.3.1",
-    "vite-plugin-dts": "^4.5.3",
-    "vitest": "^3.1.2",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.3",
     "vue-router": "^4.5.1",
-    "yjs": "^13.6.26"
+    "yjs": "^13.6.27"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
