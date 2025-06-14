@@ -61,16 +61,15 @@ export const ChildrenComp = defineComponent({
       return renderElementOrText;
     }
 
-    const _element = { ...element };
     const chunkSize = computed(() =>
-      Editor.hasInlines(editor, _element) ? null : editor.getChunkSize(_vector)
+      Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element)
     );
 
     const chunkTree = computed(() => {
       if (!chunkSize.value) {
         return null;
       }
-      return getChunkTreeForNode(editor, _element, {
+      return getChunkTreeForNode(editor, element, {
         reconcile: {
           chunkSize: chunkSize.value,
           onInsert: (n, i) => {

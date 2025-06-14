@@ -34,3 +34,33 @@ export class toRawWeakMap<K extends WeakKey, V> extends WeakMap {
     );
   }
 }
+
+
+export class toRawWeakSet<T extends WeakKey> extends WeakSet<T> {
+  constructor() {
+    super();
+  }
+
+  /**
+   * Removes the specified element from the toRawWeakSet.
+   * @returns true if the element was successfully removed, or false if it was not present.
+   */
+  delete(value: T): boolean {
+    return super.delete(isProxy(value) ? toRaw(value) : value);
+  }
+
+  /**
+   * @returns a boolean indicating whether an element with the specified value exists or not.
+   */
+  has(value: T): boolean {
+    return super.has(isProxy(value) ? toRaw(value) : value);
+  }
+
+  /**
+   * Adds a new element with a specified value.
+   * @param value Must be an object or symbol.
+   */
+  add(value: T): this {
+    return super.add(isProxy(value) ? toRaw(value) : value);
+  }
+}

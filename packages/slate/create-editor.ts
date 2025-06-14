@@ -31,6 +31,7 @@ import {
   hasInlines,
   hasPath,
   hasTexts,
+  IS_EDITOR_SET,
   isBlock,
   isEdge,
   isEmpty,
@@ -188,5 +189,6 @@ export const createEditor = (): Editor => {
       shouldMergeNodesRemovePrevNode(editor, ...args),
   });
 
+  IS_EDITOR_SET.add(editor)
   return editor
 }
