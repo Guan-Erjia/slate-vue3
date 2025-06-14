@@ -19,12 +19,16 @@ export const ChunkComp = defineComponent({
             attributes: { "data-slate-chunk": true },
             children: h(ChunkComp, {
               ancestor: chunkNode,
+              key: chunkNode.key.id,
             }),
           });
         }
 
-        // @ts-ignore Only blocks containing no inlines are chunked
-        return h(ElementComp, { element: chunkNode.node });
+        return h(ElementComp, {
+          // @ts-ignore Only blocks containing no inlines are chunked
+          element: chunkNode.node,
+          key: chunkNode.key.id,
+        });
       });
   },
 });
