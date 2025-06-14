@@ -42,7 +42,7 @@ export const ChildrenComp = defineComponent({
         // PERF: If chunking is enabled, this is done while traversing the chunk tree
         // instead to eliminate unnecessary weak map operations.
         NODE_TO_INDEX.set(n, i);
-        NODE_TO_PARENT.set(n, _vector);
+        NODE_TO_PARENT.set(n, element);
         const key = DOMEditor.findKey(editor, n);
         return Text.isText(n)
           ? h(TextComp, {
@@ -74,11 +74,11 @@ export const ChildrenComp = defineComponent({
           chunkSize: chunkSize.value,
           onInsert: (n, i) => {
             NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, _vector);
+            NODE_TO_PARENT.set(n, element);
           },
           onUpdate: (n, i) => {
             NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, _vector);
+            NODE_TO_PARENT.set(n, element);
           },
           onIndexChange: (n, i) => {
             NODE_TO_INDEX.set(n, i);
@@ -90,9 +90,9 @@ export const ChildrenComp = defineComponent({
     provide(SLATE_INNER_STATIC_CHUNK, chunkTree.value || null);
 
     return () => {
-      if (chunkSize.value === null) {
+      if (chunkSize.value !== null) {
         return renderElementOrText();
-      } else if (chunkTree) {
+      } else if (chunkTree.value) {
         return h(ChunkComp, {
           ancestor: chunkTree.value,
         });

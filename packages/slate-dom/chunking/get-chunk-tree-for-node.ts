@@ -2,7 +2,6 @@ import { Ancestor } from "slate";
 import { DOMEditor, Key } from "slate-dom";
 import { ChunkTree } from "./types";
 import { ReconcileOptions, reconcileChildren } from "./reconcile-children";
-import { toRawWeakMap as WeakMap } from "share-tools";
 import { reactive } from "vue";
 
 export const KEY_TO_CHUNK_TREE = new WeakMap<Key, ChunkTree>();
