@@ -105,6 +105,7 @@ import {
     RenderElementProps,
     RenderChunkProps,
     Slate,
+    useInheritRef,
 } from 'slate-vue3'
 import { withDOM } from 'slate-vue3/dom'
 import { withHistory } from 'slate-vue3/history'
@@ -291,7 +292,7 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
     switch (element.type) {
         case 'heading-one':
             return h(Heading, {
-                ...attributes, style,
+                ...useInheritRef(attributes), style,
                 contentVisibility: config.contentVisibilityMode === 'element',
                 showSelectedHeadings: config.showSelectedHeadings
             }, () => children)
