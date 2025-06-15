@@ -18,7 +18,7 @@ import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
-import { SLATE_INNER_STATIC_CHUNK } from "../utils/constants";
+import { SLATE_INNER_STATIC_CHUNK_ROOT } from "../utils/constants";
 
 /**
  * Children.
@@ -86,7 +86,7 @@ export const ChildrenComp = defineComponent({
       });
     });
 
-    provide(SLATE_INNER_STATIC_CHUNK, chunkTree.value || null);
+    provide(SLATE_INNER_STATIC_CHUNK_ROOT, chunkTree.value || null);
 
     return () => {
       if (chunkSize.value === null) {

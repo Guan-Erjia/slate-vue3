@@ -10,7 +10,7 @@ import {
   SLATE_INNER_PLACEHOLDER_SHOW,
   SLATE_INNER_PLACEHOLDER_RESIZE,
   SLATE_INNER_RENDER_CHUNK,
-  SLATE_INNER_STATIC_CHUNK,
+  SLATE_INNER_STATIC_CHUNK_ROOT,
 } from "../utils/constants";
 import type {
   RenderElementProps,
@@ -82,14 +82,14 @@ export const useRenderChunk = () => {
   return CHUNK_RENDER;
 };
 
-export const useStaticChunk = () => {
-  const CHUNK_STATIC = inject<ChunkTree>(SLATE_INNER_STATIC_CHUNK);
-  if (CHUNK_STATIC === undefined) {
+export const useStaticChunkRoot = () => {
+  const CHUNK_STATIC_ROOT = inject<ChunkTree>(SLATE_INNER_STATIC_CHUNK_ROOT);
+  if (CHUNK_STATIC_ROOT === undefined) {
     throw new Error(
       `The \`useStaticChunk\` hook must be used inside the <Slate> component's context.`
     );
   }
-  return CHUNK_STATIC;
+  return CHUNK_STATIC_ROOT;
 };
 
 export const useChangeEffect = (fn: () => void) => {
