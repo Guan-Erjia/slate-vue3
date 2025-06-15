@@ -1,17 +1,18 @@
-import { Ancestor, Editor, Element, Text } from "slate";
+import { Ancestor, Descendant, Editor, Element, Text } from "slate";
 import {
+  ChunkTree,
   DOMEditor,
   NODE_TO_INDEX,
   NODE_TO_PARENT,
-  getChunkTreeForNode,
+  reconcileChildren,
 } from "slate-dom";
 import {
   computed,
   defineComponent,
   h,
   provide,
+  reactive,
   renderList,
-  toRaw,
   VNode,
 } from "vue";
 import { ElementComp } from "../components/element";
@@ -64,34 +65,41 @@ export const ChildrenComp = defineComponent({
       Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element)
     );
 
+    const staticChunkTree: ChunkTree = {
+      type: "root",
+      movedNodeKeys: new Set(),
+      children: reactive([]),
+    };
+
     const chunkTree = computed(() => {
       if (!chunkSize.value) {
         return null;
       }
-      return getChunkTreeForNode(editor, element, {
-        reconcile: {
-          chunkSize: chunkSize.value,
-          onInsert: (n, i) => {
-            NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, element);
-          },
-          onUpdate: (n, i) => {
-            NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, element);
-          },
-          onIndexChange: (n, i) => {
-            NODE_TO_INDEX.set(n, i);
-          },
+      reconcileChildren(editor, {
+        chunkTree: staticChunkTree,
+        children: element.children,
+        chunkSize: chunkSize.value,
+        onInsert: (n: Descendant, i: number) => {
+          NODE_TO_INDEX.set(n, i);
+          NODE_TO_PARENT.set(n, element);
+        },
+        onUpdate: (n: Descendant, i: number) => {
+          NODE_TO_INDEX.set(n, i);
+          NODE_TO_PARENT.set(n, element);
+        },
+        onIndexChange: (n: Descendant, i: number) => {
+          NODE_TO_INDEX.set(n, i);
         },
       });
+      return staticChunkTree;
     });
 
-    provide(SLATE_INNER_STATIC_CHUNK_ROOT, chunkTree.value || null);
+    provide(SLATE_INNER_STATIC_CHUNK_ROOT, staticChunkTree);
 
     return () => {
-      if (chunkSize.value === null) {
+      if (chunkTree.value === null) {
         return renderElementOrText();
-      } else if (chunkTree.value) {
+      } else {
         return h(ChunkComp, {
           ancestor: chunkTree.value,
         });

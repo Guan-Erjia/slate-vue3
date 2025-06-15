@@ -46,6 +46,7 @@ export {
 
 export {
   getChunkTreeForNode,
+  reconcileChildren,
   KEY_TO_CHUNK_TREE,
   type ChunkAncestor,
   type ChunkTree,
@@ -53,9 +54,8 @@ export {
   type ChunkNode,
   type ChunkDescendant,
   type Chunk,
+  type ReconcileOptions
 } from "./chunking";
-
-export { type ReconcileOptions } from "./chunking/reconcile-children";
 
 export {
   EDITOR_TO_ELEMENT,
