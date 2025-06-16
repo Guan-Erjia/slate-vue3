@@ -101,7 +101,7 @@ export const ChildrenComp = defineComponent({
         return renderElementOrText();
       } else {
         return h(ChunkComp, {
-          ancestor: chunkTree.value,
+          ancestor: staticChunkTree,
         });
       }
     };

@@ -1,5 +1,4 @@
 import { Descendant } from 'slate'
-import { toRaw } from 'vue'
 import { ChunkTree, ChunkLeaf } from './types'
 import { ChunkTreeHelper, ChunkTreeHelperOptions } from './chunk-tree-helper'
 import { ChildrenHelper } from './children-helper'
@@ -82,7 +81,7 @@ export const reconcileChildren = (
 
     // Make sure the chunk tree contains the most recent version of the Slate
     // node
-    if (toRaw(treeLeaf.node) !== toRaw(matchingChild)) {
+    if (treeLeaf.node !== matchingChild) {
       treeLeaf.node = matchingChild
       onUpdate?.(matchingChild, matchingChildIndex)
     }
