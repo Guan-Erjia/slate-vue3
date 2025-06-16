@@ -1,5 +1,6 @@
 import { Descendant } from "slate";
 import { DOMEditor, Key } from "slate-dom";
+import { markRaw } from "vue";
 import { ChunkLeaf } from "./types";
 
 /**
@@ -26,7 +27,7 @@ export class ChildrenHelper {
   constructor(editor: DOMEditor, children: Descendant[]) {
     this.editor = editor;
     this.children = children;
-    this.cachedKeys = new Array(children.length);
+    this.cachedKeys = markRaw(new Array(children.length));
     this.pointerIndex = 0;
   }
 
@@ -103,7 +104,7 @@ export class ChildrenHelper {
     return nodes.map((node, i) => ({
       type: "leaf",
       node,
-      key: this.findKey(node, startIndex + i),
+      key: markRaw(this.findKey(node, startIndex + i)),
       index: startIndex + i,
     }));
   }

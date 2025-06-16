@@ -1,5 +1,6 @@
 import { Path } from 'slate'
 import { Key } from 'slate-dom'
+import { markRaw } from 'vue'
 import {
   Chunk,
   ChunkTree,
@@ -474,7 +475,7 @@ export class ChunkTreeHelper {
 
         const chunk: Chunk = {
           type: 'chunk',
-          key: new Key(),
+          key: markRaw(new Key()),
           parent,
           children: [],
         }
