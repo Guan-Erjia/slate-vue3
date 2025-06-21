@@ -65,30 +65,36 @@ import {
   SLATE_INNER_PLACEHOLDER_SHOW,
 } from "../utils/constants";
 
-
 export const Editable = defineComponent({
   name: "slate-editable",
   props: {
     scrollSelectionIntoView: {
       type: Function,
-      required: false,
       default: DEFAULT_SCROLL_INTO_VIEW,
     },
-    placeholder: { type: String },
+    placeholder: {
+      type: String,
+      default: () => "",
+    },
     readOnly: {
+      type: Boolean,
+      default: () => false,
+    },
+    autoFocus: {
       type: Boolean,
       default: () => false,
     },
   },
   setup(props: {
     readOnly: boolean;
-    placeholder?: string;
+    placeholder: string;
     scrollSelectionIntoView: (
       editor: DOMEditor,
       domRange: globalThis.Range
     ) => void;
+    autoFocus: boolean;
   }) {
-    const { placeholder, readOnly, scrollSelectionIntoView } = props;
+    const { placeholder, readOnly, scrollSelectionIntoView, autoFocus } = props;
 
     const editor = useEditor();
     const attributes: HTMLAttributes = useAttrs();
@@ -366,6 +372,9 @@ export const Editable = defineComponent({
       window.document.addEventListener("selectionchange", onDOMSelectionChange);
       window.document.addEventListener("dragend", stoppedDragging);
       window.document.addEventListener("drop", stoppedDragging);
+      if (autoFocus) {
+        editableRef.value?.focus();
+      }
     });
     onUnmounted(() => {
       const window = DOMEditor.getWindow(editor);

@@ -7,17 +7,15 @@
 ```typescript
 interface EditableProps {
   readOnly: boolean;
-  placeholder?: string;
+  placeholder: string;
   scrollSelectionIntoView: (
     editor: DOMEditor,
     domRange: globalThis.Range
   ) => void;
+  autoFocus: boolean
 }
 ```
 
-## role
-
-Same as the `role` attribute of HTML
 
 ## readOnly
 
@@ -31,13 +29,9 @@ Placeholder text when the editor is **empty**
 
 Replace the default behavior of `scrollSelectionIntoView`
 
-## style
+## autoFocus
 
-Overwrite the default `style`
-
-## is
-
-Define the `HTML` tags for rendering the root node
+Autofocus when editor is `mounted`
 
 ## Event Listener
 
