@@ -66,7 +66,6 @@ import {
 } from "../utils/constants";
 
 interface EditableProps extends HTMLAttributes {
-  role?: string;
   readOnly: boolean;
   placeholder?: string;
   style?: CSSProperties;
@@ -90,7 +89,6 @@ export const Editable = defineComponent({
       type: Boolean,
       default: () => false,
     },
-    role: { type: String },
     style: {
       type: Object,
       default: () => {},
