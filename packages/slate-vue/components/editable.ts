@@ -65,15 +65,6 @@ import {
   SLATE_INNER_PLACEHOLDER_SHOW,
 } from "../utils/constants";
 
-interface EditableProps extends HTMLAttributes {
-  readOnly: boolean;
-  placeholder?: string;
-  style?: CSSProperties;
-  scrollSelectionIntoView: (
-    editor: DOMEditor,
-    domRange: globalThis.Range
-  ) => void;
-}
 
 export const Editable = defineComponent({
   name: "slate-editable",
@@ -88,12 +79,15 @@ export const Editable = defineComponent({
       type: Boolean,
       default: () => false,
     },
-    style: {
-      type: Object,
-      default: () => {},
-    },
   },
-  setup(props: EditableProps) {
+  setup(props: {
+    readOnly: boolean;
+    placeholder?: string;
+    scrollSelectionIntoView: (
+      editor: DOMEditor,
+      domRange: globalThis.Range
+    ) => void;
+  }) {
     const { placeholder, readOnly, scrollSelectionIntoView } = props;
 
     const editor = useEditor();
@@ -1381,7 +1375,7 @@ export const Editable = defineComponent({
       }
     };
 
-    const mergedEditableStyle = computed<CSSProperties>(() => ({
+    const editableStyle = computed<CSSProperties>(() => ({
       // Allow positioning relative to the editable element.
       position: "relative",
       // Preserve adjacent whitespace and new lines.
@@ -1391,9 +1385,7 @@ export const Editable = defineComponent({
       // Make the minimum height that of the placeholder.
       minHeight: placeholderHeight.value
         ? placeholderHeight.value + "px"
-        : undefined,
-      // Allow for passed-in styles to override anything.
-      ...props.style,
+        : "unset",
     }));
 
     const spellcheck = computed(() =>
@@ -1412,7 +1404,7 @@ export const Editable = defineComponent({
 
     const showPlaceholder = computed(
       () =>
-        props.placeholder &&
+        placeholder &&
         editor.children?.length === 1 &&
         Array.from(Node.texts(editor)).length === 1 &&
         Node.string(editor) === "" &&
@@ -1428,20 +1420,19 @@ export const Editable = defineComponent({
 
     return () =>
       h(
-        attributes.is || 'div',
+        attributes.is || "div",
         {
           role: readOnly ? undefined : "textbox",
           "aria-multiline": readOnly ? undefined : true,
           "data-slate-editor": true,
           "data-slate-node": "value",
-          ...attributes,
           zindex: -1,
           spellcheck: spellcheck.value,
           autocorrect: autocorrect.value,
           autocapitalize: autocapitalize.value,
           contenteditable: !readOnly,
           ref: editableRef,
-          style: mergedEditableStyle.value,
+          style: editableStyle.value,
           onBeforeinput,
           onInput,
           onBlur,

@@ -5,16 +5,13 @@
 > This component collects user operations and maps them to the slate
 
 ```typescript
-interface EditableProps extends HTMLAttributes {
-  role?: string;
+interface EditableProps {
   readOnly: boolean;
   placeholder?: string;
-  style?: CSSProperties;
   scrollSelectionIntoView: (
     editor: DOMEditor,
     domRange: globalThis.Range
   ) => void;
-  is: string;
 }
 ```
 
