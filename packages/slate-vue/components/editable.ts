@@ -73,7 +73,6 @@ interface EditableProps extends HTMLAttributes {
     editor: DOMEditor,
     domRange: globalThis.Range
   ) => void;
-  is: string;
 }
 
 export const Editable = defineComponent({
@@ -93,13 +92,9 @@ export const Editable = defineComponent({
       type: Object,
       default: () => {},
     },
-    is: {
-      type: String,
-      default: () => "div",
-    },
   },
   setup(props: EditableProps) {
-    const { placeholder, readOnly, scrollSelectionIntoView, is } = props;
+    const { placeholder, readOnly, scrollSelectionIntoView } = props;
 
     const editor = useEditor();
     const attributes: HTMLAttributes = useAttrs();
@@ -1433,7 +1428,7 @@ export const Editable = defineComponent({
 
     return () =>
       h(
-        is,
+        attributes.is || 'div',
         {
           role: readOnly ? undefined : "textbox",
           "aria-multiline": readOnly ? undefined : true,

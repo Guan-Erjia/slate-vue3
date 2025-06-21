@@ -94,7 +94,7 @@
     <div v-if="rendering">Rendering</div>
     <Slate v-else :editor="editor" :render-element="renderElement" :render-chunk="config.chunkDivs ?
         renderChunk : undefined">
-        <Editable placeholder="Enter some text…" spellcheck autoFocus />
+        <Editable placeholder="Enter some text…" spellcheck />
     </Slate>
 </template>
 <script setup lang="ts">
