@@ -5,7 +5,7 @@ import {
   normalizeStringDiff,
   StringDiff,
 } from "slate-dom";
-import { Editor, Node, Path, Point, Range, Text } from "slate";
+import { Editor, Node, Path, Point, Range, Text, Transforms } from "slate";
 import { onMounted, ref, type Ref } from "vue";
 import { useEditor } from "./use-editor";
 
@@ -394,7 +394,22 @@ export const useAndroidManager = (
           }
 
           if (canStoreDiff) {
+            const currentSelection = editor.selection;
             storeDiff(start.path, diff);
+
+            if (currentSelection) {
+              const newPoint = {
+                path: start.path,
+                offset: start.offset + text.length,
+              };
+
+              scheduleAction(() => {
+                Transforms.select(editor, {
+                  anchor: newPoint,
+                  focus: newPoint,
+                });
+              }, newPoint);
+            }
             return;
           }
         }

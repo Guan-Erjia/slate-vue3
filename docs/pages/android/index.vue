@@ -199,6 +199,18 @@ const TEST_CASES: AndroidTestCase[] = [
             },
         ],
     },
+    {
+        id: 'autocorrect',
+        name: 'Autocorrect',
+        instructions:
+            'Type "Cant", then press space to autocorrect it. Make sure the cursor position is correct (after the autocorrected word)',
+        value: [
+            {
+                type: 'paragraph',
+                children: [{ text: '' }],
+            },
+        ],
+    },
 ]
 
 const route = useRoute()
