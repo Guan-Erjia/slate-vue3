@@ -60,8 +60,8 @@ export const StringComp = defineComponent({
     return () =>
       zeroStringAttrs.value
         ? h("span", zeroStringAttrs.value, [
-            !IS_ANDROID || !isLineBreak ? "\uFEFF" : null,
-            isLineBreak && !IS_FIREFOX ? h("br") : null,
+            !IS_ANDROID || !isLineBreak.value ? "\uFEFF" : null,
+            !IS_FIREFOX && isLineBreak.value ? h("br") : null,
           ])
         : h("span", { "data-slate-string": true }, getTextContent.value);
   },
