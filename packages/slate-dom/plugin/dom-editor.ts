@@ -431,6 +431,12 @@ export const DOMEditor: DOMEditorInterface = {
       return;
     }
 
+    // Return if no dom node is associated with the editor, which means the editor is not yet mounted
+    // or has been unmounted. This can happen especially, while retrying to focus the editor.
+    if (!EDITOR_TO_ELEMENT.get(editor)) {
+      return
+    }
+
     const el = DOMEditor.toDOMNode(editor, editor);
     const root = DOMEditor.findDocumentOrShadowRoot(editor);
     if (root.activeElement !== el) {
