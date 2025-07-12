@@ -99,7 +99,7 @@ function renderPlaceholder(props: RenderPlaceholderProps): VNode {}
 
 ## renderChunk
 
-After the editor is split into chunks, the rendering content of each chunk can be customized to improve performance when the editor content is too large.[**See the example**](https://guan-erjia.github.io/slate-vue3/examples/huge-document2)
+After the editor is split into chunks, the rendering content of each chunk can be customized to improve performance when the editor content is too large.[**See the example**](https://guan-erjia.github.io/slate-vue3/examples/with-chunks)
 
 ```typescript
 export interface RenderChunkProps {

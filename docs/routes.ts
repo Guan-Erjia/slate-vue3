@@ -160,9 +160,9 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/huge-document/index.vue"),
   },
   {
-    name: "huge-document2",
-    path: "huge-document2",
-    component: () => import("./pages/examples/huge-document2/index.vue"),
+    name: "with-chunks",
+    path: "with-chunks",
+    component: () => import("./pages/examples/with-chunks/index.vue"),
   },
   {
     name: "images",
