@@ -134,9 +134,9 @@ const initialValue: Descendant[] = [
 const renderElement = ({ attributes, children, element }: RenderElementProps) => {
   switch (element.type) {
     case 'link':
-      return h(LinkComponent, { ...attributes, element }, () => children)
+      return h(LinkComponent, { ...useInheritRef(attributes), element }, () => children)
     case 'button':
-      return h(ButtonComponent, { ...attributes, element }, () => children)
+      return h(ButtonComponent, { ...useInheritRef(attributes), element }, () => children)
     case "badge":
       return h(BadgeComponent, useInheritRef(attributes), () => children)
     default:

@@ -5,7 +5,7 @@ import {
   normalizeStringDiff,
   StringDiff,
 } from "slate-dom";
-import { Editor, Node, Path, Point, Range, Text } from "slate";
+import { Editor, Node, Path, Point, Range, Text, Transforms } from "slate";
 import { onMounted, ref, type Ref } from "vue";
 import { useEditor } from "./use-editor";
 
@@ -188,7 +188,11 @@ export const useAndroidManager = (
         }
 
         return scheduleAction(
-          () => Editor.deleteFragment(editor, { direction }),
+          () => 
+            Transforms.delete(editor, {
+              at: targetRange!,
+              reverse: direction === "backward",
+            }),
           targetRange
         );
       }
