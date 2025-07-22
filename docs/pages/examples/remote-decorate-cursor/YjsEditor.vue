@@ -72,6 +72,8 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
   getRemoteCursorsOnLeaf<{ name: string }, Text>(leaf).forEach((cursor) => {
     if (cursor.data) {
       style.backgroundColor = 'rgba(255, 0, 0, 0.5)'
+      attributes.contenteditable = false
+      attributes.unselectable = 'on'
     }
   })
 
@@ -91,6 +93,7 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
       ]
     }
   })
+  
 
   return h(
     'code' in leaf ? "code" : 'bold' in leaf ? "strong" : "span",
