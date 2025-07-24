@@ -72,9 +72,11 @@ export const reconcileChildren = (
 
       chunkTreeHelper.insertBefore(leavesToInsert)
 
-      insertedChildren.forEach((node, relativeIndex) => {
-        onInsert?.(node, insertedChildrenStartIndex + relativeIndex)
-      })
+      if (onInsert) {
+        for (let i = 0; i < insertedChildren.length; i++) {
+          onInsert(insertedChildren[i], insertedChildrenStartIndex + i)
+        }
+      }
     }
 
     const matchingChildIndex = childrenHelper.pointerIndex - 1
@@ -98,20 +100,23 @@ export const reconcileChildren = (
   if (!childrenHelper.reachedEnd) {
     const remainingChildren = childrenHelper.remaining()
 
-    const leavesToInsert = childrenHelper.toChunkLeaves(
-      remainingChildren,
-      childrenHelper.pointerIndex
-    )
+    if (remainingChildren.length) {
+      const leavesToInsert = childrenHelper.toChunkLeaves(
+        remainingChildren,
+        childrenHelper.pointerIndex
+      )
 
-    // Move the pointer back to the final leaf in the tree, or the start of the
-    // tree if the tree is currently empty
-    chunkTreeHelper.returnToPreviousLeaf()
+      // Move the pointer back to the final leaf in the tree, or the start of the
+      // tree if the tree is currently empty
+      chunkTreeHelper.returnToPreviousLeaf()
 
-    chunkTreeHelper.insertAfter(leavesToInsert)
-
-    remainingChildren.forEach((node, relativeIndex) => {
-      onInsert?.(node, childrenHelper.pointerIndex + relativeIndex)
-    })
+      chunkTreeHelper.insertAfter(leavesToInsert)
+      if (onInsert) {
+        for (let i = 0; i < remainingChildren.length; i++) {
+          onInsert(remainingChildren[i], childrenHelper.pointerIndex + i)
+        }
+      }
+    }
   }
 
   chunkTree.movedNodeKeys.clear()
