@@ -292,7 +292,6 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
         case 'heading-one':
             return h(Heading, {
                 ...useInheritRef(attributes), style,
-                contentVisibility: config.contentVisibilityMode === 'element',
                 showSelectedHeadings: config.showSelectedHeadings
             }, () => children)
         default:
