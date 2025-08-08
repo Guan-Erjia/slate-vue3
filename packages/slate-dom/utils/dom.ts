@@ -7,6 +7,7 @@
 // https://github.com/microsoft/TypeScript/issues/35002
 type DOMNode = globalThis.Node
 type DOMElement = globalThis.Element
+import { Scrubber } from 'slate'
 import { DOMEditor } from '../plugin/dom-editor'
 
 declare global {
@@ -183,7 +184,19 @@ export const getEditableChildAndIndex = (
     index = i
     i += direction === 'forward' ? 1 : -1
   }
-
+  
+  // compact vue3, get the real node element when renderList in firefox #18
+  while(child.nodeType === 3 && child.textContent === '') {
+    index++
+    child = childNodes[index]
+  }
+  if (!child) {
+    throw new Error(
+      `Compact on vue3 empty childNode: Failed to find adjacent nodes: ${Scrubber.stringify(
+        child
+      )}`
+    );
+  }
   return [child, index]
 }
 
