@@ -691,7 +691,7 @@ export const DOMEditor: DOMEditorInterface = {
       searchDirection?: "forward" | "backward";
     }
   ): T extends true ? Point | null : Point => {
-    const { exactMatch, suppressThrow, searchDirection = "backward" } = options;
+    const { exactMatch, suppressThrow, searchDirection } = options;
     const [nearestNode, nearestOffset] = compatEmptyNode(
       exactMatch ? domPoint : normalizeDOMPoint(domPoint)
     );
@@ -806,21 +806,32 @@ export const DOMEditor: DOMEditorInterface = {
           '[data-slate-node="element"]'
         );
 
-        if (searchDirection === "forward") {
-          const leafNodes = [
-            ...getLeafNodes(elementNode),
-            ...getLeafNodes(elementNode?.nextElementSibling),
-          ];
-          leafNode =
-            leafNodes.find((leaf) => isAfter(nonEditableNode, leaf)) ?? null;
-        } else {
+        if (searchDirection === 'backward' || !searchDirection) {
           const leafNodes = [
             ...getLeafNodes(elementNode?.previousElementSibling),
             ...getLeafNodes(elementNode),
           ];
+
           leafNode =
-            leafNodes.findLast((leaf) => isBefore(nonEditableNode, leaf)) ??
-            null;
+            leafNodes.findLast(leaf => isBefore(nonEditableNode, leaf)) ?? null
+        
+          if (leafNode) {
+            searchDirection === 'backward'
+          }
+        }
+
+        if (searchDirection === 'forward' || !searchDirection) {
+          const leafNodes = [
+            ...getLeafNodes(elementNode),
+            ...getLeafNodes(elementNode?.nextElementSibling),
+          ];
+
+          leafNode =
+            leafNodes.find(leaf => isAfter(nonEditableNode, leaf)) ?? null
+          
+          if (leafNode) {
+            searchDirection === 'forward'
+          }
         }
 
         if (leafNode) {
