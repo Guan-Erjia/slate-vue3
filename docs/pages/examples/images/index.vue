@@ -120,8 +120,7 @@ const withImages = (editor: CustomEditor) => {
 
 const editor = withHistory(withImages(withDOM(createEditor())))
 editor.children = initialValue;
-const onMouseDown = (event: Event) => {
-  event.preventDefault()
+const onClick = () => {
   const url = window.prompt('Enter the URL of the image:')
   if (url && !isImageUrl(url)) {
     alert('URL is not an image')
@@ -129,11 +128,14 @@ const onMouseDown = (event: Event) => {
   }
   url && insertImage(editor, url)
 }
+const onPointerDown = (event: PointerEvent) => {
+  event.preventDefault()
+}
 </script>
 <template>
   <Slate :editor="editor" :render-element="renderElement">
     <Toolbar>
-      <Button @mousedown="onMouseDown">
+      <Button @click="onClick" @pointerdown="onPointerDown">
         image
       </Button>
     </Toolbar>

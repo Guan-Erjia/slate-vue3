@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref } from "vue";
+import { h, ref, VNode, VNodeArrayChildren } from "vue";
 import { Slate, Editable, type RenderLeafProps } from "slate-vue3"
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { createEditor, Descendant, Editor } from "slate-vue3/core";
@@ -47,7 +47,7 @@ const initialValue: Descendant[] = [
 
 
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
-  let _children = children
+  let _children: VNodeArrayChildren | VNode = children
   if ('bold' in leaf) {
     _children = h('strong', null, _children)
   }
@@ -75,8 +75,7 @@ const isMarkActive = (format: string) => {
   const marks = Editor.marks(editor)
   return marks ? marks[format as keyof typeof marks] === true : false
 }
-const toggleMark = (format: string, event?: Event) => {
-  event?.preventDefault()
+const toggleMark = (format: string) => {
   const isActive = isMarkActive(format)
   if (isActive) {
     Editor.removeMark(editor, format)
@@ -103,21 +102,24 @@ const handleLoad = (e: Event) => {
 }
 
 const onBlur = () => DOMEditor.deselect(editor)
+const onPointerDown = (event: PointerEvent) => {
+  event.preventDefault()
+}
 </script>
 
 <template>
   <Slate :editor="editor" :render-leaf="renderLeaf">
     <Toolbar>
-      <Button :active="isMarkActive('bold')" @mousedown="toggleMark('bold', $event)">
+      <Button :active="isMarkActive('bold')" @click="toggleMark('bold')" @pointerdown="onPointerDown">
         format_bold
       </Button>
-      <Button :active="isMarkActive('italic')" @mousedown="toggleMark('italic', $event)">
+      <Button :active="isMarkActive('italic')" @click="toggleMark('italic')" @pointerdown="onPointerDown">
         format_italic
       </Button>
-      <Button :active="isMarkActive('underline')" @mousedown="toggleMark('underline', $event)">
+      <Button :active="isMarkActive('underline')" @click="toggleMark('underline')" @pointerdown="onPointerDown">
         format_underlined
       </Button>
-      <Button :active="isMarkActive('code')" @mousedown="toggleMark('code', $event)">
+      <Button :active="isMarkActive('code')" @click="toggleMark('code')" @pointerdown="onPointerDown">
         code
       </Button>
     </Toolbar>

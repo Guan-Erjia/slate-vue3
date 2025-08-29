@@ -7,7 +7,7 @@
   </a>
 </template>
 <script setup lang="ts">
-import { LinkElement } from '../../custom-types';
+import { LinkElement } from '../../../custom-types';
 import { useSelected } from 'slate-vue3';
 import { computed, HTMLAttributes, useAttrs } from 'vue';
 import InlineChromiumBugfix from './InlineChromiumBugfix.vue';

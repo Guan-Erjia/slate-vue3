@@ -1,5 +1,5 @@
 <template>
-  <Button :active="isMarkActive" @mousedown="onMouseDown">
+  <Button :active="isMarkActive" @click="onClick" @pointerdown="onPointerDown">
     {{ props.icon }}
   </Button>
 </template>
@@ -20,12 +20,15 @@ const isMarkActive = computed(() => {
   return marks ? marks[props.format as keyof typeof marks] === true : false
 })
 
-const onMouseDown = (event: MouseEvent) => {
-  event.preventDefault()
+const onClick = () => {
   if (isMarkActive.value) {
     Editor.removeMark(editor, props.format)
   } else {
     Editor.addMark(editor, props.format, true)
   }
+}
+
+const onPointerDown = (event: PointerEvent) => {
+  event.preventDefault()
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <Slate :editor="editor" :render-element="renderElement">
     <Toolbar>
-      <Button @mousedown="onMouseDown">add</Button>
+      <Button @click="onClick" @pointerdown="onPointerDown">add</Button>
     </Toolbar>
     <Editable placeholder="Enter some text..." />
   </Slate>
@@ -51,13 +51,15 @@ const renderElement = ({ attributes, children, element }: RenderElementProps) =>
   }
 }
 
-const onMouseDown = (event: MouseEvent) => {
-  event.preventDefault()
+const onClick = () => {
   const text = { text: '' }
   const voidNode: EditableVoidElement = {
     type: 'editable-void',
     children: [text],
   }
   Transforms.insertNodes(editor, voidNode)
+}
+const onPointerDown = (event: PointerEvent) => {
+  event.preventDefault()
 }
 </script>

@@ -2,7 +2,7 @@
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
    :decorate="decorate">
     <Toolbar>
-      <Button data-testid="code-block-button" active @mousedown="onMouseDown">
+      <Button data-testid="code-block-button" active @click="onClick" @pointerdown="onPointerDown">
         code
       </Button>
     </Toolbar>
@@ -183,8 +183,7 @@ const decorate = ([node]: [Node]) => {
   return []
 }
 
-const onMouseDown = (event: MouseEvent) => {
-  event.preventDefault()
+const onClick = () => {
   Transforms.wrapNodes(
     editor,
     { type: 'code-block', language: 'html', children: [] },
@@ -198,6 +197,9 @@ const onMouseDown = (event: MouseEvent) => {
     { type: 'code-line' as any },
     { match: n => Element.isElement(n) && n.type === 'paragraph' }
   )
+}
+const onPointerDown = (event: PointerEvent) => {
+  event.preventDefault()
 }
 </script>
 <style>

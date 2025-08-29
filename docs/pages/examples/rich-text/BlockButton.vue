@@ -1,5 +1,5 @@
 <template>
-  <Button :active="isBlockActive" @mousedown="onMouseDown">
+  <Button :active="isBlockActive" @click="onClick" @pointerdown="onPointerDown">
     {{ props.icon }}
   </Button>
 </template>
@@ -40,8 +40,7 @@ const isBlockActive = computed(() => {
 })
 
 const LIST_TYPES = ['numbered-list', 'bulleted-list']
-const onMouseDown = (event: MouseEvent) => {
-  event.preventDefault()
+const onClick = () => {
   const isActive = isBlockActive.value
   const isList = LIST_TYPES.includes(props.format)
 
@@ -71,5 +70,7 @@ const onMouseDown = (event: MouseEvent) => {
     Transforms.wrapNodes(editor, block)
   }
 }
-
+const onPointerDown = (event: PointerEvent) => {
+  event.preventDefault()
+}
 </script>

@@ -172,15 +172,13 @@ const onKeyDown = (event: KeyboardEvent) => {
   }
 }
 
-const onLinkMouseDown = (event: MouseEvent) => {
-  event.preventDefault()
+const onLinkClick = () => {
   const url = window.prompt('Enter the URL of the link:')
   if (url && editor.selection) {
     wrapLink(url)
   }
 }
-const onOffLinkMouseDown = (event: MouseEvent) => {
-  event.preventDefault()
+const onOffLinkClick = () => {
   if (isLinkActive.value) {
     Transforms.unwrapNodes(editor, {
       match: n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'link',
@@ -188,8 +186,7 @@ const onOffLinkMouseDown = (event: MouseEvent) => {
   }
 }
 
-const onSmarkMouseDown = (event: MouseEvent) => {
-  event.preventDefault()
+const onSmartClick = () => {
   if (isButtonActive.value) {
     Transforms.unwrapNodes(editor, {
       match: n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'button',
@@ -216,18 +213,21 @@ const onSmarkMouseDown = (event: MouseEvent) => {
   }
 }
 
+const onPointerDown = (event: PointerEvent) => {
+  event.preventDefault()
+}
 </script>
 
 <template>
   <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf">
     <Toolbar>
-      <Button :active="isLinkActive" @mousedown="onLinkMouseDown">
+      <Button :active="isLinkActive" @click="onLinkClick" @pointerdown="onPointerDown">
         link
       </Button>
-      <Button :active="isLinkActive" @mousedown="onOffLinkMouseDown">
+      <Button :active="isLinkActive" @click="onOffLinkClick" @pointerdown="onPointerDown">
         link_off
       </Button>
-      <Button active @mousedown="onSmarkMouseDown">
+      <Button active @click="onSmartClick" @pointerdown="onPointerDown">
         smart_button
       </Button>
     </Toolbar>
