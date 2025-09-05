@@ -1,0 +1,1 @@
+import{l as o,u as r,D as a,E as c,R as i}from"./editable-3R3-iUPg.js";import{I as u,q as l}from"./index-CFI11kLf.js";const E=()=>u(o),f=()=>{const t=E(),e=r();return l(()=>{if(!e.selection||!t?.value)return!1;const n=a.findPath(e,t.value),s=c.range(e,n);return!!i.intersection(s,e.selection)})};export{f as u};

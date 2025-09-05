@@ -1,0 +1,10 @@
+import{_ as e}from"./Markdown.vue_vue_type_style_index_0_lang-CV5N9A0A.js";import{d as t,f as n,e as o,o as c}from"./index-CFI11kLf.js";import"./editable-3R3-iUPg.js";import"./use-inherit-ref-lmEEbD6_.js";import"./prism-markdown-Nq6lbcwn.js";import"./normalize-tokens-Bcdb6Sh1.js";const s=`> Get the current editor selection from the context
+
+\`\`\`typescript
+import { useSelection } from "slate-vue3";
+
+const useSelection: () => ComputedRef<BaseSelection>;
+
+const selection = useSelection();
+\`\`\`
+`,d=t({__name:"use-selection",setup(r){return(i,m)=>(c(),n(e,{content:o(s)},null,8,["content"]))}});export{d as default};
