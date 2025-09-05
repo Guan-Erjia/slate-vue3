@@ -187,7 +187,7 @@ export const getEditableChildAndIndex = (
   
   // compact vue3, get the real node element when renderList in firefox #18
   while(child.nodeType === 3 && child.textContent === '') {
-    index++
+    index += direction === 'forward' ? 1 : -1;
     child = childNodes[index]
   }
   if (!child) {
