@@ -28,11 +28,11 @@ importers:
         specifier: ^10.0.0
         version: 10.0.0
       '@liveblocks/client':
-        specifier: ^3.6.0
-        version: 3.6.0(@types/json-schema@7.0.15)
+        specifier: ^3.6.1
+        version: 3.6.1(@types/json-schema@7.0.15)
       '@liveblocks/yjs':
-        specifier: ^3.6.0
-        version: 3.6.0(@types/json-schema@7.0.15)(yjs@13.6.27)
+        specifier: ^3.6.1
+        version: 3.6.1(@types/json-schema@7.0.15)(yjs@13.6.27)
       '@playwright/test':
         specifier: ^1.55.0
         version: 1.55.0
@@ -88,7 +88,7 @@ importers:
         specifier: ^11.0.5
         version: 11.0.5
       vite:
-        specifier: ^7.1.4
+        specifier: ^7.1.5
         version: 7.1.5(@types/node@24.3.1)(terser@5.37.0)
       vite-plugin-babel:
         specifier: ^1.3.2
@@ -418,16 +418,16 @@ packages:
   '@jridgewell/trace-mapping@0.3.30':
     resolution: {integrity: sha512-GQ7Nw5G2lTu/BtHTKfXhKHok2WGetd4XYcVKGx00SjAk8GMwgJM3zr6zORiPGuOE+/vkc90KtTosSSvaCjKb2Q==}
 
-  '@liveblocks/client@3.6.0':
-    resolution: {integrity: sha512-JdkGoXEQ06n3MpN6iDd7Lnxytspqqfvvq0xT0JFbTcxSXQFAtakgUT127GwvpRgq3mk+DdvSw8Ppf/4rbgm13w==}
+  '@liveblocks/client@3.6.1':
+    resolution: {integrity: sha512-3b90w8Ii9+syCvGUXw9j0dXQkL2qoa80AZY1Q8X01ah8hQKJgPEZiV0Ftlm36TMPZBh642bfw8Uh/JLiv5a90g==}
 
-  '@liveblocks/core@3.6.0':
-    resolution: {integrity: sha512-r4/AnfcGJJIoQA53AvUeogy0MBSlC/LgimgpsF6rgbrSrU3z5V/53MivEJt8fTGo8JrMIrKr03pvZha1RZ/xsw==}
+  '@liveblocks/core@3.6.1':
+    resolution: {integrity: sha512-KoRIU/iU4ITmcIANUjOtLlxhztUSrrB00owS/DIPSE2tFj38O0buSi7a/IP2MFjLZRUvdZL43UVwtwcAJGCsXg==}
     peerDependencies:
       '@types/json-schema': ^7
 
-  '@liveblocks/yjs@3.6.0':
-    resolution: {integrity: sha512-ZszzkNFMXWj1wqDH7r9Bd79eD0qc+2jo6+74e0oOlT1ltBHOWEIc47Jd7GstXZ0nraXzv/rFaOUBoQ2Se2zCRg==}
+  '@liveblocks/yjs@3.6.1':
+    resolution: {integrity: sha512-8VK0UD7TJh/HNXIuh0DLZhfw4/Qo4g6bzlkJwUgbPZyCzhKrAZBBPk/KyRm43l4IugnEESLZOZbHUnWaHOhoLQ==}
     peerDependencies:
       yjs: ^13.6.1
 
@@ -2389,20 +2389,20 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@liveblocks/client@3.6.0(@types/json-schema@7.0.15)':
+  '@liveblocks/client@3.6.1(@types/json-schema@7.0.15)':
     dependencies:
-      '@liveblocks/core': 3.6.0(@types/json-schema@7.0.15)
+      '@liveblocks/core': 3.6.1(@types/json-schema@7.0.15)
     transitivePeerDependencies:
       - '@types/json-schema'
 
-  '@liveblocks/core@3.6.0(@types/json-schema@7.0.15)':
+  '@liveblocks/core@3.6.1(@types/json-schema@7.0.15)':
     dependencies:
       '@types/json-schema': 7.0.15
 
-  '@liveblocks/yjs@3.6.0(@types/json-schema@7.0.15)(yjs@13.6.27)':
+  '@liveblocks/yjs@3.6.1(@types/json-schema@7.0.15)(yjs@13.6.27)':
     dependencies:
-      '@liveblocks/client': 3.6.0(@types/json-schema@7.0.15)
-      '@liveblocks/core': 3.6.0(@types/json-schema@7.0.15)
+      '@liveblocks/client': 3.6.1(@types/json-schema@7.0.15)
+      '@liveblocks/core': 3.6.1(@types/json-schema@7.0.15)
       '@noble/hashes': 1.8.0
       js-base64: 3.7.7
       y-indexeddb: 9.0.12(yjs@13.6.27)
