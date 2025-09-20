@@ -33,7 +33,7 @@ export const TextComp = defineComponent({
   setup(props: { text: Text; element: Element }) {
     const { text, element } = props;
     const editor = useEditor();
-    const spanRef = ref<HTMLSpanElement>();
+    const textRef = ref<HTMLSpanElement>();
     const decorate = useDecorate();
     const markPlaceholder = useMarkPlaceholder();
 
@@ -58,18 +58,18 @@ export const TextComp = defineComponent({
 
     onMounted(() => {
       const key = DOMEditor.findKey(editor, text);
-      if (spanRef.value) {
+      if (textRef.value) {
         const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-        KEY_TO_ELEMENT?.set(key, spanRef.value);
-        ELEMENT_TO_NODE.set(spanRef.value, text);
-        NODE_TO_ELEMENT.set(text, spanRef.value);
+        KEY_TO_ELEMENT?.set(key, textRef.value);
+        ELEMENT_TO_NODE.set(textRef.value, text);
+        NODE_TO_ELEMENT.set(text, textRef.value);
       }
     });
 
     onUnmounted(() => {
       NODE_TO_ELEMENT.delete(text);
-      if (spanRef.value) {
-        ELEMENT_TO_NODE.delete(spanRef.value);
+      if (textRef.value) {
+        ELEMENT_TO_NODE.delete(textRef.value);
       }
     });
 
@@ -96,23 +96,31 @@ export const TextComp = defineComponent({
     return () =>
       renderText({
         text,
-        attributes: { "data-slate-node": "text", ref: spanRef },
+        attributes: { "data-slate-node": "text", ref: textRef },
         children: renderList(leaves.value, (leaf, i) =>
           renderLeaf({
             text,
             leaf: leaf.leaf,
             leafPosition: leaf.position,
             attributes: { "data-slate-leaf": true },
-            children: [
-              h(StringComp, {
-                text,
-                element,
-                leaf: leaf.leaf,
-                isLast: isLastText.value && i === leaves.value.length - 1,
-                key: `${text.text}-${leaf.leaf.text}-${i}`,
-              }),
-              showPlaceholder.value && h(PlaceholderComp),
-            ],
+            children: showPlaceholder.value
+              ? [
+                  h(StringComp, {
+                    text,
+                    element,
+                    leaf: leaf.leaf,
+                    isLast: true,
+                    key: DOMEditor.findKey(editor, leaf.leaf).id,
+                  }),
+                  h(PlaceholderComp),
+                ]
+              : h(StringComp, {
+                  text,
+                  element,
+                  leaf: leaf.leaf,
+                  isLast: isLastText.value && i === leaves.value.length - 1,
+                  key: DOMEditor.findKey(editor, leaf.leaf).id,
+                }),
           })
         ),
       });

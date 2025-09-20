@@ -29,7 +29,7 @@ export interface RenderPlaceholderProps {
  * `RenderLeafProps` are passed to the `renderLeaf` handler.
  */
 export interface RenderLeafProps {
-  children: VNodeArrayChildren;
+  children: VNodeChild[] | VNode;
   /**
    * The leaf node with any applied decorations.
    * If no decorations are applied, it will be identical to the `text` property.
