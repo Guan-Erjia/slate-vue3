@@ -29,37 +29,14 @@ export const ChildrenComp = defineComponent({
   props: ["element"],
   setup(props: { element: Ancestor }) {
     const editor = useEditor();
-    // 缓存 isBlock 计算结果，节点属性一般不可能改变
     const element = props.element;
-    const isBlock =
-      !Editor.isEditor(element) &&
-      Element.isElement(element) &&
-      !editor.isInline(element);
 
-    const renderElementOrText = () =>
-      renderList(element.children, (n, i): VNode => {
-        // Update the index and parent of each child.
-        // PERF: If chunking is enabled, this is done while traversing the chunk tree
-        // instead to eliminate unnecessary weak map operations.
-        NODE_TO_INDEX.set(n, i);
-        NODE_TO_PARENT.set(n, element);
-        const key = DOMEditor.findKey(editor, n);
-        return Text.isText(n)
-          ? h(TextComp, {
-              text: n,
-              element: element,
-              key: key.id,
-            })
-          : h(ElementComp, {
-              element: n,
-              key: key.id,
-            });
-      });
-
-    // 不计算 chunkTree 提前返回
-    if (isBlock) {
-      return renderElementOrText;
-    }
+    const isBlock = computed(
+      () =>
+        !Editor.isEditor(element) &&
+        Element.isElement(element) &&
+        !editor.isInline(element)
+    );
 
     const chunkSize = computed(() =>
       Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element)
@@ -97,11 +74,28 @@ export const ChildrenComp = defineComponent({
     provide(SLATE_INNER_STATIC_CHUNK_ROOT, staticChunkTree);
 
     return () => {
-      if (chunkTree.value === null) {
-        return renderElementOrText();
+      if (chunkSize.value === null || isBlock.value) {
+        return renderList(element.children, (n, i): VNode => {
+          // Update the index and parent of each child.
+          // PERF: If chunking is enabled, this is done while traversing the chunk tree
+          // instead to eliminate unnecessary weak map operations.
+          NODE_TO_INDEX.set(n, i);
+          NODE_TO_PARENT.set(n, element);
+          const key = DOMEditor.findKey(editor, n);
+          return Text.isText(n)
+            ? h(TextComp, {
+                text: n,
+                element: element,
+                key: key.id,
+              })
+            : h(ElementComp, {
+                element: n,
+                key: key.id,
+              });
+        });
       } else {
         return h(ChunkComp, {
-          ancestor: staticChunkTree,
+          ancestor: chunkTree.value!,
         });
       }
     };

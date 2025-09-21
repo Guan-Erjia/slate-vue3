@@ -1,6 +1,6 @@
 import { Descendant } from "slate";
 import { DOMEditor, Key } from "slate-dom";
-import { markRaw } from "vue";
+import { markRaw, toRaw } from "vue";
 import { ChunkLeaf } from "./types";
 
 /**
@@ -26,7 +26,7 @@ export class ChildrenHelper {
 
   constructor(editor: DOMEditor, children: Descendant[]) {
     this.editor = editor;
-    this.children = children;
+    this.children = toRaw(children);
     this.cachedKeys = markRaw(new Array(children.length));
     this.pointerIndex = 0;
   }
@@ -84,7 +84,7 @@ export class ChildrenHelper {
    * by one and compare it to the known key.
    */
   public lookAhead(node: Descendant, key: Key) {
-    const elementResult = this.children.indexOf(node, this.pointerIndex);
+    const elementResult = this.children.indexOf(toRaw(node), this.pointerIndex);
     if (elementResult > -1) return elementResult - this.pointerIndex;
 
     for (let i = this.pointerIndex; i < this.children.length; i++) {
