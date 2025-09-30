@@ -1,7 +1,6 @@
 import { onMounted, onUnmounted, Ref } from "vue";
 import { Editor, Path, Range, Text, Descendant } from "slate";
 import { DOMEditor } from "slate-dom";
-import { toRawWeakMap as WeakMap } from "share-tools";
 import { JsonObject } from "@liveblocks/client";
 import { CursorEditor, CursorState } from "../plugins/withCursors";
 import { relativeRangeToSlateRange } from "../utils/position";
@@ -22,10 +21,10 @@ export function useOnResize<T extends HTMLElement>(
 
 export type Store<T> = readonly [() => () => void, Ref<T>];
 
-const CHILDREN_TO_CURSOR_STATE_TO_RANGE: WeakMap<
+const CHILDREN_TO_CURSOR_STATE_TO_RANGE = new WeakMap<
   Descendant[],
   WeakMap<CursorState, Range | null>
-> = new WeakMap();
+>();
 
 export function getCursorRange<TCursorData extends JsonObject = JsonObject>(
   editor: CursorEditor<TCursorData>,

@@ -4,7 +4,6 @@ import { ref } from "vue";
 import { BaseEditor } from "slate";
 import { useEditor } from "slate-vue";
 import { DOMEditor } from "slate-dom";
-import { toRawWeakMap as WeakMap } from "share-tools";
 import { Store } from "./utils";
 import {
   CursorEditor,
@@ -12,11 +11,10 @@ import {
   RemoteCursorChangeEventListener,
 } from "../plugins/withCursors";
 
-export type CursorStore<TCursorData extends JsonObject = JsonObject> = Store<
-  Record<string, CursorState<TCursorData>>
->;
-
-const EDITOR_TO_CURSOR_STORE: WeakMap<BaseEditor, CursorStore> = new WeakMap();
+const EDITOR_TO_CURSOR_STORE = new WeakMap<
+  BaseEditor,
+  Ref<Record<string, CursorState<JsonObject>>>
+>();
 
 export function useRemoteCursorStates<
   TCursorData extends JsonObject = JsonObject
@@ -48,26 +46,24 @@ export function useRemoteCursorStates<
     changed.clear();
   };
 
-  const subscribe = () => {
-    CursorEditor.on(editor, "change", changeHandler);
+  const subscribe = () => CursorEditor.on(editor, "change", changeHandler);
 
-    return () => CursorEditor.off(editor, "change", changeHandler);
-  };
+  const unSubscribe = () => CursorEditor.off(editor, "change", changeHandler);
 
-  const store: CursorStore<TCursorData> = [subscribe, cursors];
-  EDITOR_TO_CURSOR_STORE.set(editor, store);
-
-  // 设置订阅
-  let unsubscribe: () => void;
+  const cacheCursor = EDITOR_TO_CURSOR_STORE.get(editor);
+  if (cacheCursor) {
+    return cacheCursor as Ref<Record<string, CursorState<TCursorData>>>;
+  }
 
   onMounted(() => {
-    unsubscribe = subscribe();
-    // 初始获取快照
+    subscribe();
   });
 
   onUnmounted(() => {
-    unsubscribe?.();
+    unSubscribe();
   });
+
+  EDITOR_TO_CURSOR_STORE.set(editor, cursors);
 
   return cursors;
 }

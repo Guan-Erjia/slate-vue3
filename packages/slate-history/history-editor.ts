@@ -1,6 +1,5 @@
 import { BaseEditor, Editor } from "slate";
 import { History } from "./history";
-import { toRawWeakMap as WeakMap } from "share-tools";
 
 /**
  * Weakmaps for attaching state to the editor.

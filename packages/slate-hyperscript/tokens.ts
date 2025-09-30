@@ -1,17 +1,17 @@
 import { Node, Path, Text } from 'slate'
-import { toRawWeakMap as WeakMap } from 'share-tools'
+import { toRawWeakMap } from 'share-tools'
 
 /**
  * A weak map to hold anchor tokens.
  */
 
-const ANCHOR: WeakMap<Node, [number, AnchorToken]> = new WeakMap()
+const ANCHOR: WeakMap<Node, [number, AnchorToken]> = new toRawWeakMap()
 
 /**
  * A weak map to hold focus tokens.
  */
 
-const FOCUS: WeakMap<Node, [number, FocusToken]> = new WeakMap()
+const FOCUS: WeakMap<Node, [number, FocusToken]> = new toRawWeakMap()
 
 /**
  * All tokens inherit from a single constructor for `instanceof` checking.

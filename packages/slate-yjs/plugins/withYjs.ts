@@ -1,6 +1,5 @@
 import { BaseEditor, Editor, Point } from "slate";
 import { RelativePosition, Transaction, XmlText, YEvent } from "yjs";
-import { toRawWeakMap as WeakMap } from "share-tools";
 import { applyYjsEvents } from "../applyToSlate";
 import { applySlateOp } from "../applyToYjs";
 import { yTextToSlateElement } from "../utils/convert";

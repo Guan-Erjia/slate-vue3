@@ -1,5 +1,4 @@
 import { Editor, Range } from "slate";
-import { toRawWeakMap as WeakMap } from "share-tools";
 import { compareRelativePositions } from "yjs";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
 import { JsonObject } from "@liveblocks/client";
@@ -207,7 +206,7 @@ export function withCursors<
   };
 
   const awarenessChangeListener: RemoteCursorChangeEventListener = (yEvent) => {
-    const listeners: Set<RemoteCursorChangeEventListener> =
+    const listeners =
       CURSOR_CHANGE_EVENT_LISTENERS.get(e);
     if (!listeners) {
       return;

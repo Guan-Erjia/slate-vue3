@@ -2,7 +2,6 @@ import { computed, onUpdated, ref, Ref } from "vue";
 import { BaseRange, NodeMatch, Text } from "slate";
 import { DOMEditor } from "slate-dom";
 import { useEditor } from "slate-vue";
-import { toRawWeakMap as WeakMap } from "share-tools";
 import { JsonObject } from "@liveblocks/client";
 import { CursorEditor, CursorState } from "../plugins/withCursors";
 import {
@@ -31,7 +30,7 @@ export function useRemoteCursorOverlayPositions<
   const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
   const cursorStates = useRemoteCursorStates<TCursorData>();
 
-  const overlayPositionCache = ref(new WeakMap<BaseRange, OverlayPosition>());
+  const overlayPositionCache = ref(new WeakMap());
   const overlayPositions = ref<Record<string, OverlayPosition>>({});
 
   const flushOverlayCursor = () => {

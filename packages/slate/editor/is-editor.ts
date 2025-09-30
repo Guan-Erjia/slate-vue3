@@ -3,7 +3,6 @@ import { Range } from '../interfaces/range'
 import { Node } from '../interfaces/node'
 import { Operation } from '../interfaces/operation'
 import { isObject } from '../utils'
-import { toRawWeakSet as WeakSet } from 'share-tools'
 
 export const IS_EDITOR_SET  = new WeakSet<Editor>()
 
