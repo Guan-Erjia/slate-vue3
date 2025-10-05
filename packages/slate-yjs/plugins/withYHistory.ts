@@ -92,11 +92,13 @@ export function withYHistory<T extends YjsEditor>(
     stackItem: HistoryStackItem;
     type: "redo" | "undo";
   }) => {
-    stackItem.meta.set(
-      "selection",
-      e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
-    );
-    stackItem.meta.set("selectionBefore", LAST_SELECTION.get(e));
+    setTimeout(() => {
+      stackItem.meta.set(
+        "selection",
+        e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
+      );
+      stackItem.meta.set("selectionBefore", LAST_SELECTION.get(e));
+    });
   };
 
   const handleStackItemUpdated = ({
@@ -105,10 +107,12 @@ export function withYHistory<T extends YjsEditor>(
     stackItem: HistoryStackItem;
     type: "redo" | "undo";
   }) => {
-    stackItem.meta.set(
-      "selection",
-      e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
-    );
+    setTimeout(() => {
+      stackItem.meta.set(
+        "selection",
+        e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
+      );
+    });
   };
 
   const handleStackItemPopped = ({
