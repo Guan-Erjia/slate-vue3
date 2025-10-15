@@ -1,9 +1,10 @@
 import { createEditor, Text, Transforms } from "slate";
 import { withDOM } from "slate-dom";
 import { render } from "@testing-library/vue";
-import { nextTick } from "vue";
+import { h, nextTick } from "vue";
 import { describe, test, vi, expect } from "vitest";
 import VueEditor from "./components/VueEditor.vue";
+import { Editable, Slate } from "slate-vue";
 
 describe("slate-react", () => {
   describe("Editable", () => {
@@ -11,7 +12,7 @@ describe("slate-react", () => {
       test("should not unmount the node that gets split on a split_node operation", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
         const editor = withDOM(createEditor());
-        editor.children = initialValue
+        editor.children = initialValue;
         const mounts = vi.fn();
 
         render(VueEditor, {
@@ -33,7 +34,7 @@ describe("slate-react", () => {
           { type: "block", children: [{ text: "st" }] },
         ];
         const editor = withDOM(createEditor());
-        editor.children = initialValue
+        editor.children = initialValue;
         const mounts = vi.fn();
 
         render(VueEditor, {
@@ -46,103 +47,136 @@ describe("slate-react", () => {
         // only 2 renders for the initial render
         expect(mounts).toHaveBeenCalledTimes(2);
       });
+    });
+    test("calls onSelectionChange when editor select change", async () => {
+      const initialValue = [
+        { type: "block", children: [{ text: "te" }] },
+        { type: "block", children: [{ text: "st" }] },
+      ];
+      const editor = withDOM(createEditor());
+      editor.children = initialValue;
 
-      test("calls onSelectionChange when editor select change", async () => {
-        const initialValue = [
-          { type: "block", children: [{ text: "te" }] },
-          { type: "block", children: [{ text: "st" }] },
-        ];
-        const editor = withDOM(createEditor());
-        editor.children = initialValue
+      const onChange = vi.fn();
+      const onValueChange = vi.fn();
+      const onSelectionChange = vi.fn();
 
-        const onChange = vi.fn();
-        const onValueChange = vi.fn();
-        const onSelectionChange = vi.fn();
-
-        render(VueEditor, {
-          props: { editor, onChange, onValueChange, onSelectionChange },
-        });
-
-        Transforms.select(editor, { path: [0, 0], offset: 2 });
-
-        nextTick(() => {
-          expect(onSelectionChange).toHaveBeenCalled();
-          // 这里的测试和 slate-react 不一致，设置 select 的时候同样应该出发 onChange
-          expect(onChange).toHaveBeenCalled();
-          expect(onValueChange).not.toHaveBeenCalled();
-        });
+      render(VueEditor, {
+        props: { editor, onChange, onValueChange, onSelectionChange },
       });
 
-      test("calls onValueChange when editor children change", async () => {
-        const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor());
-        editor.children = initialValue
-        const onChange = vi.fn();
-        const onValueChange = vi.fn();
-        const onSelectionChange = vi.fn();
+      Transforms.select(editor, { path: [0, 0], offset: 2 });
 
-        render(VueEditor, {
-          props: { editor, onChange, onValueChange, onSelectionChange },
-        });
+      nextTick(() => {
+        expect(onSelectionChange).toHaveBeenCalled();
+        // 这里的测试和 slate-react 不一致，设置 select 的时候同样应该出发 onChange
+        expect(onChange).toHaveBeenCalled();
+        expect(onValueChange).not.toHaveBeenCalled();
+      });
+    });
 
-        Transforms.insertText(editor, "Hello word!");
+    test("calls onValueChange when editor children change", async () => {
+      const initialValue = [{ type: "block", children: [{ text: "test" }] }];
+      const editor = withDOM(createEditor());
+      editor.children = initialValue;
+      const onChange = vi.fn();
+      const onValueChange = vi.fn();
+      const onSelectionChange = vi.fn();
 
-        nextTick(() => {
-          expect(onValueChange).toHaveBeenCalled();
-          expect(onChange).toHaveBeenCalled();
-          expect(onSelectionChange).not.toHaveBeenCalled();
-        });
+      render(VueEditor, {
+        props: { editor, onChange, onValueChange, onSelectionChange },
       });
 
-      test("calls onValueChange when editor setNodes", async () => {
-        const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor());
-        editor.children = initialValue
-        const onChange = vi.fn();
-        const onValueChange = vi.fn();
-        const onSelectionChange = vi.fn();
+      Transforms.insertText(editor, "Hello word!");
 
-        render(VueEditor, {
-          props: { editor, onChange, onValueChange, onSelectionChange },
-        });
+      nextTick(() => {
+        expect(onValueChange).toHaveBeenCalled();
+        expect(onChange).toHaveBeenCalled();
+        expect(onSelectionChange).not.toHaveBeenCalled();
+      });
+    });
 
-        Transforms.setNodes(
-          editor,
-          // @ts-ignore
-          { bold: true },
-          {
-            at: { path: [0, 0], offset: 2 },
-            match: Text.isText,
-            split: true,
-          }
-        );
+    test("calls onValueChange when editor setNodes", async () => {
+      const initialValue = [{ type: "block", children: [{ text: "test" }] }];
+      const editor = withDOM(createEditor());
+      editor.children = initialValue;
+      const onChange = vi.fn();
+      const onValueChange = vi.fn();
+      const onSelectionChange = vi.fn();
 
-        nextTick(() => {
-          expect(onChange).toHaveBeenCalled();
-          expect(onValueChange).toHaveBeenCalled();
-          expect(onSelectionChange).not.toHaveBeenCalled();
-        });
+      render(VueEditor, {
+        props: { editor, onChange, onValueChange, onSelectionChange },
       });
 
-      test("calls onValueChange when editor children change", async () => {
+      Transforms.setNodes(
+        editor,
+        // @ts-ignore
+        { bold: true },
+        {
+          at: { path: [0, 0], offset: 2 },
+          match: Text.isText,
+          split: true,
+        }
+      );
+
+      nextTick(() => {
+        expect(onChange).toHaveBeenCalled();
+        expect(onValueChange).toHaveBeenCalled();
+        expect(onSelectionChange).not.toHaveBeenCalled();
+      });
+    });
+
+    test("calls onValueChange when editor children change", async () => {
+      const initialValue = [{ type: "block", children: [{ text: "test" }] }];
+      const editor = withDOM(createEditor());
+      editor.children = initialValue;
+      const onChange = vi.fn();
+      const onValueChange = vi.fn();
+      const onSelectionChange = vi.fn();
+
+      render(VueEditor, {
+        props: { editor, onChange, onValueChange, onSelectionChange },
+      });
+
+      Transforms.insertText(editor, "Hello word!");
+
+      nextTick(() => {
+        expect(onValueChange).toHaveBeenCalled();
+        expect(onChange).toHaveBeenCalled();
+        expect(onSelectionChange).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('translate="no"', () => {
+      test('should have translate="no" attribute', () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
         const editor = withDOM(createEditor());
-        editor.children = initialValue
-        const onChange = vi.fn();
-        const onValueChange = vi.fn();
-        const onSelectionChange = vi.fn();
+        editor.children = initialValue;
 
-        render(VueEditor, {
-          props: { editor, onChange, onValueChange, onSelectionChange },
+        const { container } = render(Slate, {
+          props: { editor },
+          slots: {
+            default: h(Editable),
+          },
         });
 
-        Transforms.insertText(editor, "Hello word!");
+        const editableElement = container.querySelector("[data-slate-editor]");
+        expect(editableElement?.getAttribute("translate")).toBe("no");
+      });
 
-        nextTick(() => {
-          expect(onValueChange).toHaveBeenCalled();
-          expect(onChange).toHaveBeenCalled();
-          expect(onSelectionChange).not.toHaveBeenCalled();
+      test("should allow override of translate attribute", () => {
+        const editor = withDOM(createEditor());
+        const initialValue = [{ type: "block", children: [{ text: "test" }] }];
+        editor.children = initialValue;
+
+        const { container } = render(Slate, {
+          props: { editor },
+          slots: {
+            default: h(Editable, { translate: "yes" }),
+          },
         });
+
+        const editableElement = container.querySelector("[data-slate-editor]");
+        expect(editableElement?.getAttribute("translate")).toBe("yes");
       });
     });
   });

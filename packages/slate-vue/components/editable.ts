@@ -1433,6 +1433,7 @@ export const Editable = defineComponent({
         {
           role: readOnly ? undefined : "textbox",
           "aria-multiline": readOnly ? undefined : true,
+          translate: "no",
           "data-slate-editor": true,
           "data-slate-node": "value",
           zindex: -1,
