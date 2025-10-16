@@ -1,5 +1,5 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement">
+  <Slate :editor :render-element>
     <Editable placeholder="Write some markdown..." spellcheck />
   </Slate>
 </template>

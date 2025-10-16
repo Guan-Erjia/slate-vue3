@@ -181,7 +181,7 @@ editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf">
+  <Slate :editor :render-element :render-leaf>
     <Editable placeholder="Enter some plain text..." />
   </Slate>
 </template>

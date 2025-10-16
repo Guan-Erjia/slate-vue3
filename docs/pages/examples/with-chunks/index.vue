@@ -91,7 +91,7 @@
         </details>
     </div>
     <div v-if="rendering">Rendering</div>
-    <Slate v-else :editor="editor" :render-element="renderElement" :render-chunk="config.chunkDivs ?
+    <Slate v-else :editor :render-element :render-chunk="config.chunkDivs ?
         renderChunk : undefined">
         <Editable placeholder="Enter some text…" spellcheck />
     </Slate>

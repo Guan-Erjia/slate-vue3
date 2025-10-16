@@ -1,7 +1,7 @@
 <template>
   <span v-bind="attrs" class="material-icons"
     :style="{ color: props.reversed ? props.active ? 'white' : '#aaa' : props.active ? 'black' : '#ccc' }">
-    <slot></slot>
+    <slot />
   </span>
 </template>
 <script lang="ts" setup>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Slate, Editable, type RenderElementProps, type RenderLeafProps } from "slate-vue3"
+import { Slate, Editable, type RenderLeafProps } from "slate-vue3"
 import { CSSProperties, h } from "vue";
 import { TitleElement, ParagraphElement, CustomEditor } from "../../../custom-types";
 import HoveringToolbar from "./HoveringToolbar.vue";
@@ -134,7 +134,7 @@ const onBeforeInput = (event: Event) => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-leaf="renderLeaf">
+  <Slate :editor :render-leaf>
     <HoveringToolbar />
     <Editable @beforeinput="onBeforeInput" placeholder="Enter some text..." spellcheck />
   </Slate>

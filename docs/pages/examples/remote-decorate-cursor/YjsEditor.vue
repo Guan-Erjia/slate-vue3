@@ -93,7 +93,7 @@ const renderLeaf = ({ leaf, attributes, children, }: RenderLeafProps) => {
       ]
     }
   })
-  
+
 
   return h(
     'code' in leaf ? "code" : 'bold' in leaf ? "strong" : "span",
@@ -140,8 +140,7 @@ const decorate = useDecorateRemoteCursors(editor, true);
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-     :decorate="decorate">
+  <Slate :editor :render-element :render-leaf :decorate>
     <Toolbar>
       <MarkButton format="bold" icon="format_bold" />
       <MarkButton format="italic" icon="format_italic" />

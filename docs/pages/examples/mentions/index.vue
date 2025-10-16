@@ -199,7 +199,7 @@ const menuStyle = computed(() => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf" @change="onSlateChange">
+  <Slate :editor :render-element :render-leaf @change="onSlateChange">
     <Editable @keydown="onKeyDown" placeholder="Enter some text..." spellcheck />
     <Teleport to="body">
       <div :style="menuStyle" data-cy="mentions-portal">

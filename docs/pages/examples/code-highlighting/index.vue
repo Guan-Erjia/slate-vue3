@@ -1,6 +1,5 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf"
-   :decorate="decorate">
+  <Slate :editor :render-element :render-leaf :decorate>
     <Toolbar>
       <Button data-testid="code-block-button" active @click="onClick" @pointerdown="onPointerDown">
         code

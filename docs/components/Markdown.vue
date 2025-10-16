@@ -1,5 +1,5 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf" :decorate="decorate">
+  <Slate :editor :render-element :render-leaf :decorate>
     <Editable class="slate-markdown" :read-only="true" spellcheck />
   </Slate>
 </template>

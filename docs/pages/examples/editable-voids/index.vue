@@ -1,5 +1,5 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement">
+  <Slate :editor :render-element>
     <Toolbar>
       <Button @click="onClick" @pointerdown="onPointerDown">add</Button>
     </Toolbar>

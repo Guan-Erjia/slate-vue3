@@ -44,7 +44,7 @@ You can add event listeners at this node to override the internal behavior of `E
   };
 </script>
 <template>
-  <Slate :editor="editor">
+  <Slate :editor>
     <Editable @click="handleClick" />
   </Slate>
 </template>

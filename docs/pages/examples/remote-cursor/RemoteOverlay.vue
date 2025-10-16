@@ -1,6 +1,6 @@
 <template>
   <div ref="overlayRef" style="position: relative;">
-    <slot></slot>
+    <slot />
     <template v-for="cursor in cursors">
       <div class="selection" v-for="(position, index) in cursor.selectionRects" :style="{
         height: position.height + 'px',

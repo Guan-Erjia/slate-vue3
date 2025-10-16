@@ -69,7 +69,7 @@ editor.children = initialValue
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement">
+  <Slate :editor :render-element>
     <Editable placeholder="Enter some rich text…" spellcheck />
   </Slate>
 </template>

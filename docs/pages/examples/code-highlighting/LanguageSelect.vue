@@ -15,7 +15,7 @@
       <option value="tsx">TSX</option>
       <option value="typescript">TypeScript</option>
     </select>
-    <slot></slot>
+    <slot />
   </code>
 </template>
 <script lang="ts" setup>

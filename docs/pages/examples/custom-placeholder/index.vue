@@ -22,7 +22,7 @@ editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor" :render-placeholder="renderPlaceholder">
+  <Slate :editor :render-placeholder>
     <Editable style="padding: 10px;" placeholder="Type something" />
   </Slate>
 </template>

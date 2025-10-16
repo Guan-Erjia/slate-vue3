@@ -1,5 +1,5 @@
 <template>
-  <Slate :editor="editor" :render-element="props.renderElement">
+  <Slate :editor :render-element="props.renderElement">
     <Editable />
   </Slate>
 </template>

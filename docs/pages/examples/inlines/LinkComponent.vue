@@ -2,7 +2,7 @@
   <a v-bind="attrs" :href="safeUrl" :style="{ boxShadow: selected ? '0 0 0 3px #ddd' : '' }"
     style="color: #00e;text-decoration: underline;">
     <InlineChromiumBugfix />
-    <slot></slot>
+    <slot />
     <InlineChromiumBugfix />
   </a>
 </template>

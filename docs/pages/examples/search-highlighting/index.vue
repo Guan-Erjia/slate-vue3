@@ -90,7 +90,7 @@ const search = ref('')
 </script>
 
 <template>
-  <Slate :editor="editor" :decorate="decorate" :render-leaf="renderLeaf">
+  <Slate :editor :decorate :render-leaf>
     <Toolbar>
       <div style="position: relative;">
         <span

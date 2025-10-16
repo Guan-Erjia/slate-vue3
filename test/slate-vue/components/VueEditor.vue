@@ -1,5 +1,5 @@
 <template>
-  <Slate :editor="editor" :render-element="renderElement" @change="onChange" @selectionchange="onSelectionChange"
+  <Slate :editor :render-element @change="onChange" @selectionchange="onSelectionChange"
     @valuechange="onValueChange">
     <Editable />
   </Slate>

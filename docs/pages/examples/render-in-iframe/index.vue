@@ -108,7 +108,7 @@ const onPointerDown = (event: PointerEvent) => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-leaf="renderLeaf">
+  <Slate :editor :render-leaf>
     <Toolbar>
       <Button :active="isMarkActive('bold')" @click="toggleMark('bold')" @pointerdown="onPointerDown">
         format_bold

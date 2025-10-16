@@ -219,7 +219,7 @@ const onPointerDown = (event: PointerEvent) => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf">
+  <Slate :editor :render-element :render-leaf>
     <Toolbar>
       <Button :active="isLinkActive" @click="onLinkClick" @pointerdown="onPointerDown">
         link

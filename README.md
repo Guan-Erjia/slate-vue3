@@ -53,7 +53,7 @@ editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor">
+  <Slate :editor>
     <Editable />
   </Slate>
 </template>

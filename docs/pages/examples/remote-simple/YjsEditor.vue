@@ -98,7 +98,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf">
+  <Slate :editor :render-element :render-leaf>
     <Toolbar>
       <MarkButton format="bold" icon="format_bold" />
       <MarkButton format="italic" icon="format_italic" />

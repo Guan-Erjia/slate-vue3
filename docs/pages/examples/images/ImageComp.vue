@@ -1,6 +1,6 @@
 <template>
   <div v-bind="attrs">
-    <slot></slot>
+    <slot />
     <div :contenteditable="false" style="position: relative;">
       <img :src="props.element.url" style="display: block; max-width: 100%; max-height: 10em;"
         :style="{ boxShadow: `${selected && focused ? '0 0 0 3px #B4D5FF' : 'none'}` }" />

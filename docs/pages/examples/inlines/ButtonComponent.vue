@@ -2,7 +2,7 @@
   <span @click="onClick" style="margin: 0 0.1em;background-color: #efefef;padding: 2px 6px;
     border: 1px solid #767676; border-radius: 2px" v-bind="attrs">
     <InlineChromiumBugfix />
-    <slot></slot>
+    <slot />
     <InlineChromiumBugfix />
   </span>
 </template>

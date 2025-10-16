@@ -25,7 +25,7 @@ editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor">
+  <Slate :editor>
     <Editable placeholder="Enter some plain text..." />
   </Slate>
 </template>

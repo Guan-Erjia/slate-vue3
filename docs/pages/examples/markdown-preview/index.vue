@@ -1,5 +1,5 @@
 <template>
-  <Slate :editor="editor" :render-leaf="renderLeaf" :decorate="decorate">
+  <Slate :editor :render-leaf :decorate>
     <Editable placeholder="Enter some text..." />
   </Slate>
 </template>

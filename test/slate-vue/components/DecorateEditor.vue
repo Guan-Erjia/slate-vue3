@@ -1,5 +1,5 @@
 <template>
-  <Slate :editor="editor" :render-leaf="props.renderLeaf" :decorate="decorate">
+  <Slate :editor :render-leaf="props.renderLeaf" :decorate>
     <Editable />
   </Slate>
 </template>

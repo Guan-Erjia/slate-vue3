@@ -1,6 +1,6 @@
 <template>
   <code>
-    <slot></slot>
+    <slot />
     <button class="copy-btn" @click="handleCopy">Copy</button>
   </code>
 </template>

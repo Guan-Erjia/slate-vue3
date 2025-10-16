@@ -4,9 +4,9 @@
     <div :contenteditable="false">
       <!-- Mac OS IME https://github.com/ianstormtaylor/slate/issues/3490 -->
       <!-- Others like Android https://github.com/ianstormtaylor/slate/pull/5360 -->
-      <slot v-if="IS_MAC"></slot>
+      <slot v-if="IS_MAC" />
       @{{ props.element.character }}
-      <slot v-if="!IS_MAC"></slot>
+      <slot v-if="!IS_MAC" />
     </div>
   </span>
 </template>

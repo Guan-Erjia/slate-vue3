@@ -1,7 +1,9 @@
 <template>
-  <slot></slot>
-  <img :src="props.element.url" style="display: block; max-width: 100%; max-height: 20em"
-    :style="{ boxShadow: selected && focused ? '0 0 0 2px blue' : 'none' }" />
+  <div>
+    <slot />
+    <img :src="props.element.url" style="display: block; max-width: 100%; max-height: 20em"
+      :style="{ boxShadow: selected && focused ? '0 0 0 2px blue' : 'none' }" />
+  </div>
 </template>
 <script lang="ts" setup>
 import { useFocused, useSelected } from 'slate-vue3';

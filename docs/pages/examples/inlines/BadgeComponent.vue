@@ -4,7 +4,7 @@
       boxShadow: selected ? '0 0 0 3px #ddd' : '',
     }" :data-playwright-selected="selected">
     <InlineChromiumBugfix />
-    <slot></slot>
+    <slot />
     <InlineChromiumBugfix />
   </span>
 </template>

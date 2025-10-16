@@ -80,7 +80,7 @@ const onKeyup = (event: KeyboardEvent) => {
       placeholder="paste your liveblocks publicApiKey, and press Enter to connect"
       style="width: 100%;margin-bottom: 10px;">
   </div>
-  <YjsEditor v-if="sharedType && connected && yProvider" :sharedType="sharedType" :provider="yProvider" />
+  <YjsEditor v-if="sharedType && connected && yProvider" :sharedType :provider="yProvider" />
   <div v-if="sharedType && !connected" style="height: 300px;">
     Loading...
   </div>

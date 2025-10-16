@@ -1,6 +1,6 @@
 <template>
     <h1 v-bind="attrs" :aria-selected="selected">
-        <slot></slot>
+        <slot />
     </h1>
 </template>
 

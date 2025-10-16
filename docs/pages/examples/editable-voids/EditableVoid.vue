@@ -14,7 +14,7 @@
         <RichTextEditor />
       </div>
     </div>
-    <slot></slot>
+    <slot />
   </div>
 </template>
 <script lang="ts" setup>

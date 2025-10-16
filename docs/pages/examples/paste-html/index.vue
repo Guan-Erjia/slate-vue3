@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { Slate, Editable, } from "slate-vue3"
-import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
+import { Slate, Editable, useInheritRef } from "slate-vue3"
+import type { RenderElementProps, RenderLeafProps, } from "slate-vue3";
 import { jsx } from 'slate-vue3/hyperscript'
 import { h } from "vue";
 import ImageElement from "./ImageElement.vue";
@@ -160,7 +160,7 @@ const renderElement = (props: RenderElementProps) => {
     case 'link':
       return h('a', { ...attributes, href: allowedSchemes.includes(element.url) ? element.url : 'about:blank' }, children)
     case 'image':
-      return h('div', attributes, h(ImageElement, { element }, children))
+      return h(ImageElement, { element, ...useInheritRef(attributes) }, children)
   }
 }
 
@@ -181,12 +181,12 @@ const renderLeaf = (props: RenderLeafProps) => {
   return h('span', attributes, children)
 }
 
-const editor = withHistory(withHtml(withDOM(createEditor()))) 
+const editor = withHistory(withHtml(withDOM(createEditor())))
 editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor" :render-element="renderElement" :render-leaf="renderLeaf">
+  <Slate :editor :render-element :render-leaf>
     <Editable placeholder="Paste in some HTML..." spellcheck />
   </Slate>
 </template>

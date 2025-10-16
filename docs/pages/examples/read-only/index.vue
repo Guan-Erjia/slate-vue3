@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { createEditor, Descendant } from "slate-vue3/core";
-import { Slate, Editable, type RenderElementProps } from "slate-vue3"
-import { h } from "vue";
+import { Slate, Editable } from "slate-vue3"
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
@@ -21,7 +20,7 @@ editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor="editor">
+  <Slate :editor>
     <Editable :read-only="true" placeholder="Enter some plain text..." />
   </Slate>
 </template>
