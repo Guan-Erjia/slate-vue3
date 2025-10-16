@@ -91,7 +91,6 @@
     "is-url": "^1.2.4",
     "jiti": "^2.6.1",
     "jsdom": "^27.0.0",
-    "prettier": "^3.6.2",
     "prismjs": "^1.30.0",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
