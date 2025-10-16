@@ -1,9 +1,7 @@
 name: test package
 on:
   push:
-    branches-ignore:
-      - docs
-      - master
+    branches: [ develop ]
 permissions: write-all
 jobs:
   test:

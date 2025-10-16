@@ -1,8 +1,5 @@
 name: publish package
-on:
-  push:
-    branches:
-      - master
+on: workflow_dispatch
 permissions: write-all
 jobs:
   build-package:
