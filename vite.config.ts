@@ -6,7 +6,7 @@ import { UserConfig } from "vite";
 import dts from "vite-plugin-dts";
 import { mergeConfig } from "vite";
 import babel from "vite-plugin-babel";
-import eslint from 'vite-plugin-eslint'
+import eslint from "vite-plugin-eslint";
 
 const BaseConfig: UserConfig = {
   plugins: [
@@ -32,11 +32,11 @@ const BaseConfig: UserConfig = {
       "slate-vue": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
       "slate-hyperscript": path.resolve(
         __dirname,
-        "./packages/slate-hyperscript/index.ts"
+        "./packages/slate-hyperscript/index.ts",
       ),
       "slate-history": path.resolve(
         __dirname,
-        "./packages/slate-history/index.ts"
+        "./packages/slate-history/index.ts",
       ),
       "slate-yjs": path.resolve(__dirname, "./packages/slate-yjs/index.ts"),
       "slate-dom": path.resolve(__dirname, "./packages/slate-dom/index.ts"),
@@ -88,19 +88,19 @@ export default defineConfig(({ command, mode }) => {
         "slate-vue3/core": path.resolve(__dirname, "./packages/slate/index.ts"),
         "slate-vue3/dom": path.resolve(
           __dirname,
-          "./packages/slate-dom/index.ts"
+          "./packages/slate-dom/index.ts",
         ),
         "slate-vue3/hyperscript": path.resolve(
           __dirname,
-          "./packages/slate-hyperscript/index.ts"
+          "./packages/slate-hyperscript/index.ts",
         ),
         "slate-vue3/history": path.resolve(
           __dirname,
-          "./packages/slate-history/index.ts"
+          "./packages/slate-history/index.ts",
         ),
         "slate-vue3/yjs": path.resolve(
           __dirname,
-          "./packages/slate-yjs/index.ts"
+          "./packages/slate-yjs/index.ts",
         ),
         "slate-vue3": path.resolve(__dirname, "./packages/slate-vue/index.ts"),
       },

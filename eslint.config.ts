@@ -3,6 +3,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import pluginVue from "eslint-plugin-vue";
 import { defineConfig } from "eslint/config";
+import prettierConfig from "@vue/eslint-config-prettier";
 
 export default defineConfig([
   {
@@ -17,6 +18,7 @@ export default defineConfig([
     files: ["**/*.vue"],
     languageOptions: { parserOptions: { parser: tseslint.parser } },
   },
+  prettierConfig,
   {
     rules: {
       "vue/multi-word-component-names": "off",
