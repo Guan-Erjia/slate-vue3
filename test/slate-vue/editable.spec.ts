@@ -109,7 +109,6 @@ describe("slate-react", () => {
 
       Transforms.setNodes(
         editor,
-        // @ts-ignore
         { bold: true },
         {
           at: { path: [0, 0], offset: 2 },

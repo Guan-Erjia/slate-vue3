@@ -1,5 +1,5 @@
 import { NodeTransforms } from '../interfaces/transforms/node'
-import { BaseSelection, Editor } from '../interfaces/editor'
+import { Editor } from '../interfaces/editor'
 import { Path } from '../interfaces/path'
 import { matchPath } from '../utils/match-path'
 import { Element } from '../interfaces/element'
@@ -14,7 +14,8 @@ export const setNodes: NodeTransforms['setNodes'] = (
   options = {}
 ) => {
   Editor.withoutNormalizing(editor, () => {
-    let { match, at = cloneDeep(editor.selection), compare, merge } = options
+    let { match, at = cloneDeep(editor.selection), compare } = options
+    const { merge } = options
     const {
       hanging = false,
       mode = 'lowest',

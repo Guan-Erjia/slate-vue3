@@ -15,8 +15,8 @@ export const insertFragment: TextTransforms['insertFragment'] = (
 ) => {
   Editor.withoutNormalizing(editor, () => {
     const { hanging = false, voids = false } = options
-    let { at = getDefaultInsertLocation(editor), batchDirty = true } = options
-
+    let { at = getDefaultInsertLocation(editor) } = options
+    const { batchDirty = true } = options
     if (!fragment.length) {
       return
     }

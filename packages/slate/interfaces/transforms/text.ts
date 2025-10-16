@@ -50,7 +50,6 @@ export interface TextTransforms {
   ) => void
 }
 
-// eslint-disable-next-line no-redeclare
 export const TextTransforms: TextTransforms = {
   delete(editor, options) {
     editor.delete(options)

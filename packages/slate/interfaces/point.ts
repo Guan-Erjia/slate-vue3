@@ -57,7 +57,6 @@ export interface PointInterface {
   ) => Point | null
 }
 
-// eslint-disable-next-line no-redeclare
 export const Point: PointInterface = {
   compare(point: Point, another: Point): -1 | 0 | 1 {
     const result = Path.compare(point.path, another.path)

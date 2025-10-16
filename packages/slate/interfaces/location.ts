@@ -18,7 +18,6 @@ export interface LocationInterface {
   isLocation: (value: any) => value is Location
 }
 
-// eslint-disable-next-line no-redeclare
 export const Location: LocationInterface = {
   isLocation(value: any): value is Location {
     return Path.isPath(value) || Point.isPoint(value) || Range.isRange(value)
@@ -39,7 +38,6 @@ export interface SpanInterface {
   isSpan: (value: any) => value is Span
 }
 
-// eslint-disable-next-line no-redeclare
 export const Span: SpanInterface = {
   isSpan(value: any): value is Span {
     return (

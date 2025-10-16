@@ -19,7 +19,7 @@
 </template>
 <script lang="ts" setup>
 import { Descendant, } from 'slate-vue3/core'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import TestCase from './test-case.vue'
 import { useRoute, useRouter } from 'vue-router'
 

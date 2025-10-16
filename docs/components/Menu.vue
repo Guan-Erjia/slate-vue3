@@ -1,11 +1,11 @@
 <template>
   <menu v-show="!isFold" :style="menuStyle">
-    <template v-for="menu in menuConfig">
+    <template v-for="menu in menuConfig" :key="menu.title">
       <RouterLink class="header" :to="{ name: menu.sub[0].name }">
         {{ menu.title }}
       </RouterLink>
       <ul>
-        <RouterLink :to="{ name: item.name }" v-for="item in menu.sub">
+        <RouterLink :to="{ name: item.name }" v-for="item in menu.sub" :key="item.name">
           <li :style="{
             color: item.name === route.name ? '#0366d6' : undefined,
             fontWeight: item.name === route.name ? 500 : undefined,

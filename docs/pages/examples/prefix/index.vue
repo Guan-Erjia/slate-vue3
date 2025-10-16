@@ -32,7 +32,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h('span', attributes, children)
 }
 
-const decorate = ([_node, path]: [Node, Path]) => {
+const decorate = ([, path]: [Node, Path]) => {
   const ranges = []
   if (Path.equals(path, Editor.start(editor, []).path)) {
     ranges.push({

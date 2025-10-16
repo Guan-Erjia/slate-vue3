@@ -218,7 +218,6 @@ export interface NodeInterface {
   ) => Generator<NodeEntry<Text>, void, undefined>
 }
 
-// eslint-disable-next-line no-redeclare
 export const Node: NodeInterface = {
   ancestor(root: Node, path: Path): Ancestor {
     const node = Node.get(root, path)
@@ -358,7 +357,7 @@ export const Node: NodeInterface = {
 
   fragment<T extends Ancestor = Editor>(root: T, range: Range): T['children'] {
       // 这里不能影响现有节点数据，必须深拷贝
-      let newRoot = { children: cloneDeep(root.children) }
+      const newRoot = { children: cloneDeep(root.children) }
       const [start, end] = Range.edges(range)
       const nodeEntries = Node.nodes(newRoot, {
         reverse: true,

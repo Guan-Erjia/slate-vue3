@@ -30,7 +30,7 @@ const isBlockActive = computed(() => {
         const align = TEXT_ALIGN_TYPES.includes(props.format) ? 'align' : 'type'
         return !Editor.isEditor(n) &&
           Element.isElement(n) &&
-          // @ts-ignore
+          // @ts-expect-error xxx
           n[align] === props.format
       }
     })
@@ -58,7 +58,7 @@ const onClick = () => {
       align: isActive ? undefined : props.format,
     }
   } else {
-    // @ts-ignore
+    // @ts-expect-error xxx
     newProperties = {
       type: isActive ? 'paragraph' : isList ? 'list-item' : props.format as CustomElement['type'],
     }

@@ -12,10 +12,14 @@ export function useOnResize<T extends HTMLElement>(
   const observer = new ResizeObserver(onResize);
 
   onMounted(() => {
-    _ref?.value && observer.observe(_ref.value);
+    if(_ref.value) {
+      observer.observe(_ref.value);
+    }
   });
   onUnmounted(() => {
-    _ref?.value && observer.unobserve(_ref.value);
+    if(_ref.value) { 
+      observer.unobserve(_ref.value);
+    }
   });
 }
 

@@ -149,7 +149,7 @@ export const usePlaceholderShow = () => {
 };
 
 export const usePlaceholderResize = () => {
-  const PLACEHOLDER_RESIZE_INJECT = inject<(height?: number) => {}>(
+  const PLACEHOLDER_RESIZE_INJECT = inject<(height?: number) => void>(
     SLATE_INNER_PLACEHOLDER_RESIZE
   );
   if (PLACEHOLDER_RESIZE_INJECT === undefined) {

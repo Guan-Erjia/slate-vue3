@@ -170,7 +170,6 @@ export interface OperationInterface {
   inverse: (op: Operation) => Operation
 }
 
-// eslint-disable-next-line no-redeclare
 export const Operation: OperationInterface = {
   isNodeOperation(value: any): value is NodeOperation {
     return Operation.isOperation(value) && value.type.endsWith('_node')

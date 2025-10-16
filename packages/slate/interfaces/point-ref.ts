@@ -20,7 +20,6 @@ export interface PointRefInterface {
   transform: (ref: PointRef, op: Operation) => void
 }
 
-// eslint-disable-next-line no-redeclare
 export const PointRef: PointRefInterface = {
   transform(ref: PointRef, op: Operation): void {
     const { current, affinity } = ref

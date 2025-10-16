@@ -259,7 +259,7 @@ const observer = new PerformanceObserver(list => {
     list.getEntries().forEach(entry => {
         if (entry.name === 'keypress') {
             const duration = Math.round(
-                // @ts-ignore Entry type is missing processingStart and processingEnd
+                // @ts-expect-error Entry type is missing processingStart and processingEnd
                 entry.processingEnd - entry.processingStart
             )
             const remain = keyPressDurations.slice(0, 9)
@@ -275,7 +275,7 @@ const observer1 = new PerformanceObserver(list => {
 })
 
 onMounted(() => {
-    // @ts-ignore Options type is missing durationThreshold
+    // @ts-expect-error Options type is missing durationThreshold
     observer.observe({ type: 'event', durationThreshold: 16 })
     observer1.observe({ type: 'long-animation-frame' })
 })

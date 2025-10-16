@@ -105,7 +105,6 @@ export interface RangeInterface {
   ) => Range | null
 }
 
-// eslint-disable-next-line no-redeclare
 export const Range: RangeInterface = {
   edges(range: Range, options: RangeEdgesOptions = {}): [Point, Point] {
     const { reverse = false } = options

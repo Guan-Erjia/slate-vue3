@@ -11,8 +11,6 @@ describe("slate-interface", () => {
     test.skipIf(skip)(path, () => {
       if (Editor.isEditor(input)) {
         input = withTest(reactive(input));
-      } else {
-        input = input;
       }
       const result = _test(input);
       expect(result).toStrictEqual(output);

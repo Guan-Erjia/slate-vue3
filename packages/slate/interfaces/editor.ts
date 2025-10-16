@@ -732,7 +732,6 @@ export interface EditorInterface {
   ) => boolean
 }
 
-// eslint-disable-next-line no-redeclare
 export const Editor: EditorInterface = {
   above(editor, options) {
     return editor.above(options)

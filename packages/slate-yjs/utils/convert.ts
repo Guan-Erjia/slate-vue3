@@ -8,7 +8,7 @@ export function yTextToSlateElement(yText: XmlText): Element {
   const delta = yTextToInsertDelta(yText);
 
   const children =
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+     
     delta.length > 0 ? delta.map(deltaInsertToSlateNode) : [{ text: '' }];
 
   return { ...yText.getAttributes(), children };
@@ -28,7 +28,7 @@ export function slateNodesToInsertDelta(nodes: Node[]): InsertDelta {
       return { insert: node.text, attributes: getProperties(node) };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+     
     return { insert: slateElementToYText(node) };
   });
 }

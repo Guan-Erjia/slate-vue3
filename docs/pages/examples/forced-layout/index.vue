@@ -46,8 +46,6 @@ const withLayout = (editor: CustomEditor) => {
             break
           case 1:
             enforceType('paragraph')
-          default:
-            break
         }
       }
     }

@@ -4,7 +4,6 @@ import { NODE_MAPPER } from "./node";
 import { TEXT_MAPPER } from "./text";
 import { ApplyFunc, OpMapper } from "./types";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 const NOOP = () => {};
 
 const opMappers: OpMapper = {

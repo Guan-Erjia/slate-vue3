@@ -123,13 +123,11 @@ const onKeyDown = (event: KeyboardEvent) => {
     switch (event.key) {
       case 'ArrowDown':
         event.preventDefault()
-        const prevIndex = index.value >= chars.value.length - 1 ? 0 : index.value + 1
-        index.value = (prevIndex)
+        index.value = index.value >= chars.value.length - 1 ? 0 : index.value + 1
         break
       case 'ArrowUp':
         event.preventDefault()
-        const nextIndex = index.value <= 0 ? chars.value.length - 1 : index.value - 1
-        index.value = nextIndex
+        index.value = index.value <= 0 ? chars.value.length - 1 : index.value - 1
         break
       case 'Tab':
       case 'Enter':

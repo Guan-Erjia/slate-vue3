@@ -72,7 +72,7 @@ const createHyperscript = (
 const createFactory = <T extends HyperscriptCreators>(creators: T) => {
   const jsx = <S extends keyof T & string>(
     tagName: S,
-    attributes?: Object,
+    attributes?: object,
     ...children: any[]
   ): ReturnType<T[S]> => {
     const creator = creators[tagName]

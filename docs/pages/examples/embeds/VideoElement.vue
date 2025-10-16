@@ -9,7 +9,7 @@
 import { useEditor } from 'slate-vue3'
 import { Element, Transforms } from 'slate-vue3/core'
 import { DOMEditor } from 'slate-vue3/dom'
-import { computed, HTMLAttributes, ref, useAttrs } from 'vue';
+import { computed, HTMLAttributes, useAttrs } from 'vue';
 const allowedSchemes = ['http:', 'https:']
 
 const editor = useEditor()
@@ -20,7 +20,9 @@ const safeUrl = computed(() => {
   let parsedUrl: URL | null = null
   try {
     parsedUrl = new URL(props.element.url)
-  } catch { }
+  } catch (err) {
+    console.error(err)
+  }
   if (parsedUrl && allowedSchemes.includes(parsedUrl.protocol)) {
     return parsedUrl.href
   }

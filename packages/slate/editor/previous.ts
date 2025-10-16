@@ -4,7 +4,8 @@ import { Path } from '../interfaces/path'
 
 export const previous: EditorInterface['previous'] = (editor, options = {}) => {
   const { mode = 'lowest', voids = false } = options
-  let { match, at = editor.selection } = options
+  let { match } = options
+  const { at = editor.selection } = options
 
   if (!at) {
     return

@@ -6,9 +6,16 @@ import { UserConfig } from "vite";
 import dts from "vite-plugin-dts";
 import { mergeConfig } from "vite";
 import babel from "vite-plugin-babel";
+import eslint from 'vite-plugin-eslint'
 
 const BaseConfig: UserConfig = {
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    eslint({
+      include: ["src/**/*.{js,vue}"], // 检查范围
+      cache: true, // 启用缓存提高性能
+    }),
+  ],
   base: "/slate-vue3/",
   test: {
     include: [

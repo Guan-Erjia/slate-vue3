@@ -21,7 +21,6 @@ export interface HistoryEditor extends BaseEditor {
   writeHistory: (stack: "undos" | "redos", batch: any) => void;
 }
 
-// eslint-disable-next-line no-redeclare
 export const HistoryEditor = {
   /**
    * Check if a value is a `HistoryEditor` object.

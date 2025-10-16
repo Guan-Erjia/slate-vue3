@@ -278,7 +278,6 @@ export interface DOMEditorInterface {
   ) => T extends true ? Range | null : Range;
 }
 
-// eslint-disable-next-line no-redeclare
 export const DOMEditor: DOMEditorInterface = {
   blur: (editor) => {
     const el = DOMEditor.toDOMNode(editor, editor);
@@ -814,10 +813,6 @@ export const DOMEditor: DOMEditorInterface = {
 
           leafNode =
             leafNodes.findLast(leaf => isBefore(nonEditableNode, leaf)) ?? null
-        
-          if (leafNode) {
-            searchDirection === 'backward'
-          }
         }
 
         if (searchDirection === 'forward' || !searchDirection) {
@@ -828,10 +823,6 @@ export const DOMEditor: DOMEditorInterface = {
 
           leafNode =
             leafNodes.find(leaf => isAfter(nonEditableNode, leaf)) ?? null
-          
-          if (leafNode) {
-            searchDirection === 'forward'
-          }
         }
 
         if (leafNode) {
@@ -880,10 +871,12 @@ export const DOMEditor: DOMEditorInterface = {
 
       if (node && DOMEditor.hasDOMNode(editor, node, { editable: true })) {
         const slateNode = DOMEditor.toSlateNode(editor, node);
-        let { path, offset } = Editor.start(
+        const start = Editor.start(
           editor,
           DOMEditor.findPath(editor, slateNode)
         );
+        const { path } = start
+        let { offset } = start
 
         if (!node.querySelector("[data-slate-leaf]")) {
           offset = nearestOffset;

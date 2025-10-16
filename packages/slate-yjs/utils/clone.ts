@@ -8,7 +8,7 @@ export function cloneInsertDeltaDeep(delta: InsertDelta): InsertDelta {
       return element;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+     
     return { ...element, insert: cloneDeep(element.insert) };
   });
 }

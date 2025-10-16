@@ -7,7 +7,7 @@ const modules = await resolveModules(
 
 describe("slate-hyperscript", () => {
   modules.forEach((module) => {
-    const { input, test: _test, output, path } = module;
+    const { input, output, path } = module;
     test(path, () => {
       let actual = {};
 

@@ -115,7 +115,7 @@ export const ElementComp = defineComponent({
       return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { element, text }));
     });
 
-    IS_FIREFOX &&
+    if(IS_FIREFOX) {
       onUpdated(() => {
         const nodes = elementRef.value?.childNodes;
         if (!nodes?.length) {
@@ -129,6 +129,7 @@ export const ElementComp = defineComponent({
           nodes[lastIndex].textContent = "";
         }
       });
+    }
 
     const renderElement = useRenderElement();
     return () =>

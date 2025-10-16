@@ -23,7 +23,9 @@ const safeUrl = computed(() => {
   let parsedUrl: URL | null = null
   try {
     parsedUrl = new URL(props.element.url)
-  } catch { }
+  } catch (err) {
+    console.error(err)
+  }
   if (parsedUrl && allowedSchemes.includes(parsedUrl.protocol)) {
     return parsedUrl.href
   }

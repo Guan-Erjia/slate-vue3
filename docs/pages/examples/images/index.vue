@@ -126,7 +126,9 @@ const onClick = () => {
     alert('URL is not an image')
     return
   }
-  url && insertImage(editor, url)
+  if(url) {
+    insertImage(editor, url)
+  }
 }
 const onPointerDown = (event: PointerEvent) => {
   event.preventDefault()

@@ -25,7 +25,7 @@ export const ChunkComp = defineComponent({
         }
 
         return h(ElementComp, {
-          // @ts-ignore Only blocks containing no inlines are chunked
+          // @ts-expect-error Only blocks containing no inlines are chunked
           element: chunkNode.node,
           key: chunkNode.key.id,
         });

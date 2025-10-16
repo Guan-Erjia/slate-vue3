@@ -942,7 +942,7 @@ describe("getChunkTreeForNode", () => {
           expect(chunkTreeSlateNodes).toEqual(editor.children);
         }
       } catch (e) {
-        // eslint-disable-next-line no-console
+         
         console.warn(
           `Random testing encountered an error or test failure on iteration ${iteration}. To reproduce this failure reliably, use the random seed: ${seed}`
         );

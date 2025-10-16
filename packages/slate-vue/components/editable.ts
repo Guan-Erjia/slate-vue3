@@ -399,7 +399,7 @@ export const Editable = defineComponent({
 
           const newRange = new window.Range();
           let endContainer = range.endContainer;
-          let endOffset = range.endOffset;
+          const endOffset = range.endOffset;
 
           if (
             endContainer.nodeType === 3 &&
@@ -931,8 +931,9 @@ export const Editable = defineComponent({
         !isDOMEventTargetInput(event)
       ) {
         event.preventDefault();
-        event.clipboardData &&
+        if (event.clipboardData) {
           DOMEditor.setFragmentData(editor, event.clipboardData, "copy");
+        }
       }
     };
 
@@ -944,8 +945,9 @@ export const Editable = defineComponent({
         !isDOMEventTargetInput(event)
       ) {
         event.preventDefault();
-        event.clipboardData &&
+        if (event.clipboardData) {
           DOMEditor.setFragmentData(editor, event.clipboardData, "cut");
+        }
         const selection = editor.selection;
 
         if (selection) {
@@ -998,8 +1000,9 @@ export const Editable = defineComponent({
 
         state.isDraggingInternally = true;
 
-        event.dataTransfer &&
+        if (event.dataTransfer) {
           DOMEditor.setFragmentData(editor, event.dataTransfer, "drag");
+        }
       }
     };
 
@@ -1031,8 +1034,9 @@ export const Editable = defineComponent({
             });
           }
         }
-
-        data && DOMEditor.insertData(editor, data);
+        if (data) {
+          DOMEditor.insertData(editor, data);
+        }
 
         // When dragging from another source into the editor, it's possible
         // that the current editor does not have focus.
@@ -1378,8 +1382,9 @@ export const Editable = defineComponent({
           IS_WEBKIT
         ) {
           event.preventDefault();
-          event.clipboardData &&
+          if (event.clipboardData) {
             DOMEditor.insertData(editor, event.clipboardData);
+          }
         }
       }
     };

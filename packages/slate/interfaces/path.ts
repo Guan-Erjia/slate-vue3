@@ -177,7 +177,6 @@ export interface PathInterface {
   ) => Path | null
 }
 
-// eslint-disable-next-line no-redeclare
 export const Path: PathInterface = {
   ancestors(path: Path, options: PathAncestorsOptions = {}): Path[] {
     const { reverse = false } = options

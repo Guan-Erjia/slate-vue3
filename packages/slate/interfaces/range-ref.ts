@@ -19,7 +19,6 @@ export interface RangeRefInterface {
   transform: (ref: RangeRef, op: Operation) => void
 }
 
-// eslint-disable-next-line no-redeclare
 export const RangeRef: RangeRefInterface = {
   transform(ref: RangeRef, op: Operation): void {
     const { current, affinity } = ref
