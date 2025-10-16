@@ -11,7 +11,7 @@ import {
 export function splitNode(
   sharedRoot: XmlText,
   slateRoot: Node,
-  op: SplitNodeOperation
+  op: SplitNodeOperation,
 ): void {
   const target = getYTarget(sharedRoot, slateRoot, op.path);
 
@@ -36,7 +36,7 @@ export function splitNode(
     return target.yParent.format(
       target.textRange.start,
       target.textRange.end - target.textRange.start,
-      { ...unset, ...op.properties }
+      { ...unset, ...op.properties },
     );
   }
 
@@ -54,13 +54,13 @@ export function splitNode(
 
   const length = target.slateTarget.children.reduce(
     (current, child) => current + getSlateNodeYLength(child),
-    0
+    0,
   );
 
   const splitDelta = sliceInsertDelta(
     yTextToInsertDelta(target.yTarget),
     ySplitOffset,
-    length - ySplitOffset
+    length - ySplitOffset,
   );
   const clonedDelta = cloneInsertDeltaDeep(splitDelta);
 
@@ -68,7 +68,7 @@ export function splitNode(
     sharedRoot,
     target.yTarget,
     splitDelta,
-    ySplitOffset
+    ySplitOffset,
   );
 
   const toInsert = new XmlText();
@@ -82,7 +82,7 @@ export function splitNode(
 
   target.yTarget.delete(
     splitTarget.textRange.start,
-    target.yTarget.length - splitTarget.textRange.start
+    target.yTarget.length - splitTarget.textRange.start,
   );
 
   target.yParent.insertEmbed(target.textRange.end, toInsert);
@@ -93,6 +93,6 @@ export function splitNode(
     storedPositions,
     clonedDelta,
     0,
-    ySplitOffset
+    ySplitOffset,
   );
 }

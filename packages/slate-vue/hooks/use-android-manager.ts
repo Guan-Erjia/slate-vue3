@@ -26,7 +26,7 @@ export interface AndroidManager {
 }
 
 export const useAndroidManager = (
-  editableRef: Ref<HTMLElement | undefined>
+  editableRef: Ref<HTMLElement | undefined>,
 ): AndroidManager => {
   const editor = useEditor();
   const mutationObserver = ref<MutationObserver>();
@@ -81,7 +81,7 @@ export const useAndroidManager = (
   const handleDOMBeforeInput = (event: InputEvent) => {
     mutationObserver.value?.observe(
       editableRef.value!,
-      MUTATION_OBSERVER_CONFIG
+      MUTATION_OBSERVER_CONFIG,
     );
 
     const { inputType: type } = event;
@@ -188,12 +188,12 @@ export const useAndroidManager = (
         }
 
         return scheduleAction(
-          () => 
+          () =>
             Transforms.delete(editor, {
               at: targetRange!,
               reverse: direction === "backward",
             }),
-          targetRange
+          targetRange,
         );
       }
     }
@@ -259,49 +259,49 @@ export const useAndroidManager = (
       case "deleteHardLineBackward": {
         return scheduleAction(
           () => Editor.deleteBackward(editor, { unit: "block" }),
-          targetRange
+          targetRange,
         );
       }
 
       case "deleteSoftLineBackward": {
         return scheduleAction(
           () => Editor.deleteBackward(editor, { unit: "line" }),
-          targetRange
+          targetRange,
         );
       }
 
       case "deleteHardLineForward": {
         return scheduleAction(
           () => Editor.deleteForward(editor, { unit: "block" }),
-          targetRange
+          targetRange,
         );
       }
 
       case "deleteSoftLineForward": {
         return scheduleAction(
           () => Editor.deleteForward(editor, { unit: "line" }),
-          targetRange
+          targetRange,
         );
       }
 
       case "deleteWordBackward": {
         return scheduleAction(
           () => Editor.deleteBackward(editor, { unit: "word" }),
-          targetRange
+          targetRange,
         );
       }
 
       case "deleteWordForward": {
         return scheduleAction(
           () => Editor.deleteForward(editor, { unit: "word" }),
-          targetRange
+          targetRange,
         );
       }
 
       case "insertLineBreak": {
         return scheduleAction(
           () => Editor.insertSoftBreak(editor),
-          targetRange
+          targetRange,
         );
       }
 
@@ -319,7 +319,7 @@ export const useAndroidManager = (
         if (data instanceof DataTransfer) {
           return scheduleAction(
             () => DOMEditor.insertData(editor, data),
-            targetRange
+            targetRange,
           );
         }
 
@@ -405,7 +405,7 @@ export const useAndroidManager = (
 
         return scheduleAction(
           () => Editor.insertText(editor, text),
-          targetRange
+          targetRange,
         );
       }
     }

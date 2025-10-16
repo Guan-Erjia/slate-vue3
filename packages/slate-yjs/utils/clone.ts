@@ -1,14 +1,13 @@
-import { XmlText } from 'yjs';
-import { InsertDelta } from '../model/types';
-import { yTextToInsertDelta } from './delta';
+import { XmlText } from "yjs";
+import { InsertDelta } from "../model/types";
+import { yTextToInsertDelta } from "./delta";
 
 export function cloneInsertDeltaDeep(delta: InsertDelta): InsertDelta {
   return delta.map((element) => {
-    if (typeof element.insert === 'string') {
+    if (typeof element.insert === "string") {
       return element;
     }
 
-     
     return { ...element, insert: cloneDeep(element.insert) };
   });
 }

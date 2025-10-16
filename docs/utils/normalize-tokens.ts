@@ -44,7 +44,7 @@ const appendTypes = (types: string[], add: string[] | string): string[] => {
 // This is not recursive to avoid exceeding the call-stack limit, since it's unclear
 // how nested Prism's tokens can become
 export const normalizeTokens = (
-  tokens: Array<PrismToken | string>
+  tokens: Array<PrismToken | string>,
 ): Token[][] => {
   const typeArrStack: string[][] = [[]];
   const tokenArrStack = [tokens];

@@ -1,29 +1,38 @@
 <template>
-  <div ref="overlayRef" style="position: relative;">
+  <div ref="overlayRef" style="position: relative">
     <slot />
     <template v-for="(cursor, index) in cursors" :key="index">
-      <div class="selection" v-for="(position, index) in cursor.selectionRects" :style="{
-        height: position.height + 'px',
-        top: position.top + 'px',
-        left: position.left + 'px',
-        width: position.width + 'px',
-      }" :key="index" />
+      <div
+        class="selection"
+        v-for="(position, index) in cursor.selectionRects"
+        :style="{
+          height: position.height + 'px',
+          top: position.top + 'px',
+          left: position.left + 'px',
+          width: position.width + 'px',
+        }"
+        :key="index"
+      />
 
-      <div class="cursor" v-if="cursor.caretPosition && cursor.data" :style="{
-        height: cursor.caretPosition.height + 'px',
-        top: cursor.caretPosition.top + 'px',
-        left: cursor.caretPosition.left + 'px',
-      }">
-        <div class="label"> {{ cursor.data.name }} </div>
+      <div
+        class="cursor"
+        v-if="cursor.caretPosition && cursor.data"
+        :style="{
+          height: cursor.caretPosition.height + 'px',
+          top: cursor.caretPosition.top + 'px',
+          left: cursor.caretPosition.left + 'px',
+        }"
+      >
+        <div class="label">{{ cursor.data.name }}</div>
       </div>
     </template>
   </div>
 </template>
 <script setup lang="ts">
-import { useRemoteCursorOverlayPositions } from 'slate-vue3/yjs';
-import { ref } from 'vue';
+import { useRemoteCursorOverlayPositions } from "slate-vue3/yjs";
+import { ref } from "vue";
 
-const overlayRef = ref()
+const overlayRef = ref();
 const [cursors] = useRemoteCursorOverlayPositions<{
   name: string;
 }>(overlayRef);

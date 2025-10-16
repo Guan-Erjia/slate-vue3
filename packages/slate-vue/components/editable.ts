@@ -90,7 +90,7 @@ export const Editable = defineComponent({
     placeholder: string;
     scrollSelectionIntoView: (
       editor: DOMEditor,
-      domRange: globalThis.Range
+      domRange: globalThis.Range,
     ) => void;
     autoFocus: boolean;
   }) {
@@ -106,7 +106,7 @@ export const Editable = defineComponent({
       (current) => {
         IS_READ_ONLY.set(editor, current);
         isReadOnly.value = current;
-      }
+      },
     );
 
     // Keep track of some state for the event handler logic.
@@ -291,7 +291,7 @@ export const Editable = defineComponent({
           // Ensure selection is inside the mark placeholder
           if (
             anchorNode?.parentElement?.hasAttribute(
-              "data-slate-mark-placeholder"
+              "data-slate-mark-placeholder",
             )
           ) {
             return;
@@ -328,14 +328,14 @@ export const Editable = defineComponent({
             newDomRange.endContainer,
             newDomRange.endOffset,
             newDomRange.startContainer,
-            newDomRange.startOffset
+            newDomRange.startOffset,
           );
         } else {
           domSelection.setBaseAndExtent(
             newDomRange.startContainer,
             newDomRange.startOffset,
             newDomRange.endContainer,
-            newDomRange.endOffset
+            newDomRange.endOffset,
           );
         }
         scrollSelectionIntoView(editor, newDomRange);
@@ -380,7 +380,7 @@ export const Editable = defineComponent({
       const window = DOMEditor.getWindow(editor);
       window.document.removeEventListener(
         "selectionchange",
-        onDOMSelectionChange
+        onDOMSelectionChange,
       );
       window.document.removeEventListener("dragend", stoppedDragging);
       window.document.removeEventListener("drop", stoppedDragging);
@@ -680,7 +680,7 @@ export const Editable = defineComponent({
                 // Potentially expand to single character deletes, as well.
                 if (native) {
                   deferredOperations.value.push(() =>
-                    Editor.insertText(editor, data)
+                    Editor.insertText(editor, data),
                   );
                 } else {
                   Editor.insertText(editor, data);
@@ -1343,7 +1343,7 @@ export const Editable = defineComponent({
             ) {
               const currentNode = Node.parent(
                 editor,
-                editor.selection.anchor.path
+                editor.selection.anchor.path,
               );
 
               if (
@@ -1403,17 +1403,17 @@ export const Editable = defineComponent({
     }));
 
     const spellcheck = computed(() =>
-      HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.spellcheck : false
+      HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.spellcheck : false,
     );
     const autocorrect = computed(() =>
       HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM
         ? attributes.autocorrect
-        : undefined
+        : undefined,
     );
     const autocapitalize = computed(() =>
       HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM
         ? attributes.autocapitalize
-        : undefined
+        : undefined,
     );
 
     const showPlaceholder = computed(
@@ -1422,12 +1422,12 @@ export const Editable = defineComponent({
         editor.children?.length === 1 &&
         Array.from(Node.texts(editor)).length === 1 &&
         Node.string(editor) === "" &&
-        !isComposing.value
+        !isComposing.value,
     );
 
     provide(
       SLATE_INNER_PLACEHOLDER,
-      computed(() => placeholder)
+      computed(() => placeholder),
     );
     provide(SLATE_INNER_PLACEHOLDER_SHOW, showPlaceholder);
     provide(SLATE_INNER_PLACEHOLDER_RESIZE, onPlaceholderResize);
@@ -1465,7 +1465,7 @@ export const Editable = defineComponent({
           onKeydown,
           onPaste,
         },
-        h(ChildrenComp, { element: editor })
+        h(ChildrenComp, { element: editor }),
       );
   },
 });

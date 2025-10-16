@@ -120,9 +120,9 @@ export const HistoryEditor = {
     const prev = HistoryEditor.isSaving(editor);
     SAVING.set(editor, false);
     try {
-      fn()
+      fn();
     } finally {
-      SAVING.set(editor, prev)
+      SAVING.set(editor, prev);
     }
   },
 };

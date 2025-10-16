@@ -1,4 +1,4 @@
-import { Text } from 'slate'
+import { Text } from "slate";
 
 export const input = [
   {
@@ -10,7 +10,7 @@ export const input = [
       path: [0],
       offset: 2,
     },
-    decoration1: 'decoration1',
+    decoration1: "decoration1",
   },
   {
     anchor: {
@@ -21,7 +21,7 @@ export const input = [
       path: [0],
       offset: 2,
     },
-    decoration2: 'decoration2',
+    decoration2: "decoration2",
   },
   {
     anchor: {
@@ -32,7 +32,7 @@ export const input = [
       path: [0],
       offset: 3,
     },
-    decoration3: 'decoration3',
+    decoration3: "decoration3",
   },
   {
     anchor: {
@@ -43,61 +43,61 @@ export const input = [
       path: [0],
       offset: 4,
     },
-    decoration4: 'decoration4',
+    decoration4: "decoration4",
   },
-]
+];
 
-export const test = decorations => {
-  return Text.decorations({ text: 'abcd', mark: 'mark' }, decorations)
-}
+export const test = (decorations) => {
+  return Text.decorations({ text: "abcd", mark: "mark" }, decorations);
+};
 
 export const output = [
   {
     leaf: {
-      text: 'a',
-      mark: 'mark',
+      text: "a",
+      mark: "mark",
     },
     position: { start: 0, end: 1, isFirst: true },
   },
   {
     leaf: {
-      text: 'b',
-      mark: 'mark',
-      decoration1: 'decoration1',
+      text: "b",
+      mark: "mark",
+      decoration1: "decoration1",
     },
     position: { start: 1, end: 2 },
   },
   {
     leaf: {
-      text: '',
-      mark: 'mark',
-      decoration1: 'decoration1',
-      decoration2: 'decoration2',
-      decoration3: 'decoration3',
+      text: "",
+      mark: "mark",
+      decoration1: "decoration1",
+      decoration2: "decoration2",
+      decoration3: "decoration3",
     },
     position: { start: 2, end: 2 },
   },
   {
     leaf: {
-      text: 'c',
-      mark: 'mark',
-      decoration3: 'decoration3',
+      text: "c",
+      mark: "mark",
+      decoration3: "decoration3",
     },
     position: { start: 2, end: 3 },
   },
   {
     leaf: {
-      text: 'd',
-      mark: 'mark',
+      text: "d",
+      mark: "mark",
     },
     position: { start: 3, end: 4 },
   },
   {
     leaf: {
-      text: '',
-      mark: 'mark',
-      decoration4: 'decoration4',
+      text: "",
+      mark: "mark",
+      decoration4: "decoration4",
     },
     position: { start: 4, end: 4, isLast: true },
   },
-]
+];

@@ -15,7 +15,7 @@ test.describe("hovering toolbar example", () => {
 
     await expect(page.getByTestId("menu")).toHaveCSS("opacity", "1");
     await expect(
-      page.getByTestId("menu").locator("span.material-icons")
+      page.getByTestId("menu").locator("span.material-icons"),
     ).toHaveCount(3);
   });
 

@@ -96,7 +96,7 @@ export const Slate = defineComponent({
       renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
       renderChunk?: (props: RenderChunkProps) => VNode;
     },
-    { slots, emit }
+    { slots, emit },
   ) {
     const {
       editor,
@@ -110,8 +110,8 @@ export const Slate = defineComponent({
     if (!Node.isNodeList(editor.children)) {
       throw new Error(
         `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
-          editor.children
-        )}`
+          editor.children,
+        )}`,
       );
     }
     provide(SLATE_USE_EDITOR, editor);
@@ -150,7 +150,7 @@ export const Slate = defineComponent({
         // here which only compares marks anyway.
         if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
           const unset = Object.fromEntries(
-            Object.keys(rest).map((mark) => [mark, null])
+            Object.keys(rest).map((mark) => [mark, null]),
           );
           return {
             [MARK_PLACEHOLDER_SYMBOL]: true,

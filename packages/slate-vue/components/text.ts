@@ -121,7 +121,7 @@ export const TextComp = defineComponent({
                   isLast: isLastText.value && i === leaves.value.length - 1,
                   key: DOMEditor.findKey(editor, leaf.leaf).id,
                 }),
-          })
+          }),
         ),
       });
   },

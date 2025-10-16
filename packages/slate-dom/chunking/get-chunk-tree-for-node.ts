@@ -19,7 +19,7 @@ export const getChunkTreeForNode = (
   // istanbul ignore next
   options: {
     reconcile?: Omit<ReconcileOptions, "chunkTree" | "children"> | false;
-  } = {}
+  } = {},
 ) => {
   const key = DOMEditor.findKey(editor, node);
   let chunkTree = KEY_TO_CHUNK_TREE.get(key);

@@ -16,7 +16,7 @@ const opMappers: OpMapper = {
 export function applySlateOp(
   sharedRoot: XmlText,
   slateRoot: Node,
-  op: Operation
+  op: Operation,
 ): void {
   const apply = opMappers[op.type] as ApplyFunc<typeof op>;
   if (!apply) {

@@ -30,12 +30,12 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
     if ("attributes" in change && "retain" in change) {
       const [startPathOffset, startTextOffset] = yOffsetToSlateOffsets(
         node,
-        yOffset - change.retain
+        yOffset - change.retain,
       );
       const [endPathOffset, endTextOffset] = yOffsetToSlateOffsets(
         node,
         yOffset,
-        { assoc: -1 }
+        { assoc: -1 },
       );
 
       for (
@@ -56,7 +56,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         const newProperties = change.attributes;
         const properties = pick(
           node,
-          ...(Object.keys(change.attributes) as Array<keyof Element>)
+          ...(Object.keys(change.attributes) as Array<keyof Element>),
         );
 
         if (pathOffset === startPathOffset || pathOffset === endPathOffset) {
@@ -104,12 +104,12 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
     if ("delete" in change) {
       const [startPathOffset, startTextOffset] = yOffsetToSlateOffsets(
         node,
-        yOffset - change.delete
+        yOffset - change.delete,
       );
       const [endPathOffset, endTextOffset] = yOffsetToSlateOffsets(
         node,
         yOffset,
-        { assoc: -1 }
+        { assoc: -1 },
       );
 
       for (
@@ -239,7 +239,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
 export function translateYTextEvent(
   sharedRoot: XmlText,
   editor: Editor,
-  event: YTextEvent
+  event: YTextEvent,
 ): Operation[] {
   const { target, changes } = event;
   const delta = event.delta as Delta;
@@ -262,14 +262,14 @@ export function translateYTextEvent(
       keyChanges.map(([key, info]) => [
         key,
         info.action === "delete" ? null : target.getAttribute(key),
-      ])
+      ]),
     );
 
     const properties = Object.fromEntries(
       keyChanges.map(([key]) => [
         key,
         targetElement[key as keyof typeof targetElement],
-      ])
+      ]),
     );
 
     ops.push({ type: "set_node", newProperties, properties, path: slatePath });

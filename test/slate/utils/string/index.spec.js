@@ -187,7 +187,7 @@ describe(`getWordDistance - rtl`, () => {
 
 const cases = [
   ...[...codepoints, ...zwjSequences, ...tagSequences, ...rtlCases].map(
-    ([str]) => str
+    ([str]) => str,
   ),
   ...keycapSequences,
   ...regionalIndicatorSequences,

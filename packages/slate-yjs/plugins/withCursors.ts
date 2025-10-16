@@ -13,7 +13,7 @@ export type CursorStateChangeEvent = {
 };
 
 export type RemoteCursorChangeEventListener = (
-  event: CursorStateChangeEvent
+  event: CursorStateChangeEvent,
 ) => void;
 
 const CURSOR_CHANGE_EVENT_LISTENERS: WeakMap<
@@ -51,14 +51,14 @@ export const CursorEditor = {
 
   sendCursorPosition<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
-    range: Range | null = editor.selection
+    range: Range | null = editor.selection,
   ) {
     editor.sendCursorPosition(range);
   },
 
   sendCursorData<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
-    data: TCursorData
+    data: TCursorData,
   ) {
     editor.sendCursorData(data);
   },
@@ -66,7 +66,7 @@ export const CursorEditor = {
   on<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
     event: "change",
-    handler: RemoteCursorChangeEventListener
+    handler: RemoteCursorChangeEventListener,
   ) {
     if (event !== "change") {
       return;
@@ -80,7 +80,7 @@ export const CursorEditor = {
   off<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
     event: "change",
-    listener: RemoteCursorChangeEventListener
+    listener: RemoteCursorChangeEventListener,
   ) {
     if (event !== "change") {
       return;
@@ -94,7 +94,7 @@ export const CursorEditor = {
 
   cursorState<TCursorData extends JsonObject>(
     editor: CursorEditor<TCursorData>,
-    clientId: number
+    clientId: number,
   ): CursorState<TCursorData> | null {
     if (
       clientId === editor.sharedRoot.doc?.clientID ||
@@ -118,7 +118,7 @@ export const CursorEditor = {
   },
 
   cursorStates<TCursorData extends JsonObject>(
-    editor: CursorEditor<TCursorData>
+    editor: CursorEditor<TCursorData>,
   ): Record<string, CursorState<TCursorData>> {
     if (!YjsEditor.connected(editor)) {
       return {};
@@ -139,8 +139,8 @@ export const CursorEditor = {
               data: state.data,
             },
           ];
-        }
-      ).filter(Array.isArray)
+        },
+      ).filter(Array.isArray),
     );
   },
 };
@@ -158,7 +158,7 @@ export type WithCursorsOptions<TCursorData extends JsonObject = JsonObject> = {
 
 export function withCursors<
   TCursorData extends JsonObject,
-  TEditor extends YjsEditor
+  TEditor extends YjsEditor,
 >(
   editor: TEditor,
   awareness: LiveblocksYjsProvider["awareness"],
@@ -167,7 +167,7 @@ export function withCursors<
     cursorDataField = "data",
     autoSend = true,
     data,
-  }: WithCursorsOptions<TCursorData> = {}
+  }: WithCursorsOptions<TCursorData> = {},
 ): TEditor & CursorEditor<TCursorData> {
   const e = editor as TEditor & CursorEditor<TCursorData>;
 
@@ -200,14 +200,13 @@ export function withCursors<
     ) {
       e.awareness.setLocalStateField(
         e.selectionStateField,
-        relativeRange as unknown as JsonObject
+        relativeRange as unknown as JsonObject,
       );
     }
   };
 
   const awarenessChangeListener: RemoteCursorChangeEventListener = (yEvent) => {
-    const listeners =
-      CURSOR_CHANGE_EVENT_LISTENERS.get(e);
+    const listeners = CURSOR_CHANGE_EVENT_LISTENERS.get(e);
     if (!listeners) {
       return;
     }

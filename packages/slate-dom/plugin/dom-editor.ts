@@ -58,8 +58,8 @@ function compatEmptyNode([node, offset]: DOMPoint): DOMPoint {
     if (!el) {
       throw new Error(
         `Compact on vue3 empty childNode: Failed to find adjacent nodes: ${Scrubber.stringify(
-          node
-        )}`
+          node,
+        )}`,
       );
     }
     return [el, isLeft ? 0 : el.textContent?.length || 0];
@@ -72,29 +72,29 @@ function compatEmptyNode([node, offset]: DOMPoint): DOMPoint {
 export interface DOMEditor extends BaseEditor {
   hasEditableTarget: (
     editor: DOMEditor,
-    target: EventTarget | null
+    target: EventTarget | null,
   ) => target is DOMNode;
   hasRange: (editor: DOMEditor, range: Range) => boolean;
   hasSelectableTarget: (
     editor: DOMEditor,
-    target: EventTarget | null
+    target: EventTarget | null,
   ) => boolean;
   hasTarget: (
     editor: DOMEditor,
-    target: EventTarget | null
+    target: EventTarget | null,
   ) => target is DOMNode;
   insertData: (data: DataTransfer) => void;
   insertFragmentData: (data: DataTransfer) => boolean;
   insertTextData: (data: DataTransfer) => boolean;
   isTargetInsideNonReadonlyVoid: (
     editor: DOMEditor,
-    target: EventTarget | null
+    target: EventTarget | null,
   ) => boolean;
   setFragmentData: (
     data: DataTransfer,
-    originEvent?: "drag" | "copy" | "cut"
+    originEvent?: "drag" | "copy" | "cut",
   ) => void;
-  getChunkSize: (node: Ancestor) => number | null
+  getChunkSize: (node: Ancestor) => number | null;
 }
 
 export interface DOMEditorInterface {
@@ -144,7 +144,7 @@ export interface DOMEditorInterface {
   hasDOMNode: (
     editor: DOMEditor,
     target: DOMNode,
-    options?: { editable?: boolean }
+    options?: { editable?: boolean },
   ) => boolean;
 
   /**
@@ -152,7 +152,7 @@ export interface DOMEditorInterface {
    */
   hasEditableTarget: (
     editor: DOMEditor,
-    target: EventTarget | null
+    target: EventTarget | null,
   ) => target is DOMNode;
 
   /**
@@ -165,7 +165,7 @@ export interface DOMEditorInterface {
    */
   hasSelectableTarget: (
     editor: DOMEditor,
-    target: EventTarget | null
+    target: EventTarget | null,
   ) => boolean;
 
   /**
@@ -173,7 +173,7 @@ export interface DOMEditorInterface {
    */
   hasTarget: (
     editor: DOMEditor,
-    target: EventTarget | null
+    target: EventTarget | null,
   ) => target is DOMNode;
 
   /**
@@ -211,7 +211,7 @@ export interface DOMEditorInterface {
    */
   isTargetInsideNonReadonlyVoid: (
     editor: DOMEditor,
-    target: EventTarget | null
+    target: EventTarget | null,
   ) => boolean;
 
   /**
@@ -220,7 +220,7 @@ export interface DOMEditorInterface {
   setFragmentData: (
     editor: DOMEditor,
     data: DataTransfer,
-    originEvent?: "drag" | "copy" | "cut"
+    originEvent?: "drag" | "copy" | "cut",
   ) => void;
 
   /**
@@ -262,7 +262,7 @@ export interface DOMEditorInterface {
        * non-editable and non-void.
        */
       searchDirection?: "forward" | "backward";
-    }
+    },
   ) => T extends true ? Point | null : Point;
 
   /**
@@ -274,7 +274,7 @@ export interface DOMEditorInterface {
     options: {
       exactMatch: boolean;
       suppressThrow: T;
-    }
+    },
   ) => T extends true ? Range | null : Range;
 }
 
@@ -323,7 +323,7 @@ export const DOMEditor: DOMEditorInterface = {
 
     if (x == null || y == null) {
       throw new Error(
-        `Cannot resolve a Slate range from a DOM event: ${event}`
+        `Cannot resolve a Slate range from a DOM event: ${event}`,
       );
     }
 
@@ -371,7 +371,7 @@ export const DOMEditor: DOMEditorInterface = {
 
     if (!domRange) {
       throw new Error(
-        `Cannot resolve a Slate range from a DOM event: ${event}`
+        `Cannot resolve a Slate range from a DOM event: ${event}`,
       );
     }
 
@@ -420,7 +420,7 @@ export const DOMEditor: DOMEditorInterface = {
     }
 
     throw new Error(
-      `Unable to find the path for Slate node: ${Scrubber.stringify(node)}`
+      `Unable to find the path for Slate node: ${Scrubber.stringify(node)}`,
     );
   },
 
@@ -433,7 +433,7 @@ export const DOMEditor: DOMEditorInterface = {
     // Return if no dom node is associated with the editor, which means the editor is not yet mounted
     // or has been unmounted. This can happen especially, while retrying to focus the editor.
     if (!EDITOR_TO_ELEMENT.get(editor)) {
-      return
+      return;
     }
 
     const el = DOMEditor.toDOMNode(editor, editor);
@@ -556,7 +556,7 @@ export const DOMEditor: DOMEditorInterface = {
 
     if (!domNode) {
       throw new Error(
-        `Cannot resolve a DOM node from Slate node: ${Scrubber.stringify(node)}`
+        `Cannot resolve a DOM node from Slate node: ${Scrubber.stringify(node)}`,
       );
     }
 
@@ -627,8 +627,8 @@ export const DOMEditor: DOMEditorInterface = {
     if (!domPoint) {
       throw new Error(
         `Cannot resolve a DOM point from Slate point: ${Scrubber.stringify(
-          point
-        )}`
+          point,
+        )}`,
       );
     }
 
@@ -688,11 +688,11 @@ export const DOMEditor: DOMEditorInterface = {
       exactMatch: boolean;
       suppressThrow: T;
       searchDirection?: "forward" | "backward";
-    }
+    },
   ): T extends true ? Point | null : Point => {
     const { exactMatch, suppressThrow, searchDirection } = options;
     const [nearestNode, nearestOffset] = compatEmptyNode(
-      exactMatch ? domPoint : normalizeDOMPoint(domPoint)
+      exactMatch ? domPoint : normalizeDOMPoint(domPoint),
     );
     const parentNode = nearestNode.parentNode as DOMElement;
     let textNode: DOMElement | null = null;
@@ -710,7 +710,7 @@ export const DOMEditor: DOMEditorInterface = {
           ? potentialVoidNode
           : null;
       const potentialNonEditableNode = parentNode.closest(
-        '[contenteditable="false"]'
+        '[contenteditable="false"]',
       );
       const nonEditableNode =
         potentialNonEditableNode && editorEl.contains(potentialNonEditableNode)
@@ -733,10 +733,10 @@ export const DOMEditor: DOMEditorInterface = {
           const contents = range.cloneContents();
           const removals = [
             ...Array.prototype.slice.call(
-              contents.querySelectorAll("[data-slate-zero-width]")
+              contents.querySelectorAll("[data-slate-zero-width]"),
             ),
             ...Array.prototype.slice.call(
-              contents.querySelectorAll("[contenteditable=false]")
+              contents.querySelectorAll("[contenteditable=false]"),
             ),
           ];
 
@@ -798,31 +798,32 @@ export const DOMEditor: DOMEditorInterface = {
           node
             ? node.querySelectorAll(
                 // Exclude leaf nodes in nested editors
-                "[data-slate-leaf]:not(:scope [data-slate-editor] [data-slate-leaf])"
+                "[data-slate-leaf]:not(:scope [data-slate-editor] [data-slate-leaf])",
               )
             : [];
         const elementNode = nonEditableNode.closest(
-          '[data-slate-node="element"]'
+          '[data-slate-node="element"]',
         );
 
-        if (searchDirection === 'backward' || !searchDirection) {
+        if (searchDirection === "backward" || !searchDirection) {
           const leafNodes = [
             ...getLeafNodes(elementNode?.previousElementSibling),
             ...getLeafNodes(elementNode),
           ];
 
           leafNode =
-            leafNodes.findLast(leaf => isBefore(nonEditableNode, leaf)) ?? null
+            leafNodes.findLast((leaf) => isBefore(nonEditableNode, leaf)) ??
+            null;
         }
 
-        if (searchDirection === 'forward' || !searchDirection) {
+        if (searchDirection === "forward" || !searchDirection) {
           const leafNodes = [
             ...getLeafNodes(elementNode),
             ...getLeafNodes(elementNode?.nextElementSibling),
           ];
 
           leafNode =
-            leafNodes.find(leaf => isAfter(nonEditableNode, leaf)) ?? null
+            leafNodes.find((leaf) => isAfter(nonEditableNode, leaf)) ?? null;
         }
 
         if (leafNode) {
@@ -873,10 +874,10 @@ export const DOMEditor: DOMEditorInterface = {
         const slateNode = DOMEditor.toSlateNode(editor, node);
         const start = Editor.start(
           editor,
-          DOMEditor.findPath(editor, slateNode)
+          DOMEditor.findPath(editor, slateNode),
         );
-        const { path } = start
-        let { offset } = start
+        const { path } = start;
+        let { offset } = start;
 
         if (!node.querySelector("[data-slate-leaf]")) {
           offset = nearestOffset;
@@ -891,7 +892,7 @@ export const DOMEditor: DOMEditorInterface = {
         return null as T extends true ? Point | null : Point;
       }
       throw new Error(
-        `Cannot resolve a Slate point from DOM point: ${domPoint}`
+        `Cannot resolve a Slate point from DOM point: ${domPoint}`,
       );
     }
 
@@ -909,7 +910,7 @@ export const DOMEditor: DOMEditorInterface = {
     options: {
       exactMatch: boolean;
       suppressThrow: T;
-    }
+    },
   ): T extends true ? Range | null : Range => {
     const { exactMatch, suppressThrow } = options;
     const el = isDOMSelection(domRange)
@@ -1007,7 +1008,7 @@ export const DOMEditor: DOMEditorInterface = {
       focusOffset == null
     ) {
       throw new Error(
-        `Cannot resolve a Slate range from DOM range: ${domRange}`
+        `Cannot resolve a Slate range from DOM range: ${domRange}`,
       );
     }
 

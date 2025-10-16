@@ -1,20 +1,20 @@
-import { isDeepEqual } from '@test-utils'
+import { isDeepEqual } from "@test-utils";
 
 export const input = {
   objectA: {
-    text: 'same text',
-    array: ['array-content'],
+    text: "same text",
+    array: ["array-content"],
     bold: true,
   },
   objectB: {
-    text: 'same text',
-    array: ['array-content'],
+    text: "same text",
+    array: ["array-content"],
     bold: true,
   },
-}
+};
 
 export const test = ({ objectA, objectB }) => {
-  return isDeepEqual(objectA, objectB)
-}
+  return isDeepEqual(objectA, objectB);
+};
 
-export const output = true
+export const output = true;

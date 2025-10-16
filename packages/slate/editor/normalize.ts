@@ -1,42 +1,42 @@
-import { Editor, EditorInterface } from '../interfaces/editor'
-import { DIRTY_PATH_KEYS, DIRTY_PATHS } from '../utils/weak-maps'
-import { Path } from '../interfaces/path'
-import { Node } from '../interfaces/node'
-import { Element } from '../interfaces/element'
+import { Editor, EditorInterface } from "../interfaces/editor";
+import { DIRTY_PATH_KEYS, DIRTY_PATHS } from "../utils/weak-maps";
+import { Path } from "../interfaces/path";
+import { Node } from "../interfaces/node";
+import { Element } from "../interfaces/element";
 
-export const normalize: EditorInterface['normalize'] = (
+export const normalize: EditorInterface["normalize"] = (
   editor,
-  options = {}
+  options = {},
 ) => {
-  const { force = false, operation } = options
+  const { force = false, operation } = options;
   const getDirtyPaths = (editor: Editor) => {
-    return DIRTY_PATHS.get(editor) || []
-  }
+    return DIRTY_PATHS.get(editor) || [];
+  };
 
   const getDirtyPathKeys = (editor: Editor) => {
-    return DIRTY_PATH_KEYS.get(editor) || new Set()
-  }
+    return DIRTY_PATH_KEYS.get(editor) || new Set();
+  };
 
   const popDirtyPath = (editor: Editor): Path => {
-    const path = getDirtyPaths(editor).pop()!
-    const key = path.join(',')
-    getDirtyPathKeys(editor).delete(key)
-    return path
-  }
+    const path = getDirtyPaths(editor).pop()!;
+    const key = path.join(",");
+    getDirtyPathKeys(editor).delete(key);
+    return path;
+  };
 
   if (!Editor.isNormalizing(editor)) {
-    return
+    return;
   }
 
   if (force) {
-    const allPaths = Array.from(Node.nodes(editor), ([, p]) => p)
-    const allPathKeys = new Set(allPaths.map(p => p.join(',')))
-    DIRTY_PATHS.set(editor, allPaths)
-    DIRTY_PATH_KEYS.set(editor, allPathKeys)
+    const allPaths = Array.from(Node.nodes(editor), ([, p]) => p);
+    const allPathKeys = new Set(allPaths.map((p) => p.join(",")));
+    DIRTY_PATHS.set(editor, allPaths);
+    DIRTY_PATH_KEYS.set(editor, allPathKeys);
   }
 
   if (getDirtyPaths(editor).length === 0) {
-    return
+    return;
   }
 
   Editor.withoutNormalizing(editor, () => {
@@ -47,8 +47,8 @@ export const normalize: EditorInterface['normalize'] = (
     */
     for (const dirtyPath of getDirtyPaths(editor)) {
       if (Node.has(editor, dirtyPath)) {
-        const entry = Editor.node(editor, dirtyPath)
-        const [node, _] = entry
+        const entry = Editor.node(editor, dirtyPath);
+        const [node, _] = entry;
 
         /*
           The default normalizer inserts an empty text node in this scenario, but it can be customised.
@@ -58,14 +58,14 @@ export const normalize: EditorInterface['normalize'] = (
           by definition adding children to an empty node can't cause other paths to change.
         */
         if (Element.isElement(node) && node.children.length === 0) {
-          editor.normalizeNode(entry, { operation })
+          editor.normalizeNode(entry, { operation });
         }
       }
     }
 
-    let dirtyPaths = getDirtyPaths(editor)
-    const initialDirtyPathsLength = dirtyPaths.length
-    let iteration = 0
+    let dirtyPaths = getDirtyPaths(editor);
+    const initialDirtyPathsLength = dirtyPaths.length;
+    let iteration = 0;
 
     while (dirtyPaths.length !== 0) {
       if (
@@ -76,18 +76,18 @@ export const normalize: EditorInterface['normalize'] = (
           operation,
         })
       ) {
-        return
+        return;
       }
 
-      const dirtyPath = popDirtyPath(editor)
+      const dirtyPath = popDirtyPath(editor);
 
       // If the node doesn't exist in the tree, it does not need to be normalized.
       if (Node.has(editor, dirtyPath)) {
-        const entry = Editor.node(editor, dirtyPath)
-        editor.normalizeNode(entry, { operation })
+        const entry = Editor.node(editor, dirtyPath);
+        editor.normalizeNode(entry, { operation });
       }
-      iteration++
-      dirtyPaths = getDirtyPaths(editor)
+      iteration++;
+      dirtyPaths = getDirtyPaths(editor);
     }
-  })
-}
+  });
+};

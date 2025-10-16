@@ -1,8 +1,8 @@
-import { isObject, Operation, Range } from 'slate'
+import { isObject, Operation, Range } from "slate";
 
 interface Batch {
-  operations: Operation[]
-  selectionBefore: Range | null
+  operations: Operation[];
+  selectionBefore: Range | null;
 }
 
 /**
@@ -11,8 +11,8 @@ interface Batch {
  */
 
 export interface History {
-  redos: Batch[]
-  undos: Batch[]
+  redos: Batch[];
+  undos: Batch[];
 }
 
 export const History = {
@@ -29,6 +29,6 @@ export const History = {
         Operation.isOperationList(value.redos[0].operations)) &&
       (value.undos.length === 0 ||
         Operation.isOperationList(value.undos[0].operations))
-    )
+    );
   },
-}
+};

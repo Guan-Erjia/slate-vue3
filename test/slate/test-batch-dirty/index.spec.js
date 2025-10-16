@@ -13,10 +13,10 @@ const withBatchTest = (editor, dirties) => {
 };
 
 const modules1 = await resolveModules(
-  import.meta.glob("../transforms/insertNodes/**/*.(j|t)s?(x)")
+  import.meta.glob("../transforms/insertNodes/**/*.(j|t)s?(x)"),
 );
 const modules2 = await resolveModules(
-  import.meta.glob("../transforms/insertFragment/**/*.(j|t)s?(x)")
+  import.meta.glob("../transforms/insertFragment/**/*.(j|t)s?(x)"),
 );
 
 describe("slate-transforms-insert-nodes", () => {
@@ -24,7 +24,7 @@ describe("slate-transforms-insert-nodes", () => {
     const { input, run, path } = module;
     test(path, async () => {
       const input2 = createEditor();
-      input2.children = cloneDeep(input.children)
+      input2.children = cloneDeep(input.children);
       input2.selection = cloneDeep(input.selection);
 
       const dirties1 = [];
@@ -47,9 +47,9 @@ describe("slate-transforms-insert-fragment", () => {
 
     test(path, async () => {
       const input1 = createEditor();
-      input1.children = cloneDeep(input.children)
+      input1.children = cloneDeep(input.children);
       const input2 = createEditor();
-      input2.children = cloneDeep(input.children)
+      input2.children = cloneDeep(input.children);
       input1.selection = cloneDeep(input.selection);
       input2.selection = cloneDeep(input.selection);
 

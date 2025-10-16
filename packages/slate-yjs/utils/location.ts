@@ -1,8 +1,8 @@
-import { Element, Node, Path, Text } from 'slate';
-import { YTarget } from '../model/types';
-import { sliceInsertDelta, yTextToInsertDelta } from './delta';
-import { toRaw } from 'vue';
-import { XmlText } from 'yjs';
+import { Element, Node, Path, Text } from "slate";
+import { YTarget } from "../model/types";
+import { sliceInsertDelta, yTextToInsertDelta } from "./delta";
+import { toRaw } from "vue";
+import { XmlText } from "yjs";
 
 export function getSlateNodeYLength(node: Node | undefined): number {
   if (!node) {
@@ -21,14 +21,14 @@ export function slatePathOffsetToYOffset(element: Element, pathOffset: number) {
 export function getYTarget(
   yRoot: XmlText,
   slateRoot: Node,
-  path: Path
+  path: Path,
 ): YTarget {
   if (path.length === 0) {
-    throw new Error('Path has to a have a length >= 1');
+    throw new Error("Path has to a have a length >= 1");
   }
 
   if (Text.isText(slateRoot)) {
-    throw new Error('Cannot descent into slate text');
+    throw new Error("Cannot descent into slate text");
   }
 
   const [pathOffset, ...childPath] = path;
@@ -48,7 +48,7 @@ export function getYTarget(
   if (childPath.length > 0) {
     if (!(yTarget instanceof XmlText)) {
       throw new Error(
-        "Path doesn't match yText, cannot descent into non-yText"
+        "Path doesn't match yText, cannot descent into non-yText",
       );
     }
 
@@ -68,7 +68,7 @@ export function getYTarget(
 export function yOffsetToSlateOffsets(
   parent: Element,
   yOffset: number,
-  opts: { assoc?: number; insert?: boolean } = {}
+  opts: { assoc?: number; insert?: boolean } = {},
 ): [number, number] {
   const { assoc = 0, insert = false } = opts;
 
@@ -94,7 +94,7 @@ export function yOffsetToSlateOffsets(
   }
 
   if (yOffset > currentOffset + (insert ? 1 : 0)) {
-    throw new Error('yOffset out of bounds');
+    throw new Error("yOffset out of bounds");
   }
 
   if (insert) {
@@ -109,7 +109,7 @@ export function yOffsetToSlateOffsets(
 export function getSlatePath(
   sharedRoot: XmlText,
   slateRoot: Node,
-  yText: XmlText
+  yText: XmlText,
 ): Path {
   const yNodePath = [yText];
   // 必须获取原始指针
@@ -121,7 +121,7 @@ export function getSlatePath(
     }
 
     if (!(yParent instanceof XmlText)) {
-      throw new Error('Unexpected y parent type');
+      throw new Error("Unexpected y parent type");
     }
 
     yNodePath.unshift(yParent);
@@ -145,11 +145,11 @@ export function getSlatePath(
         break;
       }
 
-      yOffset += typeof element.insert === 'string' ? element.insert.length : 1;
+      yOffset += typeof element.insert === "string" ? element.insert.length : 1;
     }
 
     if (Text.isText(slateParent)) {
-      throw new Error('Cannot descent into slate text');
+      throw new Error("Cannot descent into slate text");
     }
 
     const [pathOffset] = yOffsetToSlateOffsets(slateParent, yOffset);

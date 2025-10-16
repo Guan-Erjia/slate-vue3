@@ -9,7 +9,7 @@ export const useElement = (): ComputedRef<Element> => {
   const element = inject<ComputedRef<Element>>(SLATE_USE_ELEMENT);
   if (element === undefined) {
     throw new Error(
-      `The \`useElement\` hook must be used inside the <Slate> component's context.`
+      `The \`useElement\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return element;

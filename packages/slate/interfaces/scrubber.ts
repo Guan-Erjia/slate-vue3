@@ -1,11 +1,11 @@
-export type Scrubber = (key: string, value: unknown) => unknown
+export type Scrubber = (key: string, value: unknown) => unknown;
 
 export interface ScrubberInterface {
-  setScrubber(scrubber: Scrubber | undefined): void
-  stringify(value: any): string
+  setScrubber(scrubber: Scrubber | undefined): void;
+  stringify(value: any): string;
 }
 
-let _scrubber: Scrubber | undefined = undefined
+let _scrubber: Scrubber | undefined = undefined;
 
 /**
  * This interface implements a stringify() function, which is used by Slate
@@ -24,10 +24,10 @@ let _scrubber: Scrubber | undefined = undefined
  */
 export const Scrubber: ScrubberInterface = {
   setScrubber(scrubber: Scrubber | undefined): void {
-    _scrubber = scrubber
+    _scrubber = scrubber;
   },
 
   stringify(value: any): string {
-    return JSON.stringify(value, _scrubber)
+    return JSON.stringify(value, _scrubber);
   },
-}
+};

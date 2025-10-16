@@ -50,7 +50,7 @@ const MockElement = defineComponent({
       },
       {
         immediate: true,
-      }
+      },
     );
     return () => h("div", attrs, slots);
   },
@@ -76,7 +76,7 @@ describe("useSelected", () => {
         h(
           MockElement,
           { element, ...useInheritRef(attributes) },
-          () => children
+          () => children,
         );
 
       render(SelectedEditor, {
@@ -167,7 +167,7 @@ describe("useSelected", () => {
       Transforms.insertNodes(
         editor,
         { id: "new", children: [{ text: "" }] } as any,
-        { at: [2] }
+        { at: [2] },
       );
 
       await nextTick();

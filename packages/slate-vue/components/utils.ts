@@ -14,7 +14,7 @@ import { h } from "vue";
  */
 export const isEventHandled = <EventType extends Event>(
   event: EventType,
-  handler?: (event: EventType) => void | boolean
+  handler?: (event: EventType) => void | boolean,
 ) => {
   if (!handler) {
     return false;
@@ -35,7 +35,7 @@ export const isEventHandled = <EventType extends Event>(
  * Check if the event's target is an input element
  */
 export const isDOMEventTargetInput = <EventType extends Event>(
-  event: EventType
+  event: EventType,
 ) =>
   isDOMNode(event.target) &&
   (event.target instanceof HTMLInputElement ||
@@ -47,7 +47,7 @@ export const isDOMEventTargetInput = <EventType extends Event>(
 
 export const isDOMEventHandled = <E extends Event>(
   event: E,
-  handler?: (event: E) => void | boolean
+  handler?: (event: E) => void | boolean,
 ) => {
   if (!handler) {
     return false;
@@ -67,7 +67,7 @@ export const isDOMEventHandled = <E extends Event>(
 
 export const handleNativeHistoryEvents = (
   editor: Editor,
-  event: InputEvent
+  event: InputEvent,
 ) => {
   if (
     event.inputType === "historyUndo" &&
@@ -90,7 +90,7 @@ export const handleNativeHistoryEvents = (
  */
 export const DEFAULT_SCROLL_INTO_VIEW = (
   editor: DOMEditor,
-  domRange: globalThis.Range
+  domRange: globalThis.Range,
 ) => {
   // This was affecting the selection of multiple blocks and dragging behavior,
   // so enabled only if the selection has been collapsed.
@@ -144,7 +144,7 @@ export const DEFAULT_ELEMENT_RENDER = ({
         position: "relative",
       },
     },
-    children
+    children,
   );
 };
 

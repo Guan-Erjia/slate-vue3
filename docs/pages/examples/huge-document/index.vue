@@ -1,38 +1,42 @@
 <script setup lang="ts">
-import { Slate, Editable, type RenderElementProps, } from "slate-vue3"
+import { Slate, Editable, type RenderElementProps } from "slate-vue3";
 import { h } from "vue";
-import { faker } from '@faker-js/faker'
+import { faker } from "@faker-js/faker";
 import { createEditor, Descendant } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
-const HEADINGS = 100
-const PARAGRAPHS = 7
-const initialValue: Descendant[] = []
+const HEADINGS = 100;
+const PARAGRAPHS = 7;
+const initialValue: Descendant[] = [];
 
 for (let h = 0; h < HEADINGS; h++) {
   initialValue.push({
-    type: 'heading-one',
+    type: "heading-one",
     children: [{ text: faker.lorem.sentence() }],
-  })
+  });
 
   for (let p = 0; p < PARAGRAPHS; p++) {
     initialValue.push({
-      type: 'paragraph',
+      type: "paragraph",
       children: [{ text: faker.lorem.paragraph() }],
-    })
+    });
   }
 }
 
-const renderElement = ({ attributes, children, element }: RenderElementProps) => {
+const renderElement = ({
+  attributes,
+  children,
+  element,
+}: RenderElementProps) => {
   switch (element.type) {
-    case 'heading-one':
-      return h('h1', attributes, children)
+    case "heading-one":
+      return h("h1", attributes, children);
     default:
-      return h('p', attributes, children)
+      return h("p", attributes, children);
   }
-}
-const editor = withHistory(withDOM(createEditor()))
+};
+const editor = withHistory(withDOM(createEditor()));
 editor.children = initialValue;
 </script>
 <template>

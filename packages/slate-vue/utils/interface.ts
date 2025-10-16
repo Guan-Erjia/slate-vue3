@@ -1,16 +1,23 @@
 import type { Text, Element, LeafPosition, Editor } from "slate";
-import type { HTMLAttributes, VNode, VNodeArrayChildren, VNodeChild, VNodeProps, VNodeRef } from "vue";
+import type {
+  HTMLAttributes,
+  VNode,
+  VNodeArrayChildren,
+  VNodeChild,
+  VNodeProps,
+  VNodeRef,
+} from "vue";
 
 /**
  * `RenderChunkProps` are passed to the `renderChunk` handler
  */
 export interface RenderChunkProps {
-  highest: boolean
-  lowest: boolean
-  children: any
+  highest: boolean;
+  lowest: boolean;
+  children: any;
   attributes: {
-    'data-slate-chunk': true
-  }
+    "data-slate-chunk": true;
+  };
 }
 
 /**
@@ -42,7 +49,7 @@ export interface RenderLeafProps {
   /**
    * The position of the leaf within the Text node, only present when the text node is split by decorations.
    */
-  leafPosition?: LeafPosition
+  leafPosition?: LeafPosition;
 }
 
 /**
@@ -58,17 +65,17 @@ export interface RenderElementProps {
     dir?: "rtl";
     ref: VNodeRef;
   };
-  editor?: Editor
+  editor?: Editor;
 }
 
 /**
  * `RenderTextProps` are passed to the `renderText` handler.
  */
 export interface RenderTextProps {
-  text: Text
+  text: Text;
   children: VNodeChild[];
   attributes: {
-    'data-slate-node': 'text'
-    ref: VNodeRef
-  }
+    "data-slate-node": "text";
+    ref: VNodeRef;
+  };
 }

@@ -1,6 +1,6 @@
-import { EditorInterface, Element, Editor, Text } from '../interfaces'
+import { EditorInterface, Element, Editor, Text } from "../interfaces";
 
-export const shouldMergeNodesRemovePrevNode: EditorInterface['shouldMergeNodesRemovePrevNode'] =
+export const shouldMergeNodesRemovePrevNode: EditorInterface["shouldMergeNodesRemovePrevNode"] =
   (editor, [prevNode, prevPath], [curNode, curNodePath]) => {
     // If the target node that we're merging with is empty, remove it instead
     // of merging the two. This is a common rich text editor behavior to
@@ -11,7 +11,7 @@ export const shouldMergeNodesRemovePrevNode: EditorInterface['shouldMergeNodesRe
     return (
       (Element.isElement(prevNode) && Editor.isEmpty(editor, prevNode)) ||
       (Text.isText(prevNode) &&
-        prevNode.text === '' &&
+        prevNode.text === "" &&
         prevPath[prevPath.length - 1] !== 0)
-    )
-  }
+    );
+  };

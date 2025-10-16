@@ -5,66 +5,81 @@
         {{ menu.title }}
       </RouterLink>
       <ul>
-        <RouterLink :to="{ name: item.name }" v-for="item in menu.sub" :key="item.name">
-          <li :style="{
-            color: item.name === route.name ? '#0366d6' : undefined,
-            fontWeight: item.name === route.name ? 500 : undefined,
-          }">{{ item.name }}</li>
+        <RouterLink
+          :to="{ name: item.name }"
+          v-for="item in menu.sub"
+          :key="item.name"
+        >
+          <li
+            :style="{
+              color: item.name === route.name ? '#0366d6' : undefined,
+              fontWeight: item.name === route.name ? 500 : undefined,
+            }"
+          >
+            {{ item.name }}
+          </li>
         </RouterLink>
       </ul>
     </template>
   </menu>
 </template>
 <script lang="ts" setup>
-import { computed, CSSProperties, inject } from 'vue'
-import { EXAMPLE_RECORD, COMPONENTS_RECORD, HOOKS_RECORD, PACKAGES_RECORD, INTRODUCTION_RECORD } from '../routes'
-import { RouterLink, useRoute } from 'vue-router'
-const route = useRoute()
-const isFold = inject('IS_FOLD')
+import { computed, CSSProperties, inject } from "vue";
+import {
+  EXAMPLE_RECORD,
+  COMPONENTS_RECORD,
+  HOOKS_RECORD,
+  PACKAGES_RECORD,
+  INTRODUCTION_RECORD,
+} from "../routes";
+import { RouterLink, useRoute } from "vue-router";
+const route = useRoute();
+const isFold = inject("IS_FOLD");
 
 const isMobileDevice = computed(() => {
   const ua = window.navigator.userAgent;
-  const isAndroid = ua.includes('Android');
-  const isMobile = ua.includes('Mobile') || isAndroid;
+  const isAndroid = ua.includes("Android");
+  const isMobile = ua.includes("Mobile") || isAndroid;
   const isFireFox = /(?:Firefox)/.test(ua);
   // 是否为平板
   const isTablet =
-    /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua));
+    /(?:iPad|PlayBook)/.test(ua) ||
+    (isAndroid && !/(?:Mobile)/.test(ua)) ||
+    (isFireFox && /(?:Tablet)/.test(ua));
 
-  return (isMobile && !isTablet);
-})
+  return isMobile && !isTablet;
+});
 const menuStyle = computed<CSSProperties>(() => ({
-  height: isMobileDevice.value ? 'calc(100% - 50px)' : '100%',
-  position: isMobileDevice.value ? 'absolute' : 'static',
-}))
+  height: isMobileDevice.value ? "calc(100% - 50px)" : "100%",
+  position: isMobileDevice.value ? "absolute" : "static",
+}));
 const menuConfig = computed(() => [
   {
-
-    title: 'INTRODUCTION',
-    name: 'examples',
+    title: "INTRODUCTION",
+    name: "examples",
     sub: INTRODUCTION_RECORD,
   },
   {
-    title: 'COMPONENTS',
-    name: 'examples',
+    title: "COMPONENTS",
+    name: "examples",
     sub: COMPONENTS_RECORD,
   },
   {
-    title: 'HOOKS',
-    name: 'examples',
+    title: "HOOKS",
+    name: "examples",
     sub: HOOKS_RECORD,
   },
   {
-    title: 'SUB_PACKAGES',
-    name: 'examples',
+    title: "SUB_PACKAGES",
+    name: "examples",
     sub: PACKAGES_RECORD,
   },
   {
-    title: 'EXAMPLES',
-    name: 'examples',
+    title: "EXAMPLES",
+    name: "examples",
     sub: EXAMPLE_RECORD,
   },
-])
+]);
 </script>
 <style scoped>
 menu {

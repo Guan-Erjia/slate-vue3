@@ -5,13 +5,13 @@ import { execSync } from "node:child_process";
 
 const path = core.getInput("path");
 const packageJson = JSON.parse(
-  fs.readFileSync(join(path, "package.json")).toString()
+  fs.readFileSync(join(path, "package.json")).toString(),
 );
 
 const remoteVersions = JSON.parse(
   execSync("npm view slate-vue3 versions --json", {
     encoding: "utf-8",
-  })
+  }),
 );
 
 if (packageJson.version === remoteVersions.at(-1)) {

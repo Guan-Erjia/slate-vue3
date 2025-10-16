@@ -12,7 +12,7 @@ import {
 export function moveNode(
   sharedRoot: XmlText,
   slateRoot: Node,
-  op: MoveNodeOperation
+  op: MoveNodeOperation,
 ): void {
   const newParentPath = Path.parent(op.newPath);
   const newPathOffset = op.newPath[op.newPath.length - 1];
@@ -32,12 +32,12 @@ export function moveNode(
   const storedPositions = getStoredPositionsInDeltaAbsolute(
     sharedRoot,
     origin.yParent,
-    origin.targetDelta
+    origin.targetDelta,
   );
 
   origin.yParent.delete(
     origin.textRange.start,
-    origin.textRange.end - origin.textRange.start
+    origin.textRange.end - origin.textRange.start,
   );
 
   const targetLength = getInsertDeltaLength(yTextToInsertDelta(target.yParent));
@@ -52,6 +52,6 @@ export function moveNode(
     storedPositions,
     insertDelta,
     deltaApplyYOffset,
-    origin.textRange.start
+    origin.textRange.start,
   );
 }

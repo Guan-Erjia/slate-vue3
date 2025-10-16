@@ -25,8 +25,7 @@ export const NODE_TO_PARENT: WeakMap<Node, Ancestor> = new toRawWeakMap();
  * are used to resolve DOM event-related logic into Slate actions.
  */
 export const EDITOR_TO_WINDOW: WeakMap<Editor, Window> = new WeakMap();
-export const EDITOR_TO_ELEMENT: WeakMap<Editor, HTMLElement> =
-  new WeakMap();
+export const EDITOR_TO_ELEMENT: WeakMap<Editor, HTMLElement> = new WeakMap();
 export const ELEMENT_TO_NODE: WeakMap<HTMLElement, Node> = new WeakMap();
 export const NODE_TO_ELEMENT: WeakMap<Node, HTMLElement> = new toRawWeakMap();
 export const NODE_TO_KEY: WeakMap<Node, Key> = new toRawWeakMap();
@@ -59,5 +58,5 @@ export const EDITOR_TO_USER_MARKS: WeakMap<Editor, Partial<Text> | null> =
   new WeakMap();
 
 export const MARK_PLACEHOLDER_SYMBOL = Symbol(
-  "mark-placeholder"
+  "mark-placeholder",
 ) as unknown as string;

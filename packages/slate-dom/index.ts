@@ -54,7 +54,7 @@ export {
   type ChunkNode,
   type ChunkDescendant,
   type Chunk,
-  type ReconcileOptions
+  type ReconcileOptions,
 } from "./chunking";
 
 export {

@@ -12,7 +12,7 @@ import { translateYTextEvent } from "./textEvent";
 export function translateYjsEvent(
   sharedRoot: XmlText,
   editor: Editor,
-  event: YEvent<XmlText>
+  event: YEvent<XmlText>,
 ): Operation[] {
   if (event instanceof YTextEvent) {
     return translateYTextEvent(sharedRoot, editor, event);
@@ -32,7 +32,7 @@ export function translateYjsEvent(
 export function applyYjsEvents(
   sharedRoot: XmlText,
   editor: Editor,
-  events: YEvent<XmlText>[]
+  events: YEvent<XmlText>[],
 ) {
   Editor.withoutNormalizing(editor, () => {
     events.forEach((event) => {

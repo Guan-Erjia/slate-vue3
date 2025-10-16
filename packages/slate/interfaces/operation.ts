@@ -1,119 +1,119 @@
-import { ExtendedType, Node, Path, Range, isObject } from '..'
+import { ExtendedType, Node, Path, Range, isObject } from "..";
 
 export type BaseInsertNodeOperation = {
-  type: 'insert_node'
-  path: Path
-  node: Node
-}
+  type: "insert_node";
+  path: Path;
+  node: Node;
+};
 
 export type InsertNodeOperation = ExtendedType<
-  'InsertNodeOperation',
+  "InsertNodeOperation",
   BaseInsertNodeOperation
->
+>;
 
 export type BaseInsertTextOperation = {
-  type: 'insert_text'
-  path: Path
-  offset: number
-  text: string
-}
+  type: "insert_text";
+  path: Path;
+  offset: number;
+  text: string;
+};
 
 export type InsertTextOperation = ExtendedType<
-  'InsertTextOperation',
+  "InsertTextOperation",
   BaseInsertTextOperation
->
+>;
 
 export type BaseMergeNodeOperation = {
-  type: 'merge_node'
-  path: Path
-  position: number
-  properties: Partial<Node>
-}
+  type: "merge_node";
+  path: Path;
+  position: number;
+  properties: Partial<Node>;
+};
 
 export type MergeNodeOperation = ExtendedType<
-  'MergeNodeOperation',
+  "MergeNodeOperation",
   BaseMergeNodeOperation
->
+>;
 
 export type BaseMoveNodeOperation = {
-  type: 'move_node'
-  path: Path
-  newPath: Path
-}
+  type: "move_node";
+  path: Path;
+  newPath: Path;
+};
 
 export type MoveNodeOperation = ExtendedType<
-  'MoveNodeOperation',
+  "MoveNodeOperation",
   BaseMoveNodeOperation
->
+>;
 
 export type BaseRemoveNodeOperation = {
-  type: 'remove_node'
-  path: Path
-  node: Node
-}
+  type: "remove_node";
+  path: Path;
+  node: Node;
+};
 
 export type RemoveNodeOperation = ExtendedType<
-  'RemoveNodeOperation',
+  "RemoveNodeOperation",
   BaseRemoveNodeOperation
->
+>;
 
 export type BaseRemoveTextOperation = {
-  type: 'remove_text'
-  path: Path
-  offset: number
-  text: string
-}
+  type: "remove_text";
+  path: Path;
+  offset: number;
+  text: string;
+};
 
 export type RemoveTextOperation = ExtendedType<
-  'RemoveTextOperation',
+  "RemoveTextOperation",
   BaseRemoveTextOperation
->
+>;
 
 export type BaseSetNodeOperation = {
-  type: 'set_node'
-  path: Path
-  properties: Partial<Node>
-  newProperties: Partial<Node>
-}
+  type: "set_node";
+  path: Path;
+  properties: Partial<Node>;
+  newProperties: Partial<Node>;
+};
 
 export type SetNodeOperation = ExtendedType<
-  'SetNodeOperation',
+  "SetNodeOperation",
   BaseSetNodeOperation
->
+>;
 
 export type BaseSetSelectionOperation =
   | {
-      type: 'set_selection'
-      properties: null
-      newProperties: Range
+      type: "set_selection";
+      properties: null;
+      newProperties: Range;
     }
   | {
-      type: 'set_selection'
-      properties: Partial<Range>
-      newProperties: Partial<Range>
+      type: "set_selection";
+      properties: Partial<Range>;
+      newProperties: Partial<Range>;
     }
   | {
-      type: 'set_selection'
-      properties: Range
-      newProperties: null
-    }
+      type: "set_selection";
+      properties: Range;
+      newProperties: null;
+    };
 
 export type SetSelectionOperation = ExtendedType<
-  'SetSelectionOperation',
+  "SetSelectionOperation",
   BaseSetSelectionOperation
->
+>;
 
 export type BaseSplitNodeOperation = {
-  type: 'split_node'
-  path: Path
-  position: number
-  properties: Partial<Node>
-}
+  type: "split_node";
+  path: Path;
+  position: number;
+  properties: Partial<Node>;
+};
 
 export type SplitNodeOperation = ExtendedType<
-  'SplitNodeOperation',
+  "SplitNodeOperation",
   BaseSplitNodeOperation
->
+>;
 
 export type NodeOperation =
   | InsertNodeOperation
@@ -121,11 +121,11 @@ export type NodeOperation =
   | MoveNodeOperation
   | RemoveNodeOperation
   | SetNodeOperation
-  | SplitNodeOperation
+  | SplitNodeOperation;
 
-export type SelectionOperation = SetSelectionOperation
+export type SelectionOperation = SetSelectionOperation;
 
-export type TextOperation = InsertTextOperation | RemoveTextOperation
+export type TextOperation = InsertTextOperation | RemoveTextOperation;
 
 /**
  * `Operation` objects define the low-level instructions that Slate editors use
@@ -134,141 +134,140 @@ export type TextOperation = InsertTextOperation | RemoveTextOperation
  * collaboration, and other features.
  */
 
-export type BaseOperation = NodeOperation | SelectionOperation | TextOperation
-export type Operation = ExtendedType<'Operation', BaseOperation>
+export type BaseOperation = NodeOperation | SelectionOperation | TextOperation;
+export type Operation = ExtendedType<"Operation", BaseOperation>;
 
 export interface OperationInterface {
   /**
    * Check if a value is a `NodeOperation` object.
    */
-  isNodeOperation: (value: any) => value is NodeOperation
+  isNodeOperation: (value: any) => value is NodeOperation;
 
   /**
    * Check if a value is an `Operation` object.
    */
-  isOperation: (value: any) => value is Operation
+  isOperation: (value: any) => value is Operation;
 
   /**
    * Check if a value is a list of `Operation` objects.
    */
-  isOperationList: (value: any) => value is Operation[]
+  isOperationList: (value: any) => value is Operation[];
 
   /**
    * Check if a value is a `SelectionOperation` object.
    */
-  isSelectionOperation: (value: any) => value is SelectionOperation
+  isSelectionOperation: (value: any) => value is SelectionOperation;
 
   /**
    * Check if a value is a `TextOperation` object.
    */
-  isTextOperation: (value: any) => value is TextOperation
+  isTextOperation: (value: any) => value is TextOperation;
 
   /**
    * Invert an operation, returning a new operation that will exactly undo the
    * original when applied.
    */
-  inverse: (op: Operation) => Operation
+  inverse: (op: Operation) => Operation;
 }
 
 export const Operation: OperationInterface = {
   isNodeOperation(value: any): value is NodeOperation {
-    return Operation.isOperation(value) && value.type.endsWith('_node')
+    return Operation.isOperation(value) && value.type.endsWith("_node");
   },
 
   isOperation(value: any): value is Operation {
     if (!isObject(value)) {
-      return false
+      return false;
     }
 
     switch (value.type) {
-      case 'insert_node':
-        return Path.isPath(value.path) && Node.isNode(value.node)
-      case 'insert_text':
+      case "insert_node":
+        return Path.isPath(value.path) && Node.isNode(value.node);
+      case "insert_text":
         return (
-          typeof value.offset === 'number' &&
-          typeof value.text === 'string' &&
+          typeof value.offset === "number" &&
+          typeof value.text === "string" &&
           Path.isPath(value.path)
-        )
-      case 'merge_node':
+        );
+      case "merge_node":
         return (
-          typeof value.position === 'number' &&
+          typeof value.position === "number" &&
           Path.isPath(value.path) &&
           isObject(value.properties)
-        )
-      case 'move_node':
-        return Path.isPath(value.path) && Path.isPath(value.newPath)
-      case 'remove_node':
-        return Path.isPath(value.path) && Node.isNode(value.node)
-      case 'remove_text':
+        );
+      case "move_node":
+        return Path.isPath(value.path) && Path.isPath(value.newPath);
+      case "remove_node":
+        return Path.isPath(value.path) && Node.isNode(value.node);
+      case "remove_text":
         return (
-          typeof value.offset === 'number' &&
-          typeof value.text === 'string' &&
+          typeof value.offset === "number" &&
+          typeof value.text === "string" &&
           Path.isPath(value.path)
-        )
-      case 'set_node':
+        );
+      case "set_node":
         return (
           Path.isPath(value.path) &&
           isObject(value.properties) &&
           isObject(value.newProperties)
-        )
-      case 'set_selection':
+        );
+      case "set_selection":
         return (
           (value.properties === null && Range.isRange(value.newProperties)) ||
           (value.newProperties === null && Range.isRange(value.properties)) ||
-          (isObject(value.properties) &&
-          isObject(value.newProperties))
-        )
-      case 'split_node':
+          (isObject(value.properties) && isObject(value.newProperties))
+        );
+      case "split_node":
         return (
           Path.isPath(value.path) &&
-          typeof value.position === 'number' &&
+          typeof value.position === "number" &&
           isObject(value.properties)
-        )
+        );
       default:
-        return false
+        return false;
     }
   },
 
   isOperationList(value: any): value is Operation[] {
     return (
-      Array.isArray(value) && value.every(val => Operation.isOperation(val))
-    )
+      Array.isArray(value) && value.every((val) => Operation.isOperation(val))
+    );
   },
 
   isSelectionOperation(value: any): value is SelectionOperation {
-    return Operation.isOperation(value) && value.type.endsWith('_selection')
+    return Operation.isOperation(value) && value.type.endsWith("_selection");
   },
 
   isTextOperation(value: any): value is TextOperation {
-    return Operation.isOperation(value) && value.type.endsWith('_text')
+    return Operation.isOperation(value) && value.type.endsWith("_text");
   },
 
   inverse(op: Operation): Operation {
     switch (op.type) {
-      case 'insert_node': {
-        return { ...op, type: 'remove_node' }
+      case "insert_node": {
+        return { ...op, type: "remove_node" };
       }
 
-      case 'insert_text': {
-        return { ...op, type: 'remove_text' }
+      case "insert_text": {
+        return { ...op, type: "remove_text" };
       }
 
-      case 'merge_node': {
-        return { ...op, type: 'split_node', path: Path.previous(op.path) }
+      case "merge_node": {
+        return { ...op, type: "split_node", path: Path.previous(op.path) };
       }
 
-      case 'move_node': {
-        const { newPath, path } = op
+      case "move_node": {
+        const { newPath, path } = op;
 
         // PERF: in this case the move operation is a no-op anyways.
         if (Path.equals(newPath, path)) {
-          return op
+          return op;
         }
 
         // If the move happens completely within a single parent the path and
         // newPath are stable with respect to each other.
         if (Path.isSibling(path, newPath)) {
-          return { ...op, path: newPath, newPath: path }
+          return { ...op, path: newPath, newPath: path };
         }
 
         // If the move does not happen within a single parent it is possible
@@ -277,47 +276,51 @@ export const Operation: OperationInterface = {
         // and find the original path. We can accomplish this (only in non-sibling)
         // moves by looking at the impact of the move operation on the node
         // after the original move path.
-        const inversePath = Path.transform(path, op)!
-        const inverseNewPath = Path.transform(Path.next(path), op)!
-        return { ...op, path: inversePath, newPath: inverseNewPath }
+        const inversePath = Path.transform(path, op)!;
+        const inverseNewPath = Path.transform(Path.next(path), op)!;
+        return { ...op, path: inversePath, newPath: inverseNewPath };
       }
 
-      case 'remove_node': {
-        return { ...op, type: 'insert_node' }
+      case "remove_node": {
+        return { ...op, type: "insert_node" };
       }
 
-      case 'remove_text': {
-        return { ...op, type: 'insert_text' }
+      case "remove_text": {
+        return { ...op, type: "insert_text" };
       }
 
-      case 'set_node': {
-        const { properties, newProperties } = op
-        return { ...op, properties: newProperties, newProperties: properties }
+      case "set_node": {
+        const { properties, newProperties } = op;
+        return { ...op, properties: newProperties, newProperties: properties };
       }
 
-      case 'set_selection': {
-        const { properties, newProperties } = op
+      case "set_selection": {
+        const { properties, newProperties } = op;
 
         if (properties == null) {
           return {
             ...op,
             properties: newProperties as Range,
             newProperties: null,
-          }
+          };
         } else if (newProperties == null) {
           return {
             ...op,
             properties: null,
             newProperties: properties as Range,
-          }
+          };
         } else {
-          return { ...op, properties: newProperties, newProperties: properties }
+          return {
+            ...op,
+            properties: newProperties,
+            newProperties: properties,
+          };
         }
       }
 
-      case 'split_node': {
-        return { ...op, type: 'merge_node', path: Path.next(op.path) }
+      case "split_node": {
+        return { ...op, type: "merge_node", path: Path.next(op.path) };
       }
     }
   },
-}
+};

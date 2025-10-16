@@ -1,31 +1,31 @@
-import { SelectionTransforms } from '../interfaces/transforms/selection'
-import { Range } from '../interfaces/range'
-import { Transforms } from '../interfaces/transforms'
+import { SelectionTransforms } from "../interfaces/transforms/selection";
+import { Range } from "../interfaces/range";
+import { Transforms } from "../interfaces/transforms";
 
-export const setPoint: SelectionTransforms['setPoint'] = (
+export const setPoint: SelectionTransforms["setPoint"] = (
   editor,
   props,
-  options = {}
+  options = {},
 ) => {
-  const { selection } = editor
-  let { edge = 'both' } = options
+  const { selection } = editor;
+  let { edge = "both" } = options;
 
   if (!selection) {
-    return
+    return;
   }
 
-  if (edge === 'start') {
-    edge = Range.isBackward(selection) ? 'focus' : 'anchor'
+  if (edge === "start") {
+    edge = Range.isBackward(selection) ? "focus" : "anchor";
   }
 
-  if (edge === 'end') {
-    edge = Range.isBackward(selection) ? 'anchor' : 'focus'
+  if (edge === "end") {
+    edge = Range.isBackward(selection) ? "anchor" : "focus";
   }
 
-  const { anchor, focus } = selection
-  const point = edge === 'anchor' ? anchor : focus
+  const { anchor, focus } = selection;
+  const point = edge === "anchor" ? anchor : focus;
 
   Transforms.setSelection(editor, {
-    [edge === 'anchor' ? 'anchor' : 'focus']: { ...point, ...props },
-  })
-}
+    [edge === "anchor" ? "anchor" : "focus"]: { ...point, ...props },
+  });
+};

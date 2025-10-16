@@ -5,12 +5,12 @@ import { XmlText } from "yjs";
 export function removeNode(
   sharedRoot: XmlText,
   slateRoot: Node,
-  op: RemoveNodeOperation
+  op: RemoveNodeOperation,
 ): void {
   const { yParent: parent, textRange } = getYTarget(
     sharedRoot,
     slateRoot,
-    op.path
+    op.path,
   );
   parent.delete(textRange.start, textRange.end - textRange.start);
 }

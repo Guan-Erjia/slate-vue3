@@ -1,37 +1,37 @@
-import { Editor, EditorInterface } from '../interfaces/editor'
-import { Span } from '../interfaces/location'
-import { Path } from '../interfaces/path'
+import { Editor, EditorInterface } from "../interfaces/editor";
+import { Span } from "../interfaces/location";
+import { Path } from "../interfaces/path";
 
-export const next: EditorInterface['next'] = (editor, options = {}) => {
-  const { mode = 'lowest', voids = false } = options
-  const { at = editor.selection } = options
-  let { match } = options
+export const next: EditorInterface["next"] = (editor, options = {}) => {
+  const { mode = "lowest", voids = false } = options;
+  const { at = editor.selection } = options;
+  let { match } = options;
 
   if (!at) {
-    return
+    return;
   }
 
-  const pointAfterLocation = Editor.after(editor, at, { voids })
+  const pointAfterLocation = Editor.after(editor, at, { voids });
 
-  if (!pointAfterLocation) return
+  if (!pointAfterLocation) return;
 
-  const [, to] = Editor.last(editor, [])
+  const [, to] = Editor.last(editor, []);
 
-  const span: Span = [pointAfterLocation.path, to]
+  const span: Span = [pointAfterLocation.path, to];
 
   if (Path.isPath(at) && at.length === 0) {
-    throw new Error(`Cannot get the next node from the root node!`)
+    throw new Error(`Cannot get the next node from the root node!`);
   }
 
   if (match == null) {
     if (Path.isPath(at)) {
-      const [parent] = Editor.parent(editor, at)
-      match = n => parent.children.includes(n)
+      const [parent] = Editor.parent(editor, at);
+      match = (n) => parent.children.includes(n);
     } else {
-      match = () => true
+      match = () => true;
     }
   }
 
-  const [next] = Editor.nodes(editor, { at: span, match, mode, voids })
-  return next
-}
+  const [next] = Editor.nodes(editor, { at: span, match, mode, voids });
+  return next;
+};

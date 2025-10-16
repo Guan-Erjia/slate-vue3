@@ -1,20 +1,20 @@
-import { XmlText } from 'yjs';
-import { DeltaInsert, InsertDelta } from '../model/types';
-import { deepEquals } from './object';
+import { XmlText } from "yjs";
+import { DeltaInsert, InsertDelta } from "../model/types";
+import { deepEquals } from "./object";
 
 export function normalizeInsertDelta(delta: InsertDelta): InsertDelta {
   const normalized: InsertDelta = [];
 
   for (const element of delta) {
-    if (typeof element.insert === 'string' && element.insert.length === 0) {
+    if (typeof element.insert === "string" && element.insert.length === 0) {
       continue;
     }
 
     const prev = normalized[normalized.length - 1];
     if (
       !prev ||
-      typeof prev.insert !== 'string' ||
-      typeof element.insert !== 'string'
+      typeof prev.insert !== "string" ||
+      typeof element.insert !== "string"
     ) {
       normalized.push(element);
       continue;
@@ -41,7 +41,7 @@ export function yTextToInsertDelta(yText: XmlText): InsertDelta {
 }
 
 export function getInsertLength({ insert }: DeltaInsert): number {
-  return typeof insert === 'string' ? insert.length : 1;
+  return typeof insert === "string" ? insert.length : 1;
 }
 
 export function getInsertDeltaLength(delta: InsertDelta): number {
@@ -51,7 +51,7 @@ export function getInsertDeltaLength(delta: InsertDelta): number {
 export function sliceInsertDelta(
   delta: InsertDelta,
   start: number,
-  length: number
+  length: number,
 ): InsertDelta {
   if (length < 1) {
     return [];
@@ -74,7 +74,7 @@ export function sliceInsertDelta(
       continue;
     }
 
-    if (typeof element.insert !== 'string') {
+    if (typeof element.insert !== "string") {
       currentOffset += elementLength;
       sliced.push(element);
       continue;
@@ -83,7 +83,7 @@ export function sliceInsertDelta(
     const startOffset = Math.max(0, start - currentOffset);
     const endOffset = Math.min(
       elementLength,
-      elementLength - (currentOffset + elementLength - end)
+      elementLength - (currentOffset + elementLength - end),
     );
 
     sliced.push({

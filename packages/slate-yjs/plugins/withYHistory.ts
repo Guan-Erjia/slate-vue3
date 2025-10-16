@@ -9,7 +9,7 @@ import { YjsEditor } from "./withYjs";
 
 const LAST_SELECTION: WeakMap<Editor, RelativeRange | null> = new WeakMap();
 const DEFAULT_WITHOUT_SAVING_ORIGIN = Symbol(
-  "slate-yjs-history-without-saving"
+  "slate-yjs-history-without-saving",
 );
 
 export type YHistoryEditor = YjsEditor & {
@@ -61,7 +61,7 @@ export function withYHistory<T extends YjsEditor>(
     withoutSavingOrigin = DEFAULT_WITHOUT_SAVING_ORIGIN,
     trackedOrigins = new Set([editor.localOrigin]),
     ...options
-  }: WithYHistoryOptions = {}
+  }: WithYHistoryOptions = {},
 ): T & YHistoryEditor {
   const e = editor as T & YHistoryEditor;
 
@@ -79,7 +79,7 @@ export function withYHistory<T extends YjsEditor>(
 
     LAST_SELECTION.set(
       e,
-      e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
+      e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection),
     );
   };
 
@@ -95,7 +95,7 @@ export function withYHistory<T extends YjsEditor>(
     setTimeout(() => {
       stackItem.meta.set(
         "selection",
-        e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
+        e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection),
       );
       stackItem.meta.set("selectionBefore", LAST_SELECTION.get(e));
     });
@@ -110,7 +110,7 @@ export function withYHistory<T extends YjsEditor>(
     setTimeout(() => {
       stackItem.meta.set(
         "selection",
-        e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection)
+        e.selection && slateRangeToRelativeRange(e.sharedRoot, e, e.selection),
       );
     });
   };
@@ -132,7 +132,7 @@ export function withYHistory<T extends YjsEditor>(
     }
 
     const relativeSelection = stackItem.meta.get(
-      "selectionBefore"
+      "selectionBefore",
     ) as RelativeRange | null;
 
     if (!relativeSelection) {
@@ -142,7 +142,7 @@ export function withYHistory<T extends YjsEditor>(
     const selection = relativeRangeToSlateRange(
       e.sharedRoot,
       e,
-      relativeSelection
+      relativeSelection,
     );
 
     if (!selection) {

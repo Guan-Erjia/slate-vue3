@@ -1,12 +1,12 @@
-import { Editor, EditorInterface } from '../interfaces/editor'
+import { Editor, EditorInterface } from "../interfaces/editor";
 
-export const before: EditorInterface['before'] = (editor, at, options = {}) => {
-  const anchor = Editor.start(editor, [])
-  const focus = Editor.point(editor, at, { edge: 'start' })
-  const range = { anchor, focus }
-  const { distance = 1 } = options
-  let d = 0
-  let target
+export const before: EditorInterface["before"] = (editor, at, options = {}) => {
+  const anchor = Editor.start(editor, []);
+  const focus = Editor.point(editor, at, { edge: "start" });
+  const range = { anchor, focus };
+  const { distance = 1 } = options;
+  let d = 0;
+  let target;
 
   for (const p of Editor.positions(editor, {
     ...options,
@@ -14,15 +14,15 @@ export const before: EditorInterface['before'] = (editor, at, options = {}) => {
     reverse: true,
   })) {
     if (d > distance) {
-      break
+      break;
     }
 
     if (d !== 0) {
-      target = p
+      target = p;
     }
 
-    d++
+    d++;
   }
 
-  return target
-}
+  return target;
+};

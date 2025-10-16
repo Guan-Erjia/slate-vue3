@@ -5,16 +5,16 @@
   </code>
 </template>
 <script setup lang="ts">
-import { Element, Node } from 'slate-vue3/core';
+import { Element, Node } from "slate-vue3/core";
 const props = defineProps<{
-  element: Element
-}>()
+  element: Element;
+}>();
 
 const handleCopy = () => {
   navigator.clipboard.writeText(
-    props.element.children.map(line => Node.string(line)).join('\n')
-  )
-}
+    props.element.children.map((line) => Node.string(line)).join("\n"),
+  );
+};
 </script>
 <style>
 .slate-markdown code * {
@@ -95,7 +95,6 @@ code[class*="language-"] ::selection {
 }
 
 @media print {
-
   code[class*="language-"],
   pre[class*="language-"] {
     text-shadow: none;
@@ -105,19 +104,19 @@ code[class*="language-"] ::selection {
 /* Code blocks */
 pre[class*="language-"] {
   padding: 1em;
-  margin: .5em 0;
+  margin: 0.5em 0;
   overflow: auto;
 }
 
-:not(pre)>code[class*="language-"],
+:not(pre) > code[class*="language-"],
 pre[class*="language-"] {
   background: #f5f2f0;
 }
 
 /* Inline code */
-:not(pre)>code[class*="language-"] {
-  padding: .1em;
-  border-radius: .3em;
+:not(pre) > code[class*="language-"] {
+  padding: 0.1em;
+  border-radius: 0.3em;
   white-space: normal;
 }
 
@@ -133,7 +132,7 @@ pre[class*="language-"] {
 }
 
 .token.namespace {
-  opacity: .7;
+  opacity: 0.7;
 }
 
 .token.property,
@@ -162,7 +161,7 @@ pre[class*="language-"] {
 .style .token.string {
   color: #9a6e3a;
   /* This background color was intended by the author of this theme. */
-  background: hsla(0, 0%, 100%, .5);
+  background: hsla(0, 0%, 100%, 0.5);
 }
 
 .token.atrule,
@@ -173,7 +172,7 @@ pre[class*="language-"] {
 
 .token.function,
 .token.class-name {
-  color: #DD4A68;
+  color: #dd4a68;
 }
 
 .token.regex,

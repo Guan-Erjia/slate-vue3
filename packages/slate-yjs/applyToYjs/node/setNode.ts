@@ -5,12 +5,12 @@ import { XmlText } from "yjs";
 export function setNode(
   sharedRoot: XmlText,
   slateRoot: Node,
-  op: SetNodeOperation
+  op: SetNodeOperation,
 ): void {
   const { yTarget, textRange, yParent } = getYTarget(
     sharedRoot,
     slateRoot,
-    op.path
+    op.path,
   );
 
   if (yTarget) {
@@ -30,13 +30,13 @@ export function setNode(
   }
 
   const unset = Object.fromEntries(
-    Object.keys(op.properties).map((key) => [key, null])
+    Object.keys(op.properties).map((key) => [key, null]),
   );
   const newProperties = { ...unset, ...op.newProperties };
 
   yParent.format(
     textRange.start,
     textRange.end - textRange.start,
-    newProperties
+    newProperties,
   );
 }

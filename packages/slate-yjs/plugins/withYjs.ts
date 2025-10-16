@@ -50,7 +50,7 @@ export const YjsEditor = {
   applyRemoteEvents(
     editor: YjsEditor,
     events: YEvent<XmlText>[],
-    origin: unknown
+    origin: unknown,
   ): void {
     editor.applyRemoteEvents(events, origin);
   },
@@ -134,7 +134,7 @@ export function withYjs<T extends Editor>(
     localOrigin,
     positionStorageOrigin,
     autoConnect = false,
-  }: WithYjsOptions = {}
+  }: WithYjsOptions = {},
 ): T & YjsEditor {
   const e = editor as T & YjsEditor;
 
@@ -156,7 +156,7 @@ export function withYjs<T extends Editor>(
 
   const handleYEvents = (
     events: YEvent<XmlText>[],
-    transaction: Transaction
+    transaction: Transaction,
   ) => {
     if (e.isLocalOrigin(transaction.origin)) {
       return;

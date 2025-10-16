@@ -59,7 +59,7 @@ export class ChildrenHelper {
 
     return this.children.slice(
       this.pointerIndex,
-      this.pointerIndex + maxChildren
+      this.pointerIndex + maxChildren,
     );
   }
 

@@ -1,33 +1,33 @@
-import { Editor, Location, Node, Path, Range, Transforms } from '../../index'
-import { TextUnit } from '../../types/types'
-import { getDefaultInsertLocation } from '../../utils'
+import { Editor, Location, Node, Path, Range, Transforms } from "../../index";
+import { TextUnit } from "../../types/types";
+import { getDefaultInsertLocation } from "../../utils";
 
 export interface TextDeleteOptions {
-  at?: Location
-  distance?: number
-  unit?: TextUnit
-  reverse?: boolean
-  hanging?: boolean
-  voids?: boolean
+  at?: Location;
+  distance?: number;
+  unit?: TextUnit;
+  reverse?: boolean;
+  hanging?: boolean;
+  voids?: boolean;
 }
 
 export interface TextInsertFragmentOptions {
-  at?: Location
-  hanging?: boolean
-  voids?: boolean
-  batchDirty?: boolean
+  at?: Location;
+  hanging?: boolean;
+  voids?: boolean;
+  batchDirty?: boolean;
 }
 
 export interface TextInsertTextOptions {
-  at?: Location
-  voids?: boolean
+  at?: Location;
+  voids?: boolean;
 }
 
 export interface TextTransforms {
   /**
    * Delete content in the editor.
    */
-  delete: (editor: Editor, options?: TextDeleteOptions) => void
+  delete: (editor: Editor, options?: TextDeleteOptions) => void;
 
   /**
    * Insert a fragment in the editor
@@ -36,8 +36,8 @@ export interface TextTransforms {
   insertFragment: (
     editor: Editor,
     fragment: Node[],
-    options?: TextInsertFragmentOptions
-  ) => void
+    options?: TextInsertFragmentOptions,
+  ) => void;
 
   /**
    * Insert a string of text in the editor
@@ -46,47 +46,47 @@ export interface TextTransforms {
   insertText: (
     editor: Editor,
     text: string,
-    options?: TextInsertTextOptions
-  ) => void
+    options?: TextInsertTextOptions,
+  ) => void;
 }
 
 export const TextTransforms: TextTransforms = {
   delete(editor, options) {
-    editor.delete(options)
+    editor.delete(options);
   },
   insertFragment(editor, fragment, options) {
-    editor.insertFragment(fragment, options)
+    editor.insertFragment(fragment, options);
   },
   insertText(
     editor: Editor,
     text: string,
-    options: TextInsertTextOptions = {}
+    options: TextInsertTextOptions = {},
   ): void {
     Editor.withoutNormalizing(editor, () => {
-      const { voids = false } = options
-      let { at = getDefaultInsertLocation(editor) } = options
+      const { voids = false } = options;
+      let { at = getDefaultInsertLocation(editor) } = options;
 
       if (Path.isPath(at)) {
-        at = Editor.range(editor, at)
+        at = Editor.range(editor, at);
       }
 
       if (Range.isRange(at)) {
         if (Range.isCollapsed(at)) {
-          at = at.anchor
+          at = at.anchor;
         } else {
-          const end = Range.end(at)
+          const end = Range.end(at);
           if (!voids && Editor.void(editor, { at: end })) {
-            return
+            return;
           }
-          const start = Range.start(at)
-          const startRef = Editor.pointRef(editor, start)
-          const endRef = Editor.pointRef(editor, end)
-          Transforms.delete(editor, { at, voids })
-          const startPoint = startRef.unref()
-          const endPoint = endRef.unref()
+          const start = Range.start(at);
+          const startRef = Editor.pointRef(editor, start);
+          const endRef = Editor.pointRef(editor, end);
+          Transforms.delete(editor, { at, voids });
+          const startPoint = startRef.unref();
+          const endPoint = endRef.unref();
 
-          at = startPoint || endPoint!
-          Transforms.setSelection(editor, { anchor: at, focus: at })
+          at = startPoint || endPoint!;
+          Transforms.setSelection(editor, { anchor: at, focus: at });
         }
       }
 
@@ -94,12 +94,12 @@ export const TextTransforms: TextTransforms = {
         (!voids && Editor.void(editor, { at })) ||
         Editor.elementReadOnly(editor, { at })
       ) {
-        return
+        return;
       }
 
-      const { path, offset } = at
+      const { path, offset } = at;
       if (text.length > 0)
-        editor.apply({ type: 'insert_text', path, offset, text })
-    })
+        editor.apply({ type: "insert_text", path, offset, text });
+    });
   },
-}
+};

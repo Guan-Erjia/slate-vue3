@@ -1,40 +1,40 @@
-import { Node, NodeEntry } from '../interfaces/node'
-import { Editor, EditorLevelsOptions } from '../interfaces/editor'
-import { Element } from '../interfaces/element'
+import { Node, NodeEntry } from "../interfaces/node";
+import { Editor, EditorLevelsOptions } from "../interfaces/editor";
+import { Element } from "../interfaces/element";
 
 export function* levels<T extends Node>(
   editor: Editor,
-  options: EditorLevelsOptions<T> = {}
+  options: EditorLevelsOptions<T> = {},
 ): Generator<NodeEntry<T>, void, undefined> {
-  const { at = editor.selection, reverse = false, voids = false } = options
-  let { match } = options
+  const { at = editor.selection, reverse = false, voids = false } = options;
+  let { match } = options;
 
   if (match == null) {
-    match = () => true
+    match = () => true;
   }
 
   if (!at) {
-    return
+    return;
   }
 
-  const levels: NodeEntry<T>[] = []
-  const path = Editor.path(editor, at)
+  const levels: NodeEntry<T>[] = [];
+  const path = Editor.path(editor, at);
 
   for (const [n, p] of Node.levels(editor, path)) {
     if (!match(n, p)) {
-      continue
+      continue;
     }
 
-    levels.push([n, p] as NodeEntry<T>)
+    levels.push([n, p] as NodeEntry<T>);
 
     if (!voids && Element.isElement(n) && Editor.isVoid(editor, n)) {
-      break
+      break;
     }
   }
 
   if (reverse) {
-    levels.reverse()
+    levels.reverse();
   }
 
-  yield* levels
+  yield* levels;
 }

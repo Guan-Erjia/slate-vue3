@@ -4,7 +4,7 @@ import { XmlText } from "yjs";
 export type ApplyFunc<O extends Operation = Operation> = (
   sharedRoot: XmlText,
   slateRoot: Node,
-  op: O
+  op: O,
 ) => void;
 
 export type OpMapper<O extends Operation = Operation> = {

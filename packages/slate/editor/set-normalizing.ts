@@ -1,9 +1,9 @@
-import { EditorInterface } from '../interfaces/editor'
-import { NORMALIZING } from '../utils/weak-maps'
+import { EditorInterface } from "../interfaces/editor";
+import { NORMALIZING } from "../utils/weak-maps";
 
-export const setNormalizing: EditorInterface['setNormalizing'] = (
+export const setNormalizing: EditorInterface["setNormalizing"] = (
   editor,
-  isNormalizing
+  isNormalizing,
 ) => {
-  NORMALIZING.set(editor, isNormalizing)
-}
+  NORMALIZING.set(editor, isNormalizing);
+};

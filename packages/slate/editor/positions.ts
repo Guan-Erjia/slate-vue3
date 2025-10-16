@@ -1,28 +1,28 @@
-import { Editor, EditorPositionsOptions } from '../interfaces/editor'
-import { Point } from '../interfaces/point'
-import { Range } from '../interfaces/range'
-import { Element } from '../interfaces/element'
-import { Path } from '../interfaces/path'
-import { Text } from '../interfaces/text'
+import { Editor, EditorPositionsOptions } from "../interfaces/editor";
+import { Point } from "../interfaces/point";
+import { Range } from "../interfaces/range";
+import { Element } from "../interfaces/element";
+import { Path } from "../interfaces/path";
+import { Text } from "../interfaces/text";
 import {
   getCharacterDistance,
   getWordDistance,
   splitByCharacterDistance,
-} from '../utils/string'
+} from "../utils/string";
 
 export function* positions(
   editor: Editor,
-  options: EditorPositionsOptions = {}
+  options: EditorPositionsOptions = {},
 ): Generator<Point, void, undefined> {
   const {
     at = editor.selection,
-    unit = 'offset',
+    unit = "offset",
     reverse = false,
     voids = false,
-  } = options
+  } = options;
 
   if (!at) {
-    return
+    return;
   }
 
   /**
@@ -43,15 +43,15 @@ export function* positions(
    * a block node always appears before all of its leaf nodes.
    */
 
-  const range = Editor.range(editor, at)
-  const [start, end] = Range.edges(range)
-  const first = reverse ? end : start
-  let isNewBlock = false
-  let blockText = ''
-  let distance = 0 // Distance for leafText to catch up to blockText.
-  let leafTextRemaining = 0
-  let leafTextOffset = 0
-  const skippedPaths: Path[] = []
+  const range = Editor.range(editor, at);
+  const [start, end] = Range.edges(range);
+  const first = reverse ? end : start;
+  let isNewBlock = false;
+  let blockText = "";
+  let distance = 0; // Distance for leafText to catch up to blockText.
+  let leafTextRemaining = 0;
+  let leafTextOffset = 0;
+  const skippedPaths: Path[] = [];
 
   // Iterate through all nodes in range, grabbing entire textual content
   // of block nodes in blockText, and text nodes in leafText.
@@ -66,11 +66,13 @@ export function* positions(
   })) {
     // If the node is inside a skipped ancestor, do not return any points, but
     // still process its content so that the iteration state remains correct.
-    const hasSkippedAncestor = skippedPaths.some(p => Path.isAncestor(p, path))
+    const hasSkippedAncestor = skippedPaths.some((p) =>
+      Path.isAncestor(p, path),
+    );
 
     function* maybeYield(point: Point) {
       if (!hasSkippedAncestor) {
-        yield point
+        yield point;
       }
     }
     /*
@@ -81,18 +83,18 @@ export function* positions(
         /**
          * If the node is not selectable, skip it and its descendants
          */
-        skippedPaths.push(path)
+        skippedPaths.push(path);
         if (reverse) {
           if (Path.hasPrevious(path)) {
-            yield* maybeYield(Editor.end(editor, Path.previous(path)))
+            yield* maybeYield(Editor.end(editor, Path.previous(path)));
           }
-          continue
+          continue;
         } else {
-          const nextPath = Path.next(path)
+          const nextPath = Path.next(path);
           if (Editor.hasPath(editor, nextPath)) {
-            yield* maybeYield(Editor.start(editor, nextPath))
+            yield* maybeYield(Editor.start(editor, nextPath));
           }
-          continue
+          continue;
         }
       }
 
@@ -100,14 +102,14 @@ export function* positions(
       // yield their first point. If the `voids` option is set to true,
       // then we will iterate over their content.
       if (!voids && (editor.isVoid(node) || editor.isElementReadOnly(node))) {
-        yield* maybeYield(Editor.start(editor, path))
-        continue
+        yield* maybeYield(Editor.start(editor, path));
+        continue;
       }
 
       // Inline element nodes are ignored as they don't themselves
       // contribute to `blockText` or `leafText` - their parent and
       // children do.
-      if (editor.isInline(node)) continue
+      if (editor.isInline(node)) continue;
 
       // Block element node - set `blockText` to its text content.
       if (Editor.hasInlines(editor, node)) {
@@ -124,13 +126,13 @@ export function* positions(
         //   blockText = Editor.string(editor, blockRange, { voids })
         const e = Path.isAncestor(path, end.path)
           ? end
-          : Editor.end(editor, path)
+          : Editor.end(editor, path);
         const s = Path.isAncestor(path, start.path)
           ? start
-          : Editor.start(editor, path)
+          : Editor.start(editor, path);
 
-        blockText = Editor.string(editor, { anchor: s, focus: e }, { voids })
-        isNewBlock = true
+        blockText = Editor.string(editor, { anchor: s, focus: e }, { voids });
+        isNewBlock = true;
       }
     }
 
@@ -139,7 +141,7 @@ export function* positions(
      * positions every `distance` offset according to `unit`.
      */
     if (Text.isText(node)) {
-      const isFirst = Path.equals(path, first.path)
+      const isFirst = Path.equals(path, first.path);
 
       // Proof that we always exhaust text nodes before encountering a new one:
       //   console.assert(leafTextRemaining <= 0,
@@ -150,17 +152,17 @@ export function* positions(
       if (isFirst) {
         leafTextRemaining = reverse
           ? first.offset
-          : node.text.length - first.offset
-        leafTextOffset = first.offset // Works for reverse too.
+          : node.text.length - first.offset;
+        leafTextOffset = first.offset; // Works for reverse too.
       } else {
-        leafTextRemaining = node.text.length
-        leafTextOffset = reverse ? leafTextRemaining : 0
+        leafTextRemaining = node.text.length;
+        leafTextOffset = reverse ? leafTextRemaining : 0;
       }
 
       // Yield position at the start of node (potentially).
-      if (isFirst || isNewBlock || unit === 'offset') {
-        yield* maybeYield({ path, offset: leafTextOffset })
-        isNewBlock = false
+      if (isFirst || isNewBlock || unit === "offset") {
+        yield* maybeYield({ path, offset: leafTextOffset });
+        isNewBlock = false;
       }
 
       // Yield positions every (dynamically calculated) `distance` offset.
@@ -169,32 +171,32 @@ export function* positions(
         // and if blockText is exhausted, break to get another block node,
         // otherwise advance blockText forward by the new `distance`.
         if (distance === 0) {
-          if (blockText === '') break
-          distance = calcDistance(blockText, unit, reverse)
+          if (blockText === "") break;
+          distance = calcDistance(blockText, unit, reverse);
           // Split the string at the previously found distance and use the
           // remaining string for the next iteration.
-          blockText = splitByCharacterDistance(blockText, distance, reverse)[1]
+          blockText = splitByCharacterDistance(blockText, distance, reverse)[1];
         }
 
         // Advance `leafText` by the current `distance`.
         leafTextOffset = reverse
           ? leafTextOffset - distance
-          : leafTextOffset + distance
-        leafTextRemaining = leafTextRemaining - distance
+          : leafTextOffset + distance;
+        leafTextRemaining = leafTextRemaining - distance;
 
         // If `leafText` is exhausted, break to get a new leaf node
         // and set distance to the overflow amount, so we'll (maybe)
         // catch up to blockText in the next leaf text node.
         if (leafTextRemaining < 0) {
-          distance = -leafTextRemaining
-          break
+          distance = -leafTextRemaining;
+          break;
         }
 
         // Successfully walked `distance` offsets through `leafText`
         // to catch up with `blockText`, so we can reset `distance`
         // and yield this position in this node.
-        distance = 0
-        yield* maybeYield({ path, offset: leafTextOffset })
+        distance = 0;
+        yield* maybeYield({ path, offset: leafTextOffset });
       }
     }
   }
@@ -205,13 +207,13 @@ export function* positions(
   // Helper:
   // Return the distance in offsets for a step of size `unit` on given string.
   function calcDistance(text: string, unit: string, reverse?: boolean) {
-    if (unit === 'character') {
-      return getCharacterDistance(text, reverse)
-    } else if (unit === 'word') {
-      return getWordDistance(text, reverse)
-    } else if (unit === 'line' || unit === 'block') {
-      return text.length
+    if (unit === "character") {
+      return getCharacterDistance(text, reverse);
+    } else if (unit === "word") {
+      return getWordDistance(text, reverse);
+    } else if (unit === "line" || unit === "block") {
+      return text.length;
     }
-    return 1
+    return 1;
   }
 }

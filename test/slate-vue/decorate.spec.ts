@@ -19,7 +19,7 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   return h(
     "span",
     { ...attributes, "data-decorations": JSON.stringify(decorations) },
-    children
+    children,
   );
 };
 
@@ -39,7 +39,7 @@ const decoratePaths =
 
 const getDecoratedLeaves = (
   editor: DOMEditor,
-  path: Path
+  path: Path,
 ): { text: string; decorations: string[] }[] => {
   const text = DOMEditor.toDOMNode(editor, Node.leaf(editor, path));
   const leaves = Array.from(text.children) as HTMLElement[];

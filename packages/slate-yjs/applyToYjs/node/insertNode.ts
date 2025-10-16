@@ -7,7 +7,7 @@ import { getProperties } from "../../utils/slate";
 export function insertNode(
   sharedRoot: XmlText,
   slateRoot: Node,
-  op: InsertNodeOperation
+  op: InsertNodeOperation,
 ): void {
   const { yParent, textRange } = getYTarget(sharedRoot, slateRoot, op.path);
 
@@ -15,7 +15,7 @@ export function insertNode(
     return yParent.insert(
       textRange.start,
       op.node.text,
-      getProperties(op.node)
+      getProperties(op.node),
     );
   }
 

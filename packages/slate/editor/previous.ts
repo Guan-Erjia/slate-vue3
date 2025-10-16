@@ -1,38 +1,38 @@
-import { Editor, EditorInterface } from '../interfaces/editor'
-import { Span } from '../interfaces/location'
-import { Path } from '../interfaces/path'
+import { Editor, EditorInterface } from "../interfaces/editor";
+import { Span } from "../interfaces/location";
+import { Path } from "../interfaces/path";
 
-export const previous: EditorInterface['previous'] = (editor, options = {}) => {
-  const { mode = 'lowest', voids = false } = options
-  let { match } = options
-  const { at = editor.selection } = options
+export const previous: EditorInterface["previous"] = (editor, options = {}) => {
+  const { mode = "lowest", voids = false } = options;
+  let { match } = options;
+  const { at = editor.selection } = options;
 
   if (!at) {
-    return
+    return;
   }
 
-  const pointBeforeLocation = Editor.before(editor, at, { voids })
+  const pointBeforeLocation = Editor.before(editor, at, { voids });
 
   if (!pointBeforeLocation) {
-    return
+    return;
   }
 
-  const [, to] = Editor.first(editor, [])
+  const [, to] = Editor.first(editor, []);
 
   // The search location is from the start of the document to the path of
   // the point before the location passed in
-  const span: Span = [pointBeforeLocation.path, to]
+  const span: Span = [pointBeforeLocation.path, to];
 
   if (Path.isPath(at) && at.length === 0) {
-    throw new Error(`Cannot get the previous node from the root node!`)
+    throw new Error(`Cannot get the previous node from the root node!`);
   }
 
   if (match == null) {
     if (Path.isPath(at)) {
-      const [parent] = Editor.parent(editor, at)
-      match = n => parent.children.includes(n)
+      const [parent] = Editor.parent(editor, at);
+      match = (n) => parent.children.includes(n);
     } else {
-      match = () => true
+      match = () => true;
     }
   }
 
@@ -42,7 +42,7 @@ export const previous: EditorInterface['previous'] = (editor, options = {}) => {
     match,
     mode,
     voids,
-  })
+  });
 
-  return previous
-}
+  return previous;
+};

@@ -114,7 +114,7 @@ describe("slate-react", () => {
           at: { path: [0, 0], offset: 2 },
           match: Text.isText,
           split: true,
-        }
+        },
       );
 
       nextTick(() => {

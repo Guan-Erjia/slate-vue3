@@ -56,7 +56,7 @@ export const ElementComp = defineComponent({
 
     provide(
       SLATE_USE_ELEMENT,
-      computed(() => element)
+      computed(() => element),
     );
 
     const elementRef = ref<HTMLElement | null>(null);
@@ -74,7 +74,7 @@ export const ElementComp = defineComponent({
           KEY_TO_ELEMENT?.delete(key);
           NODE_TO_ELEMENT.delete(element);
         }
-      }
+      },
     );
 
     const isInline = computed(() => editor.isInline(element));
@@ -115,7 +115,7 @@ export const ElementComp = defineComponent({
       return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { element, text }));
     });
 
-    if(IS_FIREFOX) {
+    if (IS_FIREFOX) {
       onUpdated(() => {
         const nodes = elementRef.value?.childNodes;
         if (!nodes?.length) {

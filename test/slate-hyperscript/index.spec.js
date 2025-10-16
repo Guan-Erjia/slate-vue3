@@ -2,7 +2,7 @@ import { resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
 
 const modules = await resolveModules(
-  import.meta.glob("./fixtures/**/*.(j|t)s?(x)")
+  import.meta.glob("./fixtures/**/*.(j|t)s?(x)"),
 );
 
 describe("slate-hyperscript", () => {

@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { Slate, Editable, useInheritRef } from "slate-vue3"
+import { Slate, Editable, useInheritRef } from "slate-vue3";
 import { computed, h } from "vue";
-import type { RenderElementProps, RenderLeafProps, } from "slate-vue3";
-import { ButtonElement, CustomEditor, LinkElement } from "../../../custom-types";
+import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
+import {
+  ButtonElement,
+  CustomEditor,
+  LinkElement,
+} from "../../../custom-types";
 import isUrl from "is-url";
 import { isKeyHotkey } from "is-hotkey";
 import Toolbar from "../../../components/Toolbar.vue";
@@ -10,146 +14,173 @@ import Button from "../../../components/Button.vue";
 import LinkComponent from "./LinkComponent.vue";
 import BadgeComponent from "./BadgeComponent.vue";
 import ButtonComponent from "./ButtonComponent.vue";
-import { createEditor, Descendant, Editor, Element, Range, Transforms } from "slate-vue3/core";
+import {
+  createEditor,
+  Descendant,
+  Editor,
+  Element,
+  Range,
+  Transforms,
+} from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
 const isLinkActive = computed(() => {
   const [link] = Editor.nodes(editor, {
-    match: n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'link',
-  })
-  return !!link
-})
+    match: (n) =>
+      !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
+  });
+  return !!link;
+});
 
 const wrapLink = (url: string) => {
   if (isLinkActive.value) {
     Transforms.unwrapNodes(editor, {
-      match: n =>
-        !Editor.isEditor(n) && Element.isElement(n) && n.type === 'link',
-    })
+      match: (n) =>
+        !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
+    });
   }
-  const isCollapsed = editor.selection && Range.isCollapsed(editor.selection)
+  const isCollapsed = editor.selection && Range.isCollapsed(editor.selection);
   const link: LinkElement = {
-    type: 'link',
+    type: "link",
     url,
     children: isCollapsed ? [{ text: url }] : [],
-  }
+  };
 
   if (isCollapsed) {
-    Transforms.insertNodes(editor, link)
+    Transforms.insertNodes(editor, link);
   } else {
-    Transforms.wrapNodes(editor, link, { split: true })
-    Transforms.collapse(editor, { edge: 'end' })
+    Transforms.wrapNodes(editor, link, { split: true });
+    Transforms.collapse(editor, { edge: "end" });
   }
-}
+};
 
 const isButtonActive = computed(() => {
   const [button] = Editor.nodes(editor, {
-    match: n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'button',
-  })
-  return !!button
-})
+    match: (n) =>
+      !Editor.isEditor(n) && Element.isElement(n) && n.type === "button",
+  });
+  return !!button;
+});
 
 const withInlines = (editor: CustomEditor) => {
   const { insertData, insertText, isInline, isElementReadOnly, isSelectable } =
-    editor
+    editor;
 
-  editor.isInline = element =>
-    ['link', 'button', 'badge'].includes(element.type) || isInline(element)
+  editor.isInline = (element) =>
+    ["link", "button", "badge"].includes(element.type) || isInline(element);
 
-  editor.isElementReadOnly = element =>
-    element.type === 'badge' || isElementReadOnly(element)
+  editor.isElementReadOnly = (element) =>
+    element.type === "badge" || isElementReadOnly(element);
 
-  editor.isSelectable = element =>
-    element.type !== 'badge' && isSelectable(element)
+  editor.isSelectable = (element) =>
+    element.type !== "badge" && isSelectable(element);
 
-  editor.insertText = text => {
+  editor.insertText = (text) => {
     if (text && isUrl(text)) {
-      wrapLink(text)
+      wrapLink(text);
     } else {
-      insertText(text)
+      insertText(text);
     }
-  }
+  };
 
-  editor.insertData = data => {
-    const text = data.getData('text/plain')
+  editor.insertData = (data) => {
+    const text = data.getData("text/plain");
 
     if (text && isUrl(text)) {
-      wrapLink(text)
+      wrapLink(text);
     } else {
-      insertData(data)
+      insertData(data);
     }
-  }
+  };
 
-  return editor
-}
+  return editor;
+};
 
 const initialValue: Descendant[] = [
   {
-    type: 'paragraph',
+    type: "paragraph",
     children: [
       {
-        text: 'In addition to block nodes, you can create inline nodes. Here is a ',
+        text: "In addition to block nodes, you can create inline nodes. Here is a ",
       },
       {
-        type: 'link',
-        url: 'https://en.wikipedia.org/wiki/Hypertext',
-        children: [{ text: 'hyperlink' }],
+        type: "link",
+        url: "https://en.wikipedia.org/wiki/Hypertext",
+        children: [{ text: "hyperlink" }],
       },
       {
-        text: ', and here is a more unusual inline: an ',
+        text: ", and here is a more unusual inline: an ",
       },
       {
-        type: 'button',
-        children: [{ text: 'editable button' }],
+        type: "button",
+        children: [{ text: "editable button" }],
       },
       {
-        text: '! Here is a read-only inline: ',
+        text: "! Here is a read-only inline: ",
       },
       {
-        type: 'badge',
-        children: [{ text: 'Approved' }],
+        type: "badge",
+        children: [{ text: "Approved" }],
       },
       {
-        text: '.',
+        text: ".",
       },
     ],
   },
   {
-    type: 'paragraph',
+    type: "paragraph",
     children: [
       {
-        text: 'There are two ways to add links. You can either add a link via the toolbar icon above, or if you want in on a little secret, copy a URL to your keyboard and paste it while a range of text is selected. ',
+        text: "There are two ways to add links. You can either add a link via the toolbar icon above, or if you want in on a little secret, copy a URL to your keyboard and paste it while a range of text is selected. ",
       },
       {
-        type: 'link',
-        url: 'https://twitter.com/JustMissEmma/status/1448679899531726852',
-        children: [{ text: 'Finally, here is our favorite dog video.' }],
+        type: "link",
+        url: "https://twitter.com/JustMissEmma/status/1448679899531726852",
+        children: [{ text: "Finally, here is our favorite dog video." }],
       },
-      { text: '' },
+      { text: "" },
     ],
   },
-]
+];
 
-const renderElement = ({ attributes, children, element }: RenderElementProps) => {
+const renderElement = ({
+  attributes,
+  children,
+  element,
+}: RenderElementProps) => {
   switch (element.type) {
-    case 'link':
-      return h(LinkComponent, { ...useInheritRef(attributes), element }, () => children)
-    case 'button':
-      return h(ButtonComponent, { ...useInheritRef(attributes), element }, () => children)
+    case "link":
+      return h(
+        LinkComponent,
+        { ...useInheritRef(attributes), element },
+        () => children,
+      );
+    case "button":
+      return h(
+        ButtonComponent,
+        { ...useInheritRef(attributes), element },
+        () => children,
+      );
     case "badge":
-      return h(BadgeComponent, useInheritRef(attributes), () => children)
+      return h(BadgeComponent, useInheritRef(attributes), () => children);
     default:
-      return h('p', attributes, children)
+      return h("p", attributes, children);
   }
-}
-const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => h('span', {
-  ...attributes, style: {
-    paddingLeft: leaf.text === '' ? '0.1px' : ''
-  }
-}, children)
+};
+const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) =>
+  h(
+    "span",
+    {
+      ...attributes,
+      style: {
+        paddingLeft: leaf.text === "" ? "0.1px" : "",
+      },
+    },
+    children,
+  );
 
-const editor = withHistory(withInlines(withDOM(createEditor())))
+const editor = withHistory(withInlines(withDOM(createEditor())));
 editor.children = initialValue;
 const onKeyDown = (event: KeyboardEvent) => {
   // Default left/right behavior is unit:'character'.
@@ -159,78 +190,93 @@ const onKeyDown = (event: KeyboardEvent) => {
   // This lets the user step into and out of the inline without stepping over characters.
   // You may wish to customize this further to only use unit:'offset' in specific cases.
   if (editor.selection && Range.isCollapsed(editor.selection)) {
-    if (isKeyHotkey('left', event)) {
-      event.preventDefault()
-      Transforms.move(editor, { unit: 'offset', reverse: true })
-      return
+    if (isKeyHotkey("left", event)) {
+      event.preventDefault();
+      Transforms.move(editor, { unit: "offset", reverse: true });
+      return;
     }
-    if (isKeyHotkey('right', event)) {
-      event.preventDefault()
-      Transforms.move(editor, { unit: 'offset' })
-      return
+    if (isKeyHotkey("right", event)) {
+      event.preventDefault();
+      Transforms.move(editor, { unit: "offset" });
+      return;
     }
   }
-}
+};
 
 const onLinkClick = () => {
-  const url = window.prompt('Enter the URL of the link:')
+  const url = window.prompt("Enter the URL of the link:");
   if (url && editor.selection) {
-    wrapLink(url)
+    wrapLink(url);
   }
-}
+};
 const onOffLinkClick = () => {
   if (isLinkActive.value) {
     Transforms.unwrapNodes(editor, {
-      match: n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'link',
-    })
+      match: (n) =>
+        !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
+    });
   }
-}
+};
 
 const onSmartClick = () => {
   if (isButtonActive.value) {
     Transforms.unwrapNodes(editor, {
-      match: n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'button',
-    })
+      match: (n) =>
+        !Editor.isEditor(n) && Element.isElement(n) && n.type === "button",
+    });
   } else if (editor.selection) {
     if (isButtonActive.value) {
       Transforms.unwrapNodes(editor, {
-        match: n => !Editor.isEditor(n) && Element.isElement(n) && n.type === 'button',
-      })
+        match: (n) =>
+          !Editor.isEditor(n) && Element.isElement(n) && n.type === "button",
+      });
     }
 
-    const isCollapsed = editor.selection && Range.isCollapsed(editor.selection)
+    const isCollapsed = editor.selection && Range.isCollapsed(editor.selection);
     const button: ButtonElement = {
-      type: 'button',
-      children: isCollapsed ? [{ text: 'Edit me!' }] : [],
-    }
+      type: "button",
+      children: isCollapsed ? [{ text: "Edit me!" }] : [],
+    };
 
     if (isCollapsed) {
-      Transforms.insertNodes(editor, button)
+      Transforms.insertNodes(editor, button);
     } else {
-      Transforms.wrapNodes(editor, button, { split: true })
-      Transforms.collapse(editor, { edge: 'end' })
+      Transforms.wrapNodes(editor, button, { split: true });
+      Transforms.collapse(editor, { edge: "end" });
     }
   }
-}
+};
 
 const onPointerDown = (event: PointerEvent) => {
-  event.preventDefault()
-}
+  event.preventDefault();
+};
 </script>
 
 <template>
   <Slate :editor :render-element :render-leaf>
     <Toolbar>
-      <Button :active="isLinkActive" @click="onLinkClick" @pointerdown="onPointerDown">
+      <Button
+        :active="isLinkActive"
+        @click="onLinkClick"
+        @pointerdown="onPointerDown"
+      >
         link
       </Button>
-      <Button :active="isLinkActive" @click="onOffLinkClick" @pointerdown="onPointerDown">
+      <Button
+        :active="isLinkActive"
+        @click="onOffLinkClick"
+        @pointerdown="onPointerDown"
+      >
         link_off
       </Button>
       <Button active @click="onSmartClick" @pointerdown="onPointerDown">
         smart_button
       </Button>
     </Toolbar>
-    <Editable placeholder="Enter some text..." :spellcheck="false" @keydown="onKeyDown" />
+    <Editable
+      placeholder="Enter some text..."
+      :spellcheck="false"
+      @keydown="onKeyDown"
+    />
   </Slate>
 </template>

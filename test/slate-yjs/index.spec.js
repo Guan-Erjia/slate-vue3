@@ -46,7 +46,7 @@ async function withTestingElements(editor, doc = new Y.Doc()) {
 
 async function normalizedSlateDoc(sharedRoot) {
   const editor = createEditor();
-  editor.children = yTextToSlateElement(sharedRoot).children
+  editor.children = yTextToSlateElement(sharedRoot).children;
   const e = await withTestingElements(editor);
   Editor.normalize(e, { force: true });
   return e.children;
@@ -66,7 +66,7 @@ describe("slate-yjs", () => {
 
       // The normalized editor state should match the shared root.
       expect(await normalizedSlateDoc(editor.sharedRoot)).toStrictEqual(
-        editor.children
+        editor.children,
       );
 
       run(editor);
@@ -74,7 +74,7 @@ describe("slate-yjs", () => {
 
       // Editor state after run should match shared root.
       expect(await normalizedSlateDoc(editor.sharedRoot)).toStrictEqual(
-        editor.children
+        editor.children,
       );
 
       // Setup remote editor with input base state
@@ -85,16 +85,16 @@ describe("slate-yjs", () => {
       // Apply changes from 'run'
       Y.applyUpdateV2(
         remoteDoc,
-        Y.encodeStateAsUpdateV2(editor.sharedRoot.doc)
+        Y.encodeStateAsUpdateV2(editor.sharedRoot.doc),
       );
 
       // Verify remote and editor state are equal
       expect(await normalizedSlateDoc(remote.sharedRoot)).toStrictEqual(
-        remote.children
+        remote.children,
       );
       expect(editor.children).toEqual(remote.children);
       expect(await normalizedSlateDoc(editor.sharedRoot)).toStrictEqual(
-        editor.children
+        editor.children,
       );
 
       // Verify editor is in expected state

@@ -1,9 +1,9 @@
-import { Descendant } from 'slate'
-import { Key } from 'slate-dom'
+import { Descendant } from "slate";
+import { Key } from "slate-dom";
 
 export interface ChunkTree {
-  type: 'root'
-  children: ChunkDescendant[]
+  type: "root";
+  children: ChunkDescendant[];
 
   /**
    * The keys of any Slate nodes that have been moved using move_node since the
@@ -18,7 +18,7 @@ export interface ChunkTree {
    * This set is used to detect when a node has been moved so that this case
    * can be handled correctly and efficiently.
    */
-  movedNodeKeys: Set<Key>
+  movedNodeKeys: Set<Key>;
 
   /**
    * The chunks whose descendants have been modified during the most recent
@@ -30,22 +30,22 @@ export interface ChunkTree {
 }
 
 export interface Chunk {
-  type: 'chunk'
-  key: Key
-  parent: ChunkAncestor
-  children: ChunkDescendant[]
+  type: "chunk";
+  key: Key;
+  parent: ChunkAncestor;
+  children: ChunkDescendant[];
 }
 
 // A chunk leaf is unrelated to a Slate leaf; it is a leaf of the chunk tree,
 // containing a single element that is a child of the Slate node the chunk tree
 // belongs to.
 export interface ChunkLeaf {
-  type: 'leaf'
-  key: Key
-  node: Descendant
-  index: number
+  type: "leaf";
+  key: Key;
+  node: Descendant;
+  index: number;
 }
 
-export type ChunkAncestor = ChunkTree | Chunk
-export type ChunkDescendant = Chunk | ChunkLeaf
-export type ChunkNode = ChunkTree | Chunk | ChunkLeaf
+export type ChunkAncestor = ChunkTree | Chunk;
+export type ChunkDescendant = Chunk | ChunkLeaf;
+export type ChunkNode = ChunkTree | Chunk | ChunkLeaf;

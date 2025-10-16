@@ -1,22 +1,21 @@
-import { DOMEditor } from '../plugin/dom-editor'
-import { Ancestor, DecoratedRange, Editor, Range } from 'slate'
+import { DOMEditor } from "../plugin/dom-editor";
+import { Ancestor, DecoratedRange, Editor, Range } from "slate";
 
 export const shallowCompare = (
   obj1: { [key: string]: unknown },
-  obj2: { [key: string]: unknown }
+  obj2: { [key: string]: unknown },
 ) =>
   Object.keys(obj1).length === Object.keys(obj2).length &&
   Object.keys(obj1).every(
-    key => obj2.hasOwnProperty(key) && obj1[key] === obj2[key]
-  )
+    (key) => obj2.hasOwnProperty(key) && obj1[key] === obj2[key],
+  );
 
 const isDecorationFlagsEqual = (range: Range, other: Range) => {
-  const { anchor: rangeAnchor, focus: rangeFocus, ...rangeOwnProps } = range
-  const { anchor: otherAnchor, focus: otherFocus, ...otherOwnProps } = other
+  const { anchor: rangeAnchor, focus: rangeFocus, ...rangeOwnProps } = range;
+  const { anchor: otherAnchor, focus: otherFocus, ...otherOwnProps } = other;
 
-  return shallowCompare(rangeOwnProps, otherOwnProps
-  )
-}
+  return shallowCompare(rangeOwnProps, otherOwnProps);
+};
 
 /**
  * Check if a list of decorator ranges are equal to another.
@@ -28,27 +27,27 @@ const isDecorationFlagsEqual = (range: Range, other: Range) => {
 
 export const isElementDecorationsEqual = (
   list: Range[] | null,
-  another: Range[] | null
+  another: Range[] | null,
 ): boolean => {
   if (list === another) {
-    return true
+    return true;
   }
 
   if (!list || !another) {
-    return false
+    return false;
   }
 
   for (let i = 0; i < list.length; i++) {
-    const range = list[i]
-    const other = another[i]
+    const range = list[i];
+    const other = another[i];
 
     if (!Range.equals(range, other) || !isDecorationFlagsEqual(range, other)) {
-      return false
+      return false;
     }
   }
 
-  return true
-}
+  return true;
+};
 
 /**
  * Check if a list of decorator ranges are equal to another.
@@ -60,23 +59,23 @@ export const isElementDecorationsEqual = (
 
 export const isTextDecorationsEqual = (
   list: Range[] | null,
-  another: Range[] | null
+  another: Range[] | null,
 ): boolean => {
   if (list === another) {
-    return true
+    return true;
   }
 
   if (!list || !another) {
-    return false
+    return false;
   }
 
   if (list.length !== another.length) {
-    return false
+    return false;
   }
 
   for (let i = 0; i < list.length; i++) {
-    const range = list[i]
-    const other = another[i]
+    const range = list[i];
+    const other = another[i];
 
     // compare only offsets because paths doesn't matter for text
     if (
@@ -84,13 +83,12 @@ export const isTextDecorationsEqual = (
       range.focus.offset !== other.focus.offset ||
       !isDecorationFlagsEqual(range, other)
     ) {
-      return false
+      return false;
     }
   }
 
-  return true
-}
-
+  return true;
+};
 
 /**
  * Split and group decorations by each child of a node.
@@ -103,53 +101,53 @@ export const isTextDecorationsEqual = (
 export const splitDecorationsByChild = (
   editor: DOMEditor,
   node: Ancestor,
-  decorations: DecoratedRange[]
+  decorations: DecoratedRange[],
 ): DecoratedRange[][] => {
   const decorationsByChild = Array.from(
     node.children,
-    (): DecoratedRange[] => []
-  )
+    (): DecoratedRange[] => [],
+  );
 
   if (decorations.length === 0) {
-    return decorationsByChild
+    return decorationsByChild;
   }
 
-  const path = DOMEditor.findPath(editor, node)
-  const level = path.length
-  const ancestorRange = Editor.range(editor, path)
+  const path = DOMEditor.findPath(editor, node);
+  const level = path.length;
+  const ancestorRange = Editor.range(editor, path);
 
-  const cachedChildRanges = new Array<Range | undefined>(node.children.length)
+  const cachedChildRanges = new Array<Range | undefined>(node.children.length);
 
   const getChildRange = (index: number) => {
-    const cachedRange = cachedChildRanges[index]
-    if (cachedRange) return cachedRange
-    const childRange = Editor.range(editor, [...path, index])
-    cachedChildRanges[index] = childRange
-    return childRange
-  }
+    const cachedRange = cachedChildRanges[index];
+    if (cachedRange) return cachedRange;
+    const childRange = Editor.range(editor, [...path, index]);
+    cachedChildRanges[index] = childRange;
+    return childRange;
+  };
 
   for (const decoration of decorations) {
-    const decorationRange = Range.intersection(ancestorRange, decoration)
-    if (!decorationRange) continue
+    const decorationRange = Range.intersection(ancestorRange, decoration);
+    if (!decorationRange) continue;
 
-    const [startPoint, endPoint] = Range.edges(decorationRange)
-    const startIndex = startPoint.path[level]
-    const endIndex = endPoint.path[level]
+    const [startPoint, endPoint] = Range.edges(decorationRange);
+    const startIndex = startPoint.path[level];
+    const endIndex = endPoint.path[level];
 
     for (let i = startIndex; i <= endIndex; i++) {
-      const ds = decorationsByChild[i]
-      if (!ds) continue
+      const ds = decorationsByChild[i];
+      if (!ds) continue;
 
-      const childRange = getChildRange(i)
-      const childDecorationRange = Range.intersection(childRange, decoration)
-      if (!childDecorationRange) continue
+      const childRange = getChildRange(i);
+      const childDecorationRange = Range.intersection(childRange, decoration);
+      if (!childDecorationRange) continue;
 
       ds.push({
         ...decoration,
         ...childDecorationRange,
-      })
+      });
     }
   }
 
-  return decorationsByChild
-}
+  return decorationsByChild;
+};

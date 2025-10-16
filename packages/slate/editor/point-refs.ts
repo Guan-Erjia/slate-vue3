@@ -1,13 +1,13 @@
-import { EditorInterface } from '../interfaces/editor'
-import { POINT_REFS } from '../utils/weak-maps'
+import { EditorInterface } from "../interfaces/editor";
+import { POINT_REFS } from "../utils/weak-maps";
 
-export const pointRefs: EditorInterface['pointRefs'] = editor => {
-  let refs = POINT_REFS.get(editor)
+export const pointRefs: EditorInterface["pointRefs"] = (editor) => {
+  let refs = POINT_REFS.get(editor);
 
   if (!refs) {
-    refs = new Set()
-    POINT_REFS.set(editor, refs)
+    refs = new Set();
+    POINT_REFS.set(editor, refs);
   }
 
-  return refs
-}
+  return refs;
+};

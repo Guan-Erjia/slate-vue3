@@ -1,24 +1,24 @@
-import { Transforms } from '../interfaces/transforms'
-import { EditorInterface } from '../interfaces/editor'
+import { Transforms } from "../interfaces/transforms";
+import { EditorInterface } from "../interfaces/editor";
 
-export const insertText: EditorInterface['insertText'] = (
+export const insertText: EditorInterface["insertText"] = (
   editor,
   text,
-  options = {}
+  options = {},
 ) => {
-  const { selection, marks } = editor
+  const { selection, marks } = editor;
 
   if (selection) {
     if (marks) {
-      const node = { text, ...marks }
+      const node = { text, ...marks };
       Transforms.insertNodes(editor, node, {
         at: options.at,
         voids: options.voids,
-      })
+      });
     } else {
-      Transforms.insertText(editor, text, options)
+      Transforms.insertText(editor, text, options);
     }
 
-    editor.marks = null
+    editor.marks = null;
   }
-}
+};

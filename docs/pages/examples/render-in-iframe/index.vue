@@ -1,131 +1,150 @@
 <script setup lang="ts">
 import { h, ref, VNode, VNodeArrayChildren } from "vue";
-import { Slate, Editable, type RenderLeafProps } from "slate-vue3"
+import { Slate, Editable, type RenderLeafProps } from "slate-vue3";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { createEditor, Descendant, Editor } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 import isHotkey from "is-hotkey";
-import Toolbar from '../../../components/Toolbar.vue'
-import Button from '../../../components/Button.vue'
+import Toolbar from "../../../components/Toolbar.vue";
+import Button from "../../../components/Button.vue";
 
 const initialValue: Descendant[] = [
   {
-    type: 'paragraph',
+    type: "paragraph",
     children: [
       {
-        text: 'In this example, the document gets rendered into a controlled ',
+        text: "In this example, the document gets rendered into a controlled ",
       },
-      { text: '<iframe>', code: true },
+      { text: "<iframe>", code: true },
       {
-        text: '. This is ',
+        text: ". This is ",
       },
       {
-        text: 'particularly',
+        text: "particularly",
         italic: true,
       },
       {
-        text: ' useful, when you need to separate the styles for your editor contents from the ones addressing your UI.',
+        text: " useful, when you need to separate the styles for your editor contents from the ones addressing your UI.",
       },
     ],
   },
   {
-    type: 'paragraph',
+    type: "paragraph",
     children: [
       {
-        text: 'This also the only reliable method to preview any ',
+        text: "This also the only reliable method to preview any ",
       },
       {
-        text: 'media queries',
+        text: "media queries",
         bold: true,
       },
       {
-        text: ' in your CSS.',
+        text: " in your CSS.",
       },
     ],
   },
-]
-
+];
 
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
-  let _children: VNodeArrayChildren | VNode = children
-  if ('bold' in leaf) {
-    _children = h('strong', null, _children)
+  let _children: VNodeArrayChildren | VNode = children;
+  if ("bold" in leaf) {
+    _children = h("strong", null, _children);
   }
-  if ('code' in leaf) {
-    _children = h('code', null, _children)
+  if ("code" in leaf) {
+    _children = h("code", null, _children);
   }
-  if ('italic' in leaf) {
-    _children = h('em', null, _children)
+  if ("italic" in leaf) {
+    _children = h("em", null, _children);
   }
-  if ('underline' in leaf) {
-    _children = h('u', null, _children)
+  if ("underline" in leaf) {
+    _children = h("u", null, _children);
   }
-  return h('span', attributes, _children)
-}
+  return h("span", attributes, _children);
+};
 
-const editor = withHistory(withDOM(createEditor()))
+const editor = withHistory(withDOM(createEditor()));
 editor.children = initialValue;
 const HOTKEYS = {
-  'mod+b': 'bold',
-  'mod+i': 'italic',
-  'mod+u': 'underline',
-  'mod+`': 'code',
-}
+  "mod+b": "bold",
+  "mod+i": "italic",
+  "mod+u": "underline",
+  "mod+`": "code",
+};
 const isMarkActive = (format: string) => {
-  const marks = Editor.marks(editor)
-  return marks ? marks[format as keyof typeof marks] === true : false
-}
+  const marks = Editor.marks(editor);
+  return marks ? marks[format as keyof typeof marks] === true : false;
+};
 const toggleMark = (format: string) => {
-  const isActive = isMarkActive(format)
+  const isActive = isMarkActive(format);
   if (isActive) {
-    Editor.removeMark(editor, format)
+    Editor.removeMark(editor, format);
   } else {
-    Editor.addMark(editor, format, true)
+    Editor.addMark(editor, format, true);
   }
-}
+};
 
 const onKeyDown = (event: KeyboardEvent) => {
   for (const hotkey in HOTKEYS) {
     if (isHotkey(hotkey, event)) {
-      event.preventDefault()
-      const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS]
-      toggleMark(mark)
+      event.preventDefault();
+      const mark = HOTKEYS[hotkey as keyof typeof HOTKEYS];
+      toggleMark(mark);
     }
   }
-}
+};
 
-const iframeBody = ref()
+const iframeBody = ref();
 const handleLoad = (e: Event) => {
   if (e.target instanceof HTMLIFrameElement && e.target.contentDocument) {
-    iframeBody.value = e.target.contentDocument.body
+    iframeBody.value = e.target.contentDocument.body;
   }
-}
+};
 
-const onBlur = () => DOMEditor.deselect(editor)
+const onBlur = () => DOMEditor.deselect(editor);
 const onPointerDown = (event: PointerEvent) => {
-  event.preventDefault()
-}
+  event.preventDefault();
+};
 </script>
 
 <template>
   <Slate :editor :render-leaf>
     <Toolbar>
-      <Button :active="isMarkActive('bold')" @click="toggleMark('bold')" @pointerdown="onPointerDown">
+      <Button
+        :active="isMarkActive('bold')"
+        @click="toggleMark('bold')"
+        @pointerdown="onPointerDown"
+      >
         format_bold
       </Button>
-      <Button :active="isMarkActive('italic')" @click="toggleMark('italic')" @pointerdown="onPointerDown">
+      <Button
+        :active="isMarkActive('italic')"
+        @click="toggleMark('italic')"
+        @pointerdown="onPointerDown"
+      >
         format_italic
       </Button>
-      <Button :active="isMarkActive('underline')" @click="toggleMark('underline')" @pointerdown="onPointerDown">
+      <Button
+        :active="isMarkActive('underline')"
+        @click="toggleMark('underline')"
+        @pointerdown="onPointerDown"
+      >
         format_underlined
       </Button>
-      <Button :active="isMarkActive('code')" @click="toggleMark('code')" @pointerdown="onPointerDown">
+      <Button
+        :active="isMarkActive('code')"
+        @click="toggleMark('code')"
+        @pointerdown="onPointerDown"
+      >
         code
       </Button>
     </Toolbar>
     <iframe srcdoc="<!DOCTYPE html>" @load="handleLoad" @blur="onBlur">
       <Teleport v-if="iframeBody" :to="iframeBody">
-        <Editable placeholder="Enter some rich text…" spellcheck @keydown="onKeyDown" />
+        <Editable
+          placeholder="Enter some rich text…"
+          spellcheck
+          @keydown="onKeyDown"
+        />
       </Teleport>
     </iframe>
   </Slate>

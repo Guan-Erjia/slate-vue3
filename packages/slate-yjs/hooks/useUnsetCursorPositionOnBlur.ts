@@ -44,6 +44,6 @@ export function useUnsetCursorPositionOnBlur<TCursor extends JsonObject>() {
     () => isFocused.value,
     () => {
       sendCursorPosition(isFocused.value);
-    }
+    },
   );
 }

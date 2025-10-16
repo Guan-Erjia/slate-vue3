@@ -24,11 +24,11 @@ import { ChunkTree } from "slate-dom";
 
 export const useRenderElement = () => {
   const ELEMENT_RENDER = inject<(props: RenderElementProps) => VNode>(
-    SLATE_INNER_RENDER_ELEMENT
+    SLATE_INNER_RENDER_ELEMENT,
   );
   if (ELEMENT_RENDER === undefined) {
     throw new Error(
-      `The \`useRenderElement\` hook must be used inside the <Slate> component's context.`
+      `The \`useRenderElement\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return ELEMENT_RENDER;
@@ -36,11 +36,11 @@ export const useRenderElement = () => {
 
 export const useRenderLeaf = () => {
   const LEAF_RENDER = inject<(props: RenderLeafProps) => VNode>(
-    SLATE_INNER_RENDER_LEAF
+    SLATE_INNER_RENDER_LEAF,
   );
   if (LEAF_RENDER === undefined) {
     throw new Error(
-      `The \`useRenderLeaf\` hook must be used inside the <Slate> component's context.`
+      `The \`useRenderLeaf\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return LEAF_RENDER;
@@ -48,11 +48,11 @@ export const useRenderLeaf = () => {
 
 export const useRenderPlaceholder = () => {
   const PLACEHOLDER_RENDER = inject<(props: RenderPlaceholderProps) => VNode>(
-    SLATE_INNER_RENDER_PLACEHOLDER
+    SLATE_INNER_RENDER_PLACEHOLDER,
   );
   if (PLACEHOLDER_RENDER === undefined) {
     throw new Error(
-      `The \`useRenderPlaceholder\` hook must be used inside the <Slate> component's context.`
+      `The \`useRenderPlaceholder\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return PLACEHOLDER_RENDER;
@@ -60,11 +60,11 @@ export const useRenderPlaceholder = () => {
 
 export const useRenderText = () => {
   const TEXT_RENDER = inject<(props: RenderTextProps) => VNode>(
-    SLATE_INNER_RENDER_TEXT
+    SLATE_INNER_RENDER_TEXT,
   );
   if (TEXT_RENDER === undefined) {
     throw new Error(
-      `The \`useRenderText\` hook must be used inside the <Slate> component's context.`
+      `The \`useRenderText\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return TEXT_RENDER;
@@ -72,11 +72,11 @@ export const useRenderText = () => {
 
 export const useRenderChunk = () => {
   const CHUNK_RENDER = inject<(props: RenderChunkProps) => VNode>(
-    SLATE_INNER_RENDER_CHUNK
+    SLATE_INNER_RENDER_CHUNK,
   );
   if (CHUNK_RENDER === undefined) {
     throw new Error(
-      `The \`useRenderChunk\` hook must be used inside the <Slate> component's context.`
+      `The \`useRenderChunk\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return CHUNK_RENDER;
@@ -86,7 +86,7 @@ export const useStaticChunkRoot = () => {
   const CHUNK_STATIC_ROOT = inject<ChunkTree>(SLATE_INNER_STATIC_CHUNK_ROOT);
   if (CHUNK_STATIC_ROOT === undefined) {
     throw new Error(
-      `The \`useStaticChunk\` hook must be used inside the <Slate> component's context.`
+      `The \`useStaticChunk\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return CHUNK_STATIC_ROOT;
@@ -94,11 +94,11 @@ export const useStaticChunkRoot = () => {
 
 export const useChangeEffect = (fn: () => void) => {
   const CHANGE_EFFECT_INJECT = inject<Ref<number>>(
-    SLATE_INNER_CHANGE_EFFECT_INJECT
+    SLATE_INNER_CHANGE_EFFECT_INJECT,
   );
   if (CHANGE_EFFECT_INJECT === undefined) {
     throw new Error(
-      `The \`useChangeEffect\` hook must be used inside the <Slate> component's context.`
+      `The \`useChangeEffect\` hook must be used inside the <Slate> component's context.`,
     );
   }
 
@@ -115,7 +115,7 @@ export const useMarkPlaceholder = () => {
   >(SLATE_INNER_MARK_PLACEHOLDER);
   if (MARK_PLACEHOLDER_INJECT === undefined) {
     throw new Error(
-      `The \`useMarkPlaceholder\` hook must be used inside the <Slate> component's context.`
+      `The \`useMarkPlaceholder\` hook must be used inside the <Slate> component's context.`,
     );
   }
 
@@ -124,11 +124,11 @@ export const useMarkPlaceholder = () => {
 
 export const usePlaceholder = () => {
   const PLACEHOLDER_INJECT = inject<ComputedRef<string>>(
-    SLATE_INNER_PLACEHOLDER
+    SLATE_INNER_PLACEHOLDER,
   );
   if (PLACEHOLDER_INJECT === undefined) {
     throw new Error(
-      `The \`usePlaceholder\` hook must be used inside the <Slate> component's context.`
+      `The \`usePlaceholder\` hook must be used inside the <Slate> component's context.`,
     );
   }
 
@@ -137,11 +137,11 @@ export const usePlaceholder = () => {
 
 export const usePlaceholderShow = () => {
   const PLACEHOLDER_SHOW_INJECT = inject<ComputedRef<boolean>>(
-    SLATE_INNER_PLACEHOLDER_SHOW
+    SLATE_INNER_PLACEHOLDER_SHOW,
   );
   if (PLACEHOLDER_SHOW_INJECT === undefined) {
     throw new Error(
-      `The \`usePlaceholderShow\` hook must be used inside the <Slate> component's context.`
+      `The \`usePlaceholderShow\` hook must be used inside the <Slate> component's context.`,
     );
   }
 
@@ -150,11 +150,11 @@ export const usePlaceholderShow = () => {
 
 export const usePlaceholderResize = () => {
   const PLACEHOLDER_RESIZE_INJECT = inject<(height?: number) => void>(
-    SLATE_INNER_PLACEHOLDER_RESIZE
+    SLATE_INNER_PLACEHOLDER_RESIZE,
   );
   if (PLACEHOLDER_RESIZE_INJECT === undefined) {
     throw new Error(
-      `The \`usePlaceholderResize\` hook must be used inside the <Slate> component's context.`
+      `The \`usePlaceholderResize\` hook must be used inside the <Slate> component's context.`,
     );
   }
 

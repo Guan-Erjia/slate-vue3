@@ -6,7 +6,7 @@ type InspectableObject = Record<string | number | symbol, unknown>;
 // We have to match slates deepEquals behavior to merge insert deltas in the same way slate does.
 export function deepEquals(
   node: InspectableObject,
-  another: InspectableObject
+  another: InspectableObject,
 ): boolean {
   for (const key in node) {
     const a: any = node[key];
@@ -42,7 +42,7 @@ export function pick<TObj, TKeys extends keyof TObj>(
   ...keys: TKeys[]
 ): Pick<TObj, TKeys> {
   return Object.fromEntries(
-    Object.entries(obj as any).filter(([key]) => keys.includes(key as TKeys))
+    Object.entries(obj as any).filter(([key]) => keys.includes(key as TKeys)),
   ) as Pick<TObj, TKeys>;
 }
 
@@ -51,7 +51,7 @@ export function omit<TObj, TKeys extends keyof TObj>(
   ...keys: TKeys[]
 ): Omit<TObj, TKeys> {
   return Object.fromEntries(
-    Object.entries(obj as any).filter(([key]) => !keys.includes(key as TKeys))
+    Object.entries(obj as any).filter(([key]) => !keys.includes(key as TKeys)),
   ) as Omit<TObj, TKeys>;
 }
 
@@ -59,6 +59,6 @@ export function omitNullEntries<TObj>(obj: TObj): {
   [K in keyof TObj]: TObj[K] extends null ? never : K;
 } {
   return Object.fromEntries(
-    Object.entries(obj as any).filter(([, value]) => value !== null)
+    Object.entries(obj as any).filter(([, value]) => value !== null),
   ) as { [K in keyof TObj]: TObj[K] extends null ? never : K };
 }

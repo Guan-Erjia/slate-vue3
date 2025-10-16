@@ -35,11 +35,11 @@ export const ChildrenComp = defineComponent({
       () =>
         !Editor.isEditor(element) &&
         Element.isElement(element) &&
-        !editor.isInline(element)
+        !editor.isInline(element),
     );
 
     const chunkSize = computed(() =>
-      Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element)
+      Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element),
     );
 
     const staticChunkTree: ChunkTree = {

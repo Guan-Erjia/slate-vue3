@@ -20,7 +20,7 @@ export type RemoteCaretDecoration<TCursorData extends JsonObject = JsonObject> =
   };
 
 export type RemoteCursorDecoration<
-  TCursorData extends JsonObject = JsonObject
+  TCursorData extends JsonObject = JsonObject,
 > = {
   [
     key: `${typeof REMOTE_CURSOR_DECORATION_PREFIX}${string}`
@@ -28,11 +28,11 @@ export type RemoteCursorDecoration<
 };
 
 export type RemoteCursorDecoratedRange<
-  TCursorData extends JsonObject = JsonObject
+  TCursorData extends JsonObject = JsonObject,
 > = BaseRange & RemoteCursorDecoration<TCursorData>;
 
 export type RemoteCaretDecoratedRange<
-  TCursorData extends JsonObject = JsonObject
+  TCursorData extends JsonObject = JsonObject,
 > = BaseRange & RemoteCaretDecoration<TCursorData>;
 
 export type TextWithRemoteCursors<TCursorData extends JsonObject = JsonObject> =
@@ -42,7 +42,7 @@ export type TextWithRemoteCursors<TCursorData extends JsonObject = JsonObject> =
 
 export function getRemoteCursorsOnLeaf<
   TCursorData extends JsonObject,
-  TLeaf extends TextWithRemoteCursors<TCursorData>
+  TLeaf extends TextWithRemoteCursors<TCursorData>,
 >(leaf: TLeaf): CursorState<TCursorData>[] {
   return Object.entries(leaf)
     .filter(([key]) => key.startsWith(REMOTE_CURSOR_DECORATION_PREFIX))
@@ -51,7 +51,7 @@ export function getRemoteCursorsOnLeaf<
 
 export function getRemoteCaretsOnLeaf<
   TCursorData extends JsonObject,
-  TLeaf extends TextWithRemoteCursors<TCursorData>
+  TLeaf extends TextWithRemoteCursors<TCursorData>,
 >(leaf: TLeaf): (CursorState<TCursorData> & { isBackward: boolean })[] {
   return Object.entries(leaf)
     .filter(([key]) => key.startsWith(REMOTE_CURSOR_CARET_DECORATION_PREFIX))
@@ -66,7 +66,7 @@ function getDecoration<TCursorData extends JsonObject, TCaret extends boolean>(
   clientId: string,
   state: CursorState<TCursorData>,
   range: BaseRange,
-  caret: TCaret
+  caret: TCaret,
 ): TCaret extends true
   ? RemoteCursorDecoratedRange<TCursorData>
   : RemoteCaretDecoratedRange<TCursorData> {
@@ -84,7 +84,7 @@ function getDecoration<TCursorData extends JsonObject, TCaret extends boolean>(
 }
 
 export function useDecorateRemoteCursors<
-  TCursorData extends JsonObject = JsonObject
+  TCursorData extends JsonObject = JsonObject,
 >(editor: CursorEditor<TCursorData> & DOMEditor, carets: boolean) {
   const cursors = ref<Record<string, CursorState<TCursorData>>>({});
   const changed = new Set<number>();

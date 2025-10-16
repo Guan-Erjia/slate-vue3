@@ -31,7 +31,7 @@ export const GeneralTransforms: GeneralTransforms = {
         const index = path[path.length - 1];
         if (index > parent.children.length) {
           throw new Error(
-            `Cannot apply an 'insert_node' operation at path [${path}] because the destination is past the end of the node.`
+            `Cannot apply an 'insert_node' operation at path [${path}] because the destination is past the end of the node.`,
           );
         }
 
@@ -68,8 +68,8 @@ export const GeneralTransforms: GeneralTransforms = {
         } else {
           throw new Error(
             `Cannot apply a 'merge_node' operation at path [${path}] to nodes of different interfaces: ${Scrubber.stringify(
-              node
-            )} ${Scrubber.stringify(prev)}`
+              node,
+            )} ${Scrubber.stringify(prev)}`,
           );
         }
 
@@ -84,7 +84,7 @@ export const GeneralTransforms: GeneralTransforms = {
 
         if (Path.isAncestor(path, newPath)) {
           throw new Error(
-            `Cannot move a path [${path}] to new path [${newPath}] because the destination is inside itself.`
+            `Cannot move a path [${path}] to new path [${newPath}] because the destination is inside itself.`,
           );
         }
 
@@ -139,9 +139,9 @@ export const GeneralTransforms: GeneralTransforms = {
               let preferNext = false;
               if (prev && next) {
                 if (Path.isSibling(prev[1], path)) {
-                  preferNext = false
+                  preferNext = false;
                 } else if (Path.equals(next[1], path)) {
-                  preferNext = true
+                  preferNext = true;
                 } else {
                   preferNext =
                     Path.common(prev[1], path).length <
@@ -227,8 +227,8 @@ export const GeneralTransforms: GeneralTransforms = {
           if (!Range.isRange(newProperties)) {
             throw new Error(
               `Cannot apply an incomplete 'set_selection' operation properties ${Scrubber.stringify(
-                newProperties
-              )} when there is no current selection.`
+                newProperties,
+              )} when there is no current selection.`,
             );
           }
 
@@ -261,7 +261,7 @@ export const GeneralTransforms: GeneralTransforms = {
 
         if (path.length === 0) {
           throw new Error(
-            `Cannot apply a 'split_node' operation at path [${path}] because the root node cannot be split.`
+            `Cannot apply a 'split_node' operation at path [${path}] because the root node cannot be split.`,
           );
         }
 

@@ -1,8 +1,24 @@
 <template>
-  <code v-bind="attrs" style="font-size: 16px;line-height: 20px;margin-top: 0;
-    background-color: rgba(0,20,60,.03);padding: 5px 13px;position: relative;display: block;" :spellcheck="false">
-    <select data-testid="language-select" :value="props.value" :contenteditable="false" style="position: absolute; right: 5px; top:
-    5px; z-index: 1;" @change="onChange">
+  <code
+    v-bind="attrs"
+    style="
+      font-size: 16px;
+      line-height: 20px;
+      margin-top: 0;
+      background-color: rgba(0, 20, 60, 0.03);
+      padding: 5px 13px;
+      position: relative;
+      display: block;
+    "
+    :spellcheck="false"
+  >
+    <select
+      data-testid="language-select"
+      :value="props.value"
+      :contenteditable="false"
+      style="position: absolute; right: 5px; top: 5px; z-index: 1"
+      @change="onChange"
+    >
       <option value="css">CSS</option>
       <option value="html">HTML</option>
       <option value="java">Java</option>
@@ -19,13 +35,13 @@
   </code>
 </template>
 <script lang="ts" setup>
-import { HTMLAttributes, useAttrs } from 'vue';
+import { HTMLAttributes, useAttrs } from "vue";
 const props = defineProps<{
-  value: string
-}>()
-const emit = defineEmits(['onChange']);
+  value: string;
+}>();
+const emit = defineEmits(["onChange"]);
 const onChange = (e: Event) => {
-  emit('onChange', e)
-}
-const attrs: HTMLAttributes = useAttrs()
+  emit("onChange", e);
+};
+const attrs: HTMLAttributes = useAttrs();
 </script>

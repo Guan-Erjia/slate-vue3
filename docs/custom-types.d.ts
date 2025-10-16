@@ -184,7 +184,7 @@ declare module "slate-vue3/core" {
   }
 }
 
-declare module '*.md' {
-  const src: string
-  export default src
+declare module "*.md" {
+  const src: string;
+  export default src;
 }

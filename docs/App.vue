@@ -1,39 +1,49 @@
 <script setup lang="ts">
-import { computed, provide, ref } from 'vue';
-import { RouterView } from 'vue-router'
-import Header from './components/Header.vue'
-import Menu from './components/Menu.vue'
+import { computed, provide, ref } from "vue";
+import { RouterView } from "vue-router";
+import Header from "./components/Header.vue";
+import Menu from "./components/Menu.vue";
 
 const isMobileDevice = computed(() => {
   const ua = window.navigator.userAgent;
 
-  const isAndroid = ua.includes('Android');
-  const isMobile = ua.includes('Mobile') || isAndroid;
+  const isAndroid = ua.includes("Android");
+  const isMobile = ua.includes("Mobile") || isAndroid;
   const isFireFox = /(?:Firefox)/.test(ua);
   // 是否为平板
   const isTablet =
-    /(?:iPad|PlayBook)/.test(ua) || (isAndroid && !/(?:Mobile)/.test(ua)) || (isFireFox && /(?:Tablet)/.test(ua));
+    /(?:iPad|PlayBook)/.test(ua) ||
+    (isAndroid && !/(?:Mobile)/.test(ua)) ||
+    (isFireFox && /(?:Tablet)/.test(ua));
 
-  return (isMobile && !isTablet);
-})
+  return isMobile && !isTablet;
+});
 
-const isFold = ref(false)
+const isFold = ref(false);
 
-provide("IS_FOLD", isFold)
+provide("IS_FOLD", isFold);
 
 const handleContainerClick = () => {
   if (isMobileDevice.value) {
     isFold.value = true;
   }
-}
+};
 </script>
 
 <template>
   <Header />
-  <div style="display: flex;height: calc(100% - 50px);">
+  <div style="display: flex; height: calc(100% - 50px)">
     <Menu />
-    <div style="min-width: 0;flex-grow: 1;height: 100%;overflow-y: auto;box-sizing: border-box;"
-      @click="handleContainerClick">
+    <div
+      style="
+        min-width: 0;
+        flex-grow: 1;
+        height: 100%;
+        overflow-y: auto;
+        box-sizing: border-box;
+      "
+      @click="handleContainerClick"
+    >
       <RouterView />
     </div>
   </div>

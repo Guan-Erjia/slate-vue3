@@ -1,20 +1,20 @@
-import { Text } from 'slate'
+import { Text } from "slate";
 
 export const input = {
   textNodeA: {
-    text: 'same text',
+    text: "same text",
     bold: true,
-    italic: { origin: 'inherited', value: false },
+    italic: { origin: "inherited", value: false },
   },
   textNodeB: {
-    text: 'diff text',
+    text: "diff text",
     bold: true,
-    italic: { origin: 'inherited', value: false },
+    italic: { origin: "inherited", value: false },
   },
-}
+};
 
 export const test = ({ textNodeA, textNodeB }) => {
-  return Text.equals(textNodeA, textNodeB, { loose: true })
-}
+  return Text.equals(textNodeA, textNodeB, { loose: true });
+};
 
-export const output = true
+export const output = true;

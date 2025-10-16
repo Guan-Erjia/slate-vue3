@@ -25,7 +25,7 @@ export type CursorOverlayData<TCursorData extends JsonObject> =
 
 export function useRemoteCursorOverlayPositions<
   TCursorData extends JsonObject,
-  TContainer extends HTMLElement = HTMLDivElement
+  TContainer extends HTMLElement = HTMLDivElement,
 >(containerRef: Ref<TContainer>, shouldGenerateOverlay?: NodeMatch<Text>) {
   const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
   const cursorStates = useRemoteCursorStates<TCursorData>();
@@ -69,7 +69,7 @@ export function useRemoteCursorOverlayPositions<
         overlayPositionsChanged = true;
         overlayPositionCache.value.set(range, overlayPosition);
         return [key, overlayPosition];
-      })
+      }),
     );
 
     if (overlayPositionsChanged) {
@@ -95,7 +95,7 @@ export function useRemoteCursorOverlayPositions<
         caretPosition: overlayPosition?.caretPosition ?? null,
         selectionRects: overlayPosition?.selectionRects ?? FROZEN_EMPTY_ARRAY,
       };
-    })
+    }),
   );
 
   return [overlayData, refresh] as const;

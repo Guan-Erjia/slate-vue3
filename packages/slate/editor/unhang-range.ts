@@ -1,18 +1,18 @@
-import { Editor, EditorInterface } from '../interfaces/editor'
-import { Range } from '../interfaces/range'
-import { Path } from '../interfaces/path'
-import { Element } from '../interfaces/element'
-import { Text } from '../interfaces/text'
+import { Editor, EditorInterface } from "../interfaces/editor";
+import { Range } from "../interfaces/range";
+import { Path } from "../interfaces/path";
+import { Element } from "../interfaces/element";
+import { Text } from "../interfaces/text";
 
-export const unhangRange: EditorInterface['unhangRange'] = (
+export const unhangRange: EditorInterface["unhangRange"] = (
   editor,
   range,
-  options = {}
+  options = {},
 ) => {
-  const { voids = false } = options
-  const edges = Range.edges(range)
-  const [ start ] = edges
-  let [ , end ] = edges
+  const { voids = false } = options;
+  const edges = Range.edges(range);
+  const [start] = edges;
+  let [, end] = edges;
 
   // PERF: exit early if we can guarantee that the range isn't hanging.
   if (
@@ -21,18 +21,18 @@ export const unhangRange: EditorInterface['unhangRange'] = (
     Range.isCollapsed(range) ||
     Path.hasPrevious(end.path)
   ) {
-    return range
+    return range;
   }
 
   const endBlock = Editor.above(editor, {
     at: end,
-    match: n => Element.isElement(n) && Editor.isBlock(editor, n),
+    match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
     voids,
-  })
-  const blockPath = endBlock ? endBlock[1] : []
-  const first = Editor.start(editor, start)
-  const before = { anchor: first, focus: end }
-  let skip = true
+  });
+  const blockPath = endBlock ? endBlock[1] : [];
+  const first = Editor.start(editor, start);
+  const before = { anchor: first, focus: end };
+  let skip = true;
 
   for (const [node, path] of Editor.nodes(editor, {
     at: before,
@@ -41,15 +41,15 @@ export const unhangRange: EditorInterface['unhangRange'] = (
     voids,
   })) {
     if (skip) {
-      skip = false
-      continue
+      skip = false;
+      continue;
     }
 
-    if (node.text !== '' || Path.isBefore(path, blockPath)) {
-      end = { path, offset: node.text.length }
-      break
+    if (node.text !== "" || Path.isBefore(path, blockPath)) {
+      end = { path, offset: node.text.length };
+      break;
     }
   }
 
-  return { anchor: start, focus: end }
-}
+  return { anchor: start, focus: end };
+};

@@ -7,17 +7,17 @@ import { relativeRangeToSlateRange } from "../utils/position";
 
 export function useOnResize<T extends HTMLElement>(
   _ref: Ref<T>,
-  onResize: () => void
+  onResize: () => void,
 ) {
   const observer = new ResizeObserver(onResize);
 
   onMounted(() => {
-    if(_ref.value) {
+    if (_ref.value) {
       observer.observe(_ref.value);
     }
   });
   onUnmounted(() => {
-    if(_ref.value) { 
+    if (_ref.value) {
       observer.unobserve(_ref.value);
     }
   });
@@ -32,7 +32,7 @@ const CHILDREN_TO_CURSOR_STATE_TO_RANGE = new WeakMap<
 
 export function getCursorRange<TCursorData extends JsonObject = JsonObject>(
   editor: CursorEditor<TCursorData>,
-  cursorState: CursorState<TCursorData>
+  cursorState: CursorState<TCursorData>,
 ): Range | null {
   if (!cursorState.selection) {
     return null;
@@ -50,7 +50,7 @@ export function getCursorRange<TCursorData extends JsonObject = JsonObject>(
       range = relativeRangeToSlateRange(
         editor.sharedRoot,
         editor,
-        cursorState.selection
+        cursorState.selection,
       );
 
       cursorStates.set(cursorState, range);
@@ -89,7 +89,7 @@ export type GetSelectionRectsOptions = {
 export function getOverlayPosition(
   editor: DOMEditor,
   range: Range,
-  { yOffset, xOffset, shouldGenerateOverlay }: GetSelectionRectsOptions
+  { yOffset, xOffset, shouldGenerateOverlay }: GetSelectionRectsOptions,
 ): OverlayPosition {
   const [start, end] = Range.edges(range);
   const domRange = domEditorToDomRangeSafe(editor, range);
@@ -172,7 +172,7 @@ export function getOverlayPosition(
 
 export function domEditorToDomRangeSafe(
   editor: DOMEditor,
-  range: Range
+  range: Range,
 ): globalThis.Range | null {
   try {
     return DOMEditor.toDOMRange(editor, range);

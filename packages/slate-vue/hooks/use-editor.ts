@@ -9,7 +9,7 @@ export const useEditor = (): Reactive<DOMEditor> => {
   const editor = inject<DOMEditor>(SLATE_USE_EDITOR);
   if (editor === undefined) {
     throw new Error(
-      `The \`useEditor\` hook must be used inside the <Slate> component's context.`
+      `The \`useEditor\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return editor;
@@ -23,7 +23,7 @@ export const useEditorStatic = (): DOMEditor => {
   const editor = inject<DOMEditor>(SLATE_USE_EDITOR);
   if (editor === undefined) {
     throw new Error(
-      `The \`useEditor\` hook must be used inside the <Slate> component's context.`
+      `The \`useEditor\` hook must be used inside the <Slate> component's context.`,
     );
   }
   return toRaw(editor);

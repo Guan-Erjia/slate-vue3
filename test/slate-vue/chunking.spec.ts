@@ -31,12 +31,12 @@ const blocks = (count: number) =>
     {
       length: count,
     },
-    (_, i) => block(i.toString())
+    (_, i) => block(i.toString()),
   );
 
 const reconcileEditor = (
   editor: DOMEditor,
-  options: Omit<ReconcileOptions, "chunkTree" | "children" | "chunkSize"> = {}
+  options: Omit<ReconcileOptions, "chunkTree" | "children" | "chunkSize"> = {},
 ) =>
   getChunkTreeForNode(editor, editor, {
     reconcile: {
@@ -58,13 +58,13 @@ const getTreeShape = (chunkNode: ChunkNode): TreeShape => {
 
 const getChildrenAndTreeForShape = (
   editor: DOMEditor,
-  treeShape: TreeShape[]
+  treeShape: TreeShape[],
 ): { children: Descendant[]; chunkTree: ChunkTree } => {
   const children: Descendant[] = [];
 
   const shapeToNode = (
     ts: TreeShape,
-    parent: ChunkAncestor
+    parent: ChunkAncestor,
   ): ChunkDescendant => {
     if (Array.isArray(ts)) {
       const chunk: Chunk = {
@@ -901,7 +901,7 @@ describe("getChunkTreeForNode", () => {
 
           const randomPosition = (includeEnd: boolean) =>
             Math.floor(
-              random() * (editor.children.length + (includeEnd ? 1 : 0))
+              random() * (editor.children.length + (includeEnd ? 1 : 0)),
             );
 
           for (let i = 0; i < 30; i++) {
@@ -942,9 +942,8 @@ describe("getChunkTreeForNode", () => {
           expect(chunkTreeSlateNodes).toEqual(editor.children);
         }
       } catch (e) {
-         
         console.warn(
-          `Random testing encountered an error or test failure on iteration ${iteration}. To reproduce this failure reliably, use the random seed: ${seed}`
+          `Random testing encountered an error or test failure on iteration ${iteration}. To reproduce this failure reliably, use the random seed: ${seed}`,
         );
         throw e;
       }

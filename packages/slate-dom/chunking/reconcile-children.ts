@@ -1,18 +1,18 @@
-import { Descendant } from 'slate'
-import { ChunkTree, ChunkLeaf } from './types'
-import { ChunkTreeHelper, ChunkTreeHelperOptions } from './chunk-tree-helper'
-import { ChildrenHelper } from './children-helper'
-import { DOMEditor } from '../plugin/dom-editor'
+import { Descendant } from "slate";
+import { ChunkTree, ChunkLeaf } from "./types";
+import { ChunkTreeHelper, ChunkTreeHelperOptions } from "./chunk-tree-helper";
+import { ChildrenHelper } from "./children-helper";
+import { DOMEditor } from "../plugin/dom-editor";
 
 export interface ReconcileOptions extends ChunkTreeHelperOptions {
-  chunkTree: ChunkTree
-  children: Descendant[]
-  chunkSize: number
-  rerenderChildren?: number[]
-  onInsert?: (node: Descendant, index: number) => void
-  onUpdate?: (node: Descendant, index: number) => void
-  onIndexChange?: (node: Descendant, index: number) => void
-  debug?: boolean
+  chunkTree: ChunkTree;
+  children: Descendant[];
+  chunkSize: number;
+  rerenderChildren?: number[];
+  onInsert?: (node: Descendant, index: number) => void;
+  onUpdate?: (node: Descendant, index: number) => void;
+  onIndexChange?: (node: Descendant, index: number) => void;
+  debug?: boolean;
 }
 
 /**
@@ -29,12 +29,12 @@ export const reconcileChildren = (
     onUpdate,
     onIndexChange,
     debug,
-  }: ReconcileOptions
+  }: ReconcileOptions,
 ) => {
-  const chunkTreeHelper = new ChunkTreeHelper(chunkTree, { chunkSize, debug })
-  const childrenHelper = new ChildrenHelper(editor, children)
+  const chunkTreeHelper = new ChunkTreeHelper(chunkTree, { chunkSize, debug });
+  const childrenHelper = new ChildrenHelper(editor, children);
 
-  let treeLeaf: ChunkLeaf | null
+  let treeLeaf: ChunkLeaf | null;
 
   // Read leaves from the tree one by one, each one representing a single Slate
   // node. Each leaf from the tree is compared to the current node in the
@@ -46,78 +46,78 @@ export const reconcileChildren = (
     // 0. If the node has been removed, this will be -1. If new nodes have been
     // inserted before the node, or if the node has been moved to a later
     // position in the same children array, this will be a positive number.
-    const lookAhead = childrenHelper.lookAhead(treeLeaf.node, treeLeaf.key)
+    const lookAhead = childrenHelper.lookAhead(treeLeaf.node, treeLeaf.key);
 
     // If the node was moved, we want to remove it and insert it later, rather
     // then re-inserting all intermediate nodes before it.
-    const wasMoved = lookAhead > 0 && chunkTree.movedNodeKeys.has(treeLeaf.key)
+    const wasMoved = lookAhead > 0 && chunkTree.movedNodeKeys.has(treeLeaf.key);
 
     // If the tree leaf was moved or removed, remove it
     if (lookAhead === -1 || wasMoved) {
-      chunkTreeHelper.remove()
-      continue
+      chunkTreeHelper.remove();
+      continue;
     }
 
     // Get the matching Slate node and any nodes that may have been inserted
     // prior to it. Insert these into the chunk tree.
-    const insertedChildrenStartIndex = childrenHelper.pointerIndex
-    const insertedChildren = childrenHelper.read(lookAhead + 1)
-    const matchingChild = insertedChildren.pop()!
+    const insertedChildrenStartIndex = childrenHelper.pointerIndex;
+    const insertedChildren = childrenHelper.read(lookAhead + 1);
+    const matchingChild = insertedChildren.pop()!;
 
     if (insertedChildren.length) {
       const leavesToInsert = childrenHelper.toChunkLeaves(
         insertedChildren,
-        insertedChildrenStartIndex
-      )
+        insertedChildrenStartIndex,
+      );
 
-      chunkTreeHelper.insertBefore(leavesToInsert)
+      chunkTreeHelper.insertBefore(leavesToInsert);
 
       if (onInsert) {
         for (let i = 0; i < insertedChildren.length; i++) {
-          onInsert(insertedChildren[i], insertedChildrenStartIndex + i)
+          onInsert(insertedChildren[i], insertedChildrenStartIndex + i);
         }
       }
     }
 
-    const matchingChildIndex = childrenHelper.pointerIndex - 1
+    const matchingChildIndex = childrenHelper.pointerIndex - 1;
 
     // Make sure the chunk tree contains the most recent version of the Slate
     // node
     if (treeLeaf.node !== matchingChild) {
-      treeLeaf.node = matchingChild
-      onUpdate?.(matchingChild, matchingChildIndex)
+      treeLeaf.node = matchingChild;
+      onUpdate?.(matchingChild, matchingChildIndex);
     }
 
     // Update the index if it has changed
     if (treeLeaf.index !== matchingChildIndex) {
-      treeLeaf.index = matchingChildIndex
-      onIndexChange?.(matchingChild, matchingChildIndex)
+      treeLeaf.index = matchingChildIndex;
+      onIndexChange?.(matchingChild, matchingChildIndex);
     }
   }
 
   // If there are still Slate nodes remaining from the children array that were
   // not matched to nodes in the tree, insert them at the end of the tree
   if (!childrenHelper.reachedEnd) {
-    const remainingChildren = childrenHelper.remaining()
+    const remainingChildren = childrenHelper.remaining();
 
     if (remainingChildren.length) {
       const leavesToInsert = childrenHelper.toChunkLeaves(
         remainingChildren,
-        childrenHelper.pointerIndex
-      )
+        childrenHelper.pointerIndex,
+      );
 
       // Move the pointer back to the final leaf in the tree, or the start of the
       // tree if the tree is currently empty
-      chunkTreeHelper.returnToPreviousLeaf()
+      chunkTreeHelper.returnToPreviousLeaf();
 
-      chunkTreeHelper.insertAfter(leavesToInsert)
+      chunkTreeHelper.insertAfter(leavesToInsert);
       if (onInsert) {
         for (let i = 0; i < remainingChildren.length; i++) {
-          onInsert(remainingChildren[i], childrenHelper.pointerIndex + i)
+          onInsert(remainingChildren[i], childrenHelper.pointerIndex + i);
         }
       }
     }
   }
 
-  chunkTree.movedNodeKeys.clear()
-}
+  chunkTree.movedNodeKeys.clear();
+};

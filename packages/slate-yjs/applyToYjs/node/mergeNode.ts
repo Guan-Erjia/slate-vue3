@@ -14,13 +14,13 @@ import { getProperties } from "../../utils/slate";
 export function mergeNode(
   sharedRoot: XmlText,
   slateRoot: Node,
-  op: MergeNodeOperation
+  op: MergeNodeOperation,
 ): void {
   const target = getYTarget(sharedRoot, slateRoot, op.path);
   const prev = getYTarget(
     target.yParent,
     target.slateParent,
-    Path.previous(op.path.slice(-1))
+    Path.previous(op.path.slice(-1)),
   );
 
   if (!toRaw(target.yTarget) !== !toRaw(prev.yTarget)) {
@@ -59,7 +59,7 @@ export function mergeNode(
     sharedRoot,
     target.yTarget,
     targetDelta,
-    deltaApplyYOffset
+    deltaApplyYOffset,
   );
 
   const applyDelta: Delta = [{ retain: deltaApplyYOffset }, ...clonedDelta];
@@ -70,7 +70,7 @@ export function mergeNode(
 
   target.yParent.delete(
     target.textRange.start,
-    target.textRange.end - target.textRange.start
+    target.textRange.end - target.textRange.start,
   );
 
   restoreStoredPositionsWithDeltaAbsolute(
@@ -78,6 +78,6 @@ export function mergeNode(
     prev.yTarget,
     storedPositions,
     clonedDelta,
-    deltaApplyYOffset
+    deltaApplyYOffset,
   );
 }

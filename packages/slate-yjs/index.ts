@@ -21,7 +21,10 @@ import {
   slateRangeToRelativeRange,
 } from "./utils/position";
 
-import { CursorStore, useRemoteCursorStates } from "./hooks/useRemoteCursorStates";
+import {
+  CursorStore,
+  useRemoteCursorStates,
+} from "./hooks/useRemoteCursorStates";
 import { useUnsetCursorPositionOnBlur } from "./hooks/useUnsetCursorPositionOnBlur";
 import { getCursorRange } from "./hooks/utils";
 
@@ -29,7 +32,19 @@ import {
   CursorOverlayData,
   useRemoteCursorOverlayPositions,
 } from "./hooks/useRemoteCursorOverlayPositions";
-import { getRemoteCaretsOnLeaf, getRemoteCursorsOnLeaf, REMOTE_CURSOR_CARET_DECORATION_PREFIX, REMOTE_CURSOR_DECORATION_PREFIX, RemoteCaretDecoratedRange, RemoteCaretDecoration, RemoteCursorDecoratedRange, RemoteCursorDecoration, TextWithRemoteCursors, useDecorateRemoteCursors, UseDecorateRemoteCursorsOptions } from "./hooks/useDecorateRemoteCursors";
+import {
+  getRemoteCaretsOnLeaf,
+  getRemoteCursorsOnLeaf,
+  REMOTE_CURSOR_CARET_DECORATION_PREFIX,
+  REMOTE_CURSOR_DECORATION_PREFIX,
+  RemoteCaretDecoratedRange,
+  RemoteCaretDecoration,
+  RemoteCursorDecoratedRange,
+  RemoteCursorDecoration,
+  TextWithRemoteCursors,
+  useDecorateRemoteCursors,
+  UseDecorateRemoteCursorsOptions,
+} from "./hooks/useDecorateRemoteCursors";
 
 export type {
   WithYjsOptions,
@@ -52,7 +67,6 @@ export type {
   RemoteCursorDecoratedRange,
   RemoteCaretDecoratedRange,
   TextWithRemoteCursors,
-  
 };
 
 export {
@@ -74,5 +88,5 @@ export {
   getRemoteCaretsOnLeaf,
   useDecorateRemoteCursors,
   REMOTE_CURSOR_DECORATION_PREFIX,
-  REMOTE_CURSOR_CARET_DECORATION_PREFIX
+  REMOTE_CURSOR_CARET_DECORATION_PREFIX,
 };
