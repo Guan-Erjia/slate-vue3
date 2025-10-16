@@ -195,6 +195,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/paste-html/index.vue"),
   },
   {
+    name: "prefix",
+    path: "prefix",
+    component: () => import("./pages/examples/prefix/index.vue"),
+  },
+  {
     name: "plain-text",
     path: "plain-text",
     component: () => import("./pages/examples/plain-text/index.vue"),
