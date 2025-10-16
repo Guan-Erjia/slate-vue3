@@ -67,6 +67,7 @@
     "vue": "^3.0.0"
   },
   "devDependencies": {
+    "@actions/core": "^1.11.1",
     "@faker-js/faker": "^10.1.0",
     "@liveblocks/client": "^3.8.1",
     "@liveblocks/yjs": "^3.8.1",

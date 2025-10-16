@@ -25,6 +25,10 @@ jobs:
       - name: 安装依赖
         run: pnpm install --no-frozen-lockfile
 
+      - name: 检查版本号
+        run: node ./scripts/check-version.js
+        id: check-version
+
       - name: 开始单元测试
         run: pnpm test run
 
@@ -51,16 +55,12 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-      - name: 读取版本号
-        uses: tyankatsu0105/read-package-version-actions@v1
-        id: package-version
-
       - name: 创建 GitHub 发布
         id: release_tag
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v_${{ steps.package-version.outputs.version }}
-          release_name: release v_${{ steps.package-version.outputs.version }}
+          tag_name: v_${{ steps.check-version.outputs.version }}
+          release_name: release v_${{ steps.check-version.outputs.version }}
           prerelease: false
