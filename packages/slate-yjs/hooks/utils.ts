@@ -6,7 +6,7 @@ import { CursorEditor, CursorState } from "../plugins/withCursors";
 import { relativeRangeToSlateRange } from "../utils/position";
 
 export function useOnResize<T extends HTMLElement>(
-  _ref: Ref<T>,
+  _ref: Ref<T | null>,
   onResize: () => void,
 ) {
   const observer = new ResizeObserver(onResize);

@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <div
-      ref="menuRef"
+      ref="menu"
       data-testid="menu"
       :style="menuStyle"
       @mousedown="onMouseDown"
@@ -31,9 +31,9 @@
 <script lang="ts" setup>
 import { useEditor, useFocused } from "slate-vue3";
 import { Editor, Range } from "slate-vue3/core";
-import { computed, CSSProperties, ref } from "vue";
+import { computed, CSSProperties, useTemplateRef } from "vue";
 import Button from "../../../components/Button.vue";
-const menuRef = ref<HTMLDivElement>();
+const menuRef = useTemplateRef<HTMLDivElement>("menu");
 
 const editor = useEditor();
 const inFocus = useFocused();

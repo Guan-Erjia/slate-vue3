@@ -26,7 +26,10 @@ export type CursorOverlayData<TCursorData extends JsonObject> =
 export function useRemoteCursorOverlayPositions<
   TCursorData extends JsonObject,
   TContainer extends HTMLElement = HTMLDivElement,
->(containerRef: Ref<TContainer>, shouldGenerateOverlay?: NodeMatch<Text>) {
+>(
+  containerRef: Ref<TContainer | null>,
+  shouldGenerateOverlay?: NodeMatch<Text>,
+) {
   const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
   const cursorStates = useRemoteCursorStates<TCursorData>();
 

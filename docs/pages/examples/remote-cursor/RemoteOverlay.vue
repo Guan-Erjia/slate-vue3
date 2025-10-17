@@ -1,5 +1,5 @@
 <template>
-  <div ref="overlayRef" style="position: relative">
+  <div ref="overlay" style="position: relative">
     <slot />
     <template v-for="(cursor, index) in cursors" :key="index">
       <div
@@ -30,9 +30,10 @@
 </template>
 <script setup lang="ts">
 import { useRemoteCursorOverlayPositions } from "slate-vue3/yjs";
-import { ref } from "vue";
+import { Ref, useTemplateRef } from "vue";
 
-const overlayRef = ref();
+const overlayRef = useTemplateRef<HTMLDivElement>("overlay");
+// Use type assertion to satisfy the expected type
 const [cursors] = useRemoteCursorOverlayPositions<{
   name: string;
 }>(overlayRef);
