@@ -110,7 +110,7 @@ export const Text: TextInterface = {
       }
 
       if (
-        !text.hasOwnProperty(key) ||
+        !Object.prototype.hasOwnProperty.call(text, key) ||
         text[<keyof Text>key] !== props[<keyof Text>key]
       ) {
         return false;

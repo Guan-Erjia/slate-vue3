@@ -207,7 +207,7 @@ export const GeneralTransforms: GeneralTransforms = {
 
         // properties that were previously defined, but are now missing, must be deleted
         for (const key in properties) {
-          if (!newProperties.hasOwnProperty(key)) {
+          if (!Object.prototype.hasOwnProperty.call(newProperties, key)) {
             delete node[<keyof Node>key];
           }
         }

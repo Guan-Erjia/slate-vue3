@@ -7,7 +7,9 @@ export const shallowCompare = (
 ) =>
   Object.keys(obj1).length === Object.keys(obj2).length &&
   Object.keys(obj1).every(
-    (key) => obj2.hasOwnProperty(key) && obj1[key] === obj2[key],
+    (key) =>
+      Object.prototype.hasOwnProperty.call(obj2, key) &&
+      obj1[key] === obj2[key],
   );
 
 const isDecorationFlagsEqual = (range: Range, other: Range) => {
