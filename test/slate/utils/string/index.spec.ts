@@ -5,7 +5,7 @@ import {
   getWordDistance,
 } from "@test-utils";
 
-const codepoints = [
+const codepoints: Array<[string, number, number?]> = [
   ["a", 1],
   ["0", 1],
   [" ", 1],
@@ -26,7 +26,7 @@ const codepoints = [
   ["🇷🇺🚩", 4, 2],
 ];
 
-const zwjSequences = [
+const zwjSequences: Array<[string, number]> = [
   ["👁‍🗨", 5],
   ["👨‍👩‍👧‍👧", 11],
   ["👩‍❤️‍👨", 8],
@@ -64,7 +64,7 @@ const keycapSequences = [
   "9️⃣",
 ];
 
-const tagSequences = [
+const tagSequences: Array<[string, number]> = [
   ["🏴󠁧󠁢󠁥󠁮󠁧󠁿", 14],
   ["🏴󠁧󠁢󠁳󠁣󠁴󠁿", 14],
   ["🏴󠁧󠁢󠁷󠁬󠁳󠁿", 14],
@@ -153,14 +153,14 @@ dirs.forEach((dir) => {
   });
 });
 
-const ltrCases = [
+const ltrCases: Array<[string, number]> = [
   ["hello foobarbaz", 5],
   ["🏴󠁧󠁢󠁥󠁮󠁧󠁿🏴󠁧󠁢󠁳󠁣󠁴󠁿 🏴󠁧󠁢󠁷󠁬󠁳󠁿", 28],
   ["Don't do this", 5],
   ["I'm ok", 3],
 ];
 
-const rtlCases = [
+const rtlCases: Array<[string, number]> = [
   ["hello foobarbaz", 9],
   ["🏴󠁧󠁢󠁥󠁮󠁧󠁿🏴󠁧󠁢󠁳󠁣󠁴󠁿 🏴󠁧󠁢󠁷󠁬󠁳󠁿", 14],
   ["Don't", 5],

@@ -1,4 +1,4 @@
-import { DOMEditor } from "slate-dom";
+import { Editor } from "slate";
 import { createHyperscript } from "slate-hyperscript";
 export { withHistory, History } from "slate-history";
 export {
@@ -15,7 +15,7 @@ export { Transforms } from "../packages/slate";
  * @param editor 编辑器对象
  * @returns 扩展后的编辑器对象
  */
-export const withTest = (editor: DOMEditor) => {
+export const withTest = (editor: Editor) => {
   const { isInline, isVoid, isElementReadOnly, isSelectable } = editor;
 
   editor.isInline = (element) => {

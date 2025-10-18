@@ -8,7 +8,7 @@ describe("undo", () => {
   modules.forEach((module) => {
     const { input, run, output, path, skip } = module;
     test.skipIf(skip)(path, () => {
-      const editor = withTest(withHistory(reactive(input)));
+      const editor = withHistory(withTest(reactive(input)));
 
       run(editor);
       editor.undo();

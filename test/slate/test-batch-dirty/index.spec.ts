@@ -1,9 +1,9 @@
 import { withTest, resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
-import { createEditor } from "slate";
+import { createEditor, Editor } from "slate";
 import { cloneDeep } from "lodash-es";
 
-const withBatchTest = (editor, dirties) => {
+const withBatchTest = (editor: Editor, dirties: string[]) => {
   const { normalizeNode } = editor;
   editor.normalizeNode = ([node, path]) => {
     dirties.push(JSON.stringify(path));
@@ -27,8 +27,8 @@ describe("slate-transforms-insert-nodes", () => {
       input2.children = cloneDeep(input.children);
       input2.selection = cloneDeep(input.selection);
 
-      const dirties1 = [];
-      const dirties2 = [];
+      const dirties1: string[] = [];
+      const dirties2: string[] = [];
 
       const editor1 = withBatchTest(withTest(input), dirties1);
       const editor2 = withBatchTest(withTest(input2), dirties2);
@@ -53,8 +53,8 @@ describe("slate-transforms-insert-fragment", () => {
       input1.selection = cloneDeep(input.selection);
       input2.selection = cloneDeep(input.selection);
 
-      const dirties1 = [];
-      const dirties2 = [];
+      const dirties1: string[] = [];
+      const dirties2: string[] = [];
 
       const editor1 = withBatchTest(withTest(input1), dirties1);
       const editor2 = withBatchTest(withTest(input2), dirties2);

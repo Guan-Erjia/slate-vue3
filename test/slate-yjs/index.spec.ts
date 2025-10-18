@@ -14,14 +14,14 @@ const INLINE_ELEMENTS = ["note-link", "link"];
 
 const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function withTestingElements(editor, doc = new Y.Doc()) {
+async function withTestingElements(editor: Editor, doc = new Y.Doc()) {
   const { normalizeNode, isInline } = editor;
   editor.normalizeNode = (entry) => {
     const [node, path] = entry;
     if (
       Element.isElement(node) &&
       !Editor.isEditor(node) &&
-      node.type === "unordered-list"
+      (node as any).type === "unordered-list"
     ) {
       if (!node.children.length) {
         return Transforms.removeNodes(editor, { at: path });
@@ -31,7 +31,7 @@ async function withTestingElements(editor, doc = new Y.Doc()) {
   };
 
   editor.isInline = (element) =>
-    INLINE_ELEMENTS.includes(element.type) || isInline(element);
+    INLINE_ELEMENTS.includes((element as any).type) || isInline(element);
 
   const sharedType = doc.get("sharedRoot", Y.XmlText);
   if (sharedType.toDelta().length === 0) {
@@ -44,7 +44,7 @@ async function withTestingElements(editor, doc = new Y.Doc()) {
   return e;
 }
 
-async function normalizedSlateDoc(sharedRoot) {
+async function normalizedSlateDoc(sharedRoot: Y.XmlText) {
   const editor = createEditor();
   editor.children = yTextToSlateElement(sharedRoot).children;
   const e = await withTestingElements(editor);
@@ -60,7 +60,7 @@ describe("slate-yjs", () => {
       const editor = await withTestingElements(input);
 
       // Keep the 'local' editor state before applying run.
-      const baseState = Y.encodeStateAsUpdateV2(editor.sharedRoot.doc);
+      const baseState = Y.encodeStateAsUpdateV2(editor.sharedRoot.doc!);
 
       Editor.normalize(editor, { force: true });
 
@@ -85,7 +85,7 @@ describe("slate-yjs", () => {
       // Apply changes from 'run'
       Y.applyUpdateV2(
         remoteDoc,
-        Y.encodeStateAsUpdateV2(editor.sharedRoot.doc),
+        Y.encodeStateAsUpdateV2(editor.sharedRoot.doc!),
       );
 
       // Verify remote and editor state are equal

@@ -7,7 +7,8 @@ const modules = await resolveModules(import.meta.glob("./**/*.(j|t)s?(x)"));
 
 describe("slate-interface", () => {
   modules.forEach((module) => {
-    let { input, test: _test, output, skip, path } = module;
+    const { test: _test, output, skip, path } = module;
+    let { input } = module;
     test.skipIf(skip)(path, () => {
       if (Editor.isEditor(input)) {
         input = withTest(reactive(input));

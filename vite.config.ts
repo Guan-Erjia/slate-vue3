@@ -19,11 +19,11 @@ const BaseConfig: UserConfig = {
   base: "/slate-vue3/",
   test: {
     include: [
-      "./test/slate/**/index.spec.js",
-      "./test/slate-history/**/index.spec.js",
-      "./test/slate-hyperscript/**/index.spec.js",
-      "./test/slate-yjs/**/index.spec.js",
-      "./test/slate-vue/**/*.spec.[j|t]s",
+      "./test/slate/**/index.spec.ts",
+      "./test/slate-history/**/index.spec.ts",
+      "./test/slate-hyperscript/**/index.spec.ts",
+      "./test/slate-yjs/**/index.spec.ts",
+      "./test/slate-vue/**/*.spec.ts",
     ],
     environment: "jsdom",
   },

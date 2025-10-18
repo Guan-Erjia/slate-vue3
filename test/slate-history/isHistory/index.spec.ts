@@ -7,8 +7,8 @@ const modules = await resolveModules(import.meta.glob("./*.jsx"));
 describe("isHistory", () => {
   modules.forEach((module) => {
     const { run, input, path } = module;
-    test(path, async () => {
-      const editor = withTest(withHistory(reactive(input)));
+    test(path, () => {
+      const editor = withHistory(withTest(reactive(input)));
 
       run(editor);
 

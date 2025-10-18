@@ -2,6 +2,7 @@
   "include": ["./packages/**/*", "./test/**/*"],
   "exclude": ["./docs/**/*"],
   "compilerOptions": {
+    "types": ["vite/client"],
     "allowSyntheticDefaultImports": true,
     "composite": false,
     "declaration": true,

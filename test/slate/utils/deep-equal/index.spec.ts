@@ -6,8 +6,9 @@ const modules = await resolveModules(import.meta.glob("./*.js"));
 
 describe("slate-deep-equal", () => {
   modules.forEach((module) => {
-    let { input, test: _test, output, path } = module;
-    test(path, async () => {
+    let { input } = module;
+    const { test: _test, output, path } = module;
+    test(path, () => {
       if (Editor.isEditor(input)) {
         input = withTest(input);
       }

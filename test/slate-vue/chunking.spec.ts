@@ -45,7 +45,6 @@ const reconcileEditor = (
 
   reconcileChildren(editor, {
     chunkTree: chunkTree,
-    children: editor.children,
     chunkSize: 3,
     onInsert: (n: Descendant, i: number) => {
       NODE_TO_INDEX.set(n, i);

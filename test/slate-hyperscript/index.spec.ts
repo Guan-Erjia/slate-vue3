@@ -9,7 +9,7 @@ describe("slate-hyperscript", () => {
   modules.forEach((module) => {
     const { input, output, path } = module;
     test(path, () => {
-      let actual = {};
+      let actual: Record<string, typeof input> = {};
 
       if (Array.isArray(output)) {
         actual = input;
