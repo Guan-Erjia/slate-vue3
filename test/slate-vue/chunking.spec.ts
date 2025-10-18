@@ -12,6 +12,9 @@ import {
   Key,
   KEY_TO_CHUNK_TREE,
   getChunkTreeForNode,
+  reconcileChildren,
+  NODE_TO_INDEX,
+  NODE_TO_PARENT,
 } from "slate-dom";
 import type {
   Chunk,
@@ -37,14 +40,28 @@ const blocks = (count: number) =>
 const reconcileEditor = (
   editor: DOMEditor,
   options: Omit<ReconcileOptions, "chunkTree" | "children" | "chunkSize"> = {},
-) =>
-  getChunkTreeForNode(editor, editor, {
-    reconcile: {
-      chunkSize: 3,
-      debug: true,
-      ...options,
+) => {
+  const chunkTree = getChunkTreeForNode(editor, editor);
+
+  reconcileChildren(editor, {
+    chunkTree: chunkTree,
+    children: editor.children,
+    chunkSize: 3,
+    onInsert: (n: Descendant, i: number) => {
+      NODE_TO_INDEX.set(n, i);
+      NODE_TO_PARENT.set(n, editor);
     },
+    onUpdate: (n: Descendant, i: number) => {
+      NODE_TO_INDEX.set(n, i);
+      NODE_TO_PARENT.set(n, editor);
+    },
+    onIndexChange: (n: Descendant, i: number) => {
+      NODE_TO_INDEX.set(n, i);
+    },
+    ...options,
   });
+  return chunkTree;
+};
 
 type TreeShape = string | TreeShape[];
 

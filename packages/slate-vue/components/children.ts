@@ -1,20 +1,12 @@
 import { Ancestor, Descendant, Editor, Element, Text } from "slate";
 import {
-  ChunkTree,
   DOMEditor,
+  getChunkTreeForNode,
   NODE_TO_INDEX,
   NODE_TO_PARENT,
   reconcileChildren,
 } from "slate-dom";
-import {
-  computed,
-  defineComponent,
-  h,
-  provide,
-  reactive,
-  renderList,
-  VNode,
-} from "vue";
+import { computed, defineComponent, h, provide, renderList, VNode } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
@@ -42,11 +34,7 @@ export const ChildrenComp = defineComponent({
       Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element),
     );
 
-    const staticChunkTree: ChunkTree = {
-      type: "root",
-      movedNodeKeys: new Set(),
-      children: reactive([]),
-    };
+    const staticChunkTree = getChunkTreeForNode(editor, props.element);
 
     const chunkTree = computed(() => {
       if (!chunkSize.value) {
