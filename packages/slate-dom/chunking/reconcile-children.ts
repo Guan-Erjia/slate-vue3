@@ -6,7 +6,6 @@ import { DOMEditor } from "../plugin/dom-editor";
 
 export interface ReconcileOptions extends ChunkTreeHelperOptions {
   chunkTree: ChunkTree;
-  children: Descendant[];
   chunkSize: number;
   rerenderChildren?: number[];
   onInsert?: (node: Descendant, index: number) => void;
@@ -23,7 +22,6 @@ export const reconcileChildren = (
   editor: DOMEditor,
   {
     chunkTree,
-    children,
     chunkSize,
     onInsert,
     onUpdate,
@@ -32,7 +30,7 @@ export const reconcileChildren = (
   }: ReconcileOptions,
 ) => {
   const chunkTreeHelper = new ChunkTreeHelper(chunkTree, { chunkSize, debug });
-  const childrenHelper = new ChildrenHelper(editor, children);
+  const childrenHelper = new ChildrenHelper(editor);
 
   let treeLeaf: ChunkLeaf | null;
 

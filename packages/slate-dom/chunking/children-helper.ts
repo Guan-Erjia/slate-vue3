@@ -24,10 +24,10 @@ export class ChildrenHelper {
    */
   public pointerIndex: number;
 
-  constructor(editor: DOMEditor, children: Descendant[]) {
+  constructor(editor: DOMEditor) {
     this.editor = editor;
-    this.children = toRaw(children);
-    this.cachedKeys = markRaw(new Array(children.length));
+    this.children = toRaw(editor.children);
+    this.cachedKeys = markRaw(new Array(editor.children.length));
     this.pointerIndex = 0;
   }
 

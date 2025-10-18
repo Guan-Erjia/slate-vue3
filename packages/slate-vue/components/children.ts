@@ -42,7 +42,6 @@ export const ChildrenComp = defineComponent({
       }
       reconcileChildren(editor, {
         chunkTree: staticChunkTree,
-        children: element.children,
         chunkSize: chunkSize.value,
         onInsert: (n: Descendant, i: number) => {
           NODE_TO_INDEX.set(n, i);
