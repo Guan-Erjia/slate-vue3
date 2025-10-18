@@ -14,7 +14,6 @@ import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
 import { describe, expect, it } from "vitest";
 import DecorateEditor from "./components/DecorateEditor.vue";
-import { isEqual, range } from "lodash-es";
 
 const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   const decorations = Object.keys(Node.extractProps(leaf)).sort();
@@ -22,7 +21,7 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   return h(
     "span",
     { ...attributes, "data-decorations": JSON.stringify(decorations) },
-    children
+    children,
   );
 };
 
@@ -42,7 +41,7 @@ const decoratePaths =
 
 const getDecoratedLeaves = (
   editor: DOMEditor,
-  path: Path
+  path: Path,
 ): { text: string; decorations: string[] }[] => {
   const text = DOMEditor.toDOMNode(editor, Node.leaf(editor, path));
   const leaves = Array.from(text.children) as HTMLElement[];
@@ -163,7 +162,7 @@ describe("decorations", () => {
                 anchor: { path: [0, 0], offset: 6 },
                 focus: { path: [0, 0], offset: 12 },
                 italic: true,
-              }
+              },
             );
           }
           return ranges;
@@ -316,7 +315,7 @@ describe("decorations", () => {
               {
                 ...Editor.range(editor, [0, 1]),
                 italic: true,
-              }
+              },
             );
           }
           if (Path.equals(path, [1, 0])) {
@@ -521,7 +520,7 @@ describe("decorations", () => {
           { bold: true },
           {
             at: [0, 0, 0],
-          }
+          },
         );
         await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0, 0])).toEqual([
@@ -562,7 +561,7 @@ describe("decorations", () => {
           { children: [{ text: "0" }] },
           {
             at: [0],
-          }
+          },
         );
         await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([

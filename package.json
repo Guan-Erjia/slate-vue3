@@ -57,7 +57,14 @@
     "e2e-ui": "playwright test --ui",
     "test": "vitest",
     "lint": "eslint  --max-warnings 0",
-    "lint:fix": "eslint  --fix"
+    "lint:fix": "eslint  --fix",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "direction": "^2.0.1",
@@ -87,10 +94,12 @@
     "eslint": "^9.37.0",
     "eslint-plugin-vue": "^10.5.1",
     "globals": "^16.4.0",
+    "husky": "^9.1.7",
     "image-extensions": "^1.1.0",
     "is-url": "^1.2.4",
     "jiti": "^2.6.1",
     "jsdom": "^27.0.0",
+    "lint-staged": "^16.2.4",
     "prismjs": "^1.30.0",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
