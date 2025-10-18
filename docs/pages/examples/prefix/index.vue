@@ -10,7 +10,7 @@ import {
   RenderLeafProps,
   RenderPlaceholderProps,
 } from "slate-vue3";
-import { createEditor, Path, Node, Editor } from "slate-vue3/core";
+import { createEditor, Path, Node, Editor, NodeEntry } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 import { h } from "vue";
@@ -31,7 +31,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h("span", attributes, children);
 };
 
-const decorate = ([, path]: [Node, Path]) => {
+const decorate = ([, path]: NodeEntry) => {
   const ranges = [];
   if (Path.equals(path, Editor.start(editor, []).path)) {
     ranges.push({

@@ -155,7 +155,7 @@ Array.from(blockEntries).forEach(
   },
 );
 
-const decorate = ([node]: [Node]) => {
+const decorate = ([node]: NodeEntry) => {
   if (Element.isElement(node) && node.type === "code-line") {
     return decorationsMap.get(node) || [];
   }

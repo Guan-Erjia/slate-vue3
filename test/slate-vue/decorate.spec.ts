@@ -5,13 +5,16 @@ import {
   Path,
   createEditor as slateCreateEditor,
   Editor,
+  Transforms,
+  Text,
 } from "slate";
 import { DOMEditor, withDOM } from "slate-dom";
 import { RenderLeafProps } from "slate-vue";
 import { render } from "@testing-library/vue";
-import { h } from "vue";
+import { h, nextTick } from "vue";
 import { describe, expect, it } from "vitest";
 import DecorateEditor from "./components/DecorateEditor.vue";
+import { isEqual, range } from "lodash-es";
 
 const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   const decorations = Object.keys(Node.extractProps(leaf)).sort();
@@ -19,7 +22,7 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   return h(
     "span",
     { ...attributes, "data-decorations": JSON.stringify(decorations) },
-    children,
+    children
   );
 };
 
@@ -39,7 +42,7 @@ const decoratePaths =
 
 const getDecoratedLeaves = (
   editor: DOMEditor,
-  path: Path,
+  path: Path
 ): { text: string; decorations: string[] }[] => {
   const text = DOMEditor.toDOMNode(editor, Node.leaf(editor, path));
   const leaves = Array.from(text.children) as HTMLElement[];
@@ -76,18 +79,17 @@ describe("decorations", () => {
           ...otherNodes(),
         ];
 
-        const decorate = decoratePaths([
-          {
-            path: [0, 0],
-            decorations: () => [
-              {
-                anchor: { path: [0, 0], offset: 6 },
-                focus: { path: [0, 0], offset: 11 },
-                bold: true,
-              },
-            ],
-          },
-        ]);
+        const decorate = ([, path]: NodeEntry) => {
+          const ranges = [];
+          if (Path.equals(path, [0, 0])) {
+            ranges.push({
+              anchor: { path: [0, 0], offset: 6 },
+              focus: { path: [0, 0], offset: 11 },
+              bold: true,
+            });
+          }
+          return ranges;
+        };
 
         editor.children = initialValue;
         render(DecorateEditor, {
@@ -111,17 +113,16 @@ describe("decorations", () => {
           ...otherNodes(),
         ];
 
-        const decorate = decoratePaths([
-          {
-            path: [0, 1],
-            decorations: () => [
-              {
-                ...Editor.range(editor, [0, 1]),
-                bold: true,
-              },
-            ],
-          },
-        ]);
+        const decorate = ([, path]: NodeEntry) => {
+          const ranges = [];
+          if (Path.equals(path, [0, 1])) {
+            ranges.push({
+              ...Editor.range(editor, [0, 1]),
+              bold: true,
+            });
+          }
+          return ranges;
+        };
 
         editor.children = initialValue;
         render(DecorateEditor, {
@@ -149,10 +150,10 @@ describe("decorations", () => {
           ...otherNodes(),
         ];
 
-        const decorate = decoratePaths([
-          {
-            path: [0, 0],
-            decorations: () => [
+        const decorate = ([, path]: NodeEntry) => {
+          const ranges = [];
+          if (Path.equals(path, [0, 0])) {
+            ranges.push(
               {
                 anchor: { path: [0, 0], offset: 0 },
                 focus: { path: [0, 0], offset: 11 },
@@ -162,10 +163,11 @@ describe("decorations", () => {
                 anchor: { path: [0, 0], offset: 6 },
                 focus: { path: [0, 0], offset: 12 },
                 italic: true,
-              },
-            ],
-          },
-        ]);
+              }
+            );
+          }
+          return ranges;
+        };
 
         editor.children = initialValue;
         render(DecorateEditor, {
@@ -193,18 +195,17 @@ describe("decorations", () => {
           ...otherNodes(),
         ];
 
-        const decorate = decoratePaths([
-          {
-            path: [0],
-            decorations: () => [
-              {
-                anchor: { path: [0, 0], offset: 2 },
-                focus: { path: [0, 2], offset: 2 },
-                bold: true,
-              },
-            ],
-          },
-        ]);
+        const decorate = ([, path]: NodeEntry) => {
+          const ranges = [];
+          if (Path.isChild(path, [])) {
+            ranges.push({
+              anchor: { path: [0, 0], offset: 2 },
+              focus: { path: [0, 2], offset: 2 },
+              bold: true,
+            });
+          }
+          return ranges;
+        };
 
         editor.children = initialValue;
         render(DecorateEditor, {
@@ -242,36 +243,29 @@ describe("decorations", () => {
           ...otherNodes(),
         ];
 
-        const decorate = decoratePaths([
-          {
-            path: [],
-            decorations: () => [
-              {
-                anchor: { path: [0, 1], offset: 0 },
-                focus: { path: [1, 0], offset: 3 },
-                bold: true,
-              },
-            ],
-          },
-          {
-            path: [0],
-            decorations: () => [
-              {
-                ...Editor.range(editor, [0, 2]),
-                italic: true,
-              },
-            ],
-          },
-          {
-            path: [1, 0],
-            decorations: () => [
-              {
-                ...Editor.range(editor, [1, 0]),
-                underline: true,
-              },
-            ],
-          },
-        ]);
+        const decorate = ([_node, path]: NodeEntry) => {
+          const ranges = [];
+          if (Path.isChild(path, [])) {
+            ranges.push({
+              anchor: { path: [0, 1], offset: 0 },
+              focus: { path: [1, 0], offset: 3 },
+              bold: true,
+            });
+          }
+          if (Path.equals(path, [0, 2])) {
+            ranges.push({
+              ...Editor.range(editor, [0, 2]),
+              italic: true,
+            });
+          }
+          if (Path.equals(path, [1, 0])) {
+            ranges.push({
+              ...Editor.range(editor, [1, 0]),
+              underline: true,
+            });
+          }
+          return ranges;
+        };
 
         editor.children = initialValue;
         render(DecorateEditor, {
@@ -281,361 +275,316 @@ describe("decorations", () => {
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "0.0", decorations: [] },
         ]);
-        // expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
-        //   { text: "0.1", decorations: ["bold"] },
-        // ]);
+        expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
+          { text: "0.1", decorations: ["bold"] },
+        ]);
 
-        // expect(getDecoratedLeaves(editor, [0, 2])).toEqual([
-        //   { text: "0.2", decorations: ["bold", "italic"] },
-        // ]);
+        expect(getDecoratedLeaves(editor, [0, 2])).toEqual([
+          { text: "0.2", decorations: ["bold", "italic"] },
+        ]);
 
-        // expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
-        //   { text: "1.0", decorations: ["bold", "underline"] },
-        // ]);
+        expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
+          { text: "1.0", decorations: ["bold", "underline"] },
+        ]);
 
-        // expect(getDecoratedLeaves(editor, [2, 0])).toEqual([
-        //   { text: "2.0", decorations: [] },
-        // ]);
+        expect(getDecoratedLeaves(editor, [2, 0])).toEqual([
+          { text: "2.0", decorations: [] },
+        ]);
       });
     });
 
-    // describe("redecorating", () => {
-    //   it("redecorates all nodes when the decorate function changes", () => {
-    //     const editor = createEditor();
+    describe("redecorating", () => {
+      it("redecorates all nodes when the decorate function changes", () => {
+        const editor = createEditor();
+        const initialValue = [
+          {
+            children: [{ text: "0.0" }, { text: "0.1" }, { text: "0.2" }],
+          },
+          {
+            children: [{ text: "1.0" }, { text: "1.1" }, { text: "1.2" }],
+          },
+          ...otherNodes(),
+        ];
+        const decorate = ([_node, path]: NodeEntry) => {
+          const ranges = [];
+          if (Path.isChild(path, [])) {
+            ranges.push(
+              {
+                ...Editor.range(editor, [0, 0]),
+                bold: true,
+              },
+              {
+                ...Editor.range(editor, [0, 1]),
+                italic: true,
+              }
+            );
+          }
+          if (Path.equals(path, [1, 0])) {
+            ranges.push({
+              ...Editor.range(editor, [1, 0]),
+              bold: true,
+            });
+          }
 
-    //     const initialValue = [
-    //       {
-    //         children: [{ text: "0.0" }, { text: "0.1" }, { text: "0.2" }],
-    //       },
-    //       {
-    //         children: [{ text: "1.0" }, { text: "1.1" }, { text: "1.2" }],
-    //       },
-    //       ...otherNodes(),
-    //     ];
+          if (Path.equals(path, [1, 1])) {
+            ranges.push({
+              ...Editor.range(editor, [1, 1]),
+              italic: true,
+            });
+          }
 
-    //     const decorate1 = decoratePaths([
-    //       {
-    //         path: [],
-    //         decorations: () => [
-    //           {
-    //             ...Editor.range(editor, [0, 0]),
-    //             bold: true,
-    //           },
-    //           {
-    //             ...Editor.range(editor, [0, 1]),
-    //             italic: true,
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         path: [1, 0],
-    //         decorations: () => [
-    //           {
-    //             ...Editor.range(editor, [1, 0]),
-    //             bold: true,
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         path: [1, 1],
-    //         decorations: () => [
-    //           {
-    //             ...Editor.range(editor, [1, 1]),
-    //             italic: true,
-    //           },
-    //         ],
-    //       },
-    //     ]);
+          return ranges;
+        };
 
-    //     const decorate2 = decoratePaths([
-    //       {
-    //         path: [0],
-    //         decorations: () => [
-    //           {
-    //             ...Editor.range(editor, [0, 1]),
-    //             underline: true,
-    //           },
-    //           {
-    //             ...Editor.range(editor, [0, 2]),
-    //             bold: true,
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         path: [1, 1],
-    //         decorations: () => [
-    //           {
-    //             ...Editor.range(editor, [1, 1]),
-    //             underline: true,
-    //           },
-    //         ],
-    //       },
-    //       {
-    //         path: [1, 2],
-    //         decorations: () => [
-    //           {
-    //             ...Editor.range(editor, [1, 2]),
-    //             bold: true,
-    //           },
-    //         ],
-    //       },
-    //     ]);
+        editor.children = initialValue;
+        render(DecorateEditor, {
+          props: { editor, renderLeaf, decorate },
+        });
 
-    //     editor.children = initialValue;
-    //     const { rerender } = render(DecorateEditor, {
-    //       props: { editor, renderLeaf, decorate: decorate1 },
-    //     });
+        expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+          { text: "0.0", decorations: ["bold"] },
+        ]);
+        expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
+          { text: "0.1", decorations: ["italic"] },
+        ]);
+        expect(getDecoratedLeaves(editor, [0, 2])).toEqual([
+          { text: "0.2", decorations: [] },
+        ]);
+        expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
+          { text: "1.0", decorations: ["bold"] },
+        ]);
+        expect(getDecoratedLeaves(editor, [1, 1])).toEqual([
+          { text: "1.1", decorations: ["italic"] },
+        ]);
+        expect(getDecoratedLeaves(editor, [1, 2])).toEqual([
+          { text: "1.2", decorations: [] },
+        ]);
 
-    //     expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
-    //       { text: "0.0", decorations: ["bold"] },
-    //     ]);
+        const decorate2 = ([_node, path]: NodeEntry) => {
+          const ranges = [];
+          if (Path.equals(path, [0, 1])) {
+            ranges.push({
+              ...Editor.range(editor, [0, 1]),
+              underline: true,
+            });
+          }
+          if (Path.equals(path, [0, 2])) {
+            ranges.push({
+              ...Editor.range(editor, [0, 2]),
+              bold: true,
+            });
+          }
+          if (Path.equals(path, [1, 1])) {
+            ranges.push({
+              ...Editor.range(editor, [1, 1]),
+              underline: true,
+            });
+          }
+          if (Path.equals(path, [1, 2])) {
+            ranges.push({
+              ...Editor.range(editor, [1, 2]),
+              bold: true,
+            });
+          }
+          return ranges;
+        };
 
-    //     expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
-    //       { text: "0.1", decorations: ["italic"] },
-    //     ]);
+        // rerender won't trigger remount
+        render(DecorateEditor, {
+          props: {
+            editor,
+            renderLeaf,
+            decorate: decorate2,
+          },
+        });
 
-    //     expect(getDecoratedLeaves(editor, [0, 2])).toEqual([
-    //       { text: "0.2", decorations: [] },
-    //     ]);
+        expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+          { text: "0.0", decorations: [] },
+        ]);
+        expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
+          { text: "0.1", decorations: ["underline"] },
+        ]);
+        expect(getDecoratedLeaves(editor, [0, 2])).toEqual([
+          { text: "0.2", decorations: ["bold"] },
+        ]);
+        expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
+          { text: "1.0", decorations: [] },
+        ]);
+        expect(getDecoratedLeaves(editor, [1, 1])).toEqual([
+          { text: "1.1", decorations: ["underline"] },
+        ]);
+        expect(getDecoratedLeaves(editor, [1, 2])).toEqual([
+          { text: "1.2", decorations: ["bold"] },
+        ]);
+      });
 
-    //     expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
-    //       { text: "1.0", decorations: ["bold"] },
-    //     ]);
+      it("redecorates undecorated nodes when they change", async () => {
+        const editor = createEditor();
+        const initialValue = [
+          { children: [{ text: "The quick brown fox" }] },
+          ...otherNodes(),
+        ];
+        const decorate = ([node]: NodeEntry) => {
+          const ranges = [];
+          if (Text.isText(node) && node.text.includes("box")) {
+            ranges.push({
+              ...Editor.range(editor, [0, 0]),
+              bold: true,
+            });
+          }
+          return ranges;
+        };
+        editor.children = initialValue;
+        render(DecorateEditor, {
+          props: { editor, renderLeaf, decorate },
+        });
+        expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+          { text: "The quick brown fox", decorations: [] },
+        ]);
+        Transforms.insertText(editor, "b", {
+          at: {
+            anchor: { path: [0, 0], offset: 16 },
+            focus: { path: [0, 0], offset: 17 },
+          },
+        });
+        await nextTick();
+        expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+          { text: "The quick brown box", decorations: ["bold"] },
+        ]);
+      });
 
-    //     expect(getDecoratedLeaves(editor, [1, 1])).toEqual([
-    //       { text: "1.1", decorations: ["italic"] },
-    //     ]);
+      it("redecorates decorated nodes when they change", async () => {
+        const editor = createEditor();
+        const initialValue = [
+          { children: [{ text: "The quick brown box" }] },
+          ...otherNodes(),
+        ];
+        const decorate = ([node]: NodeEntry) => {
+          const ranges = [];
+          if (Text.isText(node) && node.text.includes("box")) {
+            ranges.push({
+              ...Editor.range(editor, [0, 0]),
+              bold: true,
+            });
+          }
+          return ranges;
+        };
 
-    //     expect(getDecoratedLeaves(editor, [1, 2])).toEqual([
-    //       { text: "1.2", decorations: [] },
-    //     ]);
+        editor.children = initialValue;
+        render(DecorateEditor, {
+          props: { editor, renderLeaf, decorate },
+        });
+        expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+          { text: "The quick brown box", decorations: ["bold"] },
+        ]);
+        Transforms.insertText(editor, "f", {
+          at: {
+            anchor: { path: [0, 0], offset: 16 },
+            focus: { path: [0, 0], offset: 17 },
+          },
+        });
+        await nextTick();
+        expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+          { text: "The quick brown fox", decorations: [] },
+        ]);
+      });
 
-    //     rerender({
-    //       props: { editor, renderLeaf, decorate: decorate2 },
-    //     });
+      it("passes down new decorations from changed ancestors", async () => {
+        const editor = createEditor();
+        const initialValue = [
+          {
+            children: [
+              { children: [{ text: "Hello world!" }] },
+              ...otherNodes(),
+            ],
+          },
+        ];
+        const decorate = ([node]: NodeEntry) => {
+          const ranges = [];
+          if ("bold" in node) {
+            ranges.push({
+              ...Editor.range(editor, [0, 0, 0]),
+              bold: true,
+            });
+          }
+          return ranges;
+        };
+        editor.children = initialValue;
+        render(DecorateEditor, {
+          props: { editor, renderLeaf, decorate },
+        });
+        expect(getDecoratedLeaves(editor, [0, 0, 0])).toEqual([
+          { text: "Hello world!", decorations: [] },
+        ]);
+        Transforms.setNodes(
+          editor,
+          { bold: true },
+          {
+            at: [0, 0, 0],
+          }
+        );
+        await nextTick();
+        expect(getDecoratedLeaves(editor, [0, 0, 0])).toEqual([
+          { text: "Hello world!", decorations: ["bold"] },
+        ]);
+      });
 
-    //     expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
-    //       { text: "0.0", decorations: [] },
-    //     ]);
+      it("does not redecorate unchanged nodes when their paths change", async () => {
+        const editor = createEditor();
+        const initialValue = [
+          { children: [{ text: "A" }] },
+          { children: [{ text: "B" }] },
+          // ...otherNodes(),
+        ];
+        const decorate = ([, path]: NodeEntry) => {
+          const ranges = [];
+          if (Path.equals(path, [1, 0])) {
+            ranges.push({
+              ...Editor.range(editor, [1, 0]),
+              bold: true,
+            });
+          }
+          return ranges;
+        };
 
-    //     expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
-    //       { text: "0.1", decorations: ["underline"] },
-    //     ]);
-
-    //     expect(getDecoratedLeaves(editor, [0, 2])).toEqual([
-    //       { text: "0.2", decorations: ["bold"] },
-    //     ]);
-
-    //     expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
-    //       { text: "1.0", decorations: [] },
-    //     ]);
-
-    //     expect(getDecoratedLeaves(editor, [1, 1])).toEqual([
-    //       { text: "1.1", decorations: ["underline"] },
-    //     ]);
-
-    //     expect(getDecoratedLeaves(editor, [1, 2])).toEqual([
-    //       { text: "1.2", decorations: ["bold"] },
-    //     ]);
-    //   });
-
-    //   it("redecorates undecorated nodes when they change", async () => {
-    //     const editor = createEditor();
-
-    //     const initialValue = [
-    //       { children: [{ text: "The quick brown fox" }] },
-    //       ...otherNodes(),
-    //     ];
-
-    //     const decorate = decoratePaths([
-    //       {
-    //         path: [0, 0],
-    //         decorations: (node) =>
-    //           Text.isText(node) && node.text.includes("box")
-    //             ? [
-    //                 {
-    //                   ...Editor.range(editor, [0, 0]),
-    //                   bold: true,
-    //                 },
-    //               ]
-    //             : [],
-    //       },
-    //     ]);
-
-    //     editor.children = initialValue;
-    //     render(DecorateEditor, {
-    //       props: { editor, renderLeaf, decorate },
-    //     });
-
-    //     expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
-    //       { text: "The quick brown fox", decorations: [] },
-    //     ]);
-
-    //     Transforms.insertText(editor, "b", {
-    //       at: {
-    //         anchor: { path: [0, 0], offset: 16 },
-    //         focus: { path: [0, 0], offset: 17 },
-    //       },
-    //     });
-
-    //     expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
-    //       { text: "The quick brown box", decorations: ["bold"] },
-    //     ]);
-    //   });
-
-    //   it("redecorates decorated nodes when they change", async () => {
-    //     const editor = createEditor();
-
-    //     const initialValue = [
-    //       { children: [{ text: "The quick brown box" }] },
-    //       ...otherNodes(),
-    //     ];
-
-    //     const decorate = decoratePaths([
-    //       {
-    //         path: [0, 0],
-    //         decorations: (node) =>
-    //           Text.isText(node) && node.text.includes("box")
-    //             ? [
-    //                 {
-    //                   ...Editor.range(editor, [0, 0]),
-    //                   bold: true,
-    //                 },
-    //               ]
-    //             : [],
-    //       },
-    //     ]);
-
-    //     editor.children = initialValue;
-    //     render(DecorateEditor, {
-    //       props: { editor, renderLeaf, decorate },
-    //     });
-
-    //     expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
-    //       { text: "The quick brown box", decorations: ["bold"] },
-    //     ]);
-
-    //     Transforms.insertText(editor, "f", {
-    //       at: {
-    //         anchor: { path: [0, 0], offset: 16 },
-    //         focus: { path: [0, 0], offset: 17 },
-    //       },
-    //     });
-
-    //     expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
-    //       { text: "The quick brown fox", decorations: [] },
-    //     ]);
-    //   });
-
-    //   it("passes down new decorations from changed ancestors", async () => {
-    //     const editor = createEditor();
-
-    //     const initialValue = [
-    //       {
-    //         children: [
-    //           { children: [{ text: "Hello world!" }] },
-    //           ...otherNodes(),
-    //         ],
-    //       },
-    //     ];
-
-    //     const decorate = decoratePaths([
-    //       {
-    //         path: [0],
-    //         decorations: (node) =>
-    //           "bold" in node
-    //             ? [
-    //                 {
-    //                   ...Editor.range(editor, [0, 0, 0]),
-    //                   bold: true,
-    //                 },
-    //               ]
-    //             : [],
-    //       },
-    //     ]);
-
-    //     editor.children = initialValue;
-    //     render(DecorateEditor, {
-    //       props: { editor, renderLeaf, decorate },
-    //     });
-
-    //     expect(getDecoratedLeaves(editor, [0, 0, 0])).toEqual([
-    //       { text: "Hello world!", decorations: [] },
-    //     ]);
-
-    //     Transforms.setNodes(editor, { bold: true } as any, {
-    //       at: [0],
-    //     });
-
-    //     expect(getDecoratedLeaves(editor, [0, 0, 0])).toEqual([
-    //       { text: "Hello world!", decorations: ["bold"] },
-    //     ]);
-    //   });
-
-    //   it("does not redecorate unchanged nodes when their paths change", async () => {
-    //     const editor = createEditor();
-
-    //     const initialValue = [
-    //       { children: [{ text: "A" }] },
-    //       { children: [{ text: "B" }] },
-    //       ...otherNodes(),
-    //     ];
-
-    //     const decorate = decoratePaths([
-    //       {
-    //         path: [1, 0],
-    //         decorations: () => [
-    //           {
-    //             ...Editor.range(editor, [1, 0]),
-    //             bold: true,
-    //           },
-    //         ],
-    //       },
-    //     ]);
-
-    //     editor.children = initialValue;
-    //     render(DecorateEditor, {
-    //       props: { editor, renderLeaf, decorate },
-    //     });
-
-    //     expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
-    //       { text: "A", decorations: [] },
-    //     ]);
-
-    //     expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
-    //       { text: "B", decorations: ["bold"] },
-    //     ]);
-
-    //     Transforms.insertNodes(
-    //       editor,
-    //       { children: [{ text: "0" }] },
-    //       {
-    //         at: [0],
-    //       }
-    //     );
-
-    //     expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
-    //       { text: "0", decorations: [] },
-    //     ]);
-
-    //     // A does not become bold even though it now matches the decoration
-    //     expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
-    //       { text: "A", decorations: [] },
-    //     ]);
-
-    //     // B remains bold even though it no longer matches the decoration
-    //     expect(getDecoratedLeaves(editor, [2, 0])).toEqual([
-    //       { text: "B", decorations: ["bold"] },
-    //     ]);
-    //   });
-    // });
+        editor.children = initialValue;
+        render(DecorateEditor, {
+          props: { editor, renderLeaf, decorate },
+        });
+        expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+          { text: "A", decorations: [] },
+        ]);
+        expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
+          { text: "B", decorations: ["bold"] },
+        ]);
+        Transforms.insertNodes(
+          editor,
+          { children: [{ text: "0" }] },
+          {
+            at: [0],
+          }
+        );
+        await nextTick();
+        expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+          { text: "0", decorations: [] },
+        ]);
+        // under decoration function control strictly
+        expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
+          { text: "A", decorations: ["bold"] },
+        ]);
+        // under decoration function control strictly
+        expect(getDecoratedLeaves(editor, [2, 0])).toEqual([
+          { text: "B", decorations: [] },
+        ]);
+      });
+    });
   };
 
   describe("without chunking", () => {
     withChunking(false);
   });
 
-  //   describe("with chunking", () => {
-  //     withChunking(true);
-  //   });
+  describe("with chunking", () => {
+    withChunking(true);
+  });
 });

@@ -228,7 +228,7 @@ const node2Decorations = computed(() => {
   return decorationsMap;
 });
 
-const decorate = ([node]: [Node]) => {
+const decorate = ([node]: NodeEntry) => {
   if (Element.isElement(node) && node.type === "code-line") {
     return node2Decorations.value.get(node);
   }
