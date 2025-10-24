@@ -10,6 +10,9 @@
       style="margin-top: 5px; box-sizing: border-box"
       :value="element.url"
       @change="onChange"
+      @compositionstart.stop
+      @compositionupdate.stop
+      @compositionend.stop
     />
   </div>
 </template>
