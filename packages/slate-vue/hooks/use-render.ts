@@ -82,7 +82,7 @@ export const useRenderChunk = () => {
   return CHUNK_RENDER;
 };
 
-export const useStaticChunkRoot = () => {
+export const useChunkRoot = () => {
   const CHUNK_STATIC_ROOT = inject<ChunkTree>(SLATE_INNER_STATIC_CHUNK_ROOT);
   if (CHUNK_STATIC_ROOT === undefined) {
     throw new Error(
