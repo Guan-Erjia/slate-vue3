@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref, shallowRef } from "vue";
 import YjsEditor from "./YjsEditor.vue";
 import {
   BaseMetadata,
@@ -18,12 +18,12 @@ const route = useRoute();
 const router = useRouter();
 
 const publicApiKey = ref((route.query.publicApiKey as string) || "");
-const roomInfo = ref<{
+const roomInfo = shallowRef<{
   room: Room<JsonObject, LsonObject, BaseUserMeta, Json, BaseMetadata>;
   leave: () => void;
 }>();
-const yProvider = ref<LiveblocksYjsProvider>();
-const sharedType = ref<XmlText>();
+const yProvider = shallowRef<LiveblocksYjsProvider>();
+const sharedType = shallowRef<XmlText>();
 const connected = ref(false);
 
 const connectchange = (e: boolean) => (connected.value = e);

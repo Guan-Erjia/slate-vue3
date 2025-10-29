@@ -34,11 +34,11 @@ export const ChildrenComp = defineComponent({
       Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element),
     );
 
+    const cacheTree = getChunkTreeForNode(editor, props.element);
     const chunkTree = computed(() => {
       if (!chunkSize.value) {
         return null;
       }
-      const cacheTree = getChunkTreeForNode(editor, props.element);
       reconcileChildren(editor, {
         chunkTree: cacheTree,
         chunkSize: chunkSize.value,
@@ -57,7 +57,7 @@ export const ChildrenComp = defineComponent({
       return cacheTree;
     });
 
-    provide(SLATE_INNER_STATIC_CHUNK_ROOT, chunkTree.value);
+    provide(SLATE_INNER_STATIC_CHUNK_ROOT, cacheTree);
 
     return () => {
       if (chunkSize.value === null || isBlock.value) {

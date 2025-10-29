@@ -1,7 +1,6 @@
 import { Element, Node, Path, Text } from "slate";
 import { YTarget } from "../model/types";
 import { sliceInsertDelta, yTextToInsertDelta } from "./delta";
-import { toRaw } from "vue";
 import { XmlText } from "yjs";
 
 export function getSlateNodeYLength(node: Node | undefined): number {
@@ -112,8 +111,8 @@ export function getSlatePath(
   yText: XmlText,
 ): Path {
   const yNodePath = [yText];
-  // 必须获取原始指针
-  while (toRaw(yNodePath[0]) !== toRaw(sharedRoot)) {
+
+  while (yNodePath[0] !== sharedRoot) {
     const { parent: yParent } = yNodePath[0];
 
     if (!yParent) {

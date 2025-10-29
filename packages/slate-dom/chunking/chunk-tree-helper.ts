@@ -1,6 +1,6 @@
 import { Path } from "slate";
 import { Key } from "slate-dom";
-import { markRaw } from "vue";
+import { shallowReactive } from "vue";
 import {
   Chunk,
   ChunkTree,
@@ -475,15 +475,13 @@ export class ChunkTreeHelper {
 
         const chunk: Chunk = {
           type: "chunk",
-          key: markRaw(new Key()),
+          key: new Key(),
           parent,
           children: [],
         };
 
-        chunk.children = groupIntoChunks(
-          chunkNodes,
-          chunk,
-          perChunk / this.chunkSize,
+        chunk.children = shallowReactive(
+          groupIntoChunks(chunkNodes, chunk, perChunk / this.chunkSize),
         );
         chunks.push(chunk);
       }

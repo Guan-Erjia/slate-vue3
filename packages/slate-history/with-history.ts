@@ -1,6 +1,6 @@
 import { Editor, Operation, Path, Transforms } from "slate";
-
 import { HistoryEditor } from "./history-editor";
+import { shallowReactive } from "vue";
 
 /**
  * The `withHistory` plugin keeps track of the operation history of a Slate
@@ -15,11 +15,14 @@ import { HistoryEditor } from "./history-editor";
 export const withHistory = <T extends Editor>(editor: T) => {
   const e = editor as T & HistoryEditor;
   const { apply } = e;
-  e.history = { undos: [], redos: [] };
+  e.history = {
+    undos: shallowReactive([]),
+    redos: shallowReactive([]),
+  };
 
   e.redo = () => {
     const { history } = e;
-    const { redos } = history;
+    const redos = history.redos;
 
     if (redos.length > 0) {
       const batch = redos[redos.length - 1];

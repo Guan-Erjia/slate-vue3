@@ -1,4 +1,3 @@
-import { toRaw } from "vue";
 import { MergeNodeOperation, Node, Path, Text } from "slate";
 import { XmlText } from "yjs";
 import { Delta } from "../../model/types";
@@ -23,7 +22,7 @@ export function mergeNode(
     Path.previous(op.path.slice(-1)),
   );
 
-  if (!toRaw(target.yTarget) !== !toRaw(prev.yTarget)) {
+  if (!target.yTarget !== !prev.yTarget) {
     throw new Error("Cannot merge y text with y element");
   }
 

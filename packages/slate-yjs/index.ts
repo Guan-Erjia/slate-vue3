@@ -21,10 +21,7 @@ import {
   slateRangeToRelativeRange,
 } from "./utils/position";
 
-import {
-  CursorStore,
-  useRemoteCursorStates,
-} from "./hooks/useRemoteCursorStates";
+import { useRemoteCursorStates } from "./hooks/useRemoteCursorStates";
 import { useUnsetCursorPositionOnBlur } from "./hooks/useUnsetCursorPositionOnBlur";
 import { getCursorRange } from "./hooks/utils";
 
@@ -53,7 +50,6 @@ export type {
   WithYHistoryOptions,
   // Base cursor plugin
   CursorState,
-  CursorStore,
   CursorEditor,
   CursorOverlayData,
   WithCursorsOptions,
