@@ -11,6 +11,8 @@ import {
   Transforms,
 } from "slate";
 import {
+  closestShadowAware,
+  containsShadowAware,
   getSelection,
   hasShadowRoot,
   isAfter,
@@ -492,12 +494,13 @@ export const DOMEditor: DOMEditorInterface = {
     }
 
     return (
-      targetEl.closest(`[data-slate-editor]`) === editorEl &&
+      closestShadowAware(targetEl, `[data-slate-editor]`) === editorEl &&
       (!editable || targetEl.isContentEditable
         ? true
         : (typeof targetEl.isContentEditable === "boolean" && // isContentEditable exists only on HTMLElement, and on other nodes it will be undefined
             // this is the core logic that lets you know you got the right editor.selection instead of null when editor is contenteditable="false"(readOnly)
-            targetEl.closest('[contenteditable="false"]') === editorEl) ||
+            closestShadowAware(targetEl, '[contenteditable="false"]') ===
+              editorEl) ||
           !!targetEl.getAttribute("data-slate-zero-width"))
     );
   },
@@ -706,7 +709,7 @@ export const DOMEditor: DOMEditorInterface = {
       // if this editor is within a void node of another editor ("nested editors", like in
       // the "Editable Voids" example on the docs site).
       const voidNode =
-        potentialVoidNode && editorEl.contains(potentialVoidNode)
+        potentialVoidNode && containsShadowAware(editorEl, potentialVoidNode)
           ? potentialVoidNode
           : null;
       const potentialNonEditableNode = parentNode.closest(

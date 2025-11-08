@@ -7,6 +7,8 @@ export { applyStringDiff, normalizeStringDiff } from "./utils/diff-text";
 export type { StringDiff, TextDiff } from "./utils/diff-text";
 
 export {
+  closestShadowAware,
+  containsShadowAware,
   getActiveElement,
   getDefaultView,
   getSelection,

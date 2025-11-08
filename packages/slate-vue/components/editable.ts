@@ -28,6 +28,7 @@ import {
   IS_FOCUSED,
   IS_READ_ONLY,
   NODE_TO_ELEMENT,
+  containsShadowAware,
 } from "slate-dom";
 import {
   computed,
@@ -267,8 +268,8 @@ export const Editable = defineComponent({
       const editorElement = EDITOR_TO_ELEMENT.get(editor)!;
       let hasDomSelectionInEditor = false;
       if (
-        editorElement.contains(anchorNode) &&
-        editorElement.contains(focusNode)
+        containsShadowAware(editorElement, anchorNode) &&
+        containsShadowAware(editorElement, focusNode)
       ) {
         hasDomSelectionInEditor = true;
       }
