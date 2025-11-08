@@ -854,7 +854,10 @@ export const Editable = defineComponent({
     };
 
     const onCompositionend = (event: CompositionEvent) => {
-      if (!DOMEditor.hasSelectableTarget(editor, event.target)) {
+      if (
+        isDOMEventTargetInput(event) ||
+        !DOMEditor.hasSelectableTarget(editor, event.target)
+      ) {
         return;
       }
 
@@ -905,22 +908,24 @@ export const Editable = defineComponent({
     };
 
     const onCompositionstart = (event: CompositionEvent) => {
-      if (DOMEditor.hasSelectableTarget(editor, event.target)) {
-        isComposing.value = true;
-        IS_COMPOSING.set(editor, true);
+      if (
+        isDOMEventTargetInput(event) ||
+        !DOMEditor.hasSelectableTarget(editor, event.target)
+      ) {
+        return;
+      }
 
-        if (
-          IS_ANDROID ||
-          isEventHandled(event, attributes.onCompositionstart)
-        ) {
-          return;
-        }
+      isComposing.value = true;
+      IS_COMPOSING.set(editor, true);
 
-        const { selection } = editor;
-        if (selection && Range.isExpanded(selection)) {
-          Editor.deleteFragment(editor);
-          return;
-        }
+      if (IS_ANDROID || isEventHandled(event, attributes.onCompositionstart)) {
+        return;
+      }
+
+      const { selection } = editor;
+      if (selection && Range.isExpanded(selection)) {
+        Editor.deleteFragment(editor);
+        return;
       }
     };
 
