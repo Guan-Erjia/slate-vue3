@@ -86,7 +86,7 @@ import {
   unwrapNodes,
   wrapNodes,
 } from "./transforms-node";
-import { reactive, shallowReactive } from "vue";
+import { ref, shallowReactive } from "vue";
 
 /**
  * Create a new Slate `Editor` object.
@@ -189,14 +189,13 @@ export const createEditor = (): Editor => {
       shouldMergeNodesRemovePrevNode(editor, ...args),
   });
 
-  const _children = reactive<Descendant[]>([]);
+  const _children = ref<Descendant[]>([]);
   Object.defineProperty(editor, "children", {
     get() {
-      return _children;
+      return _children.value;
     },
     set(value) {
-      _children.length = 0;
-      _children.push(...value);
+      _children.value = value;
     },
   });
 
