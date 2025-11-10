@@ -9,7 +9,7 @@ import {
   VNode,
 } from "vue";
 import {
-  SLATE_INNER_CHANGE_EFFECT_INJECT,
+  SLATE_INNER_EDITOR_VERSION,
   SLATE_INNER_RENDER_ELEMENT,
   SLATE_INNER_RENDER_LEAF,
   SLATE_INNER_RENDER_PLACEHOLDER,
@@ -134,8 +134,8 @@ export const Slate = defineComponent({
     const focusCb = () => (isFocus.value = DOMEditor.isFocused(editor));
 
     // 记数用，触发 changeEffect
-    const changeEffect = ref(0);
-    provide(SLATE_INNER_CHANGE_EFFECT_INJECT, changeEffect);
+    const editorVersion = ref(0);
+    provide(SLATE_INNER_EDITOR_VERSION, editorVersion);
 
     const markPlaceholder = computed(() => {
       if (
@@ -170,7 +170,7 @@ export const Slate = defineComponent({
       document.addEventListener("focusout", focusCb);
       EDITOR_TO_ON_CHANGE.set(editor, (options?: { operation?: Operation }) => {
         emit("change", options);
-        changeEffect.value++;
+        editorVersion.value++;
         switch (options?.operation?.type) {
           case "set_selection":
             emit("selectionchange", options);

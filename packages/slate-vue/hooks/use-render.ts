@@ -1,6 +1,6 @@
-import { ComputedRef, inject, Ref, watch, type VNode } from "vue";
+import { ComputedRef, inject, Ref, type VNode } from "vue";
 import {
-  SLATE_INNER_CHANGE_EFFECT_INJECT,
+  SLATE_INNER_EDITOR_VERSION,
   SLATE_INNER_RENDER_ELEMENT,
   SLATE_INNER_RENDER_LEAF,
   SLATE_INNER_RENDER_PLACEHOLDER,
@@ -92,18 +92,15 @@ export const useChunkRoot = () => {
   return CHUNK_STATIC_ROOT;
 };
 
-export const useChangeEffect = (fn: () => void) => {
-  const CHANGE_EFFECT_INJECT = inject<Ref<number>>(
-    SLATE_INNER_CHANGE_EFFECT_INJECT,
-  );
-  if (CHANGE_EFFECT_INJECT === undefined) {
+export const useEditorVersion = () => {
+  const EDITOR_VERSION = inject<Ref<number>>(SLATE_INNER_EDITOR_VERSION);
+  if (EDITOR_VERSION === undefined) {
     throw new Error(
-      `The \`useChangeEffect\` hook must be used inside the <Slate> component's context.`,
+      `The \`useEditorVersion\` hook must be used inside the <Slate> component's context.`,
     );
   }
 
-  watch(() => CHANGE_EFFECT_INJECT.value, fn);
-  return CHANGE_EFFECT_INJECT;
+  return EDITOR_VERSION;
 };
 
 export const useMarkPlaceholder = () => {

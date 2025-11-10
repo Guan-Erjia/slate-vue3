@@ -55,7 +55,7 @@ import {
 import { useEditor } from "../hooks/use-editor";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
-import { useChangeEffect } from "../hooks/use-render";
+import { useEditorVersion } from "../hooks/use-render";
 import {
   AndroidManager,
   useAndroidManager,
@@ -346,18 +346,24 @@ export const Editable = defineComponent({
 
       return newDomRange;
     };
-    useChangeEffect(() => {
-      // Make sure the DOM selection state is in sync.
-      const root = DOMEditor.findDocumentOrShadowRoot(editor);
-      const domSelection = getSelection(root);
-      if (!domSelection || !DOMEditor.isFocused(editor)) {
-        return;
-      }
-      // In firefox if there is more then 1 range and we call setDomSelection we remove the ability to select more cells in a table
-      if (domSelection.rangeCount <= 1) {
-        setDomSelection();
-      }
-    });
+
+    const editorVersion = useEditorVersion();
+
+    watch(
+      () => editorVersion.value,
+      () => {
+        // Make sure the DOM selection state is in sync.
+        const root = DOMEditor.findDocumentOrShadowRoot(editor);
+        const domSelection = getSelection(root);
+        if (!domSelection || !DOMEditor.isFocused(editor)) {
+          return;
+        }
+        // In firefox if there is more then 1 range and we call setDomSelection we remove the ability to select more cells in a table
+        if (domSelection.rangeCount <= 1) {
+          setDomSelection();
+        }
+      },
+    );
 
     // Listen for dragend and drop globally. In Firefox, if a drop handler
     // initiates an operation that causes the originally dragged element to
