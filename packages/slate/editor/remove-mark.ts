@@ -3,7 +3,6 @@ import { Path } from "../interfaces/path";
 import { Text } from "../interfaces/text";
 import { Range } from "../interfaces/range";
 import { Transforms } from "../interfaces/transforms";
-import { FLUSHING } from "../utils/weak-maps";
 import { Editor, EditorInterface } from "../interfaces/editor";
 
 export const removeMark: EditorInterface["removeMark"] = (editor, key) => {
@@ -14,7 +13,7 @@ export const removeMark: EditorInterface["removeMark"] = (editor, key) => {
       if (!Text.isText(node)) {
         return false; // marks can only be applied to text
       }
-      const [parentNode, parentPath] = Editor.parent(editor, path);
+      const [parentNode] = Editor.parent(editor, path);
       return !editor.isVoid(parentNode) || editor.markableVoid(parentNode);
     };
     const expandedSelection = Range.isExpanded(selection);
@@ -37,9 +36,7 @@ export const removeMark: EditorInterface["removeMark"] = (editor, key) => {
       const marks = { ...(Editor.marks(editor) || {}) };
       delete marks[<keyof Node>key];
       editor.marks = marks;
-      if (!FLUSHING.get(editor)) {
-        editor.onChange();
-      }
+      editor.onChange();
     }
   }
 };

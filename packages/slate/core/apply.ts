@@ -1,7 +1,6 @@
 import { PathRef } from "../interfaces/path-ref";
 import { PointRef } from "../interfaces/point-ref";
 import { RangeRef } from "../interfaces/range-ref";
-import { FLUSHING } from "../utils/weak-maps";
 import { Path } from "../interfaces/path";
 import { Transforms } from "../interfaces/transforms";
 import { WithEditorFirstArg } from "../utils/types";
@@ -41,13 +40,8 @@ export const apply: WithEditorFirstArg<Editor["apply"]> = (editor, op) => {
     editor.marks = null;
   }
 
-  if (!FLUSHING.get(editor)) {
-    FLUSHING.set(editor, true);
-
-    Promise.resolve().then(() => {
-      FLUSHING.set(editor, false);
-      editor.onChange({ operation: op });
-      editor.operations = [];
-    });
-  }
+  Promise.resolve().then(() => {
+    editor.onChange({ operation: op });
+    editor.operations = [];
+  });
 };

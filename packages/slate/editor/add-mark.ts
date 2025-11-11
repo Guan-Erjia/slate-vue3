@@ -3,7 +3,6 @@ import { Path } from "../interfaces/path";
 import { Text } from "../interfaces/text";
 import { Range } from "../interfaces/range";
 import { Transforms } from "../interfaces/transforms";
-import { FLUSHING } from "../utils/weak-maps";
 import { Editor, EditorInterface } from "../interfaces/editor";
 
 export const addMark: EditorInterface["addMark"] = (editor, key, value) => {
@@ -44,9 +43,7 @@ export const addMark: EditorInterface["addMark"] = (editor, key, value) => {
       };
 
       editor.marks = marks;
-      if (!FLUSHING.get(editor)) {
-        editor.onChange();
-      }
+      editor.onChange();
     }
   }
 };
