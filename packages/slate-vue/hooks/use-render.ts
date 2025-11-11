@@ -11,6 +11,7 @@ import {
   SLATE_INNER_PLACEHOLDER_RESIZE,
   SLATE_INNER_RENDER_CHUNK,
   SLATE_INNER_STATIC_CHUNK_ROOT,
+  SLATE_INNER_EDITOR_NODE_VERSION,
 } from "../utils/constants";
 import type {
   RenderElementProps,
@@ -101,6 +102,19 @@ export const useEditorVersion = () => {
   }
 
   return EDITOR_VERSION;
+};
+
+export const useEditorNodeVersion = () => {
+  const EDITOR_NODE_VERSION = inject<Ref<number>>(
+    SLATE_INNER_EDITOR_NODE_VERSION,
+  );
+  if (EDITOR_NODE_VERSION === undefined) {
+    throw new Error(
+      `The \`useEditorNodeVersion\` hook must be used inside the <Slate> component's context.`,
+    );
+  }
+
+  return EDITOR_NODE_VERSION;
 };
 
 export const useMarkPlaceholder = () => {

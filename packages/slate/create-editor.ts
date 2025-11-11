@@ -103,6 +103,7 @@ export const createEditor = (): Editor => {
     isVoid: () => false,
     markableVoid: () => false,
     onChange: () => {},
+    onImmediateChange: () => {},
 
     // Core
     apply: (...args) => apply(editor, ...args),

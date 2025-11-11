@@ -40,6 +40,8 @@ export const apply: WithEditorFirstArg<Editor["apply"]> = (editor, op) => {
     editor.marks = null;
   }
 
+  editor.onImmediateChange({ operation: op });
+
   Promise.resolve().then(() => {
     editor.onChange({ operation: op });
     editor.operations = [];

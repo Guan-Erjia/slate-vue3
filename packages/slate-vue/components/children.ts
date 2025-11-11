@@ -6,12 +6,21 @@ import {
   NODE_TO_PARENT,
   reconcileChildren,
 } from "slate-dom";
-import { computed, defineComponent, h, provide, renderList, VNode } from "vue";
+import {
+  computed,
+  defineComponent,
+  h,
+  provide,
+  renderList,
+  VNode,
+  watch,
+} from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
 import { SLATE_INNER_STATIC_CHUNK_ROOT } from "../utils/constants";
+import { useEditorNodeVersion } from "../hooks/use-render";
 
 /**
  * Children.
@@ -30,37 +39,46 @@ export const ChildrenComp = defineComponent({
         !editor.isInline(element),
     );
 
-    const chunkSize = computed(() =>
-      Editor.hasInlines(editor, element) ? null : editor.getChunkSize(element),
-    );
+    const chunkSize = Editor.hasInlines(editor, element)
+      ? null
+      : editor.getChunkSize(element);
 
-    const cacheTree = getChunkTreeForNode(editor, props.element);
-    const chunkTree = computed(() => {
-      if (!chunkSize.value) {
-        return null;
-      }
-      reconcileChildren(editor, {
-        chunkTree: cacheTree,
-        chunkSize: chunkSize.value,
-        onInsert: (n: Descendant, i: number) => {
-          NODE_TO_INDEX.set(n, i);
-          NODE_TO_PARENT.set(n, element);
+    const cacheTree = chunkSize
+      ? getChunkTreeForNode(editor, props.element)
+      : null;
+
+    const editorNodeVersion = useEditorNodeVersion();
+
+    if (cacheTree && chunkSize) {
+      watch(
+        editorNodeVersion,
+        () => {
+          reconcileChildren(editor, {
+            chunkTree: cacheTree,
+            chunkSize: chunkSize,
+            onInsert: (n: Descendant, i: number) => {
+              NODE_TO_INDEX.set(n, i);
+              NODE_TO_PARENT.set(n, element);
+            },
+            onUpdate: (n: Descendant, i: number) => {
+              NODE_TO_INDEX.set(n, i);
+              NODE_TO_PARENT.set(n, element);
+            },
+            onIndexChange: (n: Descendant, i: number) => {
+              NODE_TO_INDEX.set(n, i);
+            },
+          });
         },
-        onUpdate: (n: Descendant, i: number) => {
-          NODE_TO_INDEX.set(n, i);
-          NODE_TO_PARENT.set(n, element);
+        {
+          immediate: true,
         },
-        onIndexChange: (n: Descendant, i: number) => {
-          NODE_TO_INDEX.set(n, i);
-        },
-      });
-      return cacheTree;
-    });
+      );
+    }
 
     provide(SLATE_INNER_STATIC_CHUNK_ROOT, cacheTree);
 
     return () => {
-      if (chunkSize.value === null || isBlock.value) {
+      if (chunkSize === null || isBlock.value || !cacheTree) {
         return renderList(element.children, (n, i): VNode => {
           // Update the index and parent of each child.
           // PERF: If chunking is enabled, this is done while traversing the chunk tree
@@ -81,7 +99,7 @@ export const ChildrenComp = defineComponent({
         });
       } else {
         return h(ChunkComp, {
-          ancestor: chunkTree.value!,
+          ancestor: cacheTree,
         });
       }
     };

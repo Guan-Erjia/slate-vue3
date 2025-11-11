@@ -22,6 +22,7 @@ import {
   SLATE_USE_EDITOR,
   SLATE_INNER_RENDER_TEXT,
   SLATE_INNER_RENDER_CHUNK,
+  SLATE_INNER_EDITOR_NODE_VERSION,
 } from "../utils/constants";
 import {
   DecoratedRange,
@@ -42,6 +43,7 @@ import type {
 import {
   DOMEditor,
   EDITOR_TO_ON_CHANGE,
+  EDITOR_TO_ON_IMMEDIATE_CHANGE,
   MARK_PLACEHOLDER_SYMBOL,
 } from "slate-dom";
 import {
@@ -135,7 +137,9 @@ export const Slate = defineComponent({
 
     // 记数用，触发 changeEffect
     const editorVersion = ref(0);
+    const editorNodeVersion = ref(0);
     provide(SLATE_INNER_EDITOR_VERSION, editorVersion);
+    provide(SLATE_INNER_EDITOR_NODE_VERSION, editorNodeVersion);
 
     const markPlaceholder = computed(() => {
       if (
@@ -179,6 +183,20 @@ export const Slate = defineComponent({
             emit("valuechange", options);
         }
       });
+
+      EDITOR_TO_ON_IMMEDIATE_CHANGE.set(
+        editor,
+        (options?: { operation?: Operation }) => {
+          const type = options?.operation?.type;
+          if (
+            !type ||
+            ["set_selection", "insert_text", "remove_text"].includes(type)
+          ) {
+            return;
+          }
+          editorNodeVersion.value++;
+        },
+      );
     });
     onUnmounted(() => {
       document.removeEventListener("focusin", focusCb);
