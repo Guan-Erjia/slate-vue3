@@ -15,7 +15,7 @@ import {
   onUnmounted,
   renderList,
 } from "vue";
-import { useDecorate } from "../hooks/use-decorate";
+import { useDecorate } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
 import {
