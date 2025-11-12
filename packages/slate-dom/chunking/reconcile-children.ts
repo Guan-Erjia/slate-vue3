@@ -19,6 +19,7 @@ export interface ReconcileOptions extends ChunkTreeHelperOptions {
  */
 export const reconcileChildren = (
   editor: DOMEditor,
+  children: Descendant[],
   {
     chunkTree,
     chunkSize,
@@ -29,7 +30,7 @@ export const reconcileChildren = (
   }: ReconcileOptions,
 ) => {
   const chunkTreeHelper = new ChunkTreeHelper(chunkTree, { chunkSize, debug });
-  const childrenHelper = new ChildrenHelper(editor);
+  const childrenHelper = new ChildrenHelper(editor, children);
 
   let treeLeaf: ChunkLeaf | null;
 

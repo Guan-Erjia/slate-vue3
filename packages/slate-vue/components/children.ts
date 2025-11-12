@@ -6,15 +6,7 @@ import {
   NODE_TO_PARENT,
   reconcileChildren,
 } from "slate-dom";
-import {
-  computed,
-  defineComponent,
-  h,
-  provide,
-  renderList,
-  VNode,
-  watch,
-} from "vue";
+import { defineComponent, h, provide, renderList, VNode, watch } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
@@ -70,7 +62,7 @@ export const ChildrenComp = defineComponent({
     watch(
       editorNodeVersion,
       () => {
-        reconcileChildren(editor, {
+        reconcileChildren(editor, element.children, {
           chunkTree: cacheTree,
           chunkSize: chunkSize,
           onInsert: (n: Descendant, i: number) => {
