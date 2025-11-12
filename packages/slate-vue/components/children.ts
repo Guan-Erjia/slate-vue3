@@ -32,54 +32,18 @@ export const ChildrenComp = defineComponent({
     const editor = useEditor();
     const element = props.element;
 
-    const isBlock = computed(
-      () =>
-        !Editor.isEditor(element) &&
-        Element.isElement(element) &&
-        !editor.isInline(element),
-    );
+    const isBlock =
+      !Editor.isEditor(element) &&
+      Element.isElement(element) &&
+      !editor.isInline(element);
 
     const chunkSize = Editor.hasInlines(editor, element)
       ? null
       : editor.getChunkSize(element);
 
-    const cacheTree = chunkSize
-      ? getChunkTreeForNode(editor, props.element)
-      : null;
-
-    const editorNodeVersion = useEditorNodeVersion();
-
-    if (cacheTree && chunkSize) {
-      watch(
-        editorNodeVersion,
-        () => {
-          reconcileChildren(editor, {
-            chunkTree: cacheTree,
-            chunkSize: chunkSize,
-            onInsert: (n: Descendant, i: number) => {
-              NODE_TO_INDEX.set(n, i);
-              NODE_TO_PARENT.set(n, element);
-            },
-            onUpdate: (n: Descendant, i: number) => {
-              NODE_TO_INDEX.set(n, i);
-              NODE_TO_PARENT.set(n, element);
-            },
-            onIndexChange: (n: Descendant, i: number) => {
-              NODE_TO_INDEX.set(n, i);
-            },
-          });
-        },
-        {
-          immediate: true,
-        },
-      );
-    }
-
-    provide(SLATE_INNER_STATIC_CHUNK_ROOT, cacheTree);
-
-    return () => {
-      if (chunkSize === null || isBlock.value || !cacheTree) {
-        return renderList(element.children, (n, i): VNode => {
+    if (isBlock || chunkSize === null) {
+      return () =>
+        renderList(element.children, (n, i): VNode => {
           // Update the index and parent of each child.
           // PERF: If chunking is enabled, this is done while traversing the chunk tree
           // instead to eliminate unnecessary weak map operations.
@@ -97,11 +61,41 @@ export const ChildrenComp = defineComponent({
                 key: key.id,
               });
         });
-      } else {
-        return h(ChunkComp, {
-          ancestor: cacheTree,
+    }
+
+    const cacheTree = getChunkTreeForNode(editor, props.element);
+
+    const editorNodeVersion = useEditorNodeVersion();
+
+    watch(
+      editorNodeVersion,
+      () => {
+        reconcileChildren(editor, {
+          chunkTree: cacheTree,
+          chunkSize: chunkSize,
+          onInsert: (n: Descendant, i: number) => {
+            NODE_TO_INDEX.set(n, i);
+            NODE_TO_PARENT.set(n, element);
+          },
+          onUpdate: (n: Descendant, i: number) => {
+            NODE_TO_INDEX.set(n, i);
+            NODE_TO_PARENT.set(n, element);
+          },
+          onIndexChange: (n: Descendant, i: number) => {
+            NODE_TO_INDEX.set(n, i);
+          },
         });
-      }
-    };
+      },
+      {
+        immediate: true,
+      },
+    );
+
+    provide(SLATE_INNER_STATIC_CHUNK_ROOT, cacheTree);
+
+    return () =>
+      h(ChunkComp, {
+        ancestor: cacheTree,
+      });
   },
 });
