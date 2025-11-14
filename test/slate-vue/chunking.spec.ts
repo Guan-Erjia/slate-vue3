@@ -43,7 +43,7 @@ const reconcileEditor = (
 ) => {
   const chunkTree = getChunkTreeForNode(editor, editor);
 
-  reconcileChildren(editor, {
+  reconcileChildren(editor, editor.children, {
     chunkTree: chunkTree,
     chunkSize: 3,
     onInsert: (n: Descendant, i: number) => {
