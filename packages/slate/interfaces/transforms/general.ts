@@ -1,5 +1,4 @@
 import {
-  Ancestor,
   Descendant,
   Editor,
   Element,
@@ -13,6 +12,14 @@ import {
   Selection,
   Text,
 } from "../../index";
+import {
+  insertChildren,
+  modifyChildren,
+  modifyDescendant,
+  modifyLeaf,
+  removeChildren,
+  replaceChildren,
+} from "../../utils/modify";
 
 export interface GeneralTransforms {
   /**
@@ -27,15 +34,16 @@ export const GeneralTransforms: GeneralTransforms = {
     switch (op.type) {
       case "insert_node": {
         const { path, node } = op;
-        const parent = Node.parent(editor, path);
-        const index = path[path.length - 1];
-        if (index > parent.children.length) {
-          throw new Error(
-            `Cannot apply an 'insert_node' operation at path [${path}] because the destination is past the end of the node.`,
-          );
-        }
+        modifyChildren(editor, Path.parent(path), (children) => {
+          const index = path[path.length - 1];
+          if (index > children.length) {
+            throw new Error(
+              `Cannot apply an "insert_node" operation at path [${path}] because the destination is past the end of the node.`,
+            );
+          }
 
-        parent.children.splice(index, 0, node);
+          insertChildren(children, index, node);
+        });
 
         transformSelection = true;
         break;
@@ -44,10 +52,11 @@ export const GeneralTransforms: GeneralTransforms = {
       case "insert_text": {
         const { path, offset, text } = op;
         if (text.length === 0) break;
-        const node = Node.leaf(editor, path);
-        const before = node.text.slice(0, offset);
-        const after = node.text.slice(offset);
-        node.text = before + text + after;
+        modifyLeaf(editor, path, (node) => {
+          const before = node.text.slice(0, offset);
+          const after = node.text.slice(offset);
+          node.text = before + text + after;
+        });
 
         transformSelection = true;
         break;
@@ -55,25 +64,27 @@ export const GeneralTransforms: GeneralTransforms = {
 
       case "merge_node": {
         const { path } = op;
-        const node = Node.get(editor, path);
         const prevPath = Path.previous(path);
-        const prev = Node.get(editor, prevPath);
-        const parent = Node.parent(editor, path);
+        const prevIndex = prevPath[prevPath.length - 1];
         const index = path[path.length - 1];
+        modifyChildren(editor, Path.parent(path), (children) => {
+          const node = children[index];
+          const prev = children[prevIndex];
 
-        if (Text.isText(node) && Text.isText(prev)) {
-          prev.text += node.text;
-        } else if (!Text.isText(node) && !Text.isText(prev)) {
-          prev.children.push(...node.children);
-        } else {
-          throw new Error(
-            `Cannot apply a 'merge_node' operation at path [${path}] to nodes of different interfaces: ${Scrubber.stringify(
-              node,
-            )} ${Scrubber.stringify(prev)}`,
-          );
-        }
+          if (Text.isText(node) && Text.isText(prev)) {
+            prev.text = prev.text + node.text;
+          } else if (!Text.isText(node) && !Text.isText(prev)) {
+            prev.children.push(...node.children);
+          } else {
+            throw new Error(
+              `Cannot apply a "merge_node" operation at path [${path}] to nodes of different interfaces: ${Scrubber.stringify(
+                node,
+              )} ${Scrubber.stringify(prev)}`,
+            );
+          }
 
-        parent.children.splice(index, 1);
+          replaceChildren(children, prevIndex, 2, prev);
+        });
 
         transformSelection = true;
         break;
@@ -89,20 +100,21 @@ export const GeneralTransforms: GeneralTransforms = {
         }
 
         const node = Node.get(editor, path);
-        const parent = Node.parent(editor, path);
         const index = path[path.length - 1];
-
         // This is tricky, but since the `path` and `newPath` both refer to
         // the same snapshot in time, there's a mismatch. After either
         // removing the original position, the second step's path can be out
         // of date. So instead of using the `op.newPath` directly, we
         // transform `op.path` to ascertain what the `newPath` would be after
         // the operation was applied.
-        parent.children.splice(index, 1);
+        modifyChildren(editor, Path.parent(path), (children) =>
+          removeChildren(children, index, 1),
+        );
         const truePath = Path.transform(path, op)!;
-        const newParent = Node.get(editor, Path.parent(truePath)) as Ancestor;
         const newIndex = truePath[truePath.length - 1];
-        newParent.children.splice(newIndex, 0, node);
+        modifyChildren(editor, Path.parent(truePath), (children) =>
+          insertChildren(children, newIndex, node),
+        );
         transformSelection = true;
         break;
       }
@@ -110,8 +122,9 @@ export const GeneralTransforms: GeneralTransforms = {
       case "remove_node": {
         const { path } = op;
         const index = path[path.length - 1];
-        const parent = Node.parent(editor, path);
-        parent.children.splice(index, 1);
+        modifyChildren(editor, Path.parent(path), (children) =>
+          removeChildren(children, index, 1),
+        );
 
         // Transform all the points in the value, but if the point was in the
         // node that was removed we need to update the range or remove it.
@@ -173,10 +186,11 @@ export const GeneralTransforms: GeneralTransforms = {
       case "remove_text": {
         const { path, offset, text } = op;
         if (text.length === 0) break;
-        const node = Node.leaf(editor, path);
-        const before = node.text.slice(0, offset);
-        const after = node.text.slice(offset + text.length);
-        node.text = before + after;
+        modifyLeaf(editor, path, (node) => {
+          const before = node.text.slice(0, offset);
+          const after = node.text.slice(offset + text.length);
+          node.text = before + after;
+        });
 
         transformSelection = true;
         break;
@@ -189,28 +203,28 @@ export const GeneralTransforms: GeneralTransforms = {
           throw new Error(`Cannot set properties on the root node!`);
         }
 
-        const node = Node.get(editor, path);
+        modifyDescendant(editor, path, (node) => {
+          for (const key in newProperties) {
+            if (key === "children" || key === "text") {
+              throw new Error(`Cannot set the "${key}" property of nodes!`);
+            }
 
-        for (const key in newProperties) {
-          if (key === "children" || key === "text") {
-            throw new Error(`Cannot set the '${key}' property of nodes!`);
+            const value = newProperties[<keyof Node>key];
+
+            if (value == null) {
+              delete node[<keyof Node>key];
+            } else {
+              node[<keyof Node>key] = value;
+            }
           }
 
-          const value = newProperties[<keyof Node>key];
-
-          if (value == null) {
-            delete node[<keyof Node>key];
-          } else {
-            node[<keyof Node>key] = value;
+          // properties that were previously defined, but are now missing, must be deleted
+          for (const key in properties) {
+            if (!Object.hasOwn(newProperties, key)) {
+              delete node[<keyof Node>key];
+            }
           }
-        }
-
-        // properties that were previously defined, but are now missing, must be deleted
-        for (const key in properties) {
-          if (!Object.prototype.hasOwnProperty.call(newProperties, key)) {
-            delete node[<keyof Node>key];
-          }
-        }
+        });
 
         break;
       }
@@ -226,7 +240,7 @@ export const GeneralTransforms: GeneralTransforms = {
         if (editor.selection == null) {
           if (!Range.isRange(newProperties)) {
             throw new Error(
-              `Cannot apply an incomplete 'set_selection' operation properties ${Scrubber.stringify(
+              `Cannot apply an incomplete "set_selection" operation properties ${Scrubber.stringify(
                 newProperties,
               )} when there is no current selection.`,
             );
@@ -242,7 +256,7 @@ export const GeneralTransforms: GeneralTransforms = {
 
           if (value == null) {
             if (key === "anchor" || key === "focus") {
-              throw new Error(`Cannot remove the '${key}' selection property`);
+              throw new Error(`Cannot remove the "${key}" selection property`);
             }
 
             delete selection[<keyof Range>key];
@@ -258,38 +272,45 @@ export const GeneralTransforms: GeneralTransforms = {
 
       case "split_node": {
         const { path, position, properties } = op;
+        const index = path[path.length - 1];
 
         if (path.length === 0) {
           throw new Error(
-            `Cannot apply a 'split_node' operation at path [${path}] because the root node cannot be split.`,
+            `Cannot apply a "split_node" operation at path [${path}] because the root node cannot be split.`,
           );
         }
 
-        const node = Node.get(editor, path);
-        const parent = Node.parent(editor, path);
-        const index = path[path.length - 1];
-        let newNode: Descendant;
+        modifyChildren(editor, Path.parent(path), (children) => {
+          const node = children[index];
+          let newNode: Descendant;
+          let nextNode: Descendant;
 
-        if (Text.isText(node)) {
-          const before = node.text.slice(0, position);
-          const after = node.text.slice(position);
-          node.text = before;
-          newNode = {
-            ...(properties as Partial<Text>),
-            text: after,
-          };
-        } else {
-          const before = node.children.slice(0, position);
-          const after = node.children.slice(position);
-          node.children = before;
+          if (Text.isText(node)) {
+            const before = node.text.slice(0, position);
+            const after = node.text.slice(position);
+            newNode = {
+              ...node,
+              text: before,
+            };
+            nextNode = {
+              ...(properties as Partial<Text>),
+              text: after,
+            };
+          } else {
+            const before = node.children.slice(0, position);
+            const after = node.children.slice(position);
+            newNode = {
+              ...node,
+              children: before,
+            };
+            nextNode = {
+              ...(properties as Partial<Element>),
+              children: after,
+            };
+          }
 
-          newNode = {
-            ...(properties as Partial<Element>),
-            children: after,
-          };
-        }
-
-        parent.children.splice(index + 1, 0, newNode);
+          replaceChildren(children, index, 1, newNode, nextNode);
+        });
 
         transformSelection = true;
         break;
