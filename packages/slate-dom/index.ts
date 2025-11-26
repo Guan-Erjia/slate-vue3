@@ -1,79 +1,16 @@
 // Plugin
-export { DOMEditor, type DOMEditorInterface } from "./plugin/dom-editor";
-export { withDOM } from "./plugin/with-dom";
+export * from "./plugin/dom-editor";
+export * from "./plugin/with-dom";
 
 // Utils
-export { applyStringDiff, normalizeStringDiff } from "./utils/diff-text";
-export type { StringDiff, TextDiff } from "./utils/diff-text";
+export * from "./utils/diff-text";
+export * from "./utils/diff-text";
+export * from "./utils/dom";
+export * from "./utils/environment";
+export * from "./utils/hotkeys";
+export * from "./utils/key";
+export * from "./utils/range-list";
 
-export {
-  closestShadowAware,
-  containsShadowAware,
-  getActiveElement,
-  getDefaultView,
-  getSelection,
-  hasShadowRoot,
-  isAfter,
-  isBefore,
-  isDOMElement,
-  isDOMNode,
-  isDOMSelection,
-  isPlainTextOnlyPaste,
-  isTrackedMutation,
-  normalizeDOMPoint,
-} from "./utils/dom";
+export * from "./chunking";
 
-export {
-  CAN_USE_DOM,
-  HAS_BEFORE_INPUT_SUPPORT,
-  IS_ANDROID,
-  IS_CHROME,
-  IS_FIREFOX,
-  IS_FIREFOX_LEGACY,
-  IS_IOS,
-  IS_WEBKIT,
-  IS_UC_MOBILE,
-  IS_WECHATBROWSER,
-} from "./utils/environment";
-
-export { Hotkeys } from "./utils/hotkeys";
-
-export { Key } from "./utils/key";
-
-export {
-  isElementDecorationsEqual,
-  isTextDecorationsEqual,
-  splitDecorationsByChild,
-} from "./utils/range-list";
-
-export {
-  getChunkTreeForNode,
-  reconcileChildren,
-  KEY_TO_CHUNK_TREE,
-  type ChunkAncestor,
-  type ChunkTree,
-  type ChunkLeaf,
-  type ChunkNode,
-  type ChunkDescendant,
-  type Chunk,
-  type ReconcileOptions,
-} from "./chunking";
-
-export {
-  EDITOR_TO_ELEMENT,
-  EDITOR_TO_KEY_TO_ELEMENT,
-  EDITOR_TO_ON_CHANGE,
-  EDITOR_TO_ON_IMMEDIATE_CHANGE,
-  EDITOR_TO_USER_MARKS,
-  EDITOR_TO_USER_SELECTION,
-  EDITOR_TO_WINDOW,
-  ELEMENT_TO_NODE,
-  IS_COMPOSING,
-  IS_FOCUSED,
-  IS_READ_ONLY,
-  MARK_PLACEHOLDER_SYMBOL,
-  NODE_TO_ELEMENT,
-  NODE_TO_INDEX,
-  NODE_TO_KEY,
-  NODE_TO_PARENT,
-} from "./utils/weak-maps";
+export * from "./utils/weak-maps";
