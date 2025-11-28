@@ -28,6 +28,7 @@ import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
+import { provideInnerElementDR } from "../render/decorate";
 
 interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
@@ -103,6 +104,8 @@ export const ElementComp = defineComponent({
       }
       return attr;
     });
+
+    provideInnerElementDR(element);
 
     const children = computed<VNode | VNodeChild[]>(() => {
       if (!Editor.isVoid(editor, element)) {

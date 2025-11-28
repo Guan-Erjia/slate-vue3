@@ -13,6 +13,7 @@ import { ChunkComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
 import { SLATE_INNER_STATIC_CHUNK_ROOT } from "../utils/constants";
 import { useEditorNodeVersion } from "../hooks/use-render";
+import { provideInnerElementDR } from "../render/decorate";
 
 /**
  * Children.
@@ -34,6 +35,8 @@ export const ChildrenComp = defineComponent({
       : editor.getChunkSize(element);
 
     if (isBlock || chunkSize === null) {
+      provideInnerElementDR(element);
+
       return () =>
         renderList(element.children, (n, i): VNode => {
           // Update the index and parent of each child.

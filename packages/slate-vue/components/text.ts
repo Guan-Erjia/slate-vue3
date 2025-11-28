@@ -15,7 +15,6 @@ import {
   onUnmounted,
   renderList,
 } from "vue";
-import { useDecorate } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
 import {
@@ -26,6 +25,10 @@ import {
 } from "../hooks/use-render";
 import { DEFAULT_DECORATE_FN } from "./utils";
 import { PlaceholderComp } from "./placeholder";
+import {
+  injectInnerDecorateFn,
+  injectInnerElementDR,
+} from "../render/decorate";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -34,21 +37,20 @@ export const TextComp = defineComponent({
     const { text, element } = props;
     const editor = useEditor();
     const textRef = ref<HTMLSpanElement>();
-    const decorate = useDecorate();
+    const decorate = injectInnerDecorateFn();
     const markPlaceholder = useMarkPlaceholder();
 
+    const elementDR = injectInnerElementDR();
     const leaves = computed(() => {
       if (decorate === DEFAULT_DECORATE_FN) {
         return [{ leaf: text }];
       }
-      const elemPath = DOMEditor.findPath(editor, element);
       const textPath = DOMEditor.findPath(editor, text);
       const textDs = decorate([text, textPath]);
-      const elemDs = decorate([element, elemPath]);
       const range = Editor.range(editor, textPath);
-      elemDs.forEach((dec) => {
-        textDs.push(Range.intersection(dec, range)!);
-      });
+      for (const dr of elementDR.value) {
+        textDs.push(Range.intersection(dr, range)!);
+      }
       if (markPlaceholder.value) {
         textDs.unshift(markPlaceholder.value);
       }

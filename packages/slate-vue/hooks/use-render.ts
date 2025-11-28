@@ -12,7 +12,6 @@ import {
   SLATE_INNER_RENDER_CHUNK,
   SLATE_INNER_STATIC_CHUNK_ROOT,
   SLATE_INNER_EDITOR_NODE_VERSION,
-  SLATE_INNER_RENDER_DECORATE,
 } from "../utils/constants";
 import type {
   RenderElementProps,
@@ -21,7 +20,7 @@ import type {
   RenderTextProps,
   RenderChunkProps,
 } from "../utils/interface";
-import { BasePoint, DecoratedRange, NodeEntry } from "slate";
+import { BasePoint } from "slate";
 import { ChunkTree } from "slate-dom";
 
 export const useRenderElement = () => {
@@ -82,21 +81,6 @@ export const useRenderChunk = () => {
     );
   }
   return CHUNK_RENDER;
-};
-
-/**
- * Get the current `decorate` prop of the editable.
- */
-export const useDecorate = (): ((entry: NodeEntry) => DecoratedRange[]) => {
-  const decorate = inject<(entry: NodeEntry) => DecoratedRange[]>(
-    SLATE_INNER_RENDER_DECORATE,
-  );
-  if (decorate === undefined) {
-    throw new Error(
-      `The \`useDecorate\` hook must be used inside the <Slate> component's context.`,
-    );
-  }
-  return decorate;
 };
 
 export const useChunkRoot = () => {

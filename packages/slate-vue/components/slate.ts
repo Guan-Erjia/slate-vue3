@@ -18,7 +18,6 @@ import {
   SLATE_USE_FOCUSED,
   SLATE_USE_READ_ONLY,
   SLATE_USE_SELECTION,
-  SLATE_INNER_RENDER_DECORATE,
   SLATE_USE_EDITOR,
   SLATE_INNER_RENDER_TEXT,
   SLATE_INNER_RENDER_CHUNK,
@@ -54,6 +53,7 @@ import {
   DEFAULT_PLACEHOLDER_RENDER,
   DEFAULT_TEXT_RENDER,
 } from "./utils";
+import { provideInnerDecorateFn } from "../render/decorate";
 
 export const Slate = defineComponent({
   name: "slate-editor",
@@ -117,7 +117,7 @@ export const Slate = defineComponent({
       );
     }
     provide(SLATE_USE_EDITOR, editor);
-    provide(SLATE_INNER_RENDER_DECORATE, decorate);
+    provideInnerDecorateFn(decorate);
     provide(SLATE_INNER_RENDER_ELEMENT, renderElement);
     provide(SLATE_INNER_RENDER_LEAF, renderLeaf);
     provide(SLATE_INNER_RENDER_TEXT, renderText);
