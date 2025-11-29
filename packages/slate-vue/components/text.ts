@@ -68,6 +68,7 @@ export const TextComp = defineComponent({
 
     const renderText = useRenderText();
 
+    let key = 0;
     const children = computed(() =>
       renderList(leaves.value, (leaf, i) =>
         h(LeafComp, {
@@ -75,7 +76,7 @@ export const TextComp = defineComponent({
           leaf: leaf.leaf,
           isLast: props.isLast && i === leaves.value.length - 1,
           leafPosition: leaf.position,
-          key: DOMEditor.findKey(editor, leaf.leaf).id,
+          key: key++,
         }),
       ),
     );

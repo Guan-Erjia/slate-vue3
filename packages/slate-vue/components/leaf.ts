@@ -1,7 +1,5 @@
 import { Text, LeafPosition } from "slate";
-import { DOMEditor } from "slate-dom";
 import { h, computed, defineComponent } from "vue";
-import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
 import { usePlaceholderShow } from "../render/placeholder";
 import { PlaceholderComp } from "./placeholder";
@@ -20,7 +18,6 @@ export const LeafComp = defineComponent({
     const leaf = props.leaf;
     const isLast = props.isLast;
     const leafPosition = props.leafPosition;
-    const editor = useEditor();
 
     const renderLeaf = useRenderLeaf();
     const showPlaceholder = usePlaceholderShow();
@@ -32,7 +29,6 @@ export const LeafComp = defineComponent({
               text,
               leaf,
               isLast: true,
-              key: DOMEditor.findKey(editor, leaf).id,
             }),
             h(PlaceholderComp),
           ]
@@ -40,7 +36,6 @@ export const LeafComp = defineComponent({
             text,
             leaf,
             isLast,
-            key: DOMEditor.findKey(editor, leaf).id,
           });
     });
 
