@@ -16,13 +16,12 @@ import {
   renderList,
 } from "vue";
 import { useEditor } from "../hooks/use-editor";
-import { StringComp } from "./string";
-import { useMarkPlaceholder, usePlaceholderShow } from "../render/placeholder";
+import { useMarkPlaceholder } from "../render/placeholder";
 import { DEFAULT_DECORATE_FN } from "./utils";
-import { PlaceholderComp } from "./placeholder";
 import { injectDecorateFn, injectInnerElementDR } from "../render/decorate";
 import { injectLastNodeIndex } from "../render/last";
-import { useRenderLeaf, useRenderText } from "../render/fn";
+import { useRenderText } from "../render/fn";
+import { LeafComp } from "./leaf";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -74,38 +73,25 @@ export const TextComp = defineComponent({
       () => NODE_TO_INDEX.get(text) === lastNodeIndex.value,
     );
 
-    const renderLeaf = useRenderLeaf();
     const renderText = useRenderText();
-    const showPlaceholder = usePlaceholderShow();
+
+    const children = computed(() =>
+      renderList(leaves.value, (leaf, i) =>
+        h(LeafComp, {
+          text,
+          leaf: leaf.leaf,
+          isLast: isLastText.value && i === leaves.value.length - 1,
+          leafPosition: leaf.position,
+          key: DOMEditor.findKey(editor, leaf.leaf).id,
+        }),
+      ),
+    );
 
     return () =>
       renderText({
         text,
         attributes: { "data-slate-node": "text", ref: textRef },
-        children: renderList(leaves.value, (leaf, i) =>
-          renderLeaf({
-            text,
-            leaf: leaf.leaf,
-            leafPosition: leaf.position,
-            attributes: { "data-slate-leaf": true },
-            children: showPlaceholder.value
-              ? [
-                  h(StringComp, {
-                    text,
-                    leaf: leaf.leaf,
-                    isLast: true,
-                    key: DOMEditor.findKey(editor, leaf.leaf).id,
-                  }),
-                  h(PlaceholderComp),
-                ]
-              : h(StringComp, {
-                  text,
-                  leaf: leaf.leaf,
-                  isLast: isLastText.value && i === leaves.value.length - 1,
-                  key: DOMEditor.findKey(editor, leaf.leaf).id,
-                }),
-          }),
-        ),
+        children: children.value,
       });
   },
 });

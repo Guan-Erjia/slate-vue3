@@ -121,7 +121,7 @@ export const ElementComp = defineComponent({
       NODE_TO_INDEX.set(text, 0);
       NODE_TO_PARENT.set(text, element);
       const tag = isInline.value ? "span" : "div";
-      return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { element, text }));
+      return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { text }));
     });
 
     if (IS_FIREFOX) {

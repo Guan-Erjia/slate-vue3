@@ -6,7 +6,7 @@ import {
   NODE_TO_PARENT,
   reconcileChildren,
 } from "slate-dom";
-import { defineComponent, h, provide, renderList, VNode, watch } from "vue";
+import { defineComponent, h, renderList, VNode, watch } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
@@ -54,7 +54,6 @@ export const ChildrenComp = defineComponent({
           return Text.isText(n)
             ? h(TextComp, {
                 text: n,
-                element: element,
                 key: key.id,
               })
             : h(ElementComp, {
