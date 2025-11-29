@@ -9,19 +9,11 @@ import {
   VNode,
 } from "vue";
 import {
-  SLATE_INNER_EDITOR_VERSION,
-  SLATE_INNER_RENDER_ELEMENT,
-  SLATE_INNER_RENDER_LEAF,
-  SLATE_INNER_RENDER_PLACEHOLDER,
-  SLATE_INNER_MARK_PLACEHOLDER,
   SLATE_USE_COMPOSING,
   SLATE_USE_FOCUSED,
   SLATE_USE_READ_ONLY,
   SLATE_USE_SELECTION,
   SLATE_USE_EDITOR,
-  SLATE_INNER_RENDER_TEXT,
-  SLATE_INNER_RENDER_CHUNK,
-  SLATE_INNER_EDITOR_NODE_VERSION,
 } from "../utils/constants";
 import {
   DecoratedRange,
@@ -53,7 +45,21 @@ import {
   DEFAULT_PLACEHOLDER_RENDER,
   DEFAULT_TEXT_RENDER,
 } from "./utils";
-import { provideInnerDecorateFn } from "../render/decorate";
+import { provideDecorateFn } from "../render/decorate";
+import {
+  provideRenderElement,
+  provideRenderLeaf,
+  provideRenderText,
+} from "../render/fn";
+import {
+  provideEditorNodeVersion,
+  provideEditorVersion,
+} from "../render/version";
+import {
+  provideMarkPlaceholder,
+  provideRenderPlaceholder,
+} from "../render/placeholder";
+import { provideRenderChunk } from "../render/chunk";
 
 export const Slate = defineComponent({
   name: "slate-editor",
@@ -94,9 +100,9 @@ export const Slate = defineComponent({
       decorate: (entry: NodeEntry) => DecoratedRange[];
       renderElement: (props: RenderElementProps) => VNode;
       renderLeaf: (props: RenderLeafProps) => VNode;
-      renderText?: (props: RenderTextProps) => VNode;
+      renderText: (props: RenderTextProps) => VNode;
+      renderChunk: (props: RenderChunkProps) => VNode;
       renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
-      renderChunk?: (props: RenderChunkProps) => VNode;
     },
     { slots, emit },
   ) {
@@ -117,12 +123,12 @@ export const Slate = defineComponent({
       );
     }
     provide(SLATE_USE_EDITOR, editor);
-    provideInnerDecorateFn(decorate);
-    provide(SLATE_INNER_RENDER_ELEMENT, renderElement);
-    provide(SLATE_INNER_RENDER_LEAF, renderLeaf);
-    provide(SLATE_INNER_RENDER_TEXT, renderText);
-    provide(SLATE_INNER_RENDER_PLACEHOLDER, renderPlaceholder);
-    provide(SLATE_INNER_RENDER_CHUNK, renderChunk);
+    provideDecorateFn(decorate);
+    provideRenderElement(renderElement);
+    provideRenderLeaf(renderLeaf);
+    provideRenderText(renderText);
+    provideRenderPlaceholder(renderPlaceholder);
+    provideRenderChunk(renderChunk);
 
     const isFocus = ref(DOMEditor.isFocused(editor));
     const selection = computed(() => editor.selection);
@@ -138,8 +144,8 @@ export const Slate = defineComponent({
     // 记数用，触发 changeEffect
     const editorVersion = ref(0);
     const editorNodeVersion = ref(0);
-    provide(SLATE_INNER_EDITOR_VERSION, editorVersion);
-    provide(SLATE_INNER_EDITOR_NODE_VERSION, editorNodeVersion);
+    provideEditorVersion(editorVersion);
+    provideEditorNodeVersion(editorNodeVersion);
 
     const markPlaceholder = computed(() => {
       if (
@@ -167,7 +173,7 @@ export const Slate = defineComponent({
       }
       return null;
     });
-    provide(SLATE_INNER_MARK_PLACEHOLDER, markPlaceholder);
+    provideMarkPlaceholder(markPlaceholder);
 
     onMounted(() => {
       document.addEventListener("focusin", focusCb);
@@ -175,10 +181,10 @@ export const Slate = defineComponent({
       EDITOR_TO_ON_CHANGE.set(editor, (options?: { operation?: Operation }) => {
         editorVersion.value++;
         emit("change", options);
-        if (editor.operations.find((op) => op.type === "set_selection")) {
+        if (editor.operations.some((op) => op.type === "set_selection")) {
           emit("selectionchange", options);
         }
-        if (editor.operations.find((op) => op.type !== "set_selection")) {
+        if (editor.operations.some((op) => op.type !== "set_selection")) {
           emit("valuechange", options);
         }
       });

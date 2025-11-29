@@ -3,7 +3,7 @@ import {
   usePlaceholder,
   usePlaceholderResize,
   useRenderPlaceholder,
-} from "../hooks/use-render";
+} from "../render/placeholder";
 import { IS_WEBKIT } from "slate-dom";
 
 const style: CSSProperties = {

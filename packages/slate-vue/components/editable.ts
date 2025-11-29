@@ -55,16 +55,16 @@ import {
 import { useEditor } from "../hooks/use-editor";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
-import { useEditorVersion } from "../hooks/use-render";
 import {
   AndroidManager,
   useAndroidManager,
 } from "../hooks/use-android-manager";
+import { useEditorVersion } from "../render/version";
 import {
-  SLATE_INNER_PLACEHOLDER,
-  SLATE_INNER_PLACEHOLDER_RESIZE,
-  SLATE_INNER_PLACEHOLDER_SHOW,
-} from "../utils/constants";
+  providePlaceholder,
+  providePlaceholderResize,
+  providePlaceholderShow,
+} from "../render/placeholder";
 
 export const Editable = defineComponent({
   name: "slate-editable",
@@ -1430,19 +1430,16 @@ export const Editable = defineComponent({
 
     const showPlaceholder = computed(
       () =>
-        placeholder &&
+        Boolean(placeholder) &&
         editor.children?.length === 1 &&
         Array.from(Node.texts(editor)).length === 1 &&
         Node.string(editor) === "" &&
         !isComposing.value,
     );
 
-    provide(
-      SLATE_INNER_PLACEHOLDER,
-      computed(() => placeholder),
-    );
-    provide(SLATE_INNER_PLACEHOLDER_SHOW, showPlaceholder);
-    provide(SLATE_INNER_PLACEHOLDER_RESIZE, onPlaceholderResize);
+    providePlaceholder(computed(() => placeholder));
+    providePlaceholderShow(showPlaceholder);
+    providePlaceholderResize(onPlaceholderResize);
 
     return () =>
       h(

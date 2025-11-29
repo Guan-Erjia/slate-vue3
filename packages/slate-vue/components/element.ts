@@ -26,13 +26,13 @@ import {
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
-import { useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
-import { provideInnerElementDR } from "../render/decorate";
+import { provideElementDR } from "../render/decorate";
 import {
-  provideInnerLastElementNodeIndex,
-  provideInnerIsLastEmptyBlock,
+  provideLastElementNodeIndex,
+  provideIsLastEmptyBlock,
 } from "../render/last";
+import { useRenderElement } from "../render/fn";
 
 interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
@@ -109,9 +109,9 @@ export const ElementComp = defineComponent({
       return attr;
     });
 
-    provideInnerElementDR(element);
-    provideInnerLastElementNodeIndex(element);
-    provideInnerIsLastEmptyBlock(element);
+    provideElementDR(element);
+    provideLastElementNodeIndex(element);
+    provideIsLastEmptyBlock(element);
 
     const children = computed<VNode | VNodeChild[]>(() => {
       if (!Editor.isVoid(editor, element)) {

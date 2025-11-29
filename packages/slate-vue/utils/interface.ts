@@ -2,7 +2,6 @@ import type { Text, Element, LeafPosition, Editor } from "slate";
 import type {
   HTMLAttributes,
   VNode,
-  VNodeArrayChildren,
   VNodeChild,
   VNodeProps,
   VNodeRef,

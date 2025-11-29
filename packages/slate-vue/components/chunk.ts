@@ -1,7 +1,7 @@
 import { ChunkAncestor } from "slate-dom";
 import { defineComponent, h, renderList, VNode } from "vue";
-import { useRenderChunk, useChunkRoot } from "../hooks/use-render";
 import { ElementComp } from "./element";
+import { useChunkRoot, useRenderChunk } from "../render/chunk";
 
 export const ChunkComp = defineComponent({
   name: "slate-chunk",

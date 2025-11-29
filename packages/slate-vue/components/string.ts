@@ -3,7 +3,7 @@ import { IS_ANDROID, IS_FIREFOX, MARK_PLACEHOLDER_SYMBOL } from "slate-dom";
 import { computed, defineComponent, h } from "vue";
 import { useEditor } from "../hooks/use-editor";
 import { useElement } from "../hooks/use-element";
-import { injectInnerIsLastEmptyBlock } from "../render/last";
+import { injectIsLastEmptyBlock } from "../render/last";
 
 export const StringComp = defineComponent({
   name: "slate-string",
@@ -21,7 +21,7 @@ export const StringComp = defineComponent({
     // COMPAT: If this is the last text node in an empty block, render a zero-
     // width space that will convert into a line break when copying and pasting
     // to support expected plain text.
-    const isLastEmptyBlock = injectInnerIsLastEmptyBlock();
+    const isLastEmptyBlock = injectIsLastEmptyBlock();
     const isLineBreak = computed(() => {
       return (
         leaf.text === "" &&

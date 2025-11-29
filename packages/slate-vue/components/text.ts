@@ -17,19 +17,12 @@ import {
 } from "vue";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
-import {
-  useRenderLeaf,
-  useMarkPlaceholder,
-  useRenderText,
-  usePlaceholderShow,
-} from "../hooks/use-render";
+import { useMarkPlaceholder, usePlaceholderShow } from "../render/placeholder";
 import { DEFAULT_DECORATE_FN } from "./utils";
 import { PlaceholderComp } from "./placeholder";
-import {
-  injectInnerDecorateFn,
-  injectInnerElementDR,
-} from "../render/decorate";
-import { injectInnerLastNodeIndex } from "../render/last";
+import { injectDecorateFn, injectInnerElementDR } from "../render/decorate";
+import { injectLastNodeIndex } from "../render/last";
+import { useRenderLeaf, useRenderText } from "../render/fn";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -40,7 +33,7 @@ export const TextComp = defineComponent({
     const textRef = ref<HTMLSpanElement>();
     const markPlaceholder = useMarkPlaceholder();
 
-    const decorate = injectInnerDecorateFn();
+    const decorate = injectDecorateFn();
     const elementDR = injectInnerElementDR();
     const leaves = computed(() => {
       if (decorate === DEFAULT_DECORATE_FN) {
@@ -76,7 +69,7 @@ export const TextComp = defineComponent({
       }
     });
 
-    const lastNodeIndex = injectInnerLastNodeIndex();
+    const lastNodeIndex = injectLastNodeIndex();
     const isLastText = computed(
       () => NODE_TO_INDEX.get(text) === lastNodeIndex.value,
     );

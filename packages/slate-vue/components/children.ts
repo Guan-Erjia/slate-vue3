@@ -11,13 +11,13 @@ import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
-import { SLATE_INNER_STATIC_CHUNK_ROOT } from "../utils/constants";
-import { useEditorNodeVersion } from "../hooks/use-render";
-import { provideInnerElementDR } from "../render/decorate";
+import { provideElementDR } from "../render/decorate";
+import { useEditorNodeVersion } from "../render/version";
 import {
-  provideInnerLastElementNodeIndex,
-  provideInnerIsLastEmptyBlock,
+  provideIsLastEmptyBlock,
+  provideLastElementNodeIndex,
 } from "../render/last";
+import { provideChunkRoot } from "../render/chunk";
 
 /**
  * Children.
@@ -39,9 +39,9 @@ export const ChildrenComp = defineComponent({
       : editor.getChunkSize(element);
 
     if (isBlock || chunkSize === null) {
-      provideInnerElementDR(element);
-      provideInnerLastElementNodeIndex(element);
-      provideInnerIsLastEmptyBlock(element);
+      provideElementDR(element);
+      provideLastElementNodeIndex(element);
+      provideIsLastEmptyBlock(element);
 
       return () =>
         renderList(element.children, (n, i): VNode => {
@@ -92,7 +92,7 @@ export const ChildrenComp = defineComponent({
       },
     );
 
-    provide(SLATE_INNER_STATIC_CHUNK_ROOT, cacheTree);
+    provideChunkRoot(cacheTree);
 
     return () =>
       h(ChunkComp, {

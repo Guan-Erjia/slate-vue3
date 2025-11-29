@@ -1,23 +1,9 @@
-export type {
-  RenderElementProps,
-  RenderLeafProps,
-  RenderPlaceholderProps,
-  RenderTextProps,
-  RenderChunkProps,
-} from "./utils/interface";
+export * from "./utils/interface";
 
 export { Slate } from "./components/slate";
 export { Editable } from "./components/editable";
 
-export {
-  DEFAULT_ELEMENT_RENDER,
-  DEFAULT_LEAF_RENDER,
-  DEFAULT_TEXT_RENDER,
-  DEFAULT_CHUNK_RENDER,
-  DEFAULT_PLACEHOLDER_RENDER,
-  DEFAULT_SCROLL_INTO_VIEW,
-  DEFAULT_DECORATE_FN,
-} from "./components/utils";
+export * from "./components/utils";
 
 // Hooks
 export { useComposing } from "./hooks/use-composing";
