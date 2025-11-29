@@ -99,7 +99,7 @@ export const ElementComp = defineComponent({
       }
       if (Editor.isVoid(editor, element)) {
         attr["data-slate-void"] = true;
-        if (!readOnly && isInline.value) {
+        if (!readOnly.value && isInline.value) {
           attr.contenteditable = false;
         }
       }
