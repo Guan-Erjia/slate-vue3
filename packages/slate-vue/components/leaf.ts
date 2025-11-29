@@ -1,11 +1,6 @@
 import { Text, LeafPosition } from "slate";
-import {
-  DOMEditor,
-  EDITOR_TO_KEY_TO_ELEMENT,
-  ELEMENT_TO_NODE,
-  NODE_TO_ELEMENT,
-} from "slate-dom";
-import { h, ref, computed, defineComponent, onMounted, onUnmounted } from "vue";
+import { DOMEditor } from "slate-dom";
+import { h, computed, defineComponent } from "vue";
 import { useEditor } from "../hooks/use-editor";
 import { StringComp } from "./string";
 import { usePlaceholderShow } from "../render/placeholder";
@@ -26,24 +21,6 @@ export const LeafComp = defineComponent({
     const isLast = props.isLast;
     const leafPosition = props.leafPosition;
     const editor = useEditor();
-    const textRef = ref<HTMLSpanElement>();
-
-    onMounted(() => {
-      const key = DOMEditor.findKey(editor, text);
-      if (textRef.value) {
-        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-        KEY_TO_ELEMENT?.set(key, textRef.value);
-        ELEMENT_TO_NODE.set(textRef.value, text);
-        NODE_TO_ELEMENT.set(text, textRef.value);
-      }
-    });
-
-    onUnmounted(() => {
-      NODE_TO_ELEMENT.delete(text);
-      if (textRef.value) {
-        ELEMENT_TO_NODE.delete(textRef.value);
-      }
-    });
 
     const renderLeaf = useRenderLeaf();
     const showPlaceholder = usePlaceholderShow();
