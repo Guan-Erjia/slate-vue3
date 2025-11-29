@@ -1,4 +1,4 @@
-import { Editor, Text, Range, Element } from "slate";
+import { Editor, Text, Range } from "slate";
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -29,17 +29,18 @@ import {
   injectInnerDecorateFn,
   injectInnerElementDR,
 } from "../render/decorate";
+import { injectInnerLastNodeIndex } from "../render/last";
 
 export const TextComp = defineComponent({
   name: "slate-text",
-  props: ["text", "element"],
-  setup(props: { text: Text; element: Element }) {
-    const { text, element } = props;
+  props: ["text"],
+  setup(props: { text: Text }) {
+    const text = props.text;
     const editor = useEditor();
     const textRef = ref<HTMLSpanElement>();
-    const decorate = injectInnerDecorateFn();
     const markPlaceholder = useMarkPlaceholder();
 
+    const decorate = injectInnerDecorateFn();
     const elementDR = injectInnerElementDR();
     const leaves = computed(() => {
       if (decorate === DEFAULT_DECORATE_FN) {
@@ -75,21 +76,10 @@ export const TextComp = defineComponent({
       }
     });
 
-    const isLastText = computed(() => {
-      if (Editor.isVoid(editor, element)) {
-        return false;
-      }
-      if (!Element.isElement(element)) {
-        return false;
-      }
-      if (editor.isInline(element)) {
-        return false;
-      }
-      if (!Editor.hasInlines(editor, element)) {
-        return false;
-      }
-      return NODE_TO_INDEX.get(text) === element.children.length - 1;
-    });
+    const lastNodeIndex = injectInnerLastNodeIndex();
+    const isLastText = computed(
+      () => NODE_TO_INDEX.get(text) === lastNodeIndex.value,
+    );
 
     const renderLeaf = useRenderLeaf();
     const renderText = useRenderText();
@@ -109,7 +99,6 @@ export const TextComp = defineComponent({
               ? [
                   h(StringComp, {
                     text,
-                    element,
                     leaf: leaf.leaf,
                     isLast: true,
                     key: DOMEditor.findKey(editor, leaf.leaf).id,
@@ -118,7 +107,6 @@ export const TextComp = defineComponent({
                 ]
               : h(StringComp, {
                   text,
-                  element,
                   leaf: leaf.leaf,
                   isLast: isLastText.value && i === leaves.value.length - 1,
                   key: DOMEditor.findKey(editor, leaf.leaf).id,

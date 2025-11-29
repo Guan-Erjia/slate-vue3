@@ -14,6 +14,10 @@ import { useEditor } from "../hooks/use-editor";
 import { SLATE_INNER_STATIC_CHUNK_ROOT } from "../utils/constants";
 import { useEditorNodeVersion } from "../hooks/use-render";
 import { provideInnerElementDR } from "../render/decorate";
+import {
+  provideInnerLastElementNodeIndex,
+  provideInnerIsLastEmptyBlock,
+} from "../render/last";
 
 /**
  * Children.
@@ -36,6 +40,8 @@ export const ChildrenComp = defineComponent({
 
     if (isBlock || chunkSize === null) {
       provideInnerElementDR(element);
+      provideInnerLastElementNodeIndex(element);
+      provideInnerIsLastEmptyBlock(element);
 
       return () =>
         renderList(element.children, (n, i): VNode => {

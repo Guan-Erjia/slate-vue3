@@ -29,6 +29,10 @@ import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { useRenderElement } from "../hooks/use-render";
 import { useEditor } from "../hooks/use-editor";
 import { provideInnerElementDR } from "../render/decorate";
+import {
+  provideInnerLastElementNodeIndex,
+  provideInnerIsLastEmptyBlock,
+} from "../render/last";
 
 interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
@@ -106,6 +110,8 @@ export const ElementComp = defineComponent({
     });
 
     provideInnerElementDR(element);
+    provideInnerLastElementNodeIndex(element);
+    provideInnerIsLastEmptyBlock(element);
 
     const children = computed<VNode | VNodeChild[]>(() => {
       if (!Editor.isVoid(editor, element)) {
@@ -140,7 +146,6 @@ export const ElementComp = defineComponent({
         attributes: attributes.value,
         children: children.value,
         element,
-        editor,
       });
   },
 });
