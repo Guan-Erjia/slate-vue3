@@ -13,7 +13,7 @@ import { PlaceholderComp } from "./placeholder";
 import { useRenderLeaf } from "../render/fn";
 
 export const LeafComp = defineComponent({
-  name: "slate-text",
+  name: "slate-leaf",
   props: ["text", "leaf", "isLast", "leafPosition"],
   setup(props: {
     text: Text;

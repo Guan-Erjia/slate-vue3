@@ -58,7 +58,7 @@ export const StringComp = defineComponent({
 });
 
 const TextString = defineComponent({
-  name: "slate-text-string",
+  name: "slate-string-text",
   props: ["text", "isTrailing"],
   setup(props: { text: string; isTrailing?: boolean }) {
     return () =>
@@ -71,7 +71,7 @@ const TextString = defineComponent({
 });
 
 const ZeroWidthString = defineComponent({
-  name: "slate-zero-width-string",
+  name: "slate-string-zero-width",
   props: ["length", "isMarkPlaceholder", "isLineBreak"],
   setup(props: {
     length?: number;
