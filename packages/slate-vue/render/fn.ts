@@ -4,7 +4,6 @@ import type {
   RenderElementProps,
   RenderLeafProps,
   RenderTextProps,
-  RenderChunkProps,
 } from "../utils/interface";
 
 export const SLATE_INNER_RENDER_ELEMENT = Symbol("SLATE_INNER_RENDER_ELEMENT");

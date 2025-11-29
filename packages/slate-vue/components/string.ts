@@ -1,6 +1,6 @@
 import { Node, Text } from "slate";
 import { IS_ANDROID, MARK_PLACEHOLDER_SYMBOL } from "slate-dom";
-import { defineComponent, h, onUpdated, ref } from "vue";
+import { defineComponent, h } from "vue";
 import { useEditor } from "../hooks/use-editor";
 import { useElement } from "../hooks/use-element";
 import { injectIsLastEmptyBlock } from "../render/last";

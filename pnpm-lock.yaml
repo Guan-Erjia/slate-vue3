@@ -34,11 +34,11 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0
       '@liveblocks/client':
-        specifier: ^3.10.1
-        version: 3.10.1(@types/json-schema@7.0.15)
+        specifier: ^3.11.0
+        version: 3.11.0(@types/json-schema@7.0.15)
       '@liveblocks/yjs':
-        specifier: ^3.10.1
-        version: 3.10.1(@types/json-schema@7.0.15)(yjs@13.6.27)
+        specifier: ^3.11.0
+        version: 3.11.0(@types/json-schema@7.0.15)(yjs@13.6.27)
       '@playwright/test':
         specifier: ^1.57.0
         version: 1.57.0
@@ -73,8 +73,8 @@ importers:
         specifier: ^9.39.1
         version: 9.39.1(jiti@2.6.1)
       eslint-plugin-vue:
-        specifier: ^10.6.0
-        version: 10.6.0(@typescript-eslint/parser@8.48.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(vue-eslint-parser@10.2.0(eslint@9.39.1(jiti@2.6.1)))
+        specifier: ^10.6.2
+        version: 10.6.2(@typescript-eslint/parser@8.48.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(vue-eslint-parser@10.2.0(eslint@9.39.1(jiti@2.6.1)))
       globals:
         specifier: ^16.5.0
         version: 16.5.0
@@ -536,16 +536,16 @@ packages:
   '@jridgewell/trace-mapping@0.3.30':
     resolution: {integrity: sha512-GQ7Nw5G2lTu/BtHTKfXhKHok2WGetd4XYcVKGx00SjAk8GMwgJM3zr6zORiPGuOE+/vkc90KtTosSSvaCjKb2Q==}
 
-  '@liveblocks/client@3.10.1':
-    resolution: {integrity: sha512-sI8r0id+7JyFbGN4f1n74FsCcVN/b4Y8G7hSLFS1U6KRMQpLeavItO4MCtTx7bd37w0tptFI8Ad6K7x3A8p8gg==}
+  '@liveblocks/client@3.11.0':
+    resolution: {integrity: sha512-89PnIxYkDAwlGRMlALBo1NsAAUD15Ti2c9NVgnEUpqMpUdFCejwcnyc6jBLSXnS92wsu2lPXeLcQtT6ze7nKMg==}
 
-  '@liveblocks/core@3.10.1':
-    resolution: {integrity: sha512-x1MDhV2shSWYBGH6UPeQkAte3pRZcPsDZ8bRsNSVXEqZnyKhIsO2G859hX6YaXMMqrQXjkz+Pf0bDsOmu08qbA==}
+  '@liveblocks/core@3.11.0':
+    resolution: {integrity: sha512-XWULxi0zdBOXH8UOdQHMA50ayhHLgvDOhLcCrP0VzA5Gn6Oa5tDXms5ekDZ9SBv4y+fxs9ckYaXRDlOYggnwTg==}
     peerDependencies:
       '@types/json-schema': ^7
 
-  '@liveblocks/yjs@3.10.1':
-    resolution: {integrity: sha512-t/NUAGHLwMoZE2a16NMChmSEfSSanM5Y9k2mXgt5WpqoIbDOvb/JDO7BKG5cbIljLkRxUfWRcNmKy+Hbkk2i5w==}
+  '@liveblocks/yjs@3.11.0':
+    resolution: {integrity: sha512-7p9YNfFZXQriPtDMA9h2VmZ0qWDCCbAZE1C4YwBmmLs3WDYGUyP7EDLqqcVELik3tHLxSaA7Ed0gCva4TPO8FA==}
     peerDependencies:
       yjs: ^13.6.1
 
@@ -1334,8 +1334,8 @@ packages:
       eslint-config-prettier:
         optional: true
 
-  eslint-plugin-vue@10.6.0:
-    resolution: {integrity: sha512-TsoFluWxOpsJlE/l2jJygLQLWBPJ3Qdkesv7tBIunICbTcG0dS1/NBw/Ol4tJw5kHWlAVds4lUmC29/vlPUcEQ==}
+  eslint-plugin-vue@10.6.2:
+    resolution: {integrity: sha512-nA5yUs/B1KmKzvC42fyD0+l9Yd+LtEpVhWRbXuDj0e+ZURcTtyRbMDWUeJmTAh2wC6jC83raS63anNM2YT3NPw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       '@stylistic/eslint-plugin': ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
@@ -3088,20 +3088,20 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@liveblocks/client@3.10.1(@types/json-schema@7.0.15)':
+  '@liveblocks/client@3.11.0(@types/json-schema@7.0.15)':
     dependencies:
-      '@liveblocks/core': 3.10.1(@types/json-schema@7.0.15)
+      '@liveblocks/core': 3.11.0(@types/json-schema@7.0.15)
     transitivePeerDependencies:
       - '@types/json-schema'
 
-  '@liveblocks/core@3.10.1(@types/json-schema@7.0.15)':
+  '@liveblocks/core@3.11.0(@types/json-schema@7.0.15)':
     dependencies:
       '@types/json-schema': 7.0.15
 
-  '@liveblocks/yjs@3.10.1(@types/json-schema@7.0.15)(yjs@13.6.27)':
+  '@liveblocks/yjs@3.11.0(@types/json-schema@7.0.15)(yjs@13.6.27)':
     dependencies:
-      '@liveblocks/client': 3.10.1(@types/json-schema@7.0.15)
-      '@liveblocks/core': 3.10.1(@types/json-schema@7.0.15)
+      '@liveblocks/client': 3.11.0(@types/json-schema@7.0.15)
+      '@liveblocks/core': 3.11.0(@types/json-schema@7.0.15)
       '@noble/hashes': 1.8.0
       js-base64: 3.7.7
       y-indexeddb: 9.0.12(yjs@13.6.27)
@@ -3958,7 +3958,7 @@ snapshots:
       '@types/eslint': 8.56.12
       eslint-config-prettier: 10.1.8(eslint@9.39.1(jiti@2.6.1))
 
-  eslint-plugin-vue@10.6.0(@typescript-eslint/parser@8.48.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(vue-eslint-parser@10.2.0(eslint@9.39.1(jiti@2.6.1))):
+  eslint-plugin-vue@10.6.2(@typescript-eslint/parser@8.48.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(vue-eslint-parser@10.2.0(eslint@9.39.1(jiti@2.6.1))):
     dependencies:
       '@eslint-community/eslint-utils': 4.9.0(eslint@9.39.1(jiti@2.6.1))
       eslint: 9.39.1(jiti@2.6.1)

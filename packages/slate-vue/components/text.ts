@@ -4,7 +4,6 @@ import {
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
   NODE_TO_ELEMENT,
-  NODE_TO_INDEX,
 } from "slate-dom";
 import {
   h,
