@@ -19,14 +19,13 @@ import { useEditor } from "../hooks/use-editor";
 import { useMarkPlaceholder } from "../render/placeholder";
 import { DEFAULT_DECORATE_FN } from "./utils";
 import { injectDecorateFn, injectInnerElementDR } from "../render/decorate";
-import { injectLastNodeIndex } from "../render/last";
 import { useRenderText } from "../render/fn";
 import { LeafComp } from "./leaf";
 
 export const TextComp = defineComponent({
   name: "slate-text",
-  props: ["text"],
-  setup(props: { text: Text }) {
+  props: ["text", "isLast"],
+  setup(props: { text: Text; isLast: boolean }) {
     const text = props.text;
     const editor = useEditor();
     const textRef = ref<HTMLSpanElement>();
@@ -68,11 +67,6 @@ export const TextComp = defineComponent({
       }
     });
 
-    const lastNodeIndex = injectLastNodeIndex();
-    const isLastText = computed(
-      () => NODE_TO_INDEX.get(text) === lastNodeIndex.value,
-    );
-
     const renderText = useRenderText();
 
     const children = computed(() =>
@@ -80,7 +74,7 @@ export const TextComp = defineComponent({
         h(LeafComp, {
           text,
           leaf: leaf.leaf,
-          isLast: isLastText.value && i === leaves.value.length - 1,
+          isLast: props.isLast && i === leaves.value.length - 1,
           leafPosition: leaf.position,
           key: DOMEditor.findKey(editor, leaf.leaf).id,
         }),

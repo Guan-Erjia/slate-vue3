@@ -28,10 +28,7 @@ import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { useEditor } from "../hooks/use-editor";
 import { provideElementDR } from "../render/decorate";
-import {
-  provideLastElementNodeIndex,
-  provideIsLastEmptyBlock,
-} from "../render/last";
+import { provideIsLastEmptyBlock } from "../render/last";
 import { useRenderElement } from "../render/fn";
 
 interface ElementAttributes extends HTMLAttributes {
@@ -110,7 +107,6 @@ export const ElementComp = defineComponent({
     });
 
     provideElementDR(element);
-    provideLastElementNodeIndex(element);
     provideIsLastEmptyBlock(element);
 
     const children = computed<VNode | VNodeChild[]>(() => {
@@ -121,7 +117,7 @@ export const ElementComp = defineComponent({
       NODE_TO_INDEX.set(text, 0);
       NODE_TO_PARENT.set(text, element);
       const tag = isInline.value ? "span" : "div";
-      return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { text }));
+      return h(tag, VOID_CHILDREN_ATTRS, h(TextComp, { text, isLast: false }));
     });
 
     if (IS_FIREFOX) {

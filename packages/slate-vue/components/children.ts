@@ -13,10 +13,7 @@ import { ChunkComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
 import { provideElementDR } from "../render/decorate";
 import { useEditorNodeVersion } from "../render/version";
-import {
-  provideIsLastEmptyBlock,
-  provideLastElementNodeIndex,
-} from "../render/last";
+import { provideIsLastEmptyBlock } from "../render/last";
 import { provideChunkRoot } from "../render/chunk";
 
 /**
@@ -40,7 +37,6 @@ export const ChildrenComp = defineComponent({
 
     if (isBlock || chunkSize === null) {
       provideElementDR(element);
-      provideLastElementNodeIndex(element);
       provideIsLastEmptyBlock(element);
 
       return () =>
@@ -55,6 +51,7 @@ export const ChildrenComp = defineComponent({
             ? h(TextComp, {
                 text: n,
                 key: key.id,
+                isLast: i === element.children.length - 1,
               })
             : h(ElementComp, {
                 element: n,
