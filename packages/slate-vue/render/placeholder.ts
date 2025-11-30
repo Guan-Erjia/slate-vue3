@@ -46,10 +46,10 @@ export const SLATE_INNER_PLACEHOLDER_SHOW = Symbol(
   "SLATE_INNER_PLACEHOLDER_SHOW",
 );
 export const providePlaceholderShow = (show: ComputedRef<boolean>) => {
-  provide(SLATE_INNER_PLACEHOLDER_SHOW, show);
+  provide(SLATE_INNER_PLACEHOLDER_SHOW, () => show.value);
 };
 export const usePlaceholderShow = () => {
-  const PLACEHOLDER_SHOW_INJECT = inject<ComputedRef<boolean>>(
+  const PLACEHOLDER_SHOW_INJECT = inject<() => boolean>(
     SLATE_INNER_PLACEHOLDER_SHOW,
   );
   if (PLACEHOLDER_SHOW_INJECT === undefined) {

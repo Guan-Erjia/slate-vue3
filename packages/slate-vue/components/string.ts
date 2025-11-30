@@ -17,7 +17,7 @@ export const StringComp = defineComponent({
       // COMPAT: Render text inside void nodes with a zero-width space.
       // So the node can contain selection but the text is not visible.
       if (editor.isVoid(element.value)) {
-        return h(ZeroWidthString, {
+        return ZeroWidthString({
           length: Node.string(element.value).length,
         });
       }
@@ -29,7 +29,7 @@ export const StringComp = defineComponent({
         element.value.children.at(-1) === props.text &&
         isLastEmptyBlock.value
       ) {
-        return h(ZeroWidthString, {
+        return ZeroWidthString({
           isLineBreak: true,
           isMarkPlaceholder: props.leaf[MARK_PLACEHOLDER_SYMBOL] === true,
         });
@@ -39,7 +39,7 @@ export const StringComp = defineComponent({
       // node, so we render a zero-width space so that the selection can be
       // inserted next to it still.
       if (props.leaf.text === "") {
-        return h(ZeroWidthString, {
+        return ZeroWidthString({
           isMarkPlaceholder: props.leaf[MARK_PLACEHOLDER_SYMBOL] === true,
         });
       }
@@ -47,59 +47,47 @@ export const StringComp = defineComponent({
       // COMPAT: Browsers will collapse trailing new lines at the end of blocks,
       // so we need to add an extra trailing new lines to prevent that.
       if (props.isLast && props.leaf.text.endsWith("\n")) {
-        return h(TextString, {
+        return TextString({
           isTrailing: true,
           text: props.leaf.text,
         });
       }
-      return h(TextString, { text: props.leaf.text });
+      return TextString({ text: props.leaf.text });
     };
   },
 });
 
-const TextString = defineComponent({
-  name: "slate-string-text",
-  props: ["text", "isTrailing"],
-  setup(props: { text: string; isTrailing?: boolean }) {
-    return () =>
-      h(
-        "span",
-        { "data-slate-string": true },
-        `${props.text ?? ""}${props.isTrailing ? "\n" : ""}`,
-      );
-  },
-});
+const TextString = (props: { text: string; isTrailing?: boolean }) => {
+  return h(
+    "span",
+    { "data-slate-string": true },
+    `${props.text ?? ""}${props.isTrailing ? "\n" : ""}`,
+  );
+};
 
-const ZeroWidthString = defineComponent({
-  name: "slate-string-zero-width",
-  props: ["length", "isMarkPlaceholder", "isLineBreak"],
-  setup(props: {
-    length?: number;
-    isMarkPlaceholder?: boolean;
-    isLineBreak?: boolean;
-  }) {
-    // FIXME: Inserting the \uFEFF on iOS breaks capitalization at the start of an
-    // empty editor (https://github.com/ianstormtaylor/slate/issues/5199).
-    //
-    // However, not inserting the \uFEFF on iOS causes the editor to crash when
-    // inserting any text using an IME at the start of a block. This appears to
-    // be because accepting an IME suggestion when at the start of a block (no
-    // preceding \uFEFF) removes one or more DOM elements that `toSlateRange`
-    // depends on. (https://github.com/ianstormtaylor/slate/issues/5703)
-    return () =>
-      h(
-        "span",
-        {
-          "data-slate-zero-width": props.isLineBreak ? "n" : "z",
-          "data-slate-length": props.length,
-          "data-slate-mark-placeholder": props.isMarkPlaceholder
-            ? true
-            : undefined,
-        },
-        [
-          !IS_ANDROID || !props.isLineBreak ? "\uFEFF" : null,
-          props.isLineBreak ? h("br") : null,
-        ],
-      );
-  },
-});
+const ZeroWidthString = (props: {
+  length?: number;
+  isMarkPlaceholder?: boolean;
+  isLineBreak?: boolean;
+}) => {
+  // FIXME: Inserting the \uFEFF on iOS breaks capitalization at the start of an
+  // empty editor (https://github.com/ianstormtaylor/slate/issues/5199).
+  //
+  // However, not inserting the \uFEFF on iOS causes the editor to crash when
+  // inserting any text using an IME at the start of a block. This appears to
+  // be because accepting an IME suggestion when at the start of a block (no
+  // preceding \uFEFF) removes one or more DOM elements that `toSlateRange`
+  // depends on. (https://github.com/ianstormtaylor/slate/issues/5703)
+  return h(
+    "span",
+    {
+      "data-slate-zero-width": props.isLineBreak ? "n" : "z",
+      "data-slate-length": props.length,
+      "data-slate-mark-placeholder": props.isMarkPlaceholder ? true : undefined,
+    },
+    [
+      !IS_ANDROID || !props.isLineBreak ? "\uFEFF" : null,
+      props.isLineBreak ? h("br") : null,
+    ],
+  );
+};
