@@ -1,6 +1,7 @@
 import { Editor, Path, Range, Scrubber, Text } from "..";
 import { Element, ElementEntry } from "./element";
 import { modifyChildren, modifyLeaf, removeChildren } from "../utils/modify";
+import { cloneDeep } from "lodash-es";
 
 /**
  * The `Node` union type represents all of the different types of nodes that
@@ -356,7 +357,7 @@ export const Node: NodeInterface = {
   },
 
   fragment<T extends Ancestor = Editor>(root: T, range: Range): T["children"] {
-    const newRoot = { children: root.children };
+    const newRoot = { children: cloneDeep(root.children) };
     const [start, end] = Range.edges(range);
     const nodeEntries = Node.nodes(newRoot, {
       reverse: true,
