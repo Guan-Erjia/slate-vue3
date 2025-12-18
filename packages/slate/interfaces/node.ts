@@ -1,6 +1,6 @@
 import { Editor, Path, Range, Scrubber, Text } from "..";
 import { Element, ElementEntry } from "./element";
-import { modifyChildren, modifyLeaf, removeChildren } from "../utils/modify";
+import { toRaw } from "vue";
 import { cloneDeep } from "lodash-es";
 
 /**
@@ -357,37 +357,29 @@ export const Node: NodeInterface = {
   },
 
   fragment<T extends Ancestor = Editor>(root: T, range: Range): T["children"] {
-    const newRoot = { children: cloneDeep(root.children) };
+    console.time("fragment");
+    const newRoot = { children: cloneDeep(toRaw(root.children)) };
     const [start, end] = Range.edges(range);
-    const nodeEntries = Node.nodes(newRoot, {
-      reverse: true,
-      pass: ([, path]) => !Range.includes(range, path),
-    });
 
-    for (const [, path] of nodeEntries) {
-      if (!Range.includes(range, path)) {
-        const index = path[path.length - 1];
+    const endLeaf = Node.leaf(newRoot, end.path);
+    endLeaf.text = endLeaf.text.slice(0, end.offset);
+    const startLeaf = Node.leaf(newRoot, start.path);
+    startLeaf.text = startLeaf.text.slice(start.offset);
 
-        modifyChildren(newRoot, Path.parent(path), (children) =>
-          removeChildren(children, index, 1),
-        );
-      }
-
-      if (Path.equals(path, end.path)) {
-        modifyLeaf(newRoot, path, (node) => {
-          const before = node.text.slice(0, end.offset);
-          return { ...node, text: before };
-        });
-      }
-
-      if (Path.equals(path, start.path)) {
-        modifyLeaf(newRoot, path, (node) => {
-          const before = node.text.slice(start.offset);
-          return { ...node, text: before };
-        });
-      }
+    let node: any = newRoot;
+    for (let i = 0; i < end.path.length; i++) {
+      const index = end.path[i];
+      node.children = node.children.slice(0, index + 1);
+      node = node.children[index];
+    }
+    node = newRoot;
+    for (let i = 0; i < start.path.length; i++) {
+      const index = start.path[i];
+      node.children = node.children.slice(index);
+      node = node.children[0];
     }
 
+    console.timeEnd("fragment");
     return newRoot.children;
   },
 

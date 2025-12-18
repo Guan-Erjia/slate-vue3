@@ -1,10 +1,8 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from "vite";
+import { defineConfig, mergeConfig, type UserConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
-import path from "path";
-import { UserConfig } from "vite";
+import path from "node:path";
 import dts from "vite-plugin-dts";
-import { mergeConfig } from "vite";
 import babel from "vite-plugin-babel";
 import eslint from "vite-plugin-eslint";
 
