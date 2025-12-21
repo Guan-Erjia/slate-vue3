@@ -1,7 +1,5 @@
 import { Editor, Path, Range, Scrubber, Text } from "..";
 import { Element, ElementEntry } from "./element";
-import { toRaw } from "vue";
-import { cloneDeep } from "lodash-es";
 
 /**
  * The `Node` union type represents all of the different types of nodes that
@@ -357,30 +355,49 @@ export const Node: NodeInterface = {
   },
 
   fragment<T extends Ancestor = Editor>(root: T, range: Range): T["children"] {
-    console.time("fragment");
-    const newRoot = { children: cloneDeep(toRaw(root.children)) };
+    const newRoot = { children: root.children };
     const [start, end] = Range.edges(range);
 
-    const endLeaf = Node.leaf(newRoot, end.path);
-    endLeaf.text = endLeaf.text.slice(0, end.offset);
-    const startLeaf = Node.leaf(newRoot, start.path);
-    startLeaf.text = startLeaf.text.slice(start.offset);
+    const startText = Node.leaf(newRoot, start.path).text.slice(start.offset);
+    const endText = Node.leaf(newRoot, end.path).text.slice(0, end.offset);
 
-    let node: any = newRoot;
+    let node = newRoot;
     for (let i = 0; i < end.path.length; i++) {
       const index = end.path[i];
       node.children = node.children.slice(0, index + 1);
-      node = node.children[index];
+      if (Element.isElement(node.children[index])) {
+        node = node.children[index];
+      }
     }
     node = newRoot;
     for (let i = 0; i < start.path.length; i++) {
       const index = start.path[i];
       node.children = node.children.slice(index);
-      node = node.children[0];
+      if (Element.isElement(node.children[0])) {
+        node = node.children[0];
+      }
     }
-
-    console.timeEnd("fragment");
-    return newRoot.children;
+    const simpleClone = (node: T["children"]): T["children"] => {
+      return node.map((n) => {
+        if (Element.isElement(n)) {
+          return {
+            ...n,
+            children: simpleClone(n.children),
+          };
+        }
+        return { ...n };
+      });
+    };
+    const result = { children: simpleClone(newRoot.children) };
+    const [firstNode] = Node.first(result, []);
+    if (Text.isText(firstNode)) {
+      firstNode.text = startText;
+    }
+    const [lastNode] = Node.last(result, []);
+    if (Text.isText(lastNode)) {
+      lastNode.text = endText;
+    }
+    return result.children;
   },
 
   get(root: Node, path: Path): Node {

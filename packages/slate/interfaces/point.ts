@@ -1,6 +1,5 @@
 import { ExtendedType, isObject, Operation, Path } from "..";
 import { TextDirection } from "../types/types";
-import { cloneDeep } from "lodash-es";
 
 /**
  * `Point` objects refer to a specific location in a text node in a Slate
@@ -103,7 +102,7 @@ export const Point: PointInterface = {
     }
     const { affinity = "forward" } = options;
     let offset = point.offset;
-    let path = cloneDeep(point.path);
+    let path = [...point.path];
 
     switch (op.type) {
       case "insert_node":
