@@ -356,8 +356,8 @@ export const Node: NodeInterface = {
 
   fragment<T extends Ancestor = Editor>(root: T, range: Range): T["children"] {
     const newRoot = { children: root.children };
-    const [start, end] = Range.edges(range);
 
+    const [start, end] = Range.edges(range);
     const startText = Node.leaf(newRoot, start.path).text.slice(start.offset);
     const endText = Node.leaf(newRoot, end.path).text.slice(0, end.offset);
 
@@ -377,27 +377,28 @@ export const Node: NodeInterface = {
         node = node.children[0];
       }
     }
-    const simpleClone = (node: T["children"]): T["children"] => {
-      return node.map((n) => {
-        if (Element.isElement(n)) {
+    const simpleClone = (children: T["children"]): T["children"] => {
+      return children.map((node) => {
+        if (Element.isElement(node)) {
           return {
-            ...n,
-            children: simpleClone(n.children),
+            ...node,
+            children: simpleClone(node.children),
           };
         }
-        return { ...n };
+        return { ...node };
       });
     };
-    const result = { children: simpleClone(newRoot.children) };
-    const [firstNode] = Node.first(result, []);
+    newRoot.children = simpleClone(newRoot.children);
+    const [firstNode] = Node.first(newRoot, []);
     if (Text.isText(firstNode)) {
       firstNode.text = startText;
     }
-    const [lastNode] = Node.last(result, []);
+    const [lastNode] = Node.last(newRoot, []);
     if (Text.isText(lastNode)) {
       lastNode.text = endText;
     }
-    return result.children;
+
+    return newRoot.children;
   },
 
   get(root: Node, path: Path): Node {
