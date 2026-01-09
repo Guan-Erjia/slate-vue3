@@ -61,9 +61,9 @@ export const GeneralTransforms: GeneralTransforms = {
         const parent = Node.parent(editor, path);
         const index = path[path.length - 1];
 
-        if (Text.isText(node) && Text.isText(prev)) {
+        if (Node.isText(node) && Node.isText(prev)) {
           prev.text += node.text;
-        } else if (!Text.isText(node) && !Text.isText(prev)) {
+        } else if (!Node.isText(node) && !Node.isText(prev)) {
           prev.children.push(...node.children);
         } else {
           throw new Error(
@@ -269,7 +269,7 @@ export const GeneralTransforms: GeneralTransforms = {
         const index = path[path.length - 1];
         let newNode: Descendant;
 
-        if (Text.isText(node)) {
+        if (Node.isText(node)) {
           const before = node.text.slice(0, position);
           const after = node.text.slice(position);
           node.text = before;

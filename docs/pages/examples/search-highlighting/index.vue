@@ -7,8 +7,7 @@ import {
   DecoratedRange,
   Descendant,
   NodeEntry,
-  Text,
-  Element,
+  Node,
 } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
@@ -51,9 +50,9 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   const ranges = [];
   if (
     search.value &&
-    Element.isElement(node) &&
+    Node.isElement(node) &&
     Array.isArray(node.children) &&
-    node.children.every(Text.isText)
+    node.children.every(Node.isText)
   ) {
     const texts = node.children.map((it) => it.text);
     const str = texts.join("");
@@ -109,7 +108,7 @@ const search = ref("");
             top: 0.5em;
             left: 0.6em;
             color: #ccc;
-            font-family: &quot;Material Icons&quot;;
+            font-family: Material Icons;
           "
           >search</span
         >

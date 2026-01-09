@@ -6,7 +6,7 @@ import {
   Descendant,
   NodeEntry,
   DecoratedRange,
-  Text,
+  Node,
   Path,
 } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
@@ -49,7 +49,7 @@ const editor = withHistory(withDOM(createEditor()));
 editor.children = initialValue;
 const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   const ranges: DecoratedRange[] = [];
-  if (!editor.selection || !Text.isText(node)) {
+  if (!editor.selection || !Node.isText(node)) {
     return ranges;
   }
   const offset = node.text.length;

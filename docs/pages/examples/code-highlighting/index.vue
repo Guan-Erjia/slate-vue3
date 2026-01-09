@@ -189,7 +189,7 @@ const node2Decorations = computed(() => {
   const blockEntries = Editor.nodes(editor, {
     at: [],
     mode: "highest",
-    match: (n) => Element.isElement(n) && n.type === "code-block",
+    match: (n) => Node.isElement(n) && n.type === "code-block",
   });
 
   Array.from(blockEntries).forEach(
@@ -229,7 +229,7 @@ const node2Decorations = computed(() => {
 });
 
 const decorate = ([node]: NodeEntry) => {
-  if (Element.isElement(node) && node.type === "code-line") {
+  if (Node.isElement(node) && node.type === "code-line") {
     return node2Decorations.value.get(node);
   }
   return [];
@@ -240,14 +240,14 @@ const onClick = () => {
     editor,
     { type: "code-block", language: "html", children: [] },
     {
-      match: (n) => Element.isElement(n) && n.type === "paragraph",
+      match: (n) => Node.isElement(n) && n.type === "paragraph",
       split: true,
     },
   );
   Transforms.setNodes(
     editor,
     { type: "code-line" as any },
-    { match: (n) => Element.isElement(n) && n.type === "paragraph" },
+    { match: (n) => Node.isElement(n) && n.type === "paragraph" },
   );
 };
 const onPointerDown = (event: PointerEvent) => {

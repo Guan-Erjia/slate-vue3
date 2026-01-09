@@ -6,10 +6,10 @@ import { h } from "vue";
 import {
   Editor,
   Range,
-  Element,
   Point,
   Descendant,
   createEditor,
+  Node,
 } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 import { CustomEditor } from "../../../custom-types";
@@ -19,10 +19,7 @@ const withTables = (editor: CustomEditor) => {
   editor.deleteBackward = (unit) => {
     if (editor.selection && Range.isCollapsed(editor.selection)) {
       const [cell] = Editor.nodes(editor, {
-        match: (n) =>
-          !Editor.isEditor(n) &&
-          Element.isElement(n) &&
-          n.type === "table-cell",
+        match: (n) => Node.isElement(n) && n.type === "table-cell",
       });
       if (cell) {
         const [, cellPath] = cell;
@@ -38,10 +35,7 @@ const withTables = (editor: CustomEditor) => {
   editor.deleteForward = (unit) => {
     if (editor.selection && Range.isCollapsed(editor.selection)) {
       const [cell] = Editor.nodes(editor, {
-        match: (n) =>
-          !Editor.isEditor(n) &&
-          Element.isElement(n) &&
-          n.type === "table-cell",
+        match: (n) => Node.isElement(n) && n.type === "table-cell",
       });
 
       if (cell) {
@@ -58,8 +52,7 @@ const withTables = (editor: CustomEditor) => {
   editor.insertBreak = () => {
     if (editor.selection) {
       const [table] = Editor.nodes(editor, {
-        match: (n) =>
-          !Editor.isEditor(n) && Element.isElement(n) && n.type === "table",
+        match: (n) => Node.isElement(n) && n.type === "table",
       });
       if (table) {
         return;

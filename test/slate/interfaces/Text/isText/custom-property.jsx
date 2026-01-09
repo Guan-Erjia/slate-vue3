@@ -1,10 +1,10 @@
-import { Text } from 'slate'
+import { Node } from "slate";
 
 export const input = {
-  text: '',
+  text: "",
   custom: true,
-}
-export const test = value => {
-  return Text.isText(value)
-}
-export const output = true
+};
+export const test = (value) => {
+  return Node.isText(value);
+};
+export const output = true;

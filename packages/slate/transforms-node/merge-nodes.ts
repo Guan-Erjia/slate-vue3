@@ -1,28 +1,19 @@
 import { NodeTransforms } from "../interfaces/transforms/node";
 import { Editor } from "../interfaces/editor";
 import { Path } from "../interfaces/path";
-import { Element } from "../interfaces/element";
 import { Range } from "../interfaces/range";
 import { Transforms } from "../interfaces/transforms";
-import { Text } from "../interfaces/text";
 import { Scrubber } from "../interfaces/scrubber";
 import { Node } from "../interfaces/node";
 
 const hasSingleChildNest = (editor: Editor, node: Node): boolean => {
-  if (Element.isElement(node)) {
-    const element = node as Element;
-    if (Editor.isVoid(editor, node)) {
-      return true;
-    } else if (element.children.length === 1) {
-      return hasSingleChildNest(editor, element.children[0]);
-    } else {
-      return false;
-    }
-  } else if (Editor.isEditor(node)) {
-    return false;
-  } else {
-    return true;
-  }
+  return (
+    node !== editor &&
+    (Node.isText(node) ||
+      Editor.isVoid(editor, node) ||
+      (node.children.length === 1 &&
+        hasSingleChildNest(editor, node.children[0])))
+  );
 };
 
 export const mergeNodes: NodeTransforms["mergeNodes"] = (
@@ -42,7 +33,7 @@ export const mergeNodes: NodeTransforms["mergeNodes"] = (
         const [parent] = Editor.parent(editor, at);
         match = (n) => parent.children.includes(n);
       } else {
-        match = (n) => Element.isElement(n) && Editor.isBlock(editor, n);
+        match = (n) => Node.isElement(n) && Editor.isBlock(editor, n);
       }
     }
 
@@ -100,14 +91,14 @@ export const mergeNodes: NodeTransforms["mergeNodes"] = (
 
     // Ensure that the nodes are equivalent, and figure out what the position
     // and extra properties of the merge will be.
-    if (Text.isText(node) && Text.isText(prevNode)) {
+    if (Node.isText(node) && Node.isText(prevNode)) {
       const { text, ...rest } = node;
       position = prevNode.text.length;
-      properties = rest as Partial<Text>;
-    } else if (Element.isElement(node) && Element.isElement(prevNode)) {
+      properties = rest;
+    } else if (Node.isElement(node) && Node.isElement(prevNode)) {
       const { children, ...rest } = node;
       position = prevNode.children.length;
-      properties = rest as Partial<Element>;
+      properties = rest;
     } else {
       throw new Error(
         `Cannot merge the node at path [${path}] with the previous sibling because it is not the same kind: ${Scrubber.stringify(

@@ -120,11 +120,7 @@
 </template>
 <script setup lang="ts">
 import { faker } from "@faker-js/faker";
-import {
-  createEditor as slateCreateEditor,
-  Descendant,
-  Editor,
-} from "slate-vue3/core";
+import { createEditor as slateCreateEditor, Descendant } from "slate-vue3/core";
 import {
   Editable,
   RenderElementProps,
@@ -256,7 +252,7 @@ const getInitialValue = (blocks: number) => {
 const createEditor = (config: Config) => {
   const editor = withHistory(withDOM(slateCreateEditor()));
   editor.getChunkSize = (node) =>
-    config.chunking && Editor.isEditor(node) ? config.chunkSize : null;
+    config.chunking && node === editor ? config.chunkSize : null;
   return editor;
 };
 

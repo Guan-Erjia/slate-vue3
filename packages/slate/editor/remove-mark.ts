@@ -1,6 +1,5 @@
 import { Node } from "../interfaces/node";
 import { Path } from "../interfaces/path";
-import { Text } from "../interfaces/text";
 import { Range } from "../interfaces/range";
 import { Transforms } from "../interfaces/transforms";
 import { Editor, EditorInterface } from "../interfaces/editor";
@@ -10,7 +9,7 @@ export const removeMark: EditorInterface["removeMark"] = (editor, key) => {
 
   if (selection) {
     const match = (node: Node, path: Path) => {
-      if (!Text.isText(node)) {
+      if (!Node.isText(node)) {
         return false; // marks can only be applied to text
       }
       const [parentNode] = Editor.parent(editor, path);

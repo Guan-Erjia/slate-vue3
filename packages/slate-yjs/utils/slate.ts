@@ -1,4 +1,4 @@
-import { BaseText, Descendant, Text } from "slate";
+import { BaseText, Descendant, Node } from "slate";
 import { omit } from "./object";
 
 export function getProperties<TNode extends Descendant>(
@@ -6,6 +6,6 @@ export function getProperties<TNode extends Descendant>(
 ): Omit<TNode, TNode extends BaseText ? "text" : "children"> {
   return omit(
     node,
-    (Text.isText(node) ? "text" : "children") as keyof TNode,
+    (Node.isText(node) ? "text" : "children") as keyof TNode,
   ) as Omit<TNode, TNode extends BaseText ? "text" : "children">;
 }

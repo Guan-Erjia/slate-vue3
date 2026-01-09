@@ -12,8 +12,8 @@ import {
   createEditor,
   DecoratedRange,
   Descendant,
+  Node,
   NodeEntry,
-  Text,
 } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
@@ -40,7 +40,7 @@ const initialValue: Descendant[] = [
 const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   const ranges: any[] = [];
 
-  if (!Text.isText(node)) {
+  if (!Node.isText(node)) {
     return ranges;
   }
 

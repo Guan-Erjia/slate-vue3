@@ -529,7 +529,7 @@ export const Editable = defineComponent({
             ) {
               const block = Editor.above(editor, {
                 at: anchor.path,
-                match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+                match: (n) => Node.isElement(n) && Editor.isBlock(editor, n),
               });
 
               if (block && Node.string(block[0]).includes("\t")) {
@@ -807,7 +807,7 @@ export const Editable = defineComponent({
       IS_FOCUSED.delete(editor);
     };
 
-    const onClick = (event: MouseEvent) => {
+    const onClick = (event: PointerEvent) => {
       if (
         DOMEditor.hasTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onClick) &&
@@ -829,9 +829,9 @@ export const Editable = defineComponent({
 
         if (event.detail === 3 && path.length >= 1) {
           let blockPath = path;
-          if (!(Element.isElement(node) && Editor.isBlock(editor, node))) {
+          if (!(Node.isElement(node) && Editor.isBlock(editor, node))) {
             const block = Editor.above(editor, {
-              match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+              match: (n) => Node.isElement(n) && Editor.isBlock(editor, n),
               at: path,
             });
 
@@ -984,7 +984,7 @@ export const Editable = defineComponent({
         // default, and calling `preventDefault` hides the cursor.
         const node = DOMEditor.toSlateNode(editor, event.target);
 
-        if (Element.isElement(node) && Editor.isVoid(editor, node)) {
+        if (Node.isElement(node) && Editor.isVoid(editor, node)) {
           event.preventDefault();
         }
       }
@@ -999,7 +999,7 @@ export const Editable = defineComponent({
         const node = DOMEditor.toSlateNode(editor, event.target);
         const path = DOMEditor.findPath(editor, node);
         const voidMatch =
-          (Element.isElement(node) && Editor.isVoid(editor, node)) ||
+          (Node.isElement(node) && Editor.isVoid(editor, node)) ||
           Editor.void(editor, { at: path, voids: true });
 
         // If starting a drag on a void node, make sure it is selected
@@ -1358,7 +1358,7 @@ export const Editable = defineComponent({
               );
 
               if (
-                Element.isElement(currentNode) &&
+                Node.isElement(currentNode) &&
                 Editor.isVoid(editor, currentNode) &&
                 (Editor.isInline(editor, currentNode) ||
                   Editor.isBlock(editor, currentNode))

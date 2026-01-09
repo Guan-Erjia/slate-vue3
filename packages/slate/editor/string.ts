@@ -1,6 +1,6 @@
 import { Editor, EditorInterface } from "../interfaces/editor";
 import { Range } from "../interfaces/range";
-import { Text } from "../interfaces/text";
+import { Node } from "../interfaces/node";
 import { Path } from "../interfaces/path";
 
 export const string: EditorInterface["string"] = (editor, at, options = {}) => {
@@ -11,7 +11,7 @@ export const string: EditorInterface["string"] = (editor, at, options = {}) => {
 
   for (const [node, path] of Editor.nodes(editor, {
     at: range,
-    match: Text.isText,
+    match: Node.isText,
     voids,
   })) {
     let t = node.text;

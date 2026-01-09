@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { Editor, Element, Transforms } from "slate-vue3/core";
+import { Editor, Node, Transforms } from "slate-vue3/core";
 import { useEditor } from "slate-vue3";
 import Button from "../../../components/Button.vue";
 import { computed } from "vue";
@@ -27,8 +27,7 @@ const isBlockActive = computed(() => {
           ? "align"
           : "type";
         return (
-          !Editor.isEditor(n) &&
-          Element.isElement(n) &&
+          Node.isElement(n) &&
           // @ts-expect-error xxx
           n[align] === props.format
         );
@@ -46,8 +45,7 @@ const onClick = () => {
 
   Transforms.unwrapNodes(editor, {
     match: (n) =>
-      !Editor.isEditor(n) &&
-      Element.isElement(n) &&
+      Node.isElement(n) &&
       LIST_TYPES.includes(n.type) &&
       !TEXT_ALIGN_TYPES.includes(props.format),
     split: true,
@@ -67,7 +65,7 @@ const onClick = () => {
           : (props.format as CustomElement["type"]),
     };
   }
-  Transforms.setNodes<Element>(editor, newProperties);
+  Transforms.setNodes(editor, newProperties);
 
   if (!isActive && isList) {
     const block = { type: props.format, children: [] } as CustomElement;

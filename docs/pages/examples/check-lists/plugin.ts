@@ -1,4 +1,4 @@
-import { Range, Editor, Element, Point, Transforms } from "slate-vue3/core";
+import { Range, Editor, Node, Point, Transforms } from "slate-vue3/core";
 import { CustomEditor, CustomElement } from "../../../custom-types";
 export const withChecklists = (editor: CustomEditor) => {
   const { deleteBackward } = editor;
@@ -7,10 +7,7 @@ export const withChecklists = (editor: CustomEditor) => {
     const { selection } = editor;
     if (selection && Range.isCollapsed(selection)) {
       const [match] = Editor.nodes(editor, {
-        match: (n) =>
-          !Editor.isEditor(n) &&
-          Element.isElement(n) &&
-          n.type === "check-list-item",
+        match: (n) => Node.isElement(n) && n.type === "check-list-item",
       });
 
       if (match) {
@@ -22,10 +19,7 @@ export const withChecklists = (editor: CustomEditor) => {
             type: "paragraph",
           };
           Transforms.setNodes(editor, newProperties, {
-            match: (n) =>
-              !Editor.isEditor(n) &&
-              Element.isElement(n) &&
-              n.type === "check-list-item",
+            match: (n) => Node.isElement(n) && n.type === "check-list-item",
           });
           return;
         }

@@ -1,4 +1,4 @@
-import { Editor, Element, Node, Operation, Path, Text } from "slate";
+import { Editor, Element, isObject, Node, Operation, Path, Text } from "slate";
 import { XmlText, YTextEvent } from "yjs";
 import { Delta } from "../model/types";
 import { deltaInsertToSlateNode } from "../utils/convert";
@@ -46,7 +46,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         const child = node.children[pathOffset];
         const childPath = [...slatePath, pathOffset];
 
-        if (!Text.isText(child)) {
+        if (!Node.isText(child)) {
           // Ignore attribute updates on non-text nodes (which are backed by XmlText)
           // to be consistent with deltaInsertToSlateNode. XmlText attributes don't show
           // up in deltas but in key changes (YEvent.changes.keys).
@@ -122,7 +122,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         const childPath = [...slatePath, pathOffset];
 
         if (
-          Text.isText(child) &&
+          Node.isText(child) &&
           (pathOffset === startPathOffset || pathOffset === endPathOffset)
         ) {
           const start = pathOffset === startPathOffset ? startTextOffset : 0;
@@ -158,7 +158,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
       const child = node.children[pathOffset];
       const childPath = [...slatePath, pathOffset];
 
-      if (Text.isText(child)) {
+      if (isObject(child) && Node.isText(child)) {
         const lastOp = ops[ops.length - 1];
 
         /**
@@ -252,7 +252,7 @@ export function translateYTextEvent(
   const slatePath = getSlatePath(sharedRoot, editor, target);
   const targetElement = Node.get(editor, slatePath);
 
-  if (Text.isText(targetElement)) {
+  if (Node.isText(targetElement)) {
     throw new Error("Cannot apply yTextEvent to text node");
   }
 

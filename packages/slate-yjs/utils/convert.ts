@@ -23,7 +23,7 @@ export function deltaInsertToSlateNode(insert: DeltaInsert): Node {
 
 export function slateNodesToInsertDelta(nodes: Node[]): InsertDelta {
   return nodes.map((node) => {
-    if (Text.isText(node)) {
+    if (Node.isText(node)) {
       return { insert: node.text, attributes: getProperties(node) };
     }
 

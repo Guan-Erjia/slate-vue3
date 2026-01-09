@@ -2,7 +2,7 @@ import { NodeTransforms } from "../interfaces/transforms/node";
 import { Editor } from "../interfaces/editor";
 import { Path } from "../interfaces/path";
 import { matchPath } from "../utils/match-path";
-import { Element } from "../interfaces/element";
+import { Node } from "../interfaces/node";
 import { Range } from "../interfaces/range";
 import { Transforms } from "../interfaces/transforms";
 import { cloneDeep } from "lodash-es";
@@ -22,7 +22,7 @@ export const unwrapNodes: NodeTransforms["unwrapNodes"] = (
     if (match == null) {
       match = Path.isPath(at)
         ? matchPath(editor, at)
-        : (n) => Element.isElement(n) && Editor.isBlock(editor, n);
+        : (n) => Node.isElement(n) && Editor.isBlock(editor, n);
     }
 
     if (Path.isPath(at)) {
@@ -50,7 +50,7 @@ export const unwrapNodes: NodeTransforms["unwrapNodes"] = (
 
       Transforms.liftNodes(editor, {
         at: range,
-        match: (n) => Element.isAncestor(node) && node.children.includes(n),
+        match: (n) => !Node.isText(node) && node.children.includes(n),
         voids,
       });
     }

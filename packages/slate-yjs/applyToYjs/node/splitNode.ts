@@ -20,7 +20,7 @@ export function splitNode(
   }
 
   if (!target.yTarget) {
-    if (!Text.isText(target.slateTarget)) {
+    if (!Node.isText(target.slateTarget)) {
       throw new Error("Mismatch node type between y target and slate node");
     }
 
@@ -40,7 +40,7 @@ export function splitNode(
     );
   }
 
-  if (Text.isText(target.slateTarget)) {
+  if (Node.isText(target.slateTarget)) {
     throw new Error("Mismatch node type between y target and slate node");
   }
 

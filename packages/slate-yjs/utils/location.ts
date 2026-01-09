@@ -8,7 +8,7 @@ export function getSlateNodeYLength(node: Node | undefined): number {
     return 0;
   }
 
-  return Text.isText(node) ? node.text.length : 1;
+  return Node.isText(node) ? node.text.length : 1;
 }
 
 export function slatePathOffsetToYOffset(element: Element, pathOffset: number) {
@@ -26,7 +26,7 @@ export function getYTarget(
     throw new Error("Path has to a have a length >= 1");
   }
 
-  if (Text.isText(slateRoot)) {
+  if (Node.isText(slateRoot)) {
     throw new Error("Cannot descent into slate text");
   }
 
@@ -75,7 +75,7 @@ export function yOffsetToSlateOffsets(
   let lastNonEmptyPathOffset = 0;
   for (let pathOffset = 0; pathOffset < parent.children.length; pathOffset++) {
     const child = parent.children[pathOffset];
-    const nodeLength = Text.isText(child) ? child.text.length : 1;
+    const nodeLength = Node.isText(child) ? child.text.length : 1;
 
     if (nodeLength > 0) {
       lastNonEmptyPathOffset = pathOffset;
@@ -101,7 +101,7 @@ export function yOffsetToSlateOffsets(
   }
 
   const child = parent.children[lastNonEmptyPathOffset];
-  const textOffset = Text.isText(child) ? child.text.length : 1;
+  const textOffset = Node.isText(child) ? child.text.length : 1;
   return [lastNonEmptyPathOffset, textOffset];
 }
 
@@ -147,7 +147,7 @@ export function getSlatePath(
       yOffset += typeof element.insert === "string" ? element.insert.length : 1;
     }
 
-    if (Text.isText(slateParent)) {
+    if (Node.isText(slateParent)) {
       throw new Error("Cannot descent into slate text");
     }
 

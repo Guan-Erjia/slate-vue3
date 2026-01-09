@@ -17,7 +17,7 @@ export function moveNode(
   const newParentPath = Path.parent(op.newPath);
   const newPathOffset = op.newPath[op.newPath.length - 1];
   const parent = Node.get(slateRoot, newParentPath);
-  if (Text.isText(parent)) {
+  if (Node.isText(parent)) {
     throw new Error("Cannot move slate node into text element");
   }
   const normalizedNewPath = [

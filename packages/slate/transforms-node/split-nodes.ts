@@ -1,6 +1,5 @@
 import { NodeTransforms } from "../interfaces/transforms/node";
 import { Editor } from "../interfaces/editor";
-import { Element } from "../interfaces/element";
 import { Range } from "../interfaces/range";
 import { Path } from "../interfaces/path";
 import { PointRef } from "../interfaces/point-ref";
@@ -37,7 +36,7 @@ export const splitNodes: NodeTransforms["splitNodes"] = (
     } = options;
 
     if (match == null) {
-      match = (n) => Element.isElement(n) && Editor.isBlock(editor, n);
+      match = (n) => Node.isElement(n) && Editor.isBlock(editor, n);
     }
 
     if (Range.isRange(at)) {
@@ -77,7 +76,7 @@ export const splitNodes: NodeTransforms["splitNodes"] = (
       if (!voids && voidMatch) {
         const [voidNode, voidPath] = voidMatch;
 
-        if (Element.isElement(voidNode) && editor.isInline(voidNode)) {
+        if (Node.isElement(voidNode) && editor.isInline(voidNode)) {
           let after = Editor.after(editor, voidPath);
 
           if (!after) {
@@ -112,7 +111,7 @@ export const splitNodes: NodeTransforms["splitNodes"] = (
         if (
           path.length < highestPath.length ||
           path.length === 0 ||
-          (!voids && Element.isElement(node) && Editor.isVoid(editor, node))
+          (!voids && Node.isElement(node) && Editor.isVoid(editor, node))
         ) {
           break;
         }

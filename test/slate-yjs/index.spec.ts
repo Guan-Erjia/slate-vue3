@@ -18,11 +18,7 @@ async function withTestingElements(editor: Editor, doc = new Y.Doc()) {
   const { normalizeNode, isInline } = editor;
   editor.normalizeNode = (entry) => {
     const [node, path] = entry;
-    if (
-      Element.isElement(node) &&
-      !Editor.isEditor(node) &&
-      (node as any).type === "unordered-list"
-    ) {
+    if (Element.isElement(node) && (node as any).type === "unordered-list") {
       if (!node.children.length) {
         return Transforms.removeNodes(editor, { at: path });
       }

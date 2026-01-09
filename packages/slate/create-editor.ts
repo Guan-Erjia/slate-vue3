@@ -31,7 +31,6 @@ import {
   hasInlines,
   hasPath,
   hasTexts,
-  IS_EDITOR_SET,
   isBlock,
   isEdge,
   isEmpty,
@@ -200,6 +199,5 @@ export const createEditor = (): Editor => {
     },
   });
 
-  IS_EDITOR_SET.add(editor);
   return editor;
 };

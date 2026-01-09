@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, Ref } from "vue";
-import { Editor, Path, Range, Text, Descendant } from "slate";
+import { Editor, Path, Range, Text, Descendant, Node } from "slate";
 import { DOMEditor } from "slate-dom";
 import { JsonObject } from "@liveblocks/client";
 import { CursorEditor, CursorState } from "../plugins/withCursors";
@@ -104,7 +104,7 @@ export function getOverlayPosition(
   const nodeIterator = Editor.nodes(editor, {
     at: range,
     match: (n, p) =>
-      Text.isText(n) && (!shouldGenerateOverlay || shouldGenerateOverlay(n, p)),
+      Node.isText(n) && (!shouldGenerateOverlay || shouldGenerateOverlay(n, p)),
   });
 
   let caretPosition: CaretPosition | null = null;

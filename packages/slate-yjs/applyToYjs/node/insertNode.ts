@@ -11,7 +11,7 @@ export function insertNode(
 ): void {
   const { yParent, textRange } = getYTarget(sharedRoot, slateRoot, op.path);
 
-  if (Text.isText(op.node)) {
+  if (Node.isText(op.node)) {
     return yParent.insert(
       textRange.start,
       op.node.text,

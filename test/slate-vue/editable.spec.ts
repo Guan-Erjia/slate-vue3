@@ -1,4 +1,4 @@
-import { createEditor, Text, Transforms } from "slate";
+import { createEditor, Node, Transforms } from "slate";
 import { withDOM } from "slate-dom";
 import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
@@ -112,7 +112,7 @@ describe("slate-react", () => {
         { bold: true },
         {
           at: { path: [0, 0], offset: 2 },
-          match: Text.isText,
+          match: Node.isText,
           split: true,
         },
       );

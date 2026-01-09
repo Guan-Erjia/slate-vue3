@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Transforms, Text } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms, Node } from "slate";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -12,10 +12,10 @@ export const input = (
       </block>
     </block>
   </editor>
-)
-export const run = editor => {
-  Transforms.mergeNodes(editor, { at: [1, 0, 1], match: Text.isText })
-}
+);
+export const run = (editor) => {
+  Transforms.mergeNodes(editor, { at: [1, 0, 1], match: Node.isText });
+};
 export const output = (
   <editor>
     <block>one</block>
@@ -25,4 +25,4 @@ export const output = (
       </block>
     </block>
   </editor>
-)
+);

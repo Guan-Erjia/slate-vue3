@@ -1,6 +1,10 @@
 import { nextTick } from "vue";
-import { BulletedListElement, CustomEditor } from "../../../custom-types";
-import { Range, Element, Editor, Transforms, Point } from "slate-vue3/core";
+import {
+  BulletedListElement,
+  CustomEditor,
+  ParagraphElement,
+} from "../../../custom-types";
+import { Range, Editor, Transforms, Point, Node } from "slate-vue3/core";
 
 export const SHORTCUTS = {
   "*": "list-item",
@@ -24,7 +28,7 @@ export const withShortcuts = (editor: CustomEditor) => {
     if (text.endsWith(" ") && selection && Range.isCollapsed(selection)) {
       const { anchor } = selection;
       const block = Editor.above(editor, {
-        match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+        match: (n) => Node.isElement(n) && Editor.isBlock(editor, n),
       });
       const path = block ? block[1] : [];
       const start = Editor.start(editor, path);
@@ -40,11 +44,11 @@ export const withShortcuts = (editor: CustomEditor) => {
         }
 
         await nextTick();
-        const newProperties: Partial<Element> = {
+        const newProperties = {
           type,
         };
-        Transforms.setNodes<Element>(editor, newProperties, {
-          match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+        Transforms.setNodes(editor, newProperties, {
+          match: (n) => Node.isElement(n) && Editor.isBlock(editor, n),
         });
 
         if (type === "list-item") {
@@ -53,10 +57,7 @@ export const withShortcuts = (editor: CustomEditor) => {
             children: [],
           };
           Transforms.wrapNodes(editor, list, {
-            match: (n) =>
-              !Editor.isEditor(n) &&
-              Element.isElement(n) &&
-              n.type === "list-item",
+            match: (n) => Node.isElement(n) && n.type === "list-item",
           });
         }
 
@@ -72,7 +73,7 @@ export const withShortcuts = (editor: CustomEditor) => {
 
     if (selection && Range.isCollapsed(selection)) {
       const match = Editor.above(editor, {
-        match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+        match: (n) => Node.isElement(n) && Editor.isBlock(editor, n),
       });
 
       if (match) {
@@ -80,22 +81,18 @@ export const withShortcuts = (editor: CustomEditor) => {
         const start = Editor.start(editor, path);
 
         if (
-          !Editor.isEditor(block) &&
-          Element.isElement(block) &&
+          Node.isElement(block) &&
           block.type !== "paragraph" &&
           Point.equals(selection.anchor, start)
         ) {
-          const newProperties: Partial<Element> = {
+          const newProperties = {
             type: "paragraph",
           };
-          Transforms.setNodes(editor, newProperties);
+          Transforms.setNodes(editor, newProperties as ParagraphElement);
 
           if (block.type === "list-item") {
             Transforms.unwrapNodes(editor, {
-              match: (n) =>
-                !Editor.isEditor(n) &&
-                Element.isElement(n) &&
-                n.type === "bulleted-list",
+              match: (n) => Node.isElement(n) && n.type === "bulleted-list",
               split: true,
             });
           }

@@ -1,4 +1,4 @@
-import { Ancestor, Descendant, Editor, Element, Text } from "slate";
+import { Ancestor, Descendant, Editor, Node } from "slate";
 import {
   DOMEditor,
   getChunkTreeForNode,
@@ -26,10 +26,7 @@ export const ChildrenComp = defineComponent({
     const editor = useEditor();
     const element = props.element;
 
-    const isBlock =
-      !Editor.isEditor(element) &&
-      Element.isElement(element) &&
-      !editor.isInline(element);
+    const isBlock = Node.isElement(element) && !editor.isInline(element);
 
     const chunkSize = Editor.hasInlines(editor, element)
       ? null
@@ -47,7 +44,7 @@ export const ChildrenComp = defineComponent({
           NODE_TO_INDEX.set(n, i);
           NODE_TO_PARENT.set(n, element);
           const key = DOMEditor.findKey(editor, n);
-          return Text.isText(n)
+          return Node.isText(n)
             ? h(TextComp, {
                 text: n,
                 key: key.id,

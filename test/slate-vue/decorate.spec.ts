@@ -6,7 +6,6 @@ import {
   createEditor as slateCreateEditor,
   Editor,
   Transforms,
-  Text,
 } from "slate";
 import { DOMEditor, withDOM } from "slate-dom";
 import { RenderLeafProps } from "slate-vue";
@@ -425,7 +424,7 @@ describe("decorations", () => {
         ];
         const decorate = ([node]: NodeEntry) => {
           const ranges = [];
-          if (Text.isText(node) && node.text.includes("box")) {
+          if (Node.isText(node) && node.text.includes("box")) {
             ranges.push({
               ...Editor.range(editor, [0, 0]),
               bold: true,
@@ -460,7 +459,7 @@ describe("decorations", () => {
         ];
         const decorate = ([node]: NodeEntry) => {
           const ranges = [];
-          if (Text.isText(node) && node.text.includes("box")) {
+          if (Node.isText(node) && node.text.includes("box")) {
             ranges.push({
               ...Editor.range(editor, [0, 0]),
               bold: true,

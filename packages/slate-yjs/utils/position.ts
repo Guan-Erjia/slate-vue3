@@ -53,7 +53,7 @@ export function absolutePositionToSlatePoint(
   const parentPath = getSlatePath(sharedRoot, slateRoot, type);
   const parent = Node.get(slateRoot, parentPath);
 
-  if (Text.isText(parent)) {
+  if (Node.isText(parent)) {
     throw new Error(
       "Absolute position doesn't match slateRoot, cannot descent into text",
     );
@@ -64,7 +64,7 @@ export function absolutePositionToSlatePoint(
   });
 
   const target = parent.children[pathOffset];
-  if (!Text.isText(target)) {
+  if (!Node.isText(target)) {
     return null;
   }
 

@@ -1,11 +1,4 @@
-import {
-  Descendant,
-  Editor,
-  Element,
-  Node,
-  Transforms,
-  createEditor,
-} from "slate";
+import { Descendant, Element, Node, Transforms, createEditor } from "slate";
 import {
   withDOM,
   DOMEditor,
@@ -119,7 +112,7 @@ const getChildrenAndTreeForShape = (
 };
 
 const withChunking = (editor: DOMEditor) => {
-  editor.getChunkSize = (node) => (Editor.isEditor(node) ? 3 : null);
+  editor.getChunkSize = (node) => (node === editor ? 3 : null);
   return editor;
 };
 

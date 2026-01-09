@@ -33,7 +33,7 @@ export function mergeNode(
     }
 
     const prevSibling = Node.get(slateRoot, Path.previous(op.path));
-    if (!Text.isText(prevSibling)) {
+    if (!Node.isText(prevSibling)) {
       throw new Error("Path points to Y.Text but not a Slate text node.");
     }
 

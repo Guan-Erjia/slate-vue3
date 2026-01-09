@@ -18,17 +18,16 @@ import {
   createEditor,
   Descendant,
   Editor,
-  Element,
   Range,
   Transforms,
+  Node,
 } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
 const isLinkActive = computed(() => {
   const [link] = Editor.nodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
+    match: (n) => Node.isElement(n) && n.type === "link",
   });
   return !!link;
 });
@@ -36,8 +35,7 @@ const isLinkActive = computed(() => {
 const wrapLink = (url: string) => {
   if (isLinkActive.value) {
     Transforms.unwrapNodes(editor, {
-      match: (n) =>
-        !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
+      match: (n) => Node.isElement(n) && n.type === "link",
     });
   }
   const isCollapsed = editor.selection && Range.isCollapsed(editor.selection);
@@ -57,8 +55,7 @@ const wrapLink = (url: string) => {
 
 const isButtonActive = computed(() => {
   const [button] = Editor.nodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && Element.isElement(n) && n.type === "button",
+    match: (n) => Node.isElement(n) && n.type === "button",
   });
   return !!button;
 });
@@ -212,8 +209,7 @@ const onLinkClick = () => {
 const onOffLinkClick = () => {
   if (isLinkActive.value) {
     Transforms.unwrapNodes(editor, {
-      match: (n) =>
-        !Editor.isEditor(n) && Element.isElement(n) && n.type === "link",
+      match: (n) => Node.isElement(n) && n.type === "link",
     });
   }
 };
@@ -221,14 +217,12 @@ const onOffLinkClick = () => {
 const onSmartClick = () => {
   if (isButtonActive.value) {
     Transforms.unwrapNodes(editor, {
-      match: (n) =>
-        !Editor.isEditor(n) && Element.isElement(n) && n.type === "button",
+      match: (n) => Node.isElement(n) && n.type === "button",
     });
   } else if (editor.selection) {
     if (isButtonActive.value) {
       Transforms.unwrapNodes(editor, {
-        match: (n) =>
-          !Editor.isEditor(n) && Element.isElement(n) && n.type === "button",
+        match: (n) => Node.isElement(n) && n.type === "button",
       });
     }
 

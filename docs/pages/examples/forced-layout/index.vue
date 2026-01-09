@@ -11,7 +11,6 @@ import {
   Editor,
   Transforms,
   Node,
-  Element,
   Descendant,
   createEditor,
 } from "slate-vue3/core";
@@ -43,9 +42,9 @@ const withLayout = (editor: CustomEditor) => {
       for (const [child, childPath] of Node.children(editor, path)) {
         const slateIndex = childPath[0];
         const enforceType = (type: "paragraph" | "title") => {
-          if (Element.isElement(child) && child.type !== type) {
-            const newProperties: Partial<Element> = { type };
-            Transforms.setNodes<Element>(editor, newProperties, {
+          if (Node.isElement(child) && child.type !== type) {
+            const newProperties = { type };
+            Transforms.setNodes(editor, newProperties, {
               at: childPath,
             });
           }

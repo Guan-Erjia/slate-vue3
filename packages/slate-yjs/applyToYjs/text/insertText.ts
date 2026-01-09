@@ -15,7 +15,7 @@ export function insertText(
   );
 
   const targetNode = Node.get(slateRoot, op.path);
-  if (!Text.isText(targetNode)) {
+  if (!Node.isText(targetNode)) {
     throw new Error("Cannot insert text into non-text node");
   }
 

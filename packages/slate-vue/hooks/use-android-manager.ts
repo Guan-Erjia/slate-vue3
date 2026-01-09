@@ -5,7 +5,7 @@ import {
   normalizeStringDiff,
   StringDiff,
 } from "slate-dom";
-import { Editor, Node, Path, Point, Range, Text, Transforms } from "slate";
+import { Editor, Node, Path, Point, Range, Transforms } from "slate";
 import { onMounted, ref, type Ref } from "vue";
 import { useEditor } from "./use-editor";
 
@@ -138,7 +138,7 @@ export const useAndroidManager = (
         if (leaf.text.length === start.offset && end.offset === 0) {
           const next = Editor.next(editor, {
             at: start.path,
-            match: Text.isText,
+            match: Node.isText,
           });
           if (next && Path.equals(next[1], end.path)) {
             // when deleting a linebreak, targetRange will span across the break (ie start in the node before and end in the node after)

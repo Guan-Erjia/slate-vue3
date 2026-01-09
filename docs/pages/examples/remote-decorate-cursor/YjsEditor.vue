@@ -5,7 +5,7 @@ import {
   type RenderElementProps,
   type RenderLeafProps,
 } from "slate-vue3";
-import { createEditor, Editor, Node, Transforms } from "slate-vue3/core";
+import { createEditor, Node, Transforms } from "slate-vue3/core";
 import { withDOM } from "slate-vue3/dom";
 import {
   getRemoteCaretsOnLeaf,
@@ -142,7 +142,7 @@ const { normalizeNode } = editor;
 editor.normalizeNode = (entry: [Node]) => {
   const [node] = entry;
 
-  if (!Editor.isEditor(node) || node.children.length > 0) {
+  if (Node.isElement(node) && node.children.length > 0) {
     return normalizeNode(entry);
   }
   Transforms.insertNodes(editor, initialValue[0], { at: [0] });
