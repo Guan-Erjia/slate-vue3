@@ -7,6 +7,7 @@ import { Transforms } from "../interfaces/transforms";
 import { Node } from "../interfaces/node";
 import { Point } from "../interfaces/point";
 import { cloneDeep } from "lodash-es";
+import { Location } from "../interfaces";
 
 /**
  * Convert a range into a point by deleting it's content.
@@ -35,17 +36,20 @@ export const splitNodes: NodeTransforms["splitNodes"] = (
       always = false,
     } = options;
 
+    if (!at) return;
+
     if (match == null) {
       match = (n) => Node.isElement(n) && Editor.isBlock(editor, n);
     }
 
-    if (Range.isRange(at)) {
+    if (Location.isRange(at)) {
       at = deleteRange(editor, at);
+      if (!at) return;
     }
 
     // If the target is a path, the default height-skipping and position
     // counters need to account for us potentially splitting at a non-leaf.
-    if (Path.isPath(at)) {
+    if (Location.isPath(at)) {
       const path = at;
       const point = Editor.point(editor, path);
       const [parent] = Editor.parent(editor, path);
@@ -53,10 +57,6 @@ export const splitNodes: NodeTransforms["splitNodes"] = (
       height = point.path.length - path.length + 1;
       at = point;
       always = true;
-    }
-
-    if (!at) {
-      return;
     }
 
     const beforeRef = Editor.pointRef(editor, at, {

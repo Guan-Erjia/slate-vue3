@@ -5,7 +5,7 @@ import { matchPath } from "../utils/match-path";
 import { Range } from "../interfaces/range";
 import { Transforms } from "../interfaces/transforms";
 import { cloneDeep } from "lodash-es";
-import { Node, Point } from "../interfaces";
+import { Location, Node, Point } from "../interfaces";
 
 export const wrapNodes: NodeTransforms["wrapNodes"] = (
   editor,
@@ -21,7 +21,7 @@ export const wrapNodes: NodeTransforms["wrapNodes"] = (
     }
 
     if (match == null) {
-      if (Path.isPath(at)) {
+      if (Location.isPath(at)) {
         match = matchPath(editor, at);
       } else if (editor.isInline(element)) {
         match = (n) =>
@@ -31,7 +31,7 @@ export const wrapNodes: NodeTransforms["wrapNodes"] = (
       }
     }
 
-    if (split && Range.isRange(at)) {
+    if (split && Location.isRange(at)) {
       const [start, end] = Range.edges(at);
 
       const rangeRef = Editor.rangeRef(editor, at, {

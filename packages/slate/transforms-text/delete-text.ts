@@ -6,6 +6,7 @@ import { Path } from "../interfaces/path";
 import { Transforms } from "../interfaces/transforms";
 import { NodeEntry, Node } from "../interfaces/node";
 import { cloneDeep } from "lodash-es";
+import { Location } from "../interfaces";
 
 export const deleteText: TextTransforms["delete"] = (editor, options = {}) => {
   Editor.withoutNormalizing(editor, () => {
@@ -22,12 +23,12 @@ export const deleteText: TextTransforms["delete"] = (editor, options = {}) => {
     }
 
     let isCollapsed = false;
-    if (Range.isRange(at) && Range.isCollapsed(at)) {
+    if (Location.isRange(at) && Range.isCollapsed(at)) {
       isCollapsed = true;
       at = at.anchor;
     }
 
-    if (Point.isPoint(at)) {
+    if (Location.isPoint(at)) {
       const furthestVoid = Editor.void(editor, { at, mode: "highest" });
 
       if (!voids && furthestVoid) {
@@ -43,7 +44,7 @@ export const deleteText: TextTransforms["delete"] = (editor, options = {}) => {
       }
     }
 
-    if (Path.isPath(at)) {
+    if (Location.isPath(at)) {
       Transforms.removeNodes(editor, { at, voids });
       return;
     }

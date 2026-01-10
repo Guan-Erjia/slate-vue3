@@ -5,6 +5,7 @@ import { Range } from "../interfaces/range";
 import { Transforms } from "../interfaces/transforms";
 import { Scrubber } from "../interfaces/scrubber";
 import { Node } from "../interfaces/node";
+import { Location } from "../interfaces";
 
 const hasSingleChildNest = (editor: Editor, node: Node): boolean => {
   return (
@@ -29,7 +30,7 @@ export const mergeNodes: NodeTransforms["mergeNodes"] = (
     }
 
     if (match == null) {
-      if (Path.isPath(at)) {
+      if (Location.isPath(at)) {
         const [parent] = Editor.parent(editor, at);
         match = (n) => parent.children.includes(n);
       } else {
@@ -37,11 +38,11 @@ export const mergeNodes: NodeTransforms["mergeNodes"] = (
       }
     }
 
-    if (!hanging && Range.isRange(at)) {
+    if (!hanging && Location.isRange(at)) {
       at = Editor.unhangRange(editor, at, { voids });
     }
 
-    if (Range.isRange(at)) {
+    if (Location.isRange(at)) {
       if (Range.isCollapsed(at)) {
         at = at.anchor;
       } else {

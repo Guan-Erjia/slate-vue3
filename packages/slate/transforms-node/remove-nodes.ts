@@ -1,9 +1,8 @@
 import { NodeTransforms } from "../interfaces/transforms/node";
 import { Editor } from "../interfaces/editor";
-import { Path } from "../interfaces/path";
 import { matchPath } from "../utils/match-path";
 import { Node } from "../interfaces/node";
-import { Range } from "../interfaces/range";
+import { Location } from "../interfaces";
 
 export const removeNodes: NodeTransforms["removeNodes"] = (
   editor,
@@ -18,12 +17,12 @@ export const removeNodes: NodeTransforms["removeNodes"] = (
     }
 
     if (match == null) {
-      match = Path.isPath(at)
+      match = Location.isPath(at)
         ? matchPath(editor, at)
         : (n) => Node.isElement(n) && Editor.isBlock(editor, n);
     }
 
-    if (!hanging && Range.isRange(at)) {
+    if (!hanging && Location.isRange(at)) {
       at = Editor.unhangRange(editor, at, { voids });
     }
 
