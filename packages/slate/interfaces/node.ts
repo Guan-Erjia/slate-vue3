@@ -386,6 +386,7 @@ export const Node: NodeInterface = {
       const index = end.path[i];
       node.children = node.children.slice(0, index + 1);
       if (Node.isElement(node.children[index])) {
+        node.children[index] = { ...node.children[index] };
         node = node.children[index];
       }
     }
@@ -394,6 +395,7 @@ export const Node: NodeInterface = {
       const index = start.path[i];
       node.children = node.children.slice(index);
       if (Node.isElement(node.children[0])) {
+        node.children[0] = { ...node.children[0] };
         node = node.children[0];
       }
     }
