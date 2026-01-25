@@ -115,7 +115,7 @@
     :render-element
     :render-chunk="config.chunkDivs ? renderChunk : undefined"
   >
-    <Editable placeholder="Enter some text…" spellcheck />
+    <Editable placeholder="Enter some text…" spellcheck="false" />
   </Slate>
 </template>
 <script setup lang="ts">

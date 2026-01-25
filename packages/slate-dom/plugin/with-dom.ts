@@ -18,7 +18,6 @@ import { findCurrentLineRange } from "../utils/lines";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
   EDITOR_TO_ON_CHANGE,
-  EDITOR_TO_ON_IMMEDIATE_CHANGE,
   EDITOR_TO_USER_MARKS,
   EDITOR_TO_USER_SELECTION,
   NODE_TO_KEY,
@@ -40,14 +39,7 @@ export const withDOM = <T extends BaseEditor>(
   clipboardFormatKey = "x-slate-fragment",
 ): T & DOMEditor => {
   const e = editor as T & DOMEditor;
-  const {
-    apply,
-    onChange,
-    onImmediateChange,
-    deleteBackward,
-    addMark,
-    removeMark,
-  } = e;
+  const { apply, onChange, deleteBackward, addMark, removeMark } = e;
 
   // The WeakMap which maps a key to a specific HTMLElement must be scoped to the editor instance to
   // avoid collisions between editors in the DOM that share the same value.
@@ -323,14 +315,6 @@ export const withDOM = <T extends BaseEditor>(
     }
 
     onChange(options);
-  };
-
-  e.onImmediateChange = (options) => {
-    const onContextImmediateChange = EDITOR_TO_ON_IMMEDIATE_CHANGE.get(e);
-    if (onContextImmediateChange) {
-      onContextImmediateChange(options);
-    }
-    onImmediateChange(options);
   };
 
   return e;

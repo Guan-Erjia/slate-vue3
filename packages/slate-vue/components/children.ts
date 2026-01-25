@@ -12,7 +12,6 @@ import { TextComp } from "../components/text";
 import { ChunkComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
 import { provideElementDR } from "../render/decorate";
-import { useEditorNodeVersion } from "../render/version";
 import { provideIsLastEmptyBlock } from "../render/last";
 import { provideChunkRoot } from "../render/chunk";
 
@@ -57,21 +56,15 @@ export const ChildrenComp = defineComponent({
         });
     }
 
-    const cacheTree = getChunkTreeForNode(editor, props.element);
-
-    const editorNodeVersion = useEditorNodeVersion();
+    const cacheTree = getChunkTreeForNode(editor, element);
 
     watch(
-      editorNodeVersion,
+      element.children,
       () => {
-        reconcileChildren(editor, element.children, {
+        reconcileChildren(element, {
           chunkTree: cacheTree,
           chunkSize: chunkSize,
           onInsert: (n: Descendant, i: number) => {
-            NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, element);
-          },
-          onUpdate: (n: Descendant, i: number) => {
             NODE_TO_INDEX.set(n, i);
             NODE_TO_PARENT.set(n, element);
           },
@@ -80,9 +73,7 @@ export const ChildrenComp = defineComponent({
           },
         });
       },
-      {
-        immediate: true,
-      },
+      { deep: false },
     );
 
     provideChunkRoot(cacheTree);

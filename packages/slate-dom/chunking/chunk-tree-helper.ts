@@ -88,13 +88,64 @@ export class ChunkTreeHelper {
   ) {
     this.root = chunkTree;
     this.chunkSize = chunkSize;
-    // istanbul ignore next
     this.debug = debug ?? false;
     this.pointerChunk = chunkTree;
     this.pointerIndex = -1;
     this.pointerIndexStack = [];
     this.reachedEnd = false;
     this.validateState();
+  }
+
+  public seekToIndex(index: number) {
+    this.pointerChunk = this.root;
+    this.pointerIndex = -1;
+    this.pointerIndexStack = [];
+    this.reachedEnd = false;
+    this.cachedPointerNode = undefined;
+
+    let currentIndex = -1;
+
+    while (this.readLeaf()) {
+      currentIndex++;
+      if (currentIndex === index) {
+        return;
+      }
+    }
+
+    throw new Error(`Index ${index} out of bounds`);
+  }
+
+  public removeAt(index: number): ChunkLeaf {
+    this.seekToIndex(index);
+
+    const leaf = this.pointerNode as ChunkLeaf;
+    this.remove();
+    return leaf;
+  }
+
+  public insertAt(index: number, leaf: ChunkLeaf): void {
+    if (index === 0) {
+      this.pointerChunk = this.root;
+      this.pointerIndex = -1;
+      this.pointerIndexStack = [];
+      this.reachedEnd = false;
+      this.cachedPointerNode = undefined;
+      this.insertAfter([leaf]);
+      return;
+    }
+
+    this.seekToIndex(index - 1);
+    this.insertAfter([leaf]);
+  }
+
+  public move(from: number, to: number): void {
+    if (from === to) return;
+
+    const leaf = this.removeAt(from);
+
+    const adjustedTo = from < to ? to - 1 : to;
+
+    this.insertAt(adjustedTo, leaf);
   }
 
   /**
@@ -127,47 +178,6 @@ export class ChunkTreeHelper {
   }
 
   /**
-   * Move the pointer to the previous leaf in the chunk tree
-   */
-  public returnToPreviousLeaf() {
-    // If we were at the end of the tree, descend into the end of the last
-    // chunk in the tree
-    if (this.reachedEnd) {
-      this.reachedEnd = false;
-      this.enterChunkUntilLeaf(true);
-      return;
-    }
-
-    // Get the previous sibling or aunt node
-    while (true) {
-      if (this.pointerIndex >= 1) {
-        this.pointerIndex--;
-        this.cachedPointerNode = undefined;
-        break;
-      } else if (this.pointerChunk.type === "root") {
-        this.pointerIndex = -1;
-        return;
-      } else {
-        this.exitChunk();
-      }
-    }
-
-    this.validateState();
-
-    // If the previous sibling or aunt is a chunk, descend into it
-    this.enterChunkUntilLeaf(true);
-  }
-
-  /**
-   * Insert leaves before the current leaf, leaving the pointer unchanged
-   */
-  public insertBefore(leaves: ChunkLeaf[]) {
-    this.returnToPreviousLeaf();
-    this.insertAfter(leaves);
-    this.readLeaf();
-  }
-
-  /**
    * Insert leaves after the current leaf, leaving the pointer on the last
    * inserted leaf
    *
@@ -178,7 +188,7 @@ export class ChunkTreeHelper {
    * Any remaining leaves are passed to rawInsertAfter to be chunked and
    * inserted at the highest possible level.
    */
-  public insertAfter(leaves: ChunkLeaf[]) {
+  private insertAfter(leaves: ChunkLeaf[]) {
     // istanbul ignore next
     if (leaves.length === 0) return;
 
@@ -260,7 +270,7 @@ export class ChunkTreeHelper {
    * Remove the current node and decrement the pointer, deleting any ancestor
    * chunk that becomes empty as a result
    */
-  public remove() {
+  private remove() {
     this.pointerSiblings.splice(this.pointerIndex--, 1);
     this.cachedPointerNode = undefined;
 
@@ -356,7 +366,7 @@ export class ChunkTreeHelper {
   /**
    * Restore the pointer to a previous state
    */
-  private restorePointer(savedPointer: SavedPointer) {
+  public restorePointer(savedPointer: SavedPointer) {
     if (savedPointer === "start") {
       this.pointerChunk = this.root;
       this.pointerIndex = -1;

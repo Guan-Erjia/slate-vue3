@@ -61,7 +61,6 @@ export interface BaseEditor {
       fallbackElement?: () => Element;
     },
   ) => void;
-  onImmediateChange: (options?: { operation?: Operation }) => void;
   onChange: (options?: { operation?: Operation }) => void;
   shouldNormalize: ({
     iteration,
