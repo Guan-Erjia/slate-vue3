@@ -1,6 +1,5 @@
 import { Path } from "slate";
 import { Key } from "slate-dom";
-import { shallowReactive } from "vue";
 import {
   Chunk,
   ChunkTree,
@@ -480,8 +479,10 @@ export class ChunkTreeHelper {
           children: [],
         };
 
-        chunk.children = shallowReactive(
-          groupIntoChunks(chunkNodes, chunk, perChunk / this.chunkSize),
+        chunk.children = groupIntoChunks(
+          chunkNodes,
+          chunk,
+          perChunk / this.chunkSize,
         );
         chunks.push(chunk);
       }

@@ -54,15 +54,6 @@ export const EDITOR_TO_ON_CHANGE = new WeakMap<
   (options?: { operation?: Operation }) => void
 >();
 
-/**
- * Weak map for trigger chunk tree reconciliation on immediate changes.
- */
-
-export const EDITOR_TO_ON_IMMEDIATE_CHANGE = new WeakMap<
-  Editor,
-  (options?: { operation?: Operation }) => void
->();
-
 export const EDITOR_TO_USER_MARKS: WeakMap<Editor, Partial<Text> | null> =
   new WeakMap();
 

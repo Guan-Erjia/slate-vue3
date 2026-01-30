@@ -6,15 +6,14 @@ import {
   NODE_TO_PARENT,
   reconcileChildren,
 } from "slate-dom";
-import { defineComponent, h, renderList, VNode, watch } from "vue";
+import { defineComponent, h, ref, renderList, VNode, watch } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
-import { ChunkComp } from "../components/chunk";
+import { ChunkCompFc } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
 import { provideElementDR } from "../render/decorate";
-import { useEditorNodeVersion } from "../render/version";
 import { provideIsLastEmptyBlock } from "../render/last";
-import { provideChunkRoot } from "../render/chunk";
+import { provideChunkRoot, useRenderChunk } from "../render/chunk";
 
 /**
  * Children.
@@ -59,11 +58,12 @@ export const ChildrenComp = defineComponent({
 
     const cacheTree = getChunkTreeForNode(editor, props.element);
 
-    const editorNodeVersion = useEditorNodeVersion();
-
+    const version = ref(0);
     watch(
-      editorNodeVersion,
+      element.children,
       () => {
+        version.value++;
+        console.time("Reconcile children chunks");
         reconcileChildren(editor, element.children, {
           chunkTree: cacheTree,
           chunkSize: chunkSize,
@@ -79,17 +79,21 @@ export const ChildrenComp = defineComponent({
             NODE_TO_INDEX.set(n, i);
           },
         });
+        console.timeEnd("Reconcile children chunks");
       },
       {
+        deep: false,
         immediate: true,
       },
     );
 
     provideChunkRoot(cacheTree);
+    const renderChunk = useRenderChunk();
 
-    return () =>
-      h(ChunkComp, {
-        ancestor: cacheTree,
-      });
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      version.value;
+      return ChunkCompFc(cacheTree, renderChunk, true);
+    };
   },
 });

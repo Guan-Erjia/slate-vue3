@@ -16,6 +16,7 @@ export interface RenderChunkProps {
   children: any;
   attributes: {
     "data-slate-chunk": true;
+    key: string;
   };
 }
 

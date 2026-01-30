@@ -1,7 +1,6 @@
 import { Ancestor } from "slate";
 import { DOMEditor, Key } from "slate-dom";
 import { ChunkTree } from "./types";
-import { shallowReactive } from "vue";
 
 export const KEY_TO_CHUNK_TREE = new WeakMap<Key, ChunkTree>();
 
@@ -19,7 +18,7 @@ export const getChunkTreeForNode = (editor: DOMEditor, node: Ancestor) => {
     chunkTree = {
       type: "root",
       movedNodeKeys: new Set(),
-      children: shallowReactive([]),
+      children: [],
     };
 
     KEY_TO_CHUNK_TREE.set(key, chunkTree);
