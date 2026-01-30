@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           registry-url: "https://registry.npmjs.org/"
-          node-version: "latest"
+          node-version: 24
 
       - name: 安装 PNPM
         run: npm i -g pnpm

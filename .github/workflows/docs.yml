@@ -1,31 +1,32 @@
 name: build website
 on:
- push:
-  branches:
-   - master
+  push:
+    branches:
+      - master
 permissions: write-all
 jobs:
- docs:
-  runs-on: ubuntu-latest
-  steps:
-   - uses: actions/checkout@v4
-   - uses: pnpm/action-setup@v3
-     with:
-      version: 8
-   - name: 配置 Node 环境
-     uses: actions/setup-node@v4
-     with:
-      node-version: 'latest'
-   - name: 安装 PNPM
-     run: npm i -g pnpm
-   - name: 安装依赖
-     run: pnpm install --no-frozen-lockfile
-   - name: 构建
-     run: pnpm build
-   - name: 发布到Github Pages
-     uses: crazy-max/ghaction-github-pages@v4
-     with:
-      target_branch: docs
-      build_dir: ./dist
-     env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - name: 配置 Node 环境
+        uses: actions/setup-node@v4
+        with:
+          registry-url: "https://registry.npmjs.org/"
+          node-version: 24
+      - name: 安装 PNPM
+        run: npm i -g pnpm
+      - name: 安装依赖
+        run: pnpm install --no-frozen-lockfile
+      - name: 构建
+        run: pnpm build
+      - name: 发布到Github Pages
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: docs
+          build_dir: ./dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

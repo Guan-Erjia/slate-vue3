@@ -16,13 +16,16 @@ jobs:
         uses: actions/setup-node@v4
         with:
           registry-url: "https://registry.npmjs.org/"
-          node-version: "latest"
+          node-version: 24
 
       - name: 安装 PNPM
         run: npm i -g pnpm
 
       - name: 安装依赖
         run: pnpm install --no-frozen-lockfile
+
+      - name: 开始单元测试
+        run: pnpm test run
 
       - name: 准备集成测试环境
         run: pnpm playwright install --with-deps
