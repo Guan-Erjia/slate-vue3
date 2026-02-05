@@ -100,7 +100,7 @@ export const setNodes: NodeTransforms["setNodes"] = (
         if (compare(props[<keyof Node>k], node[<keyof Node>k])) {
           hasChanges = true;
           // Omit new properties from the old properties list
-          if (Object.prototype.hasOwnProperty.call(node, k))
+          if (Object.hasOwn(node, k))
             properties[<keyof Node>k] = node[<keyof Node>k];
           // Omit properties that have been removed from the new properties list
           if (merge) {

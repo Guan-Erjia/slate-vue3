@@ -23,7 +23,7 @@ export function setNode(
     });
 
     return Object.entries(op.properties).forEach(([key]) => {
-      if (!Object.prototype.hasOwnProperty.call(op.newProperties, key)) {
+      if (!Object.hasOwn(op.newProperties, key)) {
         yTarget.removeAttribute(key);
       }
     });
