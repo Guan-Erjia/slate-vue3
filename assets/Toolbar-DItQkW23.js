@@ -1,0 +1,1 @@
+import{_ as e,o as t,c as r,g as s}from"./index-cO_khfoC.js";const n={},a={style:{position:"relative","padding-bottom":"8px","margin-bottom":"10px","border-bottom":"2px solid #eee"},"data-test-id":"menu"};function c(o,d){return t(),r("div",a,[s(o.$slots,"default")])}const l=e(n,[["render",c]]);export{l as T};

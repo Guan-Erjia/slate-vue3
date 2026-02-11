@@ -1,0 +1,1 @@
+import{_ as o,c as t,a as n,r,o as c}from"./index-cO_khfoC.js";const s={},a={style:{margin:"15px",padding:"10px","padding-bottom":"30px","box-sizing":"border-box","background-color":"white",position:"relative"}};function i(d,_){const e=r("RouterView");return c(),t("div",a,[n(e)])}const x=o(s,[["render",i]]);export{x as default};
