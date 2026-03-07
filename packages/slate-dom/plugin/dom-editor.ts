@@ -693,11 +693,12 @@ export const DOMEditor: DOMEditorInterface = {
       searchDirection?: "forward" | "backward";
     },
   ): T extends true ? Point | null : Point => {
-    const { exactMatch, suppressThrow, searchDirection } = options;
+    const { exactMatch, suppressThrow } = options;
     const [nearestNode, nearestOffset] = compatEmptyNode(
       exactMatch ? domPoint : normalizeDOMPoint(domPoint),
     );
     const parentNode = nearestNode.parentNode as DOMElement;
+    let searchDirection = options.searchDirection;
     let textNode: DOMElement | null = null;
     let offset = 0;
 
@@ -817,6 +818,10 @@ export const DOMEditor: DOMEditorInterface = {
           leafNode =
             leafNodes.findLast((leaf) => isBefore(nonEditableNode, leaf)) ??
             null;
+
+          if (leafNode) {
+            searchDirection = "backward";
+          }
         }
 
         if (searchDirection === "forward" || !searchDirection) {
@@ -827,6 +832,10 @@ export const DOMEditor: DOMEditorInterface = {
 
           leafNode =
             leafNodes.find((leaf) => isAfter(nonEditableNode, leaf)) ?? null;
+
+          if (leafNode) {
+            searchDirection = "forward";
+          }
         }
 
         if (leafNode) {
