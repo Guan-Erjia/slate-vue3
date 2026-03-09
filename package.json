@@ -58,7 +58,8 @@
     "test": "vitest",
     "lint": "eslint  --max-warnings 0",
     "lint:fix": "eslint  --fix",
-    "prepare": "husky"
+    "prepare": "husky",
+    "typecheck": "vue-tsc --noEmit"
   },
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
@@ -113,6 +114,7 @@
     "vite-plugin-eslint": "^1.8.1",
     "vitest": "^4.0.18",
     "vue-router": "^5.0.3",
+    "vue-tsc": "^3.2.5",
     "yjs": "^13.6.29"
   },
   "publishConfig": {

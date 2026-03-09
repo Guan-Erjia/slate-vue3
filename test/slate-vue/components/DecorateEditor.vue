@@ -1,5 +1,5 @@
 <template>
-  <Slate :editor :render-leaf="props.renderLeaf" :decorate>
+  <Slate :editor :render-leaf :decorate>
     <Editable />
   </Slate>
 </template>
@@ -9,7 +9,7 @@ import { DOMEditor } from "slate-dom";
 import { Slate, Editable, RenderLeafProps } from "slate-vue";
 import { VNode } from "vue";
 
-const props = defineProps<{
+defineProps<{
   editor: DOMEditor;
   renderLeaf: (props: RenderLeafProps) => VNode;
   decorate: (entry: NodeEntry) => DecoratedRange[];

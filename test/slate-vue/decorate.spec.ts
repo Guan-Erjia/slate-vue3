@@ -1,5 +1,4 @@
 import {
-  DecoratedRange,
   Node,
   NodeEntry,
   Path,
@@ -23,20 +22,6 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
     children,
   );
 };
-
-interface DecorateConfig {
-  path: Path;
-  decorations: (node: Node) => (DecoratedRange & Record<string, unknown>)[];
-}
-
-const decoratePaths =
-  (configs: DecorateConfig[]) =>
-  ([node, path]: NodeEntry): DecoratedRange[] => {
-    const matchingConfig = configs.find(({ path: p }) => Path.equals(path, p));
-    if (!matchingConfig) return [];
-
-    return matchingConfig.decorations(node);
-  };
 
 const getDecoratedLeaves = (
   editor: DOMEditor,

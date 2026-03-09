@@ -11,6 +11,6 @@ export const isCustomOperation = (op: Operation): boolean =>
   (op as any).type === "custom_op";
 
 export const isHeadingElement = (element: Element): element is HeadingElement =>
-  element.type === "heading";
+  (element as any).type === "heading";
 
 export const skip = true;
