@@ -10,9 +10,13 @@ export const ChunkCompFc = (
 ) =>
   renderList(ancestor.children, (chunkNode): VNode => {
     if (chunkNode.type === "chunk") {
+      // Chunking keeps each chunk level homogeneous, so checking the first
+      // child is enough to determine whether this is the lowest chunk layer.
+      const lowest = chunkNode.children[0]?.type === "leaf";
+
       return renderChunk({
-        highest: highest === true,
-        lowest: chunkNode.children.some((c) => c.type === "leaf"),
+        highest: !!highest,
+        lowest,
         attributes: { "data-slate-chunk": true, key: chunkNode.key.id },
         children: ChunkCompFc(chunkNode, renderChunk, false),
       });
