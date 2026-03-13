@@ -7,16 +7,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v6
         with:
           registry-url: "https://registry.npmjs.org/"
           node-version: 'latest'
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
+          package-manager-cache: true
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: 安装依赖
         run: pnpm install --no-frozen-lockfile
