@@ -114,9 +114,8 @@ export const Element: ElementInterface = {
     elementVal: string,
     elementKey: string = "type",
   ): value is T => {
-    return (
-      isElement(value) && value[<keyof Descendant>elementKey] === elementVal
-    );
+    const key = elementKey as keyof Descendant;
+    return isElement(value) && (value[key] as unknown as string) === elementVal;
   },
 
   matches(element: Element, props: Partial<Element>): boolean {

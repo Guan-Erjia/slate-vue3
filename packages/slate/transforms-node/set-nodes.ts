@@ -96,22 +96,20 @@ export const setNodes: NodeTransforms["setNodes"] = (
         if (k === "children" || k === "text") {
           continue;
         }
-
-        if (compare(props[<keyof Node>k], node[<keyof Node>k])) {
+        const key = k as keyof Node;
+        if (compare(props[key] as Partial<Node>, node[key] as Partial<Node>)) {
           hasChanges = true;
           // Omit new properties from the old properties list
-          if (Object.hasOwn(node, k))
-            properties[<keyof Node>k] = node[<keyof Node>k];
+          if (Object.hasOwn(node, k)) properties[key] = node[key];
           // Omit properties that have been removed from the new properties list
           if (merge) {
-            if (props[<keyof Node>k] != null)
-              newProperties[<keyof Node>k] = merge(
-                node[<keyof Node>k],
-                props[<keyof Node>k],
+            if (props[key] != null)
+              newProperties[key] = merge(
+                node[key] as Partial<Node>,
+                props[key] as Partial<Node>,
               );
-          } else {
-            if (props[<keyof Node>k] != null)
-              newProperties[<keyof Node>k] = props[<keyof Node>k];
+          } else if (props[key] != null) {
+            newProperties[key] = props[key];
           }
         }
       }
