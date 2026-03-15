@@ -23,7 +23,7 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: 安装依赖
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: 构建
         run: pnpm build
       - uses: crazy-max/ghaction-github-pages@v4

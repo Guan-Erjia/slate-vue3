@@ -21,7 +21,7 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: 安装依赖
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: 检查版本号
         run: node ./scripts/check-version.js
@@ -30,7 +30,17 @@ jobs:
       - name: 开始单元测试
         run: pnpm test run
 
+      - name: 缓存 Playwright 浏览器
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
       - name: 准备集成测试环境
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm playwright install --with-deps
 
       - name: 开始集成测试
