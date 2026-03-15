@@ -24,11 +24,20 @@ jobs:
 
       - name: 安装依赖
         run: pnpm install --frozen-lockfile
+
       - name: 构建
         run: pnpm build
+
+      - name: 准备 Pages 目录
+        run: |
+          rm -rf .pages
+          mkdir -p .pages/docs
+          cp -R dist/. .pages/docs/
+          touch .pages/docs/.nojekyll
+
       - uses: crazy-max/ghaction-github-pages@v4
         with:
           target_branch: docs
-          build_dir: ./dist
+          build_dir: ./.pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
