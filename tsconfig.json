@@ -1,5 +1,5 @@
 {
-  "include": ["./packages/**/*", "./test/**/*"],
+  "include": ["./packages/**/*", "./test/**/*", "./playwright.config.ts"],
   "exclude": ["./docs/**/*"],
   "compilerOptions": {
     "types": ["vite/client", "node"],
