@@ -13,10 +13,10 @@ const withBatchTest = (editor: Editor, dirties: string[]) => {
 };
 
 const modules1 = await resolveModules(
-  import.meta.glob("../transforms/insertNodes/**/*.(j|t)s?(x)"),
+  import.meta.glob("../transforms/insertNodes/**/*.{js,jsx,ts,tsx}"),
 );
 const modules2 = await resolveModules(
-  import.meta.glob("../transforms/insertFragment/**/*.(j|t)s?(x)"),
+  import.meta.glob("../transforms/insertFragment/**/*.{js,jsx,ts,tsx}"),
 );
 
 describe("slate-transforms-insert-nodes", () => {

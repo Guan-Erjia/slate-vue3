@@ -3,7 +3,9 @@ import { test, expect, describe } from "vitest";
 import { reactive } from "vue";
 import { Editor } from "slate";
 
-const modules = await resolveModules(import.meta.glob("./**/*.(j|t)s?(x)"));
+const modules = await resolveModules(
+  import.meta.glob("./**/*.{js,jsx,ts,tsx}"),
+);
 
 describe("slate-interface", () => {
   modules.forEach((module) => {

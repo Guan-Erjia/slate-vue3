@@ -1,7 +1,9 @@
 import { withTest, resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
 
-const modules = await resolveModules(import.meta.glob("./**/*.(j|t)s?(x)"));
+const modules = await resolveModules(
+  import.meta.glob("./**/*.{js,jsx,ts,tsx}"),
+);
 
 describe("slate-transforms", () => {
   modules.forEach((module) => {

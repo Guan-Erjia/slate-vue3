@@ -3,7 +3,7 @@ import { test, expect, describe } from "vitest";
 import { reactive } from "vue";
 import { Editor } from "slate";
 
-const modules = await resolveModules(import.meta.glob("./**/*.js?(x)"));
+const modules = await resolveModules(import.meta.glob("./**/*.{js,jsx}"));
 
 describe("slate-normalization", () => {
   modules.forEach((module) => {

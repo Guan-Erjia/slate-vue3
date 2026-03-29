@@ -63,7 +63,7 @@ export const ChildrenComp = defineComponent({
       element.children,
       () => {
         version.value++;
-        console.time("Reconcile children chunks");
+        // console.time("Reconcile children chunks");
         reconcileChildren(editor, element.children, {
           chunkTree: cacheTree,
           chunkSize: chunkSize,
@@ -79,7 +79,7 @@ export const ChildrenComp = defineComponent({
             NODE_TO_INDEX.set(n, i);
           },
         });
-        console.timeEnd("Reconcile children chunks");
+        // console.timeEnd("Reconcile children chunks");
       },
       {
         deep: false,
