@@ -5,7 +5,7 @@ import { JsonObject } from "@liveblocks/client";
 import { CursorEditor } from "../plugins/withCursors";
 
 export function useUnsetCursorPositionOnBlur<TCursor extends JsonObject>() {
-  const editor = useEditor() as CursorEditor<TCursor> & DOMEditor;
+  const editor = useEditor() as unknown as CursorEditor<TCursor> & DOMEditor;
   const isFocused = useFocused();
 
   const sendCursorPosition = (focus?: boolean) => {

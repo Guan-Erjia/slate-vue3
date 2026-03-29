@@ -30,7 +30,8 @@ export function useRemoteCursorOverlayPositions<
   containerRef: Ref<TContainer | null>,
   shouldGenerateOverlay?: NodeMatch<Text>,
 ) {
-  const editor = useEditor() as CursorEditor<TCursorData> & DOMEditor;
+  const editor = useEditor() as unknown as CursorEditor<TCursorData> &
+    DOMEditor;
   const cursorStates = useRemoteCursorStates<TCursorData>();
 
   const overlayPositionCache = ref(new WeakMap());

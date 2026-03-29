@@ -5,13 +5,13 @@ import { toRawWeakMap } from "share-tools";
  * A weak map to hold anchor tokens.
  */
 
-const ANCHOR: WeakMap<Node, [number, AnchorToken]> = new toRawWeakMap();
+const ANCHOR = new toRawWeakMap<Node, [number, AnchorToken]>();
 
 /**
  * A weak map to hold focus tokens.
  */
 
-const FOCUS: WeakMap<Node, [number, FocusToken]> = new toRawWeakMap();
+const FOCUS = new toRawWeakMap<Node, [number, FocusToken]>();
 
 /**
  * All tokens inherit from a single constructor for `instanceof` checking.

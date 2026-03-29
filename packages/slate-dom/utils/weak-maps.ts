@@ -24,26 +24,25 @@ export const NODE_TO_PARENT: WeakMap<Node, Ancestor> = new WeakMap();
  * Weak maps that allow us to go between Slate nodes and DOM nodes. These
  * are used to resolve DOM event-related logic into Slate actions.
  */
-export const EDITOR_TO_WINDOW: WeakMap<Editor, Window> = new WeakMap();
-export const EDITOR_TO_ELEMENT: WeakMap<Editor, HTMLElement> = new WeakMap();
-export const ELEMENT_TO_NODE: WeakMap<HTMLElement, Node> = new WeakMap();
-export const NODE_TO_ELEMENT: WeakMap<Node, HTMLElement> = new WeakMap();
-export const NODE_TO_KEY: WeakMap<Node, Key> = new toRawWeakMap();
-export const EDITOR_TO_KEY_TO_ELEMENT: WeakMap<
+export const EDITOR_TO_WINDOW = new WeakMap<Editor, Window>();
+export const EDITOR_TO_ELEMENT = new WeakMap<Editor, HTMLElement>();
+export const ELEMENT_TO_NODE = new WeakMap<HTMLElement, Node>();
+export const NODE_TO_ELEMENT = new WeakMap<Node, HTMLElement>();
+export const NODE_TO_KEY = new toRawWeakMap<Node, Key>();
+export const EDITOR_TO_KEY_TO_ELEMENT = new WeakMap<
   Editor,
   WeakMap<Key, HTMLElement>
-> = new WeakMap();
+>();
 
 /**
  * Weak maps for storing editor-related state.
  */
 
-export const IS_READ_ONLY: WeakMap<Editor, boolean> = new WeakMap();
-export const IS_FOCUSED: WeakMap<Editor, boolean> = new WeakMap();
-export const IS_COMPOSING: WeakMap<Editor, boolean> = new WeakMap();
+export const IS_READ_ONLY = new WeakMap<Editor, boolean>();
+export const IS_FOCUSED = new WeakMap<Editor, boolean>();
+export const IS_COMPOSING = new WeakMap<Editor, boolean>();
 
-export const EDITOR_TO_USER_SELECTION: WeakMap<Editor, RangeRef | null> =
-  new WeakMap();
+export const EDITOR_TO_USER_SELECTION = new WeakMap<Editor, RangeRef | null>();
 
 /**
  * Weak map for associating the context `onChange` context with the plugin.
