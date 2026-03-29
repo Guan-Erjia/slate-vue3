@@ -1,0 +1,1 @@
+import{L as e,S as t,o as n,p as r}from"./runtime-core.esm-bundler-ebiS_r9Z.js";import{t as i}from"./Markdown-Ckf5t3Y6.js";var a="Complie `jsx` to slate descendant, work for unit test\n",o=r({__name:`hyperscript`,setup(r){return(r,o)=>(t(),n(i,{content:e(a)},null,8,[`content`]))}});export{o as default};

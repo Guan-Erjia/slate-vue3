@@ -1,0 +1,1 @@
+import{t as e}from"./rich-text-eMUldvfB.js";export{e as default};

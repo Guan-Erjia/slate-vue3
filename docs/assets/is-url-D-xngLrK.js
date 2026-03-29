@@ -1,0 +1,1 @@
+import{w as e}from"./slate-vue-D_S0Ualz.js";var t=e(((e,t)=>{t.exports=a;var n=/^(?:\w+:)?\/\/(\S+)$/,r=/^localhost[\:?\d]*(?:[^\:?\d]\S*)?$/,i=/^[^\s\.]+\.\S{2,}$/;function a(e){if(typeof e!=`string`)return!1;var t=e.match(n);if(!t)return!1;var a=t[1];return a?!!(r.test(a)||i.test(a)):!1}}));export{t};

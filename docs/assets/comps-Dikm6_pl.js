@@ -1,0 +1,1 @@
+import{E as e,S as t,c as n,f as r}from"./runtime-core.esm-bundler-ebiS_r9Z.js";import{t as i}from"./index-D6SxgZA8.js";var a={},o={style:{margin:`15px`,padding:`10px`,"padding-bottom":`30px`,"box-sizing":`border-box`,"background-color":`white`,position:`relative`}};function s(i,a){let s=e(`RouterView`);return t(),n(`div`,o,[r(s)])}var c=i(a,[[`render`,s]]);export{c as default};
