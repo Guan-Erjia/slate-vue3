@@ -14,6 +14,23 @@ import {
   Text,
 } from "../../index";
 
+/**
+ * The set of properties that cannot be set using set_node.
+ */
+export const NON_SETTABLE_NODE_PROPERTIES = [
+  "children",
+  "text",
+  // Do not allow overriding any property on the Object prototype
+  ...Object.getOwnPropertyNames(Object.prototype),
+];
+
+/**
+ * The set of properties that cannot be set using set_selection.
+ */
+export const NON_SETTABLE_SELECTION_PROPERTIES = Object.getOwnPropertyNames(
+  Object.prototype,
+);
+
 export interface GeneralTransforms {
   /**
    * Transform the editor by an operation.
@@ -55,11 +72,22 @@ export const GeneralTransforms: GeneralTransforms = {
 
       case "merge_node": {
         const { path } = op;
-        const node = Node.get(editor, path);
+        const index = path[path.length - 1];
         const prevPath = Path.previous(path);
+        const prevIndex = prevPath[prevPath.length - 1];
+        if (path.length === 0) {
+          throw new Error(
+            `Cannot apply a "merge_node" operation at path [${path}] because the root node cannot be merged.`,
+          );
+        }
+
+        // Defend against malicious paths containing strings
+        if (typeof index !== "number" || typeof prevIndex !== "number")
+          throw new Error("Index must be number");
+
+        const node = Node.get(editor, path);
         const prev = Node.get(editor, prevPath);
         const parent = Node.parent(editor, path);
-        const index = path[path.length - 1];
 
         if (Node.isText(node) && Node.isText(prev)) {
           prev.text += node.text;
@@ -191,11 +219,23 @@ export const GeneralTransforms: GeneralTransforms = {
         const node = Node.get(editor, path);
 
         for (const key in newProperties) {
-          if (key === "children" || key === "text") {
+          if (NON_SETTABLE_NODE_PROPERTIES.includes(key)) {
             throw new Error(`Cannot set the '${key}' property of nodes!`);
           }
 
-          const value = newProperties[<keyof Node>key];
+          const value = Object.hasOwn(newProperties, key)
+            ? newProperties[<keyof Node>key]
+            : undefined;
+
+          // Make sure we're not setting `then` to a function, since this will
+          // cause the node to be treated as a Promise-like object, which can
+          // cause unexpected behaviour when returning the node from async
+          // functions.
+          if (key === "then" && typeof value === "function") {
+            throw new Error(
+              'Cannot set the "then" property of a node to a function',
+            );
+          }
 
           if (value == null) {
             delete node[<keyof Node>key];
@@ -237,7 +277,22 @@ export const GeneralTransforms: GeneralTransforms = {
         const selection = { ...editor.selection };
 
         for (const key in newProperties) {
+          if (NON_SETTABLE_SELECTION_PROPERTIES.includes(key)) {
+            throw new Error(
+              `Cannot set the "${key}" property of the selection!`,
+            );
+          }
           const value = newProperties[<keyof Range>key];
+
+          // Make sure we're not setting `then` to a function, since this will
+          // cause the selection to be treated as a Promise-like object, which
+          // can cause unexpected behaviour when returning the selection from
+          // async functions.
+          if (key === "then" && typeof value === "function") {
+            throw new Error(
+              'Cannot set the "then" property of the selection to a function',
+            );
+          }
 
           if (value == null) {
             if (key === "anchor" || key === "focus") {
@@ -267,6 +322,10 @@ export const GeneralTransforms: GeneralTransforms = {
         const node = Node.get(editor, path);
         const parent = Node.parent(editor, path);
         const index = path[path.length - 1];
+
+        // Defend against malicious paths containing strings
+        if (typeof index !== "number") throw new Error("Index must be number");
+
         let newNode: Descendant;
 
         if (Node.isText(node)) {

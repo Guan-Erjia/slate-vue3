@@ -6,6 +6,7 @@ import { Transforms } from "../interfaces/transforms";
 import { Node } from "../interfaces/node";
 import { cloneDeep } from "lodash-es";
 import { Location } from "../interfaces";
+import { NON_SETTABLE_NODE_PROPERTIES } from "../interfaces/transforms/general";
 
 export const setNodes: NodeTransforms["setNodes"] = (
   editor,
@@ -81,9 +82,8 @@ export const setNodes: NodeTransforms["setNodes"] = (
       mode,
       voids,
     })) {
-      const properties: Partial<Node> = {};
-      // FIXME: is this correct?
-      const newProperties: Partial<Node> & { [key: string]: unknown } = {};
+      const properties: Record<string, unknown> = {};
+      const newProperties: Record<string, unknown> = {};
 
       // You can't set properties on the editor node.
       if (path.length === 0) {
@@ -93,23 +93,25 @@ export const setNodes: NodeTransforms["setNodes"] = (
       let hasChanges = false;
 
       for (const k in props) {
-        if (k === "children" || k === "text") {
+        if (NON_SETTABLE_NODE_PROPERTIES.includes(k)) {
           continue;
         }
-        const key = k as keyof Node;
-        if (compare(props[key] as Partial<Node>, node[key] as Partial<Node>)) {
+
+        const value: unknown = Object.hasOwn(node, k)
+          ? node[<keyof Node>k]
+          : undefined;
+
+        const newValue: unknown = props[<keyof Node>k];
+
+        if (compare(newValue, value)) {
           hasChanges = true;
           // Omit new properties from the old properties list
-          if (Object.hasOwn(node, k)) properties[key] = node[key];
+          if (Object.hasOwn(node, k)) properties[k] = value;
           // Omit properties that have been removed from the new properties list
           if (merge) {
-            if (props[key] != null)
-              newProperties[key] = merge(
-                node[key] as Partial<Node>,
-                props[key] as Partial<Node>,
-              );
-          } else if (props[key] != null) {
-            newProperties[key] = props[key];
+            if (newValue != null) newProperties[k] = merge(value, newValue);
+          } else {
+            if (newValue != null) newProperties[k] = newValue;
           }
         }
       }

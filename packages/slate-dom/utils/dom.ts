@@ -151,6 +151,9 @@ export const getEditableChildAndIndex = (
   index: number,
   direction: "forward" | "backward",
 ): [DOMNode, number] => {
+  if (typeof index !== "number") {
+    throw new Error("Expected index to be a number");
+  }
   const { childNodes } = parent;
   let child = childNodes[index];
   let i = index;
