@@ -223,9 +223,7 @@ export const GeneralTransforms: GeneralTransforms = {
             throw new Error(`Cannot set the '${key}' property of nodes!`);
           }
 
-          const value = Object.hasOwn(newProperties, key)
-            ? newProperties[<keyof Node>key]
-            : undefined;
+          const value = newProperties[<keyof Node>key];
 
           // Make sure we're not setting `then` to a function, since this will
           // cause the node to be treated as a Promise-like object, which can
@@ -333,7 +331,6 @@ export const GeneralTransforms: GeneralTransforms = {
           const after = node.text.slice(position);
           node.text = before;
           newNode = {
-            ...(properties as Partial<Text>),
             text: after,
           };
         } else {
@@ -342,9 +339,30 @@ export const GeneralTransforms: GeneralTransforms = {
           node.children = before;
 
           newNode = {
-            ...(properties as Partial<Element>),
             children: after,
           };
+        }
+
+        for (const key in properties) {
+          if (NON_SETTABLE_NODE_PROPERTIES.includes(key)) {
+            throw new Error(`Cannot set the "${key}" property of nodes!`);
+          }
+
+          const value = properties[<keyof Node>key];
+
+          // Make sure we're not setting `then` to a function, since this will
+          // cause the node to be treated as a Promise-like object, which can
+          // cause unexpected behaviour when returning the node from async
+          // functions.
+          if (key === "then" && typeof value === "function") {
+            throw new Error(
+              'Cannot set the "then" property of a node to a function',
+            );
+          }
+
+          if (value != null) {
+            newNode[<keyof Node>key] = value;
+          }
         }
 
         parent.children.splice(index + 1, 0, newNode);
