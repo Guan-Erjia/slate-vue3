@@ -4,7 +4,7 @@ import { Slate, Editable, type RenderLeafProps } from "slate-vue3";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { createEditor, Descendant, Editor } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
-import isHotkey from "is-hotkey";
+import { isHotkey } from "is-hotkey";
 import Toolbar from "../../../components/Toolbar.vue";
 import Button from "../../../components/Button.vue";
 

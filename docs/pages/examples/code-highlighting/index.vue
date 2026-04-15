@@ -52,7 +52,7 @@ import { computed, h } from "vue";
 import LanguageSelect from "./LanguageSelect.vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import Button from "../../../components/Button.vue";
-import isHotkey from "is-hotkey";
+import { isHotkey } from "is-hotkey";
 import { CodeBlockElement } from "../../../custom-types";
 import { normalizeTokens } from "../../../utils/normalize-tokens";
 
