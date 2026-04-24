@@ -7,13 +7,6 @@ import babel from "vite-plugin-babel";
 import eslint from "vite-plugin-eslint";
 
 const BaseConfig: UserConfig = {
-  oxc: {
-    jsx: {
-      runtime: "classic",
-      pragma: "jsx",
-      development: false,
-    },
-  },
   plugins: [
     vue(),
     eslint({
@@ -79,6 +72,7 @@ export default defineConfig(({ command, mode }) => {
       plugins: [
         dts({
           tsconfigPath: "./tsconfig.json",
+          entryRoot: "packages",
           exclude: ["./packages/docs/**/*", "./test/**/*"],
           compilerOptions: {
             verbatimModuleSyntax: false,
