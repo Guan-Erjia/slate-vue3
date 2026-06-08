@@ -5,6 +5,7 @@ import {
   createEditor,
   createElement,
   createFocus,
+  createPoint,
   createFragment,
   createSelection,
   createText,
@@ -21,6 +22,7 @@ const DEFAULT_CREATORS = {
   element: createElement,
   focus: createFocus,
   fragment: createFragment,
+  point: createPoint,
   selection: createSelection,
   text: createText,
 };

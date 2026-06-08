@@ -7,7 +7,7 @@ const modules = await resolveModules(
 
 describe("slate-hyperscript", () => {
   modules.forEach((module) => {
-    const { input, output, path } = module;
+    const { input, output, path, test: _test } = module;
     test(path, () => {
       let actual: Record<string, typeof input> = {};
 
@@ -20,6 +20,7 @@ describe("slate-hyperscript", () => {
       }
 
       expect(actual).toStrictEqual(output);
+      _test?.();
     });
   });
 });
