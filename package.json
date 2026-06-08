@@ -82,7 +82,7 @@
     "@faker-js/faker": "^10.4.0",
     "@liveblocks/client": "^3.18.2",
     "@liveblocks/yjs": "^3.18.2",
-    "@playwright/test": "^1.59.1",
+    "@playwright/test": "^1.60.0",
     "@testing-library/vue": "^8.1.0",
     "@types/is-hotkey": "^0.1.10",
     "@types/is-url": "^1.2.32",
