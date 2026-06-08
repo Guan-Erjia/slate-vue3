@@ -1,6 +1,6 @@
 {
   "name": "slate-vue3",
-  "version": "0.13.7",
+  "version": "0.13.8",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
