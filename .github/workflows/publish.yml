@@ -20,20 +20,20 @@ jobs:
           package-manager-cache: true
           cache-dependency-path: pnpm-lock.yaml
 
-      - name: 安装依赖
+      - name: install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: 检查版本号
+      - name: check version
         run: node ./scripts/check-version.js
         id: check-version
 
-      - name: 开始单元测试
+      - name: run unit tests
         run: pnpm test run
 
-      - name: 准备集成测试环境
+      - name: setup integration test environment
         run: pnpm playwright install --with-deps
 
-      - name: 开始集成测试
+      - name: run integration tests
         run: pnpm e2e
 
       - uses: actions/upload-artifact@v6
@@ -43,22 +43,21 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-      - name: 开始打包
+      - name: build package
         run: pnpm build-all
 
-      - name: 发布npm
+      - name: publish npm
         run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-      - name: 创建 GitHub 发布
+      - name: create GitHub release
         id: release_tag
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v_${{ steps.check-version.outputs.version }}
-          release_name: release v_${{ steps.check-version.outputs.version }}
+          name: release v_${{ steps.check-version.outputs.version }}
           prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
