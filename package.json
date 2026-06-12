@@ -50,6 +50,7 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:lib": "vite build --mode=lib-watch",
     "build": "vite build",
     "preview": "vite preview",
     "build-all": "vite build --mode=lib",
@@ -101,6 +102,7 @@
     "jiti": "^2.7.0",
     "jsdom": "^29.1.1",
     "lint-staged": "^17.0.7",
+    "prettier": "^3.8.4",
     "prismjs": "^1.30.0",
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",

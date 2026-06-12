@@ -55,10 +55,12 @@ const BaseConfig: UserConfig = {
 
 export default defineConfig(({ command, mode }) => {
   console.log(command, mode);
-  if (mode === "lib") {
+  if (mode === "lib" || mode === "lib-watch") {
     return mergeConfig(BaseConfig, {
       build: {
         minify: false,
+        sourcemap: mode === "lib-watch",
+        watch: mode === "lib-watch" ? {} : undefined,
         modulePreload: { polyfill: false },
         copyPublicDir: false,
         lib: {
