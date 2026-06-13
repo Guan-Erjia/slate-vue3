@@ -1,4 +1,4 @@
-import { Path, Point, Range } from "slate";
+import { Path, Point, Range } from "slate-vue3/core";
 
 /**
  * Hyperscript point refs can be used to construct arbitrary points using the

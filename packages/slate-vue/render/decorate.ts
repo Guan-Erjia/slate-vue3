@@ -1,5 +1,5 @@
-import { DecoratedRange, Element, NodeEntry } from "slate";
-import { DOMEditor } from "slate-dom";
+import { DecoratedRange, Element, NodeEntry } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
 import { computed, inject, provide, ComputedRef } from "vue";
 import { useEditor } from "../hooks/use-editor";
 

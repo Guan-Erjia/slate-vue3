@@ -1,10 +1,10 @@
-import { Editor, Text, Range } from "slate";
+import { Editor, Text, Range } from "slate-vue3/core";
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
   NODE_TO_ELEMENT,
-} from "slate-dom";
+} from "slate-vue3/dom";
 import {
   h,
   ref,

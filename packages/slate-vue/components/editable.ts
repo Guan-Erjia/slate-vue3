@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { Editor, Element, Node, Path, Range, Text, Transforms } from "slate";
+import { Editor, Element, Node, Path, Range, Text, Transforms } from "slate-vue3/core";
 import {
   DOMEditor,
   getActiveElement,
@@ -29,7 +29,7 @@ import {
   IS_READ_ONLY,
   NODE_TO_ELEMENT,
   containsShadowAware,
-} from "slate-dom";
+} from "slate-vue3/dom";
 import {
   computed,
   defineComponent,

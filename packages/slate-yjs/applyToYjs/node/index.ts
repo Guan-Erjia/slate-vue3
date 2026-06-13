@@ -1,4 +1,4 @@
-import { NodeOperation } from "slate";
+import { NodeOperation } from "slate-vue3/core";
 import { OpMapper } from "../types";
 import { insertNode } from "./insertNode";
 import { mergeNode } from "./mergeNode";

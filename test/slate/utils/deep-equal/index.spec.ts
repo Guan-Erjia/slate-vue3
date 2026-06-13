@@ -1,6 +1,6 @@
 import { withTest, resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
-import { Editor } from "slate";
+import { Editor } from "slate-vue3/core";
 
 const modules = await resolveModules(import.meta.glob("./*.js"));
 

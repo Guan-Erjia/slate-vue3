@@ -1,4 +1,4 @@
-import { Node, SplitNodeOperation, Text } from "slate";
+import { Node, SplitNodeOperation } from "slate-vue3/core";
 import { XmlText } from "yjs";
 import { cloneInsertDeltaDeep } from "../../utils/clone";
 import { sliceInsertDelta, yTextToInsertDelta } from "../../utils/delta";

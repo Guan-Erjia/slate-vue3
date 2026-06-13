@@ -10,8 +10,8 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { DOMEditor } from "slate-dom";
-import { Slate, Editable, RenderElementProps } from "slate-vue";
+import { DOMEditor } from "slate-vue3/dom";
+import { Slate, Editable, RenderElementProps } from "slate-vue3";
 import { h } from "vue";
 
 const props = defineProps<{

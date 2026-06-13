@@ -4,8 +4,8 @@ import {
   isDOMSelection,
   normalizeStringDiff,
   StringDiff,
-} from "slate-dom";
-import { Editor, Node, Path, Point, Range, Transforms } from "slate";
+} from "slate-vue3/dom";
+import { Editor, Node, Path, Point, Range, Transforms } from "slate-vue3/core";
 import { onMounted, ref, type Ref } from "vue";
 import { useEditor } from "./use-editor";
 

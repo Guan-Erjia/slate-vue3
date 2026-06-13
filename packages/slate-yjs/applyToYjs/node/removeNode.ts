@@ -1,4 +1,4 @@
-import { Node, RemoveNodeOperation } from "slate";
+import { Node, RemoveNodeOperation } from "slate-vue3/core";
 import { getYTarget } from "../../utils/location";
 import { XmlText } from "yjs";
 

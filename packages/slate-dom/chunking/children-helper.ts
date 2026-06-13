@@ -1,7 +1,8 @@
-import { Descendant } from "slate";
-import { DOMEditor, Key } from "slate-dom";
+import { Descendant } from "slate-vue3/core";
 import { ChunkLeaf } from "./types";
 import { toRaw } from "vue";
+import { DOMEditor } from "../plugin/dom-editor";
+import { Key } from "../utils/key";
 
 /**
  * Traverse an array of children, providing helpers useful for reconciling the

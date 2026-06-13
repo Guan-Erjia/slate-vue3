@@ -2,7 +2,7 @@
  * Utilities for single-line deletion
  */
 
-import { Editor, Range } from "slate";
+import { Editor, Range } from "slate-vue3/core";
 import { DOMEditor } from "../plugin/dom-editor";
 
 const doRectsIntersect = (rect: DOMRect, compareRect: DOMRect) => {

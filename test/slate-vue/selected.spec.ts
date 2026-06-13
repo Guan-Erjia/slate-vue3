@@ -1,8 +1,8 @@
-import { createEditor, Transforms } from "slate";
+import { createEditor, Transforms } from "slate-vue3/core";
 import { render } from "@testing-library/vue";
-import { DOMEditor, withDOM } from "slate-dom";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { beforeEach, describe, expect, it } from "vitest";
-import { RenderElementProps, useInheritRef, useSelected } from "slate-vue";
+import { RenderElementProps, useInheritRef, useSelected } from "slate-vue3";
 import { defineComponent, h, nextTick, useAttrs, watch } from "vue";
 import SelectedEditor from "./components/SelectedEditor.vue";
 

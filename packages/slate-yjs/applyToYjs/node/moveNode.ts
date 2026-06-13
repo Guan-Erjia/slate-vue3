@@ -1,4 +1,4 @@
-import { MoveNodeOperation, Node, Path, Text } from "slate";
+import { MoveNodeOperation, Node, Path } from "slate-vue3/core";
 import { XmlText } from "yjs";
 import { Delta } from "../../model/types";
 import { cloneInsertDeltaDeep } from "../../utils/clone";

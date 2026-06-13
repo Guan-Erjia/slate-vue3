@@ -1,7 +1,7 @@
 import { computed, onUpdated, ref, Ref } from "vue";
-import { BaseRange, NodeMatch, Text } from "slate";
-import { DOMEditor } from "slate-dom";
-import { useEditor } from "slate-vue";
+import { BaseRange, NodeMatch, Text } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
+import { useEditor } from "slate-vue3";
 import { JsonObject } from "@liveblocks/client";
 import { CursorEditor, CursorState } from "../plugins/withCursors";
 import {

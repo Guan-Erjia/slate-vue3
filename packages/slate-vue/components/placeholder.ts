@@ -4,7 +4,7 @@ import {
   usePlaceholderResize,
   useRenderPlaceholder,
 } from "../render/placeholder";
-import { IS_WEBKIT } from "slate-dom";
+import { IS_WEBKIT } from "slate-vue3/dom";
 
 const style: CSSProperties = {
   position: "absolute",

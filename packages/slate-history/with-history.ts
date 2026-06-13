@@ -1,4 +1,4 @@
-import { Editor, Operation, Path, Transforms } from "slate";
+import { Editor, Operation, Path, Transforms } from "slate-vue3/core";
 import { HistoryEditor } from "./history-editor";
 import { shallowReactive } from "vue";
 

@@ -1,24 +1,8 @@
 {
+  "extends": "../tsconfig.json",
   "include": ["./**/*"],
+  "exclude": ["../packages/**/*", "../test/**/*", "../playwright.config.ts"],
   "compilerOptions": {
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "jsx": "preserve",
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "sourceMap": false,
-    "strict": true,
-    "target": "esnext",
-    "verbatimModuleSyntax": false,
-    "paths": {
-      "slate-vue3/core": ["../packages/slate/index.ts"],
-      "slate-vue3/dom": ["../packages/slate-dom/index.ts"],
-      "slate-vue3/history": ["../packages/slate-history/index.ts"],
-      "slate-vue3/hyperscript": ["../packages/slate-hyperscript/index.ts"],
-      "slate-vue3/yjs": ["../packages/slate-yjs/index.ts"],
-      "slate-vue3": ["../packages/slate-vue/index.ts"]
-    }
   }
 }

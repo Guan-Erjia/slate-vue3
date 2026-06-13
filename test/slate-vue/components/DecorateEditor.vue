@@ -4,9 +4,9 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { DecoratedRange, NodeEntry } from "slate";
-import { DOMEditor } from "slate-dom";
-import { Slate, Editable, RenderLeafProps } from "slate-vue";
+import { DecoratedRange, NodeEntry } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
+import { Slate, Editable, RenderLeafProps } from "slate-vue3";
 import { VNode } from "vue";
 
 defineProps<{

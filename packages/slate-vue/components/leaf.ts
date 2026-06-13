@@ -1,4 +1,4 @@
-import { Text, LeafPosition } from "slate";
+import { Text, LeafPosition } from "slate-vue3/core";
 import { h, defineComponent } from "vue";
 import { StringComp } from "./string";
 import { usePlaceholderShow } from "../render/placeholder";

@@ -1,4 +1,4 @@
-import type { Editor, Element, Node } from "slate";
+import type { Editor, Element, Node } from "slate-vue3/core";
 import { RelativePosition, XmlText } from "yjs";
 
 export type DeltaAttributes = {

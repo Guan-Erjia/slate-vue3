@@ -8,7 +8,7 @@ import {
   Range,
   Scrubber,
   Transforms,
-} from "slate";
+} from "slate-vue3/core";
 import {
   closestShadowAware,
   containsShadowAware,

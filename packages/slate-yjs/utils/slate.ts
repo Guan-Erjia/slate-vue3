@@ -1,4 +1,4 @@
-import { BaseText, Descendant, Node } from "slate";
+import { BaseText, Descendant, Node } from "slate-vue3/core";
 import { omit } from "./object";
 
 export function getProperties<TNode extends Descendant>(

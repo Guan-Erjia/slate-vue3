@@ -1,4 +1,4 @@
-import { Element, Text, Operation } from "slate";
+import { Element, Text, Operation } from "slate-vue3/core";
 import { CustomText, HeadingElement } from "./custom-types";
 
 export const isBoldText = (text: Text): text is CustomText =>

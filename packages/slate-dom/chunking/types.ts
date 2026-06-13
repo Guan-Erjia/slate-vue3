@@ -1,5 +1,5 @@
-import { Descendant } from "slate";
-import { Key } from "slate-dom";
+import { Descendant } from "slate-vue3/core";
+import { Key } from "../utils/key";
 
 export interface ChunkTree {
   type: "root";

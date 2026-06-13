@@ -1,4 +1,4 @@
-import { ChunkAncestor } from "slate-dom";
+import { ChunkAncestor } from "slate-vue3/dom";
 import { h, renderList, VNode } from "vue";
 import { ElementComp } from "./element";
 import { RenderChunkProps } from "../utils/interface";

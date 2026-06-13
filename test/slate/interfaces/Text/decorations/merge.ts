@@ -1,4 +1,4 @@
-import { DecoratedRange, Text } from "slate";
+import { DecoratedRange, Text } from "slate-vue3/core";
 
 const merge = (leaf: Text, dec: { decoration: number[] }) => {
   const { decoration, ...rest } = dec;

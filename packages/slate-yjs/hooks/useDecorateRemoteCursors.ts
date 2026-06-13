@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, ref } from "vue";
-import { BaseRange, BaseText, NodeEntry, Range } from "slate";
-import { DOMEditor } from "slate-dom";
+import { BaseRange, BaseText, NodeEntry, Range } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
 import { JsonObject } from "@liveblocks/client";
 import {
   CursorEditor,

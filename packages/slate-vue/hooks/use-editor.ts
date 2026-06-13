@@ -1,6 +1,6 @@
 import { inject, ShallowReactive } from "vue";
 import { SLATE_USE_EDITOR } from "../utils/constants";
-import type { DOMEditor } from "slate-dom";
+import type { DOMEditor } from "slate-vue3/dom";
 
 /**
  * Get the current editor reactive object from the context.

@@ -1,4 +1,4 @@
-import { Editor, Range } from "slate";
+import { Editor, Range } from "slate-vue3/core";
 import { compareRelativePositions } from "yjs";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
 import { JsonObject } from "@liveblocks/client";

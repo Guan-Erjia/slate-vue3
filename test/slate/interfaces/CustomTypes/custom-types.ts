@@ -1,4 +1,4 @@
-import { Descendant, Operation } from "slate";
+import { Descendant, Operation } from "slate-vue3/core";
 
 export type HeadingElement = {
   type: "heading";

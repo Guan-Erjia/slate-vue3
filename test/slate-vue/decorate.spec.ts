@@ -5,9 +5,9 @@ import {
   createEditor as slateCreateEditor,
   Editor,
   Transforms,
-} from "slate";
-import { DOMEditor, withDOM } from "slate-dom";
-import { RenderLeafProps } from "slate-vue";
+} from "slate-vue3/core";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { RenderLeafProps } from "slate-vue3";
 import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
 import { describe, expect, it } from "vitest";

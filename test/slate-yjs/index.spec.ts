@@ -4,9 +4,9 @@ import {
   withYjs,
   yTextToSlateElement,
   slateNodesToInsertDelta,
-} from "slate-yjs";
+} from "slate-vue3/yjs";
 import * as Y from "yjs";
-import { Editor, createEditor, Element, Transforms } from "slate";
+import { Editor, createEditor, Element, Transforms } from "slate-vue3/core";
 
 const modules = await resolveModules(import.meta.glob("./**/*.jsx"));
 

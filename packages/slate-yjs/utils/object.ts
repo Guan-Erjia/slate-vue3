@@ -1,4 +1,4 @@
-import { isObject } from "slate";
+import { isObject } from "slate-vue3/core";
 
 type InspectableObject = Record<string | number | symbol, unknown>;
 

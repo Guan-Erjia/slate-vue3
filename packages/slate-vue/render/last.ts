@@ -1,4 +1,4 @@
-import { Element, Node } from "slate";
+import { Element, Node } from "slate-vue3/core";
 import { computed, ComputedRef, inject, provide } from "vue";
 import { useEditor } from "../hooks/use-editor";
 export const SLATE_INNER_RENDER_IS_LAST_EMPTY_BLOCK = Symbol(

@@ -1,4 +1,4 @@
-import { Node, Path, Text } from "slate";
+import { Node, Path, Text } from "slate-vue3/core";
 import { toRawWeakMap } from "share-tools";
 import { HyperscriptPointRef, HyperscriptRangeRef } from "./refs";
 

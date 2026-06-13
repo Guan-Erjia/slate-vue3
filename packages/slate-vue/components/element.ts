@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { Editor, Element, Node } from "slate";
+import { Editor, Element, Node } from "slate-vue3/core";
 import { ChildrenComp } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -9,7 +9,7 @@ import {
   NODE_TO_PARENT,
   DOMEditor,
   IS_FIREFOX,
-} from "slate-dom";
+} from "slate-vue3/dom";
 import { TextComp } from "./text";
 import {
   computed,

@@ -1,4 +1,4 @@
-import { BasePoint, BaseRange, Node, Text } from "slate";
+import { BasePoint, BaseRange, Node,   } from "slate-vue3/core";
 import {
   AbsolutePosition,
   createAbsolutePositionFromRelativePosition,

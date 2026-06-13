@@ -1,4 +1,4 @@
-import { Element, isObject, createEditor as makeEditor } from "slate";
+import { Element, isObject, createEditor as makeEditor } from "slate-vue3/core";
 import {
   createAnchor,
   createCursor,

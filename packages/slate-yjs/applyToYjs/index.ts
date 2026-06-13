@@ -1,4 +1,4 @@
-import { Node, Operation } from "slate";
+import { Node, Operation } from "slate-vue3/core";
 import { XmlText } from "yjs";
 import { NODE_MAPPER } from "./node";
 import { TEXT_MAPPER } from "./text";

@@ -1,6 +1,6 @@
 import { withTest, resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
-import { createEditor, Editor } from "slate";
+import { createEditor, Editor } from "slate-vue3/core";
 import { cloneDeep } from "lodash-es";
 
 const withBatchTest = (editor: Editor, dirties: string[]) => {

@@ -1,11 +1,11 @@
-import { Ancestor, Descendant, Editor, Node } from "slate";
+import { Ancestor, Descendant, Editor, Node } from "slate-vue3/core";
 import {
   DOMEditor,
   getChunkTreeForNode,
   NODE_TO_INDEX,
   NODE_TO_PARENT,
   reconcileChildren,
-} from "slate-dom";
+} from "slate-vue3/dom";
 import { defineComponent, h, ref, renderList, VNode, watch } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";

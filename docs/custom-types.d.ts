@@ -1,9 +1,9 @@
 /// <reference types="vite/client" />
-import { Descendant, BaseEditor, BaseRange } from "slate-vue3/core";
+import { Descendant, BaseEditor, BaseRange, BaseText } from "slate-vue3/core";
 import { DOMEditor } from "slate-vue3/dom";
 
 export type BlockQuoteElement = {
-  type: "block-quote";
+  type: "block-quote" | "blockquote";
   align?: string;
   children: Descendant[];
 };
@@ -35,6 +35,12 @@ export type CheckListItemElement = {
 export type EditableVoidElement = {
   type: "editable-void";
   children: EmptyText[];
+};
+
+export type HeadingElement = {
+  type: "heading";
+  depth: number;
+  children: Descendant[];
 };
 
 export type HeadingOneElement = {
@@ -85,7 +91,16 @@ export type ButtonElement = { type: "button"; children: Descendant[] };
 
 export type BadgeElement = { type: "badge"; children: Descendant[] };
 
-export type ListItemElement = { type: "list-item"; children: Descendant[] };
+export type ListElement = {
+  type: "list";
+  children: Descendant[];
+  ordered: "ol" | "ul";
+};
+
+export type ListItemElement = {
+  type: "list-item" | "listItem";
+  children: Descendant[];
+};
 
 export type MentionElement = {
   type: "mention";
@@ -138,6 +153,7 @@ export type CustomElement =
   | NumberedListElement
   | CheckListItemElement
   | EditableVoidElement
+  | HeadingElement
   | HeadingOneElement
   | HeadingTwoElement
   | HeadingThreeElement
@@ -148,6 +164,7 @@ export type CustomElement =
   | LinkElement
   | ButtonElement
   | BadgeElement
+  | ListElement
   | ListItemElement
   | MentionElement
   | ParagraphElement
@@ -161,10 +178,14 @@ export type CustomElement =
   | CodeLineElement;
 
 export type CustomText = {
+  text: string;
   bold?: boolean;
   italic?: boolean;
   code?: boolean;
-  text: string;
+  strong?: boolean;
+  emphasis?: boolean;
+  inlineCode?: boolean;
+  delete?: boolean;
 };
 
 export type EmptyText = {
@@ -177,7 +198,7 @@ declare module "slate-vue3/core" {
   interface CustomTypes {
     Editor: CustomEditor;
     Element: CustomElement;
-    Text: CustomText | EmptyText;
+    Text: CustomText;
     Range: BaseRange & {
       [key: string]: unknown;
     };

@@ -1,4 +1,10 @@
-import { Descendant, Element, Node, Transforms, createEditor } from "slate";
+import {
+  Descendant,
+  Element,
+  Node,
+  Transforms,
+  createEditor,
+} from "slate-vue3/core";
 import {
   withDOM,
   DOMEditor,
@@ -8,7 +14,7 @@ import {
   reconcileChildren,
   NODE_TO_INDEX,
   NODE_TO_PARENT,
-} from "slate-dom";
+} from "slate-vue3/dom";
 import type {
   Chunk,
   ChunkAncestor,
@@ -17,7 +23,7 @@ import type {
   ChunkNode,
   ChunkTree,
   ReconcileOptions,
-} from "slate-dom";
+} from "slate-vue3/dom";
 import { describe, vi, it, expect } from "vitest";
 
 const block = (text: string): Element => ({ children: [{ text }] });

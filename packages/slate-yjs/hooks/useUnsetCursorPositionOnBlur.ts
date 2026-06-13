@@ -1,6 +1,6 @@
 import { onMounted, onUnmounted, watch } from "vue";
-import { DOMEditor } from "slate-dom";
-import { useEditor, useFocused } from "slate-vue";
+import { DOMEditor } from "slate-vue3/dom";
+import { useEditor, useFocused } from "slate-vue3";
 import { JsonObject } from "@liveblocks/client";
 import { CursorEditor } from "../plugins/withCursors";
 

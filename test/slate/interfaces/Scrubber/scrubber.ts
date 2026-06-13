@@ -1,4 +1,4 @@
-import { Node, Scrubber } from "slate";
+import { Node, Scrubber } from "slate-vue3/core";
 
 export const input = {
   customField: "some very long custom field value that will get scrubbed",

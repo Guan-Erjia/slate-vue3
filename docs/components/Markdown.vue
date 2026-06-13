@@ -62,7 +62,7 @@ const renderElement = ({
   children,
   element,
 }: RenderElementProps) => {
-  switch ((element as any).type) {
+  switch (element.type) {
     case "heading":
       return h("h" + element.depth, attributes, children);
     case "code":
@@ -76,7 +76,7 @@ const renderElement = ({
     case "listItem":
       return h("li", attributes, children);
     case "link":
-      return h("a", { href: (element as any).url, target: "_blank" }, children);
+      return h("a", { href: element.url, target: "_blank" }, children);
     case "blockquote":
       return h("blockquote", attributes, children);
     default:

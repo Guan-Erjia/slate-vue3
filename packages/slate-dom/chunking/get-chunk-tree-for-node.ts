@@ -1,5 +1,6 @@
-import { Ancestor } from "slate";
-import { DOMEditor, Key } from "slate-dom";
+import { Ancestor } from "slate-vue3/core";
+import {  Key } from "../utils/key";
+import { DOMEditor} from '../plugin/dom-editor'
 import { ChunkTree } from "./types";
 
 export const KEY_TO_CHUNK_TREE = new WeakMap<Key, ChunkTree>();

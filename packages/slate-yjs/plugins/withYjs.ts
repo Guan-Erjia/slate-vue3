@@ -1,4 +1,4 @@
-import { BaseEditor, Editor, Point } from "slate";
+import { BaseEditor, Editor, Point } from "slate-vue3/core";
 import { RelativePosition, Transaction, XmlText, YEvent } from "yjs";
 import { applyYjsEvents } from "../applyToSlate";
 import { applySlateOp } from "../applyToYjs";

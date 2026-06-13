@@ -1,6 +1,6 @@
-import { Editor } from "slate";
-import { createHyperscript } from "slate-hyperscript";
-export { withHistory, History } from "slate-history";
+import { Editor } from "slate-vue3/core";
+import { createHyperscript } from "slate-vue3/hyperscript";
+export { withHistory, History } from "slate-vue3/history";
 export {
   codepointsIteratorRTL,
   getCharacterDistance,

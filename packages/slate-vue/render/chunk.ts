@@ -1,4 +1,4 @@
-import { ChunkTree } from "slate-dom";
+import { ChunkTree } from "slate-vue3/dom";
 import { inject, provide, VNode } from "vue";
 import { RenderChunkProps } from "../utils/interface";
 

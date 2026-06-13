@@ -1,4 +1,4 @@
-import { Editor, Operation } from "slate";
+import { Editor, Operation } from "slate-vue3/core";
 import { XmlText, YEvent, YTextEvent } from "yjs";
 import { translateYTextEvent } from "./textEvent";
 

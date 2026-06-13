@@ -1,4 +1,4 @@
-import { InsertTextOperation, Node, Text } from "slate";
+import { InsertTextOperation, Node } from "slate-vue3/core";
 import { XmlText } from "yjs";
 import { getYTarget } from "../../utils/location";
 import { getProperties } from "../../utils/slate";

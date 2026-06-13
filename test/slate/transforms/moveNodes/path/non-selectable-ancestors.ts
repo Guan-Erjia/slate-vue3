@@ -1,4 +1,4 @@
-import { createEditor, Editor, Transforms } from "slate";
+import { createEditor, Editor, Transforms } from "slate-vue3/core";
 
 export const input = createEditor() as any;
 

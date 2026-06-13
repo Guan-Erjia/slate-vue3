@@ -1,4 +1,4 @@
-import { Element, Node, Path, Text } from "slate";
+import { Element, Node, Path, Text } from "slate-vue3/core";
 import { YTarget } from "../model/types";
 import { sliceInsertDelta, yTextToInsertDelta } from "./delta";
 import { XmlText } from "yjs";

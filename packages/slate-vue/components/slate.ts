@@ -23,7 +23,7 @@ import {
   Scrubber,
   Text,
   Range,
-} from "slate";
+} from "slate-vue3/core";
 import type {
   RenderChunkProps,
   RenderElementProps,
@@ -35,7 +35,7 @@ import {
   DOMEditor,
   EDITOR_TO_ON_CHANGE,
   MARK_PLACEHOLDER_SYMBOL,
-} from "slate-dom";
+} from "slate-vue3/dom";
 import {
   DEFAULT_CHUNK_RENDER,
   DEFAULT_DECORATE_FN,

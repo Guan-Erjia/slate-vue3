@@ -1,4 +1,4 @@
-import type { Text, Element, LeafPosition, Editor } from "slate";
+import type { Text, Element, LeafPosition, Editor } from "slate-vue3/core";
 import type {
   HTMLAttributes,
   VNode,

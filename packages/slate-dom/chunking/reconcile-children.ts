@@ -1,4 +1,4 @@
-import { Descendant } from "slate";
+import { Descendant } from "slate-vue3/core";
 import { ChunkTree, ChunkLeaf } from "./types";
 import { ChunkTreeHelper, ChunkTreeHelperOptions } from "./chunk-tree-helper";
 import { ChildrenHelper } from "./children-helper";

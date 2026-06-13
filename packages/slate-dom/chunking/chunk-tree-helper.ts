@@ -1,5 +1,5 @@
-import { Path } from "slate";
-import { Key } from "slate-dom";
+import { Path } from "slate-vue3/core";
+import { Key } from "../utils/key";
 import {
   Chunk,
   ChunkTree,
