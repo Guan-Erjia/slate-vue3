@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const run = (editor, options = {}) => {
   Transforms.insertNodes(
@@ -8,9 +8,9 @@ export const run = (editor, options = {}) => {
     <block>
       <text />
     </block>,
-    options
-  )
-}
+    options,
+  );
+};
 export const input = (
   <editor>
     <block>
@@ -19,7 +19,7 @@ export const input = (
       rd
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>wo</block>
@@ -28,4 +28,4 @@ export const output = (
     </block>
     <block>rd</block>
   </editor>
-)
+);

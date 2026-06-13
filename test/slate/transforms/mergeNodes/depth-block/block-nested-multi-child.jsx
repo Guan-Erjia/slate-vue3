@@ -1,15 +1,15 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
-import { Transforms } from 'slate'
+import { jsx } from "@test-utils";
+import { Transforms } from "slate-vue3/core";
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.mergeNodes(editor, {
     at: {
       path: [0, 1, 1, 0, 0, 0],
       offset: 0,
     },
-  })
-}
+  });
+};
 
 export const input = (
   <editor>
@@ -36,7 +36,7 @@ export const input = (
       </block>
     </block>
   </editor>
-)
+);
 
 export const output = (
   <editor>
@@ -60,4 +60,4 @@ export const output = (
       </block>
     </block>
   </editor>
-)
+);

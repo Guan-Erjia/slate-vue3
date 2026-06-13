@@ -1,6 +1,6 @@
 /** @jsx jsxYjs */
-import { Transforms } from 'slate';
-import { jsxYjs } from '@test-utils';
+import { Transforms } from "slate-vue3/core";
+import { jsxYjs } from "@test-utils";
 
 export const input = (
   <editor>
@@ -21,6 +21,6 @@ export const expected = (
 );
 
 export function run(editor) {
-  editor.insertNode({ type: 'unstyled', children: [{ text: '' }] });
-  Transforms.setNodes(editor, { type: 'header-one' });
+  editor.insertNode({ type: "unstyled", children: [{ text: "" }] });
+  Transforms.setNodes(editor, { type: "header-one" });
 }

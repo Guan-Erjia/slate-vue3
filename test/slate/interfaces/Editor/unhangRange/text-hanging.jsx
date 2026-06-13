@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -16,13 +16,13 @@ export const input = (
       </text>
     </block>
   </editor>
-)
+);
 
-export const test = editor => {
-  return Editor.unhangRange(editor, editor.selection)
-}
+export const test = (editor) => {
+  return Editor.unhangRange(editor, editor.selection);
+};
 
 export const output = {
   anchor: { path: [0, 0], offset: 6 },
   focus: { path: [0, 2], offset: 0 },
-}
+};

@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -12,10 +12,10 @@ export const input = (
       five
     </block>
   </editor>
-)
-export const test = editor => {
-  return Array.from(Editor.positions(editor, { at: [0, 1] }))
-}
+);
+export const test = (editor) => {
+  return Array.from(Editor.positions(editor, { at: [0, 1] }));
+};
 export const output = [
   { path: [0, 1, 0], offset: 0 },
   { path: [0, 1, 0], offset: 1 },
@@ -32,4 +32,4 @@ export const output = [
   { path: [0, 1, 2], offset: 2 },
   { path: [0, 1, 2], offset: 3 },
   { path: [0, 1, 2], offset: 4 },
-]
+];

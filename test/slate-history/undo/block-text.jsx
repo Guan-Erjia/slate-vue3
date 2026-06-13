@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@test-utils";
-import { Transforms } from "slate";
+import { Transforms } from "slate-vue3/core";
 import { cloneDeep } from "lodash-es";
 
 export const input = (
@@ -16,5 +16,5 @@ export const input = (
 export const output = cloneDeep(input);
 
 export const run = (editor) => {
-  Transforms.delete(editor, {reverse: true});
+  Transforms.delete(editor, { reverse: true });
 };

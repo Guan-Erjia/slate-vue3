@@ -1,4 +1,4 @@
-import { Range } from 'slate'
+import { Range } from "slate-vue3/core";
 
 /**
  * If a collapsed Range is transformed with affinity outward by an insert_text operation, it should expand.
@@ -13,20 +13,20 @@ export const input = {
     path: [0, 0],
     offset: 1,
   },
-}
-export const test = value => {
+};
+export const test = (value) => {
   return Range.transform(
     value,
     {
-      type: 'insert_text',
+      type: "insert_text",
       path: [0, 0],
-      text: 'a',
+      text: "a",
       offset: 1,
       properties: {},
     },
-    { affinity: 'outward' }
-  )
-}
+    { affinity: "outward" },
+  );
+};
 export const output = {
   anchor: {
     path: [0, 0],
@@ -36,4 +36,4 @@ export const output = {
     path: [0, 0],
     offset: 2,
   },
-}
+};

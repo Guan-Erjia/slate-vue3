@@ -1,4 +1,4 @@
-import { Range } from 'slate'
+import { Range } from "slate-vue3/core";
 
 export const input = {
   range: {
@@ -21,8 +21,8 @@ export const input = {
       offset: 0,
     },
   },
-}
+};
 export const test = ({ range, another }) => {
-  return Range.equals(range, another)
-}
-export const output = false
+  return Range.equals(range, another);
+};
+export const output = false;

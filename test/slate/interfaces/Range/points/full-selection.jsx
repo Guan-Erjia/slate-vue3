@@ -1,4 +1,4 @@
-import { Range } from 'slate'
+import { Range } from "slate-vue3/core";
 
 export const input = {
   anchor: {
@@ -9,11 +9,11 @@ export const input = {
     path: [0],
     offset: 0,
   },
-}
-export const test = value => {
-  return Array.from(Range.points(value))
-}
+};
+export const test = (value) => {
+  return Array.from(Range.points(value));
+};
 export const output = [
-  [input.anchor, 'anchor'],
-  [input.focus, 'focus'],
-]
+  [input.anchor, "anchor"],
+  [input.focus, "focus"],
+];

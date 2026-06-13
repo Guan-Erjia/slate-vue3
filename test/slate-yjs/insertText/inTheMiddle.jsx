@@ -1,5 +1,5 @@
 /** @jsx jsxYjs */
-import { jsxYjs } from '@test-utils';
+import { jsxYjs } from "@test-utils";
 
 export const input = (
   <editor>
@@ -27,5 +27,5 @@ export const inputRemoteEditor = (
 );
 
 export function run(editor) {
-  editor.insertText('world');
+  editor.insertText("world");
 }

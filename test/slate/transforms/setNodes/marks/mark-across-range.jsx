@@ -1,48 +1,48 @@
 /** @jsx jsx */
 // Apply a mark across a range containing text with other marks and a void
-import { Editor, Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
-  Editor.addMark(editor, 'bold', true)
-}
+export const run = (editor) => {
+  Editor.addMark(editor, "bold", true);
+};
 export const input = (
   <editor>
     <block>
       <text>
         <anchor />
-        word{' '}
+        word{" "}
       </text>
       <text italic>italic words </text>
       <inline void>
         <text />
       </inline>
       <text underline>
-        {' '}
+        {" "}
         underlined words
         <focus />
       </text>
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
       <text bold>
         <anchor />
-        word{' '}
+        word{" "}
       </text>
       <text italic bold>
-        italic words{' '}
+        italic words{" "}
       </text>
       <inline void>
         <text />
       </inline>
       <text underline bold>
-        {' '}
+        {" "}
         underlined words
         <focus />
       </text>
     </block>
   </editor>
-)
+);

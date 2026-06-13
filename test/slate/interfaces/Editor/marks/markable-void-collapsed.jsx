@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -13,9 +13,9 @@ export const input = (
       <text />
     </block>
   </editor>
-)
-export const test = editor => {
-  editor.markableVoid = node => node.markable
-  return Editor.marks(editor)
-}
-export const output = { bold: true }
+);
+export const test = (editor) => {
+  editor.markableVoid = (node) => node.markable;
+  return Editor.marks(editor);
+};
+export const output = { bold: true };

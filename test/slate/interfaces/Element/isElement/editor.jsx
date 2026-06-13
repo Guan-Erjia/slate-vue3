@@ -1,4 +1,4 @@
-import { Element } from 'slate'
+import { Element } from "slate-vue3/core";
 
 export const input = {
   children: [],
@@ -23,8 +23,8 @@ export const input = {
   onChange() {},
   removeMark() {},
   getDirtyPaths() {},
-}
-export const test = value => {
-  return Element.isElement(value)
-}
-export const output = false
+};
+export const test = (value) => {
+  return Element.isElement(value);
+};
+export const output = false;

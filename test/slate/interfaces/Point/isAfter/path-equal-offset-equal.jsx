@@ -1,4 +1,4 @@
-import { Point } from 'slate'
+import { Point } from "slate-vue3/core";
 
 export const input = {
   point: {
@@ -9,8 +9,8 @@ export const input = {
     path: [0, 1],
     offset: 7,
   },
-}
+};
 export const test = ({ point, another }) => {
-  return Point.isAfter(point, another)
-}
-export const output = false
+  return Point.isAfter(point, another);
+};
+export const output = false;

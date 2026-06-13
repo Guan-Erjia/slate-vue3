@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
-  Transforms.splitNodes(editor, { at: [0, 2] })
-}
+export const run = (editor) => {
+  Transforms.splitNodes(editor, { at: [0, 2] });
+};
 export const input = (
   <editor>
     <block data>
@@ -15,7 +15,7 @@ export const input = (
       <text />
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block data>
@@ -29,4 +29,4 @@ export const output = (
       <text />
     </block>
   </editor>
-)
+);

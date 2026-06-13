@@ -1,4 +1,4 @@
-import { Path } from "slate";
+import { Path } from "slate-vue3/core";
 
 export const input = [2, 4, "b"];
 export const test = (value) => {

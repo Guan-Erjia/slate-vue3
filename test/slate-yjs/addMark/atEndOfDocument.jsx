@@ -1,5 +1,5 @@
 /** @jsx jsxYjs */
-import { jsxYjs } from '@test-utils';
+import { jsxYjs } from "@test-utils";
 
 export const input = (
   <editor>
@@ -14,7 +14,7 @@ export const input = (
 export const expected = (
   <editor>
     <unstyled>
-      Hello{' '}
+      Hello{" "}
       <text bold>
         <anchor />
         world!
@@ -25,5 +25,5 @@ export const expected = (
 );
 
 export function run(editor) {
-  editor.addMark('bold', true);
+  editor.addMark("bold", true);
 }

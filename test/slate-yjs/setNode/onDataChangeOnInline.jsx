@@ -1,6 +1,6 @@
 /** @jsx jsxYjs */
-import { Editor, Transforms } from 'slate';
-import { jsxYjs } from '@test-utils';
+import { Editor, Transforms } from "slate-vue3/core";
+import { jsxYjs } from "@test-utils";
 
 export const input = (
   <editor>
@@ -27,9 +27,9 @@ export const expected = (
 export function run(editor) {
   Transforms.setNodes(
     editor,
-    { noteId: 'note2' },
+    { noteId: "note2" },
     {
       match: (node) => Editor.isInline(editor, node),
-    }
+    },
   );
 }

@@ -1,4 +1,4 @@
-import { Path } from "slate";
+import { Path } from "slate-vue3/core";
 
 const path = [3, 3];
 

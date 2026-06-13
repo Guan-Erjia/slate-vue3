@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
-import { Transforms, Editor } from 'slate'
+import { jsx } from "@test-utils";
+import { Transforms, Editor } from "slate-vue3/core";
 
 export const input = (
   <editor>
@@ -8,17 +8,17 @@ export const input = (
       a<cursor />
     </element>
   </editor>
-)
+);
 
-Transforms.setSelection(input, { custom: 123 })
+Transforms.setSelection(input, { custom: 123 });
 
 export const operations = [
   {
-    type: 'set_selection',
+    type: "set_selection",
     oldProperties: {},
     newProperties: { custom: null },
   },
-]
+];
 
 export const output = (
   <editor>
@@ -26,4 +26,4 @@ export const output = (
       a<cursor />
     </element>
   </editor>
-)
+);

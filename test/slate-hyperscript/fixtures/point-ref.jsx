@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { HyperscriptPointRef } from "slate-hyperscript";
+import { HyperscriptPointRef } from "slate-vue3/hyperscript";
 import { jsx } from "@test-utils";
 import { expect } from "vitest";
 

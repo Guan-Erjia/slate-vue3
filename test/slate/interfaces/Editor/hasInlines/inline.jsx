@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -8,9 +8,9 @@ export const input = (
       one<inline>two</inline>three
     </block>
   </editor>
-)
-export const test = editor => {
-  const block = editor.children[0]
-  return Editor.hasInlines(editor, block)
-}
-export const output = true
+);
+export const test = (editor) => {
+  const block = editor.children[0];
+  return Editor.hasInlines(editor, block);
+};
+export const output = true;

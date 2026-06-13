@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from "@test-utils";
 import { expect } from "vitest";
-import { HyperscriptRangeRef } from "slate-hyperscript";
+import { HyperscriptRangeRef } from "slate-vue3/hyperscript";
 
 const rangeRef = new HyperscriptRangeRef();
 

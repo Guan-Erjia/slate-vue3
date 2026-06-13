@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const run = (editor, options = {}) => {
   Transforms.insertFragment(
@@ -8,9 +8,9 @@ export const run = (editor, options = {}) => {
     <fragment>
       <inline>fragment</inline>
     </fragment>,
-    options
-  )
-}
+    options,
+  );
+};
 export const input = (
   <editor>
     <block>
@@ -19,7 +19,7 @@ export const input = (
       rd
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -31,4 +31,4 @@ export const output = (
       rd
     </block>
   </editor>
-)
+);

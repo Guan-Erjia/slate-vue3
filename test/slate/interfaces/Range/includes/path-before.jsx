@@ -1,4 +1,4 @@
-import { Range } from 'slate'
+import { Range } from "slate-vue3/core";
 
 export const input = {
   range: {
@@ -12,8 +12,8 @@ export const input = {
     },
   },
   target: [0],
-}
+};
 export const test = ({ range, target }) => {
-  return Range.includes(range, target)
-}
-export const output = false
+  return Range.includes(range, target);
+};
+export const output = false;

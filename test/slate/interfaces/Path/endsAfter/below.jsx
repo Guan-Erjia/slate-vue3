@@ -1,10 +1,10 @@
-import { Path } from 'slate'
+import { Path } from "slate-vue3/core";
 
 export const input = {
   path: [0],
   another: [0, 1],
-}
+};
 export const test = ({ path, another }) => {
-  return Path.endsAfter(path, another)
-}
-export const output = false
+  return Path.endsAfter(path, another);
+};
+export const output = false;

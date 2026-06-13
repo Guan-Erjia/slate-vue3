@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
-  Transforms.delete(editor, { reverse: true })
-}
+export const run = (editor) => {
+  Transforms.delete(editor, { reverse: true });
+};
 export const input = (
   <editor>
     <block>one</block>
@@ -15,7 +15,7 @@ export const input = (
       four
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -26,4 +26,4 @@ export const output = (
       four
     </block>
   </editor>
-)
+);

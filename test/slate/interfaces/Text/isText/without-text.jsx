@@ -1,4 +1,4 @@
-import { Node } from "slate";
+import { Node } from "slate-vue3/core";
 
 export const input = {};
 export const test = (value) => {

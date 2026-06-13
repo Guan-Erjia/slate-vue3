@@ -1,12 +1,12 @@
-import { Text } from 'slate'
+import { Text } from "slate-vue3/core";
 
 export const input = [
   {
     children: [],
     selection: null,
   },
-]
-export const test = value => {
-  return Text.isTextList(value)
-}
-export const output = false
+];
+export const test = (value) => {
+  return Text.isTextList(value);
+};
+export const output = false;

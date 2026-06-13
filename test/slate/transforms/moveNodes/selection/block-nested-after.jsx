@@ -1,13 +1,13 @@
 /** @jsx jsx */
-import { Editor, Transforms, Element } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Transforms, Element } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.moveNodes(editor, {
-    match: n => Element.isElement(n) && Editor.isBlock(editor, n),
+    match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
     to: [1],
-  })
-}
+  });
+};
 export const input = (
   <editor>
     <block>
@@ -22,7 +22,7 @@ export const input = (
       </block>
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -37,4 +37,4 @@ export const output = (
       <focus />
     </block>
   </editor>
-)
+);

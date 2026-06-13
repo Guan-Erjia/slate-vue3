@@ -1,4 +1,4 @@
-import { Text } from 'slate'
+import { Text } from "slate-vue3/core";
 
 export const input = [
   {
@@ -10,26 +10,26 @@ export const input = [
       path: [0],
       offset: 1,
     },
-    decoration: 'decoration',
+    decoration: "decoration",
   },
-]
-export const test = decorations => {
-  return Text.decorations({ text: 'abc', mark: 'mark' }, decorations)
-}
+];
+export const test = (decorations) => {
+  return Text.decorations({ text: "abc", mark: "mark" }, decorations);
+};
 export const output = [
   {
     leaf: {
-      text: 'a',
-      mark: 'mark',
-      decoration: 'decoration',
+      text: "a",
+      mark: "mark",
+      decoration: "decoration",
     },
     position: { start: 0, end: 1, isFirst: true },
   },
   {
     leaf: {
-      text: 'bc',
-      mark: 'mark',
+      text: "bc",
+      mark: "mark",
     },
     position: { start: 1, end: 3, isLast: true },
   },
-]
+];

@@ -1,6 +1,6 @@
 /** @jsx jsx  */
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -9,8 +9,8 @@ export const input = (
       <text>two</text>
     </block>
   </editor>
-)
-export const test = editor => {
-  return Editor.string(editor, [0], { voids: true })
-}
-export const output = `onetwo`
+);
+export const test = (editor) => {
+  return Editor.string(editor, [0], { voids: true });
+};
+export const output = `onetwo`;

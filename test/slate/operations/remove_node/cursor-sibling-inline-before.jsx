@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -12,14 +12,14 @@ export const input = (
     </element>
     <element>b</element>
   </editor>
-)
+);
 export const operations = [
   {
-    type: 'remove_node',
+    type: "remove_node",
     path: [0, 2],
-    node: { text: '' },
+    node: { text: "" },
   },
-]
+];
 export const output = (
   <editor>
     <element>
@@ -32,4 +32,4 @@ export const output = (
     </element>
     <element>b</element>
   </editor>
-)
+);

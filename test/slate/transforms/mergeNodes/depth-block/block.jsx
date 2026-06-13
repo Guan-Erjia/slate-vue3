@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor, Transforms, Element } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Transforms, Element } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -10,12 +10,12 @@ export const input = (
       two
     </block>
   </editor>
-)
-export const run = editor => {
+);
+export const run = (editor) => {
   Transforms.mergeNodes(editor, {
-    match: n => Element.isElement(n) && Editor.isBlock(editor, n),
-  })
-}
+    match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+  });
+};
 export const output = (
   <editor>
     <block>
@@ -24,4 +24,4 @@ export const output = (
       two
     </block>
   </editor>
-)
+);

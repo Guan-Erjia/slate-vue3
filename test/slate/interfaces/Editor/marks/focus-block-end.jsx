@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 /**
  * Similar to firefox-double-click.tsx, when the selection is at the end of
@@ -27,10 +27,10 @@ export const input = (
       </text>
     </block>
   </editor>
-)
+);
 
-export const test = editor => {
-  return Editor.marks(editor)
-}
+export const test = (editor) => {
+  return Editor.marks(editor);
+};
 
-export const output = { bold: true }
+export const output = { bold: true };

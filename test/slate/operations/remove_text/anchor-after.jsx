@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -8,19 +8,19 @@ export const input = (
       <anchor />d<focus />
     </element>
   </editor>
-)
+);
 export const operations = [
   {
-    type: 'remove_text',
+    type: "remove_text",
     path: [0, 0],
     offset: 1,
-    text: 'or',
+    text: "or",
   },
-]
+];
 export const output = (
   <editor>
     <element>
       w<anchor />d<focus />
     </element>
   </editor>
-)
+);

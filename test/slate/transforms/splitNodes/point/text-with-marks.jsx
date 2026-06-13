@@ -1,19 +1,19 @@
 /** @jsx jsx */
-import { Editor, Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.splitNodes(editor, {
     at: { path: [0, 0], offset: 2 },
-  })
-}
+  });
+};
 export const input = (
   <editor>
     <block>
       <text bold>word</text>
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -23,4 +23,4 @@ export const output = (
       <text bold>rd</text>
     </block>
   </editor>
-)
+);

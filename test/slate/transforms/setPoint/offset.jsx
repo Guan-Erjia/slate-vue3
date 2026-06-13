@@ -1,11 +1,11 @@
 /** @jsx jsx */
-import { Editor, Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
-  Transforms.move(editor)
-  Transforms.setPoint(editor, { offset: 0 }, { edge: 'focus' })
-}
+export const run = (editor) => {
+  Transforms.move(editor);
+  Transforms.setPoint(editor, { offset: 0 }, { edge: "focus" });
+};
 export const input = (
   <editor>
     <block>
@@ -13,7 +13,7 @@ export const input = (
       oo
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -22,4 +22,4 @@ export const output = (
       <anchor />o
     </block>
   </editor>
-)
+);

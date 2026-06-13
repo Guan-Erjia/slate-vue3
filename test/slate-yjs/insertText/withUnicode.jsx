@@ -1,12 +1,12 @@
 /** @jsx jsxYjs */
-import { jsxYjs } from '@test-utils';
+import { jsxYjs } from "@test-utils";
 
 export const input = (
   <editor>
     <unstyled>
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
       <cursor />
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
     </unstyled>
   </editor>
 );
@@ -14,14 +14,14 @@ export const input = (
 export const expected = (
   <editor>
     <unstyled>
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
       <cursor />
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
     </unstyled>
   </editor>
 );
 
 export function run(editor) {
-  editor.insertText('Iñtërnâtiônàlizætiøn☃💩\uFEFF');
+  editor.insertText("Iñtërnâtiônàlizætiøn☃💩\uFEFF");
 }

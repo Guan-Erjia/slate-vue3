@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 /**
  * This test verifies that when double clicking a marked word in Firefox,
@@ -21,8 +21,8 @@ export const input = (
     </block>
     <block>block two</block>
   </editor>
-)
-export const test = editor => {
-  return Editor.marks(editor)
-}
-export const output = { bold: true }
+);
+export const test = (editor) => {
+  return Editor.marks(editor);
+};
+export const output = { bold: true };

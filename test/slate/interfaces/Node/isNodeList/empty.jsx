@@ -1,7 +1,7 @@
-import { Node } from 'slate'
+import { Node } from "slate-vue3/core";
 
-export const input = []
-export const test = value => {
-  return Node.isNodeList(value)
-}
-export const output = true
+export const input = [];
+export const test = (value) => {
+  return Node.isNodeList(value);
+};
+export const output = true;

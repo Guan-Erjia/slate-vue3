@@ -1,4 +1,4 @@
-import { Location } from "slate";
+import { Location } from "slate-vue3/core";
 
 export const input = {
   anchor: { path: [0, 1], offset: 2 },

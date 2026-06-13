@@ -1,24 +1,24 @@
-import { Point } from 'slate'
+import { Point } from "slate-vue3/core";
 
 export const input = {
   path: [0, 0],
   offset: 0,
-}
+};
 
-export const test = value => {
+export const test = (value) => {
   return Point.transform(
     value,
     {
-      type: 'insert_text',
+      type: "insert_text",
       path: [0, 0],
-      text: 'a',
+      text: "a",
       offset: 1,
       properties: {},
     },
-    { affinity: 'forward' }
-  )
-}
+    { affinity: "forward" },
+  );
+};
 export const output = {
   path: [0, 0],
   offset: 0,
-}
+};

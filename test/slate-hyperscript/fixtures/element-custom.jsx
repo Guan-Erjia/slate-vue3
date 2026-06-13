@@ -1,17 +1,17 @@
 /** @jsx jsx */
-import { createHyperscript } from 'slate-hyperscript'
+import { createHyperscript } from "slate-vue3/hyperscript";
 
 const jsx = createHyperscript({
   elements: {
-    paragraph: { type: 'paragraph' },
+    paragraph: { type: "paragraph" },
   },
-})
-export const input = <paragraph>word</paragraph>
+});
+export const input = <paragraph>word</paragraph>;
 export const output = {
-  type: 'paragraph',
+  type: "paragraph",
   children: [
     {
-      text: 'word',
+      text: "word",
     },
   ],
-}
+};

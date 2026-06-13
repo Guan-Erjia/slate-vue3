@@ -1,10 +1,10 @@
-import { Element } from 'slate'
+import { Element } from "slate-vue3/core";
 
 export const input = {
-  source: 'heading-large',
-  children: [{ text: '' }],
-}
-export const test = value =>
-  Element.isElementType(value, 'heading-large', 'source')
+  source: "heading-large",
+  children: [{ text: "" }],
+};
+export const test = (value) =>
+  Element.isElementType(value, "heading-large", "source");
 
-export const output = true
+export const output = true;

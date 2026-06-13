@@ -1,4 +1,4 @@
-import { Range } from 'slate'
+import { Range } from "slate-vue3/core";
 
 export const input = {
   anchor: {
@@ -9,9 +9,9 @@ export const input = {
     path: [0, 1],
     offset: 0,
   },
-  custom: 'value',
-}
-export const test = value => {
-  return Range.isRange(value)
-}
-export const output = true
+  custom: "value",
+};
+export const test = (value) => {
+  return Range.isRange(value);
+};
+export const output = true;

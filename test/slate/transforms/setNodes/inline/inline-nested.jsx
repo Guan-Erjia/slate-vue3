@@ -1,14 +1,14 @@
 /** @jsx jsx */
-import { Editor, Transforms, Element } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Transforms, Element } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.setNodes(
     editor,
     { someKey: true },
-    { match: n => Element.isElement(n) && Editor.isInline(editor, n) }
-  )
-}
+    { match: (n) => Element.isElement(n) && Editor.isInline(editor, n) },
+  );
+};
 export const input = (
   <editor>
     <block>
@@ -24,7 +24,7 @@ export const input = (
       <text />
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -40,4 +40,4 @@ export const output = (
       <text />
     </block>
   </editor>
-)
+);

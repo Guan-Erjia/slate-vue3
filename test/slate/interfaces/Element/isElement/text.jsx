@@ -1,9 +1,9 @@
-import { Element } from 'slate'
+import { Element } from "slate-vue3/core";
 
 export const input = {
-  text: '',
-}
-export const test = value => {
-  return Element.isElement(value)
-}
-export const output = false
+  text: "",
+};
+export const test = (value) => {
+  return Element.isElement(value);
+};
+export const output = false;

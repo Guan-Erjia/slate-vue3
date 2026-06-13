@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -9,10 +9,10 @@ export const input = (
     <block nonSelectable>two</block>
     <block>three</block>
   </editor>
-)
+);
 
-export const test = editor => {
-  return Editor.before(editor, { path: [2, 0], offset: 0 })
-}
+export const test = (editor) => {
+  return Editor.before(editor, { path: [2, 0], offset: 0 });
+};
 
-export const output = { path: [0, 0], offset: 3 }
+export const output = { path: [0, 0], offset: 3 };

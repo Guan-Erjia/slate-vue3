@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -9,15 +9,15 @@ export const input = (
       after text
     </element>
   </editor>
-)
+);
 export const operations = [
   {
-    type: 'split_node',
+    type: "split_node",
     path: [0],
     position: 1,
     properties: {},
   },
-]
+];
 export const output = (
   <editor>
     <element data>before text</element>
@@ -27,4 +27,4 @@ export const output = (
       after text
     </element>
   </editor>
-)
+);

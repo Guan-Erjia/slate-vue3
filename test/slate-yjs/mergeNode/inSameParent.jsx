@@ -1,5 +1,5 @@
 /** @jsx jsxYjs */
-import { jsxYjs } from '@test-utils';
+import { jsxYjs } from "@test-utils";
 
 export const input = (
   <editor>
@@ -19,13 +19,13 @@ export const expected = (
 
 export function run(editor) {
   editor.apply({
-    type: 'merge_node',
+    type: "merge_node",
     path: [0, 2],
     position: 0,
     properties: {},
   });
   editor.apply({
-    type: 'merge_node',
+    type: "merge_node",
     path: [0, 1],
     position: 0,
     properties: {},

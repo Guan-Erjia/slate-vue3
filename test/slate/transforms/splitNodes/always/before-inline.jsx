@@ -1,13 +1,13 @@
 /** @jsx jsx */
-import { Editor, Transforms, Element } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Transforms, Element } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.splitNodes(editor, {
-    match: n => Element.isElement(n) && Editor.isBlock(editor, n),
+    match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
     always: true,
-  })
-}
+  });
+};
 export const input = (
   <editor>
     <block>
@@ -17,7 +17,7 @@ export const input = (
       word
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>word</block>
@@ -27,4 +27,4 @@ export const output = (
       word
     </block>
   </editor>
-)
+);

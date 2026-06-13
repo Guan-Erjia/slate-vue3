@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
-  Transforms.unwrapNodes(editor, { match: n => n.a, split: true })
-}
+export const run = (editor) => {
+  Transforms.unwrapNodes(editor, { match: (n) => n.a, split: true });
+};
 export const input = (
   <editor>
     <block a>
@@ -22,7 +22,7 @@ export const input = (
       <block>six</block>
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block a>
@@ -42,4 +42,4 @@ export const output = (
       <block>six</block>
     </block>
   </editor>
-)
+);

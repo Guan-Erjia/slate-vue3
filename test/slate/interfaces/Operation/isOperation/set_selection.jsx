@@ -1,11 +1,11 @@
-import { Operation } from 'slate'
+import { Operation } from "slate-vue3/core";
 
 export const input = {
-  type: 'set_selection',
+  type: "set_selection",
   properties: {},
   newProperties: {},
-}
-export const test = value => {
-  return Operation.isOperation(value)
-}
-export const output = true
+};
+export const test = (value) => {
+  return Operation.isOperation(value);
+};
+export const output = true;

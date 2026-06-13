@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
-  Transforms.delete(editor, { unit: 'word' })
-}
+export const run = (editor) => {
+  Transforms.delete(editor, { unit: "word" });
+};
 export const input = (
   <editor>
     <block>
@@ -12,11 +12,11 @@ export const input = (
       one two three
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
       <cursor /> two three
     </block>
   </editor>
-)
+);

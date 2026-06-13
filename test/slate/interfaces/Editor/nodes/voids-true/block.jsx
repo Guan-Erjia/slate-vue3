@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { Editor, Node } from "slate";
+import { Editor, Node } from "slate-vue3/core";
 import { jsx } from "@test-utils";
 
 export const input = (

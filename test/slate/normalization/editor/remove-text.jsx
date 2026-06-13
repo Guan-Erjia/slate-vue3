@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -8,10 +8,10 @@ export const input = (
     <text>three</text>
     <block>four</block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>two</block>
     <block>four</block>
   </editor>
-)
+);

@@ -1,4 +1,4 @@
-import { Range } from 'slate'
+import { Range } from "slate-vue3/core";
 
 export const input = {
   anchor: {
@@ -9,8 +9,8 @@ export const input = {
     path: [3],
     offset: 0,
   },
-}
-export const test = range => {
-  return Range.isCollapsed(range)
-}
-export const output = false
+};
+export const test = (range) => {
+  return Range.isCollapsed(range);
+};
+export const output = false;

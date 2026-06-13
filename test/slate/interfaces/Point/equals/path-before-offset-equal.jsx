@@ -1,4 +1,4 @@
-import { Point } from 'slate'
+import { Point } from "slate-vue3/core";
 
 export const input = {
   point: {
@@ -9,8 +9,8 @@ export const input = {
     path: [0, 1],
     offset: 0,
   },
-}
+};
 export const test = ({ point, another }) => {
-  return Point.equals(point, another)
-}
-export const output = false
+  return Point.equals(point, another);
+};
+export const output = false;

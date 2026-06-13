@@ -1,19 +1,19 @@
 /** @jsx jsx */
-import { Editor, Node, Text, Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Node, Text, Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.wrapNodes(editor, <block a />, {
     match: (node, currentPath) => {
       // reject all nodes inside blocks tagged `noneditable`. Which is everything.
-      if (node.noneditable) return false
+      if (node.noneditable) return false;
       for (const [node, _] of Node.ancestors(editor, currentPath)) {
-        if (node.noneditable) return false
+        if (node.noneditable) return false;
       }
-      return true
+      return true;
     },
-  })
-}
+  });
+};
 export const input = (
   <editor>
     <block noneditable>
@@ -21,7 +21,7 @@ export const input = (
       word
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block noneditable>
@@ -29,4 +29,4 @@ export const output = (
       word
     </block>
   </editor>
-)
+);

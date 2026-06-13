@@ -1,12 +1,12 @@
 /** @jsx jsx */
 // Apply a mark across a range containing text with other marks and some voids that support marks
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
-  editor.markableVoid = node => node.markable
-  Editor.addMark(editor, 'bold', true)
-}
+export const run = (editor) => {
+  editor.markableVoid = (node) => node.markable;
+  Editor.addMark(editor, "bold", true);
+};
 export const input = (
   <editor>
     <block>
@@ -25,7 +25,7 @@ export const input = (
       </text>
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -36,7 +36,7 @@ export const output = (
         <text bold />
       </inline>
       <text italic bold>
-        italic words{' '}
+        italic words{" "}
       </text>
       <inline void markable>
         <text bold />
@@ -46,4 +46,4 @@ export const output = (
       </text>
     </block>
   </editor>
-)
+);

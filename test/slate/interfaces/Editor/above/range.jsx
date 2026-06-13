@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor, Element } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Element } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -11,17 +11,17 @@ export const input = (
       <block>two</block>
     </block>
   </editor>
-)
+);
 const range = {
   anchor: { offset: 0, path: [0, 0, 0, 0] },
   focus: { offset: 0, path: [0, 1, 0] },
-}
-export const test = editor => {
+};
+export const test = (editor) => {
   return Editor.above(editor, {
     at: range,
-    match: n => Element.isElement(n) && Editor.isBlock(editor, n),
-  })
-}
+    match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+  });
+};
 export const output = [
   <block>
     <block>
@@ -30,4 +30,4 @@ export const output = [
     <block>two</block>
   </block>,
   [0],
-]
+];

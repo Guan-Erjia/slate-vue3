@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
-import { Transforms, Editor } from 'slate'
+import { jsx } from "@test-utils";
+import { Transforms, Editor } from "slate-vue3/core";
 
 export const input = (
   <editor>
@@ -8,16 +8,16 @@ export const input = (
       <text someKey />
     </element>
   </editor>
-)
+);
 
 export const operations = [
   {
-    type: 'set_node',
+    type: "set_node",
     path: [0, 0],
     properties: { someKey: true },
     newProperties: {},
   },
-]
+];
 
 export const output = (
   <editor>
@@ -25,4 +25,4 @@ export const output = (
       <text />
     </element>
   </editor>
-)
+);

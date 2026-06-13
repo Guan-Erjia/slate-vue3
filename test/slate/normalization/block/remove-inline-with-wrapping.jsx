@@ -1,7 +1,7 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
+import { jsx } from "@test-utils";
 
-export const withFallbackElement = true
+export const withFallbackElement = true;
 
 export const input = (
   <editor>
@@ -12,7 +12,7 @@ export const input = (
       <inline>four</inline>
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -30,4 +30,4 @@ export const output = (
       </block>
     </block>
   </editor>
-)
+);

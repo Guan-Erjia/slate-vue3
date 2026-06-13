@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { Transforms, Node } from "slate";
+import { Transforms, Node } from "slate-vue3/core";
 import { jsx } from "@test-utils";
 
 export const run = (editor) => {

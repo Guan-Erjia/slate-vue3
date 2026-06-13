@@ -1,6 +1,6 @@
 /** @jsx jsx  */
-import { Node } from 'slate'
-import { jsx } from '@test-utils'
+import { Node } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -11,8 +11,8 @@ export const input = (
       <text key="d" />
     </element>
   </editor>
-)
-export const test = value => {
+);
+export const test = (value) => {
   return Array.from(
     Node.elements(value, {
       range: {
@@ -25,9 +25,9 @@ export const test = value => {
           offset: 0,
         },
       },
-    })
-  )
-}
+    }),
+  );
+};
 export const output = [
   [
     <element>
@@ -38,4 +38,4 @@ export const output = [
     </element>,
     [0],
   ],
-]
+];

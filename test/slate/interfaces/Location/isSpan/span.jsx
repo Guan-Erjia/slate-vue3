@@ -1,4 +1,4 @@
-import { Location, Span } from "slate";
+import { Location, Span } from "slate-vue3/core";
 
 export const input = [
   [0, 1],

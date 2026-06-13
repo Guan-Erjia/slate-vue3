@@ -1,7 +1,7 @@
 /** @jsx jsx */
-import assert from 'assert'
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import assert from "assert";
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -10,15 +10,15 @@ export const input = (
       <cursor />
     </block>
   </editor>
-)
-export const run = editor => {
+);
+export const run = (editor) => {
   // position 2 is past the end of the block children
   assert.throws(() => {
-    Transforms.insertNodes(editor, <text>another</text>, { at: [0, 2] })
-  }, 'Inserting a node after the end of a block should fail')
+    Transforms.insertNodes(editor, <text>another</text>, { at: [0, 2] });
+  }, "Inserting a node after the end of a block should fail");
   // 1 is _at_ the end, so it's still valid
-  Transforms.insertNodes(editor, <text>another</text>, { at: [0, 1] })
-}
+  Transforms.insertNodes(editor, <text>another</text>, { at: [0, 1] });
+};
 export const output = (
   <editor>
     <block>
@@ -27,4 +27,4 @@ export const output = (
       another
     </block>
   </editor>
-)
+);

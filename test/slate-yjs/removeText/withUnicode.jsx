@@ -1,15 +1,15 @@
 /** @jsx jsxYjs */
-import { Transforms } from 'slate';
-import { jsxYjs } from '@test-utils';
+import { Transforms } from "slate-vue3/core";
+import { jsxYjs } from "@test-utils";
 
 export const input = (
   <editor>
     <unstyled>
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
       <anchor />
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
       <focus />
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
     </unstyled>
   </editor>
 );
@@ -17,9 +17,9 @@ export const input = (
 export const expected = (
   <editor>
     <unstyled>
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
       <cursor />
-      {'Iñtërnâtiônàlizætiøn☃💩\uFEFF'}
+      {"Iñtërnâtiônàlizætiøn☃💩\uFEFF"}
     </unstyled>
   </editor>
 );

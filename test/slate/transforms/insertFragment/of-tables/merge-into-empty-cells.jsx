@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const run = (editor, options = {}) => {
   Transforms.insertFragment(
@@ -13,9 +13,9 @@ export const run = (editor, options = {}) => {
         </block>
       </block>
     </block>,
-    options
-  )
-}
+    options,
+  );
+};
 export const input = (
   <editor>
     <block>
@@ -31,7 +31,7 @@ export const input = (
       </block>
     </block>
   </editor>
-)
+);
 // TODO: paste "2" into second cell instead of creating new one?
 export const output = (
   <editor>
@@ -49,5 +49,5 @@ export const output = (
       </block>
     </block>
   </editor>
-)
-export const skip = true
+);
+export const skip = true;

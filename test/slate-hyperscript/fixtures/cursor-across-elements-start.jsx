@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { jsx } from '@test-utils'
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -12,20 +12,20 @@ export const input = (
       two
     </element>
   </editor>
-)
+);
 export const output = {
   children: [
     {
       children: [
         {
-          text: 'one',
+          text: "one",
         },
       ],
     },
     {
       children: [
         {
-          text: 'two',
+          text: "two",
         },
       ],
     },
@@ -40,4 +40,4 @@ export const output = {
       offset: 0,
     },
   },
-}
+};

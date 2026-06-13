@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -13,10 +13,10 @@ export const input = (
     </block>
     <block>three</block>
   </editor>
-)
-export const run = editor => {
-  Transforms.removeNodes(editor, { at: [0] })
-}
+);
+export const run = (editor) => {
+  Transforms.removeNodes(editor, { at: [0] });
+};
 export const output = (
   <editor>
     <block>
@@ -24,4 +24,4 @@ export const output = (
       three
     </block>
   </editor>
-)
+);

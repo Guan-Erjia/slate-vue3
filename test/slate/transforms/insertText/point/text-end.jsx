@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -8,12 +8,12 @@ export const input = (
       <text>word</text>
     </block>
   </editor>
-)
-export const run = editor => {
-  Transforms.insertText(editor, 'x', { at: { path: [0, 0], offset: 4 } })
-}
+);
+export const run = (editor) => {
+  Transforms.insertText(editor, "x", { at: { path: [0, 0], offset: 4 } });
+};
 export const output = (
   <editor>
     <block>wordx</block>
   </editor>
-)
+);

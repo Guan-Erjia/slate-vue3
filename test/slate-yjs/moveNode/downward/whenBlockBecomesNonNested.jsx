@@ -1,6 +1,6 @@
 /** @jsx jsxYjs */
-import { Editor } from 'slate';
-import { jsxYjs, Transforms } from '@test-utils';
+import { Editor } from "slate-vue3/core";
+import { jsxYjs, Transforms } from "@test-utils";
 
 export const input = (
   <editor>
@@ -28,10 +28,10 @@ export function run(editor) {
   Editor.withoutNormalizing(editor, () => {
     Transforms.setNodes(
       editor,
-      { type: 'unstyled' },
+      { type: "unstyled" },
       {
         at: [0, 0],
-      }
+      },
     );
     Transforms.moveNodes(editor, {
       at: [0, 0],

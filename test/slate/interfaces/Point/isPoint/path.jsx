@@ -1,7 +1,7 @@
-import { Point } from 'slate'
+import { Point } from "slate-vue3/core";
 
-export const input = [0, 1]
-export const test = value => {
-  return Point.isPoint(value)
-}
-export const output = false
+export const input = [0, 1];
+export const test = (value) => {
+  return Point.isPoint(value);
+};
+export const output = false;

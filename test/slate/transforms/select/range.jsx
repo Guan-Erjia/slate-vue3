@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.select(editor, {
     anchor: {
       path: [0, 0],
@@ -12,8 +12,8 @@ export const run = editor => {
       path: [0, 0],
       offset: 3,
     },
-  })
-}
+  });
+};
 export const input = (
   <editor>
     <block>
@@ -21,7 +21,7 @@ export const input = (
       one
     </block>
   </editor>
-)
+);
 export const output = (
   <editor>
     <block>
@@ -30,4 +30,4 @@ export const output = (
       <focus />
     </block>
   </editor>
-)
+);

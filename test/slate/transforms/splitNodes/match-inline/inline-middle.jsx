@@ -1,13 +1,13 @@
 /** @jsx jsx */
 
-import { Editor, Transforms, Element } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor, Transforms, Element } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
-export const run = editor => {
+export const run = (editor) => {
   Transforms.splitNodes(editor, {
-    match: n => Element.isElement(n) && Editor.isInline(editor, n),
-  })
-}
+    match: (n) => Element.isElement(n) && Editor.isInline(editor, n),
+  });
+};
 
 export const input = (
   <editor>
@@ -21,7 +21,7 @@ export const input = (
       <text />
     </block>
   </editor>
-)
+);
 
 export const output = (
   <editor>
@@ -36,4 +36,4 @@ export const output = (
       <text />
     </block>
   </editor>
-)
+);

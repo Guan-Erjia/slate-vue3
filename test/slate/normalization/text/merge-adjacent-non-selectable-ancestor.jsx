@@ -1,4 +1,4 @@
-import { createEditor } from "slate";
+import { createEditor } from "slate-vue3/core";
 
 export const input = createEditor();
 

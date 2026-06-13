@@ -1,7 +1,7 @@
-import { Path } from 'slate'
+import { Path } from "slate-vue3/core";
 
-export const input = [0, 1]
-export const test = path => {
-  return Path.previous(path)
-}
-export const output = [0, 0]
+export const input = [0, 1];
+export const test = (path) => {
+  return Path.previous(path);
+};
+export const output = [0, 0];

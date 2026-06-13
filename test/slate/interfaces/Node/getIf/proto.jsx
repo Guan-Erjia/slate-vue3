@@ -1,5 +1,5 @@
 /** @jsx jsx  */
-import { Node } from "slate";
+import { Node } from "slate-vue3/core";
 import { jsx } from "@test-utils";
 
 export const input = (

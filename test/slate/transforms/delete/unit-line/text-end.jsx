@@ -1,11 +1,11 @@
 /** @jsx jsx */
-import { Transforms } from 'slate'
-import { jsx } from '@test-utils'
-import { cloneDeep } from 'lodash-es'
+import { Transforms } from "slate-vue3/core";
+import { jsx } from "@test-utils";
+import { cloneDeep } from "lodash-es";
 
-export const run = editor => {
-  Transforms.delete(editor, { unit: 'line' })
-}
+export const run = (editor) => {
+  Transforms.delete(editor, { unit: "line" });
+};
 export const input = (
   <editor>
     <block>
@@ -13,5 +13,5 @@ export const input = (
       <cursor />
     </block>
   </editor>
-)
-export const output = cloneDeep(input)
+);
+export const output = cloneDeep(input);

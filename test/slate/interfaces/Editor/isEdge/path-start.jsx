@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import { Editor } from 'slate'
-import { jsx } from '@test-utils'
+import { Editor } from "slate-vue3/core";
+import { jsx } from "@test-utils";
 
 export const input = (
   <editor>
@@ -9,9 +9,9 @@ export const input = (
       one
     </block>
   </editor>
-)
-export const test = editor => {
-  const { anchor } = editor.selection
-  return Editor.isEdge(editor, anchor, [0])
-}
-export const output = true
+);
+export const test = (editor) => {
+  const { anchor } = editor.selection;
+  return Editor.isEdge(editor, anchor, [0]);
+};
+export const output = true;
