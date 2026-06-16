@@ -157,8 +157,8 @@ export const Range: RangeInterface = {
     }
 
     const [start, end] = Range.edges(range);
-    let isAfterStart = false;
-    let isBeforeEnd = false;
+    let isAfterStart;
+    let isBeforeEnd;
 
     if (Location.isPoint(target)) {
       isAfterStart = Point.compare(target, start) >= 0;

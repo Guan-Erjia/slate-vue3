@@ -352,7 +352,7 @@ export const getActiveElement = () => {
 export const isBefore = (node: DOMNode, otherNode: DOMNode): boolean =>
   Boolean(
     node.compareDocumentPosition(otherNode) &
-      globalThis.Node.DOCUMENT_POSITION_PRECEDING,
+    globalThis.Node.DOCUMENT_POSITION_PRECEDING,
   );
 
 /**
@@ -361,7 +361,7 @@ export const isBefore = (node: DOMNode, otherNode: DOMNode): boolean =>
 export const isAfter = (node: DOMNode, otherNode: DOMNode): boolean =>
   Boolean(
     node.compareDocumentPosition(otherNode) &
-      globalThis.Node.DOCUMENT_POSITION_FOLLOWING,
+    globalThis.Node.DOCUMENT_POSITION_FOLLOWING,
   );
 
 /**

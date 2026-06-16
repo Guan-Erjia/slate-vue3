@@ -48,8 +48,8 @@ export function* positions(
   let isNewBlock = false;
   let blockText = "";
   let distance = 0; // Distance for leafText to catch up to blockText.
-  let leafTextRemaining = 0;
-  let leafTextOffset = 0;
+  let leafTextRemaining;
+  let leafTextOffset;
   const skippedPaths: Path[] = [];
 
   // Iterate through all nodes in range, grabbing entire textual content

@@ -115,7 +115,7 @@ export function getOverlayPosition(
     const isStartNode = Path.equals(path, start.path);
     const isEndNode = Path.equals(path, end.path);
 
-    let clientRects: DOMRectList | null = null;
+    let clientRects: DOMRectList | null;
     if (isStartNode || isEndNode) {
       const nodeRange = document.createRange();
       nodeRange.selectNode(domNode);

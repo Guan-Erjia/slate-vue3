@@ -1,4 +1,12 @@
-import { Editor, Element, isObject, Node, Operation, Path, Text } from "slate-vue3/core";
+import {
+  Editor,
+  Element,
+  isObject,
+  Node,
+  Operation,
+  Path,
+  Text,
+} from "slate-vue3/core";
 import { XmlText, YTextEvent } from "yjs";
 import { Delta } from "../model/types";
 import { deltaInsertToSlateNode } from "../utils/convert";

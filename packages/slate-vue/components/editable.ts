@@ -1,5 +1,13 @@
 import { direction } from "direction";
-import { Editor, Element, Node, Path, Range, Text, Transforms } from "slate-vue3/core";
+import {
+  Editor,
+  Element,
+  Node,
+  Path,
+  Range,
+  Text,
+  Transforms,
+} from "slate-vue3/core";
 import {
   DOMEditor,
   getActiveElement,
