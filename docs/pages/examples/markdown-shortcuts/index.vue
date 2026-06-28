@@ -23,7 +23,7 @@ const initialValue: Descendant[] = [
     ],
   },
   {
-    type: "block-quote",
+    type: "blockquote",
     children: [{ text: "A wise quote." }],
   },
   {
@@ -56,7 +56,7 @@ const renderElement = ({
   element,
 }: RenderElementProps) => {
   return h(
-    element.type === "block-quote"
+    element.type === "blockquote"
       ? "blockquote"
       : element.type === "bulleted-list"
         ? "ul"

@@ -21,11 +21,12 @@ import { useEditor } from "slate-vue3";
 import { Element, Transforms } from "slate-vue3/core";
 import { DOMEditor } from "slate-vue3/dom";
 import { computed, HTMLAttributes, useAttrs } from "vue";
+import { VideoElement } from "../../../custom-types";
 const allowedSchemes = ["http:", "https:"];
 
 const editor = useEditor();
 const props = defineProps<{
-  element: any;
+  element: VideoElement;
 }>();
 const safeUrl = computed(() => {
   let parsedUrl: URL | null = null;

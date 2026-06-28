@@ -10,7 +10,7 @@ export const SHORTCUTS = {
   "*": "list-item",
   "-": "list-item",
   "+": "list-item",
-  ">": "block-quote",
+  ">": "blockquote",
   "#": "heading-one",
   "##": "heading-two",
   "###": "heading-three",

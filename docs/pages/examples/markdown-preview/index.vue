@@ -78,11 +78,7 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
 const editor = withHistory(withDOM(createEditor()));
 editor.children = initialValue;
 
-const renderLeaf = (
-  props: RenderLeafProps & {
-    leaf: any;
-  },
-) => {
+const renderLeaf = (props: RenderLeafProps) => {
   const { attributes, children, leaf } = props;
   const style: CSSProperties = {
     fontWeight: leaf.bold ? "bold" : "",

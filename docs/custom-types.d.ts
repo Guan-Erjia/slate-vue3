@@ -3,7 +3,7 @@ import { Descendant, BaseEditor, BaseRange, BaseText } from "slate-vue3/core";
 import { DOMEditor } from "slate-vue3/dom";
 
 export type BlockQuoteElement = {
-  type: "block-quote" | "blockquote";
+  type: "blockquote";
   align?: string;
   children: Descendant[];
 };
@@ -114,11 +114,11 @@ export type ParagraphElement = {
   children: Descendant[];
 };
 
-export type TableElement = { type: "table"; children: any[] };
+export type TableElement = { type: "table"; children: Descendant[] };
 
 export type TableCellElement = { type: "table-cell"; children: CustomText[] };
 
-export type TableRowElement = { type: "table-row"; children: any[] };
+export type TableRowElement = { type: "table-row"; children: Descendant[] };
 
 export type TitleElement = { type: "title"; children: Descendant[] };
 
@@ -186,6 +186,11 @@ export type CustomText = {
   emphasis?: boolean;
   inlineCode?: boolean;
   delete?: boolean;
+  underlined?: boolean;
+  title?: boolean;
+  list?: boolean;
+  hr?: boolean;
+  blockquote?: boolean;
 };
 
 export type EmptyText = {

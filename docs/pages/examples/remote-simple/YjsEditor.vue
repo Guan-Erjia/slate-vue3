@@ -9,7 +9,7 @@ import { CSSProperties, h, onMounted, onUnmounted } from "vue";
 import { CustomElement } from "../../../custom-types";
 import { withYHistory, withYjs, YjsEditor } from "slate-vue3/yjs";
 import { withDOM } from "slate-vue3/dom";
-import { createEditor, Node, Transforms } from "slate-vue3/core";
+import { createEditor, Node, Path, Transforms } from "slate-vue3/core";
 import { XmlText } from "yjs";
 import Toolbar from "../../../components/Toolbar.vue";
 import MarkButton from "../rich-text/MarkButton.vue";
@@ -34,7 +34,7 @@ const renderElement = ({
     },
   };
   switch (element.type) {
-    case "block-quote":
+    case "blockquote":
       return h("blockquote", attributes, children);
 
     case "bulleted-list":
@@ -88,7 +88,7 @@ const props = defineProps<{
 const editor = withYHistory(withYjs(withDOM(createEditor()), props.sharedType));
 editor.children = initialValue;
 const { normalizeNode } = editor;
-editor.normalizeNode = (entry: [Node]) => {
+editor.normalizeNode = (entry: [Node, Path]) => {
   const [node] = entry;
 
   if (Node.isElement(node) && node.children.length > 0) {
@@ -114,7 +114,7 @@ onUnmounted(() => {
       <MarkButton format="code" icon="code" />
       <BlockButton format="heading-one" icon="looks_one" />
       <BlockButton format="heading-two" icon="looks_two" />
-      <BlockButton format="block-quote" icon="format_quote" />
+      <BlockButton format="blockquote" icon="format_quote" />
       <BlockButton format="numbered-list" icon="format_list_numbered" />
       <BlockButton format="bulleted-list" icon="format_list_bulleted" />
       <BlockButton format="left" icon="format_align_left" />

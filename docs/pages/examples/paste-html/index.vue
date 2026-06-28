@@ -12,7 +12,7 @@ import { CustomEditor } from "../../../custom-types";
 const allowedSchemes = ["http:", "https:", "mailto:", "tel:"];
 const ELEMENT_TAGS = {
   A: (el: HTMLLinkElement) => ({ type: "link", url: el.getAttribute("href") }),
-  BLOCKQUOTE: () => ({ type: "block-quote" }),
+  BLOCKQUOTE: () => ({ type: "blockquote" }),
   H1: () => ({ type: "heading-one" }),
   H2: () => ({ type: "heading-two" }),
   H3: () => ({ type: "heading-three" }),
@@ -139,7 +139,7 @@ const renderElement = (props: RenderElementProps) => {
   switch (element.type) {
     default:
       return h("p", attributes, children);
-    case "block-quote":
+    case "blockquote":
       return h("blockquote", attributes, children);
     case "code-block":
       return h("pre", null, h("code", attributes, children));
