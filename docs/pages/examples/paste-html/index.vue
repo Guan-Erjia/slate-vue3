@@ -13,12 +13,12 @@ const allowedSchemes = ["http:", "https:", "mailto:", "tel:"];
 const ELEMENT_TAGS = {
   A: (el: HTMLLinkElement) => ({ type: "link", url: el.getAttribute("href") }),
   BLOCKQUOTE: () => ({ type: "blockquote" }),
-  H1: () => ({ type: "heading-one" }),
-  H2: () => ({ type: "heading-two" }),
-  H3: () => ({ type: "heading-three" }),
-  H4: () => ({ type: "heading-four" }),
-  H5: () => ({ type: "heading-five" }),
-  H6: () => ({ type: "heading-six" }),
+  H1: () => ({ type: "heading", depth: 1 }),
+  H2: () => ({ type: "heading", depth: 2 }),
+  H3: () => ({ type: "heading", depth: 3 }),
+  H4: () => ({ type: "heading", depth: 4 }),
+  H5: () => ({ type: "heading", depth: 5 }),
+  H6: () => ({ type: "heading", depth: 6 }),
   IMG: (el: HTMLImageElement) => ({
     type: "image",
     url: el.getAttribute("src"),
@@ -145,18 +145,8 @@ const renderElement = (props: RenderElementProps) => {
       return h("pre", null, h("code", attributes, children));
     case "bulleted-list":
       return h("ul", attributes, children);
-    case "heading-one":
-      return h("h1", attributes, children);
-    case "heading-two":
-      return h("h2", attributes, children);
-    case "heading-three":
-      return h("h3", attributes, children);
-    case "heading-four":
-      return h("h4", attributes, children);
-    case "heading-five":
-      return h("h5", attributes, children);
-    case "heading-six":
-      return h("h6", attributes, children);
+    case "heading":
+      return h(`h${element.depth}`, attributes, children);
     case "list-item":
       return h("li", attributes, children);
     case "numbered-list":

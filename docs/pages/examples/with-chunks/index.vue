@@ -141,7 +141,7 @@ import {
   watch,
 } from "vue";
 import type {
-  HeadingOneElement,
+  HeadingElement,
   ParagraphElement,
 } from "../../../custom-types.d.ts";
 import Heading from "./heading.vue";
@@ -232,8 +232,9 @@ const getInitialValue = (blocks: number) => {
 
   for (let i = cachedInitialValue.length; i < blocks; i++) {
     if (i % 100 === 0) {
-      const heading: HeadingOneElement = {
-        type: "heading-one",
+      const heading: HeadingElement = {
+        type: "heading",
+        depth: 1,
         children: [{ text: faker.lorem.sentence() }],
       };
       cachedInitialValue.push(heading);
@@ -335,7 +336,7 @@ const renderElement = ({
       config.contentVisibilityMode === "element" ? "auto" : undefined,
   };
   switch (element.type) {
-    case "heading-one":
+    case "heading":
       return h(
         Heading,
         {

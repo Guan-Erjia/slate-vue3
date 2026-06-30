@@ -9,28 +9,27 @@ import { Editor, Node, Transforms } from "slate-vue3/core";
 import { useEditor } from "slate-vue3";
 import Button from "../../../components/Button.vue";
 import { computed } from "vue";
-import { CustomElement } from "../../../custom-types";
+import { CustomElement } from "../../../custom-types.js";
 const editor = useEditor();
 const props = defineProps<{
   icon: string;
-  format: string;
+  format: CustomElement["type"];
+  depth?: number;
 }>();
 
-const TEXT_ALIGN_TYPES = ["left", "center", "right", "justify"];
 const isBlockActive = computed(() => {
   if (!editor.selection) return false;
   const [match] = Array.from(
     Editor.nodes(editor, {
       at: Editor.unhangRange(editor, editor.selection),
       match: (n) => {
-        const align = TEXT_ALIGN_TYPES.includes(props.format)
-          ? "align"
-          : "type";
-        return (
-          Node.isElement(n) &&
-          // @ts-expect-error xxx
-          n[align] === props.format
-        );
+        if (!Node.isElement(n)) {
+          return false;
+        }
+        if (props.format === "heading" && typeof props.depth === "number") {
+          return n.type === "heading" && n.depth === props.depth;
+        }
+        return n.type === props.format;
       },
     }),
   );
@@ -44,32 +43,17 @@ const onClick = () => {
   const isList = LIST_TYPES.includes(props.format);
 
   Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      Node.isElement(n) &&
-      LIST_TYPES.includes(n.type) &&
-      !TEXT_ALIGN_TYPES.includes(props.format),
+    match: (n) => Node.isElement(n) && LIST_TYPES.includes(n.type),
     split: true,
   });
-  let newProperties: Partial<CustomElement>;
-  if (TEXT_ALIGN_TYPES.includes(props.format)) {
-    newProperties = {
-      align: isActive ? undefined : props.format,
-    };
-  } else {
-    // @ts-expect-error xxx
-    newProperties = {
-      type: isActive
-        ? "paragraph"
-        : isList
-          ? "list-item"
-          : (props.format as CustomElement["type"]),
-    };
-  }
-  Transforms.setNodes(editor, newProperties);
+  const newProperties = {
+    type: isActive ? "paragraph" : isList ? "list-item" : props.format,
+  };
+  Transforms.setNodes(editor, { ...newProperties, depth: props.depth } as any);
 
   if (!isActive && isList) {
-    const block = { type: props.format, children: [] } as CustomElement;
-    Transforms.wrapNodes(editor, block);
+    const block = { type: props.format, children: [] };
+    Transforms.wrapNodes(editor, block as any);
   }
 };
 const onPointerDown = (event: PointerEvent) => {

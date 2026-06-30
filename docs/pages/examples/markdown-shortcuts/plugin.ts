@@ -7,16 +7,16 @@ import {
 import { Range, Editor, Transforms, Point, Node } from "slate-vue3/core";
 
 export const SHORTCUTS = {
-  "*": "list-item",
-  "-": "list-item",
-  "+": "list-item",
-  ">": "blockquote",
-  "#": "heading-one",
-  "##": "heading-two",
-  "###": "heading-three",
-  "####": "heading-four",
-  "#####": "heading-five",
-  "######": "heading-six",
+  "*": { type: "list-item" },
+  "-": { type: "list-item" },
+  "+": { type: "list-item" },
+  ">": { type: "blockquote" },
+  "#": { type: "heading", depth: 1 },
+  "##": { type: "heading", depth: 2 },
+  "###": { type: "heading", depth: 3 },
+  "####": { type: "heading", depth: 4 },
+  "#####": { type: "heading", depth: 5 },
+  "######": { type: "heading", depth: 6 },
 };
 
 export const withShortcuts = (editor: CustomEditor) => {
@@ -34,9 +34,9 @@ export const withShortcuts = (editor: CustomEditor) => {
       const start = Editor.start(editor, path);
       const range = { anchor, focus: start };
       const beforeText = Editor.string(editor, range) + text.slice(0, -1);
-      const type: any = SHORTCUTS[beforeText as keyof typeof SHORTCUTS];
+      const cuts = SHORTCUTS[beforeText as keyof typeof SHORTCUTS] as any;
 
-      if (type) {
+      if (cuts) {
         Transforms.select(editor, range);
 
         if (!Range.isCollapsed(range)) {
@@ -45,13 +45,13 @@ export const withShortcuts = (editor: CustomEditor) => {
 
         await nextTick();
         const newProperties = {
-          type,
+          ...cuts,
         };
         Transforms.setNodes(editor, newProperties, {
           match: (n) => Node.isElement(n) && Editor.isBlock(editor, n),
         });
 
-        if (type === "list-item") {
+        if (cuts.type === "list-item") {
           const list: BulletedListElement = {
             type: "bulleted-list",
             children: [],

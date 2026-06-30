@@ -12,7 +12,8 @@ const initialValue: Descendant[] = [];
 
 for (let h = 0; h < HEADINGS; h++) {
   initialValue.push({
-    type: "heading-one",
+    type: "heading",
+    depth: 1,
     children: [{ text: faker.lorem.sentence() }],
   });
 
@@ -30,8 +31,8 @@ const renderElement = ({
   element,
 }: RenderElementProps) => {
   switch (element.type) {
-    case "heading-one":
-      return h("h1", attributes, children);
+    case "heading":
+      return h(`h${element.depth}`, attributes, children);
     default:
       return h("p", attributes, children);
   }

@@ -43,42 +43,6 @@ export type HeadingElement = {
   children: Descendant[];
 };
 
-export type HeadingOneElement = {
-  type: "heading-one";
-  align?: string;
-  children: Descendant[];
-};
-
-export type HeadingTwoElement = {
-  type: "heading-two";
-  align?: string;
-  children: Descendant[];
-};
-
-export type HeadingThreeElement = {
-  type: "heading-three";
-  align?: string;
-  children: Descendant[];
-};
-
-export type HeadingFourElement = {
-  type: "heading-four";
-  align?: string;
-  children: Descendant[];
-};
-
-export type HeadingFiveElement = {
-  type: "heading-five";
-  align?: string;
-  children: Descendant[];
-};
-
-export type HeadingSixElement = {
-  type: "heading-six";
-  align?: string;
-  children: Descendant[];
-};
-
 export type ImageElement = {
   type: "image";
   url: string;
@@ -154,12 +118,6 @@ export type CustomElement =
   | CheckListItemElement
   | EditableVoidElement
   | HeadingElement
-  | HeadingOneElement
-  | HeadingTwoElement
-  | HeadingThreeElement
-  | HeadingFourElement
-  | HeadingFiveElement
-  | HeadingSixElement
   | ImageElement
   | LinkElement
   | ButtonElement

@@ -14,6 +14,7 @@ import { XmlText } from "yjs";
 import Toolbar from "../../../components/Toolbar.vue";
 import MarkButton from "../rich-text/MarkButton.vue";
 import BlockButton from "../rich-text/BlockButton.vue";
+import AlignButton from "../rich-text/AlignButton.vue";
 
 const initialValue: CustomElement[] = [
   {
@@ -40,14 +41,8 @@ const renderElement = ({
     case "bulleted-list":
       return h("ul", attributes, children);
 
-    case "heading-one":
-      return h("h1", attributes, children);
-
-    case "heading-two":
-      return h("h2", attributes, children);
-
-    case "heading-three":
-      return h("h3", attributes, children);
+    case "heading":
+      return h(`h${element.depth}`, attributes, children);
 
     case "list-item":
       return h("li", attributes, children);
@@ -112,15 +107,15 @@ onUnmounted(() => {
       <MarkButton format="italic" icon="format_italic" />
       <MarkButton format="underline" icon="format_underlined" />
       <MarkButton format="code" icon="code" />
-      <BlockButton format="heading-one" icon="looks_one" />
-      <BlockButton format="heading-two" icon="looks_two" />
+      <BlockButton format="heading" :depth="1" icon="looks_one" />
+      <BlockButton format="heading" :depth="2" icon="looks_two" />
       <BlockButton format="blockquote" icon="format_quote" />
       <BlockButton format="numbered-list" icon="format_list_numbered" />
       <BlockButton format="bulleted-list" icon="format_list_bulleted" />
-      <BlockButton format="left" icon="format_align_left" />
-      <BlockButton format="center" icon="format_align_center" />
-      <BlockButton format="right" icon="format_align_right" />
-      <BlockButton format="justify" icon="format_align_justify" />
+      <AlignButton direction="left" icon="format_align_left" />
+      <AlignButton direction="center" icon="format_align_center" />
+      <AlignButton direction="right" icon="format_align_right" />
+      <AlignButton direction="justify" icon="format_align_justify" />
     </Toolbar>
     <Editable placeholder="Enter some rich text…" spellcheck />
   </Slate>

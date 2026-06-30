@@ -35,7 +35,8 @@ const initialValue: Descendant[] = [
     ],
   },
   {
-    type: "heading-two",
+    type: "heading",
+    depth: 2,
     children: [{ text: "Try it out!" }],
   },
   {
@@ -60,21 +61,11 @@ const renderElement = ({
       ? "blockquote"
       : element.type === "bulleted-list"
         ? "ul"
-        : element.type === "heading-one"
-          ? "h1"
-          : element.type === "heading-two"
-            ? "h2"
-            : element.type === "heading-three"
-              ? "h3"
-              : element.type === "heading-four"
-                ? "h4"
-                : element.type === "heading-five"
-                  ? "h5"
-                  : element.type === "heading-six"
-                    ? "h6"
-                    : element.type === "list-item"
-                      ? "li"
-                      : "p",
+        : element.type === "heading"
+          ? `h${element.depth}`
+          : element.type === "list-item"
+            ? "li"
+            : "p",
     attributes,
     children,
   );
