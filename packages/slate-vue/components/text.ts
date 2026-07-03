@@ -13,6 +13,7 @@ import {
   onMounted,
   onUnmounted,
   renderList,
+  onUpdated,
 } from "vue";
 import { useEditor } from "../hooks/use-editor";
 import { useMarkPlaceholder } from "../render/placeholder";
@@ -20,6 +21,7 @@ import { DEFAULT_DECORATE_FN } from "./utils";
 import { injectDecorateFn, injectInnerElementDR } from "../render/decorate";
 import { useRenderText } from "../render/fn";
 import { LeafComp } from "./leaf";
+import { useEditorVersion } from "../render/version";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -29,6 +31,7 @@ export const TextComp = defineComponent({
     const editor = useEditor();
     const textRef = ref<HTMLSpanElement>();
     const markPlaceholder = useMarkPlaceholder();
+    const editorVersion = useEditorVersion();
 
     const decorate = injectDecorateFn();
     const elementDR = injectInnerElementDR();
@@ -47,6 +50,24 @@ export const TextComp = defineComponent({
       }
       const filterDs = textDs.filter(Boolean);
       return Text.decorations(text, filterDs.length ? filterDs : []);
+    });
+
+    // Skip the forced re-render on the initial mount: there is no committed
+    // DOM to restore the selection against yet, and forcing an extra render
+    // here breaks contenteditable input in Firefox. Only later decoration
+    // changes need to re-render Editable in the same batch as the text
+    // components notified above, so its selection-restoration layout effect
+    // runs after the decoration-induced DOM changes are committed. Without
+    // that, the text components restructure the DOM in a separate pass where
+    // Editable's layout effect never fires, potentially leaving the caret at
+    // a wrong position.
+    let hasUpdated = false;
+    onUpdated(() => {
+      if (!hasUpdated) {
+        hasUpdated = true;
+        return;
+      }
+      editorVersion.value++;
     });
 
     onMounted(() => {

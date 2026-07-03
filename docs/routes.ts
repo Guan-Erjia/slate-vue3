@@ -125,6 +125,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/check-lists/index.vue"),
   },
   {
+    name: "decorations-async",
+    path: "decorations-async",
+    component: () => import("./pages/examples/decorations-async/index.vue"),
+  },
+  {
     name: "editable-voids",
     path: "editable-voids",
     component: () => import("./pages/examples/editable-voids/index.vue"),
