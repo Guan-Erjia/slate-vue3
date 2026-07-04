@@ -102,13 +102,9 @@ const findDuplicateRanges = (editor: DOMEditor): Range[] => {
 const editor = withHistory(withDOM(createEditor()));
 editor.children = initialValue;
 
-const ranges = ref<Range[]>([]);
-const timeoutRef = ref<ReturnType<typeof setTimeout> | null>(null);
-
 // Compute the initial decorations synchronously on mount.
-onMounted(() => {
-  ranges.value = findDuplicateRanges(editor);
-});
+const ranges = ref<Range[]>(findDuplicateRanges(editor));
+const timeoutRef = ref<ReturnType<typeof setTimeout> | null>(null);
 
 onUnmounted(() => {
   if (timeoutRef.value) clearTimeout(timeoutRef.value);
