@@ -22,6 +22,7 @@ import { injectDecorateFn, injectInnerElementDR } from "../render/decorate";
 import { useRenderText } from "../render/fn";
 import { LeafComp } from "./leaf";
 import { useEditorVersion } from "../render/version";
+import { RenderTextProps } from "../utils/interface";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -30,15 +31,52 @@ export const TextComp = defineComponent({
     const text = props.text;
     const editor = useEditor();
     const textRef = ref<HTMLSpanElement>();
+
+    const decorate = injectDecorateFn();
+    const needDecorate = decorate !== DEFAULT_DECORATE_FN;
+
+    onMounted(() => {
+      const key = DOMEditor.findKey(editor, text);
+      if (textRef.value) {
+        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
+        KEY_TO_ELEMENT?.set(key, textRef.value);
+        ELEMENT_TO_NODE.set(textRef.value, text);
+        NODE_TO_ELEMENT.set(text, textRef.value);
+      }
+    });
+
+    onUnmounted(() => {
+      NODE_TO_ELEMENT.delete(text);
+      if (textRef.value) {
+        ELEMENT_TO_NODE.delete(textRef.value);
+      }
+    });
+
+    const renderText = useRenderText();
+    const renderTextAttributes: RenderTextProps["attributes"] = {
+      "data-slate-node": "text",
+      ref: textRef,
+    };
+    if (!needDecorate) {
+      return () =>
+        renderText({
+          text,
+          attributes: renderTextAttributes,
+          children: [
+            h(LeafComp, {
+              text,
+              leaf: text,
+              isLast: props.isLast,
+            }),
+          ],
+        });
+    }
+
     const markPlaceholder = useMarkPlaceholder();
     const editorVersion = useEditorVersion();
 
-    const decorate = injectDecorateFn();
     const elementDR = injectInnerElementDR();
     const leaves = computed(() => {
-      if (decorate === DEFAULT_DECORATE_FN) {
-        return [{ leaf: text }];
-      }
       const textPath = DOMEditor.findPath(editor, text);
       const textDs = decorate([text, textPath]);
       const range = Editor.range(editor, textPath);
@@ -61,33 +99,7 @@ export const TextComp = defineComponent({
     // that, the text components restructure the DOM in a separate pass where
     // Editable's layout effect never fires, potentially leaving the caret at
     // a wrong position.
-    let hasUpdated = false;
-    onUpdated(() => {
-      if (!hasUpdated) {
-        hasUpdated = true;
-        return;
-      }
-      editorVersion.value++;
-    });
-
-    onMounted(() => {
-      const key = DOMEditor.findKey(editor, text);
-      if (textRef.value) {
-        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-        KEY_TO_ELEMENT?.set(key, textRef.value);
-        ELEMENT_TO_NODE.set(textRef.value, text);
-        NODE_TO_ELEMENT.set(text, textRef.value);
-      }
-    });
-
-    onUnmounted(() => {
-      NODE_TO_ELEMENT.delete(text);
-      if (textRef.value) {
-        ELEMENT_TO_NODE.delete(textRef.value);
-      }
-    });
-
-    const renderText = useRenderText();
+    onUpdated(() => editorVersion.value++);
 
     let key = 0;
     const children = computed(() =>
@@ -105,7 +117,7 @@ export const TextComp = defineComponent({
     return () =>
       renderText({
         text,
-        attributes: { "data-slate-node": "text", ref: textRef },
+        attributes: renderTextAttributes,
         children: children.value,
       });
   },
