@@ -2,10 +2,9 @@
 import { defineConfig, mergeConfig, type UserConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "node:path";
-import dts from "vite-plugin-dts";
+import dts from "unplugin-dts/vite";
 import babel from "vite-plugin-babel";
-// @ts-expect-error vite-plugin-eslint does not expose types via exports under bundler resolution.
-import eslint from "vite-plugin-eslint";
+import eslint from "vite-plugin-eslint2";
 
 const BaseConfig: UserConfig = {
   oxc: {
