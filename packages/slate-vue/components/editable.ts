@@ -442,12 +442,14 @@ export const Editable = defineComponent({
           newRange.setStart(range.startContainer, range.startOffset);
           newRange.setEnd(endContainer, endOffset);
 
-          // Translate the DOM Range into a Slate Range
+          // Unresolvable ranges would throw out of the handler (#3556); suppress and skip the move.
           const slateRange = DOMEditor.toSlateRange(editor, newRange, {
             exactMatch: false,
-            suppressThrow: false,
+            suppressThrow: true,
           });
-          Transforms.select(editor, slateRange);
+          if (slateRange) {
+            Transforms.select(editor, slateRange);
+          }
           processing.value = false;
           event.preventDefault();
           event.stopImmediatePropagation();
@@ -556,12 +558,15 @@ export const Editable = defineComponent({
             const [targetRange] = event.getTargetRanges();
 
             if (targetRange) {
+              // Unresolvable ranges would throw out of the handler (#3556); suppress and fall back to synthetic handling.
               const range = DOMEditor.toSlateRange(editor, targetRange, {
                 exactMatch: false,
-                suppressThrow: false,
+                suppressThrow: true,
               });
 
-              if (!selection || !Range.equals(selection, range)) {
+              if (!range) {
+                native = false;
+              } else if (!selection || !Range.equals(selection, range)) {
                 native = false;
 
                 const selectionRef =
