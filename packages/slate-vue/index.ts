@@ -4,6 +4,7 @@ export { Slate } from "./components/slate";
 export { Editable } from "./components/editable";
 
 export * from "./components/utils";
+export * from "./utils/constants";
 
 // Hooks
 export { useComposing } from "./hooks/use-composing";

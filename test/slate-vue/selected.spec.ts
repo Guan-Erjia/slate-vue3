@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { RenderElementProps, useInheritRef, useSelected } from "slate-vue3";
 import { defineComponent, h, nextTick, useAttrs, watch } from "vue";
 import SelectedEditor from "./components/SelectedEditor.vue";
+import { StaleEditor } from "./components/StaleEditor";
 
 let editor: DOMEditor;
 let elementSelectedRenders: Record<string, boolean[] | undefined>;
@@ -189,5 +190,46 @@ describe("useSelected", () => {
 
   describe("with chunking", () => {
     withChunking(true);
+  });
+
+  // https://github.com/ianstormtaylor/slate/issues/6053
+  describe("when the referenced element has been removed", () => {
+    // Keeps referencing an element after it has been removed from the editor.
+
+    const run = async (chunking: boolean) => {
+      const editor = withDOM(createEditor());
+      editor.children = [
+        { children: [{ text: "one" }] },
+        { children: [{ text: "two" }] },
+        { children: [{ text: "three" }] },
+      ];
+
+      if (chunking) {
+        editor.getChunkSize = () => 3;
+      }
+
+      let selected: boolean | undefined;
+      const captureSelected = (value: boolean) => {
+        selected = value;
+      };
+
+      render(StaleEditor, {
+        props: {
+          editor,
+          captureSelected,
+        },
+      });
+
+      // A selection on a node that survives the removal below.
+      Transforms.select(editor, [0, 0]);
+      await nextTick();
+      Transforms.removeNodes(editor, { at: [2] });
+      await nextTick();
+      expect(selected).toBe(false);
+    };
+
+    it("returns false with suppressThrow (without chunking)", () => run(false));
+
+    it("returns false with suppressThrow (with chunking)", () => run(true));
   });
 });
