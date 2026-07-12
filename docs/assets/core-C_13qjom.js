@@ -1,0 +1,1 @@
+import{L as e,S as t,o as n,p as r}from"./runtime-core.esm-bundler-CmM2dv3X.js";import{t as i}from"./Markdown-CFrll9wd.js";var a="Provides the same interface as the [**`slate`**](https://docs.slatejs.org/concepts) library",o=r({__name:`core`,setup(r){return(r,o)=>(t(),n(i,{content:e(a)},null,8,[`content`]))}});export{o as default};

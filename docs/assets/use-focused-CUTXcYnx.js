@@ -1,0 +1,1 @@
+import{S as e}from"./slate-vue-DaKWDKju.js";import{g as t}from"./runtime-core.esm-bundler-CmM2dv3X.js";var n=()=>{let n=t(e);if(n===void 0)throw Error("The `useFocused` hook must be used inside the <Slate> component's context.");return n};export{n as t};

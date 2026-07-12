@@ -1,0 +1,1 @@
+import{S as e,T as t,c as n}from"./runtime-core.esm-bundler-CmM2dv3X.js";import{t as r}from"./index-YiTkCut6.js";var i={},a={style:{position:`relative`,"padding-bottom":`8px`,"margin-bottom":`10px`,"border-bottom":`2px solid #eee`},"data-test-id":`menu`};function o(r,i){return e(),n(`div`,a,[t(r.$slots,`default`)])}var s=r(i,[[`render`,o]]);export{s as t};

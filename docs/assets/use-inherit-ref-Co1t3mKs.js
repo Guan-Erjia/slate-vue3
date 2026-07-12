@@ -1,0 +1,1 @@
+var e=e=>(e.onVnodeMounted=t=>{e.ref&&typeof e.ref==`object`&&(e.ref.value=t.el)},e.onVnodeUnmounted=()=>{e.ref&&typeof e.ref==`object`&&(e.ref.value=null)},e);export{e as t};
