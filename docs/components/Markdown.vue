@@ -12,11 +12,7 @@ import {
   useInheritRef,
 } from "slate-vue3";
 import { CSSProperties, h } from "vue";
-import Prism from "prismjs";
-import "prismjs";
-import "prismjs/components/prism-markdown";
-import "prismjs/components/prism-typescript";
-import "prismjs/components/prism-bash";
+import Prism from "../utils/prism";
 import {
   createEditor,
   Editor,

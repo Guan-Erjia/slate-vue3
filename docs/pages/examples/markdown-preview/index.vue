@@ -6,8 +6,7 @@
 <script lang="ts" setup>
 import { Slate, Editable, RenderLeafProps } from "slate-vue3";
 import { CSSProperties, h } from "vue";
-import Prism from "prismjs";
-import "prismjs/components/prism-markdown";
+import Prism from "../../../utils/prism";
 import {
   createEditor,
   DecoratedRange,

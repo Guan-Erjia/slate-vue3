@@ -6,8 +6,6 @@
 <script lang="ts" setup>
 import { Slate, Editable, RenderElementProps } from "slate-vue3";
 import { h } from "vue";
-import "prismjs";
-import "prismjs/components/prism-markdown";
 import { withShortcuts } from "./plugin";
 import { createEditor, Descendant } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
