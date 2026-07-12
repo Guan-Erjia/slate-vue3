@@ -2,10 +2,24 @@ import { createEditor, Transforms } from "slate-vue3/core";
 import { render } from "@testing-library/vue";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { beforeEach, describe, expect, it } from "vitest";
-import { RenderElementProps, useInheritRef, useSelected } from "slate-vue3";
-import { defineComponent, h, nextTick, useAttrs, watch } from "vue";
-import SelectedEditor from "./components/SelectedEditor.vue";
-import { StaleEditor } from "./components/StaleEditor";
+import {
+  Editable,
+  RenderElementProps,
+  Slate,
+  SLATE_USE_ELEMENT,
+  useEditor,
+  useInheritRef,
+  useSelected,
+} from "slate-vue3";
+import {
+  computed,
+  defineComponent,
+  h,
+  nextTick,
+  provide,
+  useAttrs,
+  watch,
+} from "vue";
 
 let editor: DOMEditor;
 let elementSelectedRenders: Record<string, boolean[] | undefined>;
@@ -80,10 +94,13 @@ describe("useSelected", () => {
           () => children,
         );
 
-      render(SelectedEditor, {
+      render(Slate, {
         props: {
           editor,
           renderElement,
+        },
+        slots: {
+          default: h(Editable),
         },
       });
     });
@@ -213,10 +230,28 @@ describe("useSelected", () => {
         selected = value;
       };
 
-      render(StaleEditor, {
-        props: {
-          editor,
-          captureSelected,
+      const SelectedProbe = defineComponent({
+        setup() {
+          captureSelected(useSelected({ suppressThrow: true }).value);
+          return () => null;
+        },
+      });
+
+      const StaleConsumer = defineComponent({
+        setup() {
+          const editor = useEditor();
+          provide(
+            SLATE_USE_ELEMENT,
+            computed(() => editor.children.at(-1)),
+          );
+          return () => h(SelectedProbe);
+        },
+      });
+
+      render(Slate, {
+        props: { editor },
+        slots: {
+          default: [h(Editable), h(StaleConsumer)],
         },
       });
 

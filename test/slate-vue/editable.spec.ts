@@ -3,8 +3,7 @@ import { withDOM } from "slate-vue3/dom";
 import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
 import { describe, test, vi, expect } from "vitest";
-import VueEditor from "./components/VueEditor.vue";
-import { Editable, Slate } from "slate-vue3";
+import { Editable, RenderElementProps, Slate } from "slate-vue3";
 
 describe("slate-react", () => {
   describe("Editable", () => {
@@ -15,8 +14,18 @@ describe("slate-react", () => {
         editor.children = initialValue;
         const mounts = vi.fn();
 
-        render(VueEditor, {
-          props: { editor, onRenderTracked: mounts },
+        const renderElement = ({
+          attributes,
+          children,
+        }: RenderElementProps) => {
+          mounts();
+          return h("p", attributes, children);
+        };
+        render(Slate, {
+          props: { editor, renderElement },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         // slate updates at next tick, so we need this to be async
@@ -37,8 +46,18 @@ describe("slate-react", () => {
         editor.children = initialValue;
         const mounts = vi.fn();
 
-        render(VueEditor, {
-          props: { editor, onRenderTracked: mounts },
+        const renderElement = ({
+          attributes,
+          children,
+        }: RenderElementProps) => {
+          mounts();
+          return h("p", attributes, children);
+        };
+        render(Slate, {
+          props: { editor, renderElement },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         // slate updates at next tick, so we need this to be async
@@ -57,21 +76,28 @@ describe("slate-react", () => {
       editor.children = initialValue;
 
       const onChange = vi.fn();
-      const onValueChange = vi.fn();
-      const onSelectionChange = vi.fn();
+      const onValuechange = vi.fn();
+      const onSelectionchange = vi.fn();
 
-      render(VueEditor, {
-        props: { editor, onChange, onValueChange, onSelectionChange },
+      render(Slate, {
+        props: {
+          editor,
+          onChange,
+          onValuechange,
+          onSelectionchange,
+        },
+        slots: {
+          default: h(Editable),
+        },
       });
 
       Transforms.select(editor, { path: [0, 0], offset: 2 });
 
-      nextTick(() => {
-        expect(onSelectionChange).toHaveBeenCalled();
-        // 这里的测试和 slate-react 不一致，设置 select 的时候同样应该出发 onChange
-        expect(onChange).toHaveBeenCalled();
-        expect(onValueChange).not.toHaveBeenCalled();
-      });
+      await nextTick();
+      expect(onSelectionchange).toHaveBeenCalled();
+      // 这里的测试和 slate-react 不一致，设置 select 的时候同样应该出发 onChange
+      expect(onChange).toHaveBeenCalled();
+      expect(onValuechange).not.toHaveBeenCalled();
     });
 
     test("calls onValueChange when editor children change", async () => {
@@ -79,19 +105,22 @@ describe("slate-react", () => {
       const editor = withDOM(createEditor());
       editor.children = initialValue;
       const onChange = vi.fn();
-      const onValueChange = vi.fn();
-      const onSelectionChange = vi.fn();
+      const onValuechange = vi.fn();
+      const onSelectionchange = vi.fn();
 
-      render(VueEditor, {
-        props: { editor, onChange, onValueChange, onSelectionChange },
+      render(Slate, {
+        props: { editor, onChange, onValuechange, onSelectionchange },
+        slots: {
+          default: h(Editable),
+        },
       });
 
       Transforms.insertText(editor, "Hello word!");
 
       nextTick(() => {
-        expect(onValueChange).toHaveBeenCalled();
+        expect(onValuechange).toHaveBeenCalled();
         expect(onChange).toHaveBeenCalled();
-        expect(onSelectionChange).not.toHaveBeenCalled();
+        expect(onSelectionchange).not.toHaveBeenCalled();
       });
     });
 
@@ -100,11 +129,14 @@ describe("slate-react", () => {
       const editor = withDOM(createEditor());
       editor.children = initialValue;
       const onChange = vi.fn();
-      const onValueChange = vi.fn();
-      const onSelectionChange = vi.fn();
+      const onValuechange = vi.fn();
+      const onSelectionchange = vi.fn();
 
-      render(VueEditor, {
-        props: { editor, onChange, onValueChange, onSelectionChange },
+      render(Slate, {
+        props: { editor, onChange, onValuechange, onSelectionchange },
+        slots: {
+          default: h(Editable),
+        },
       });
 
       Transforms.setNodes(
@@ -119,8 +151,8 @@ describe("slate-react", () => {
 
       nextTick(() => {
         expect(onChange).toHaveBeenCalled();
-        expect(onValueChange).toHaveBeenCalled();
-        expect(onSelectionChange).not.toHaveBeenCalled();
+        expect(onValuechange).toHaveBeenCalled();
+        expect(onSelectionchange).not.toHaveBeenCalled();
       });
     });
 
@@ -129,19 +161,22 @@ describe("slate-react", () => {
       const editor = withDOM(createEditor());
       editor.children = initialValue;
       const onChange = vi.fn();
-      const onValueChange = vi.fn();
-      const onSelectionChange = vi.fn();
+      const onValuechange = vi.fn();
+      const onSelectionchange = vi.fn();
 
-      render(VueEditor, {
-        props: { editor, onChange, onValueChange, onSelectionChange },
+      render(Slate, {
+        props: { editor, onChange, onValuechange, onSelectionchange },
+        slots: {
+          default: h(Editable),
+        },
       });
 
       Transforms.insertText(editor, "Hello word!");
 
       nextTick(() => {
-        expect(onValueChange).toHaveBeenCalled();
+        expect(onValuechange).toHaveBeenCalled();
         expect(onChange).toHaveBeenCalled();
-        expect(onSelectionChange).not.toHaveBeenCalled();
+        expect(onSelectionchange).not.toHaveBeenCalled();
       });
     });
 

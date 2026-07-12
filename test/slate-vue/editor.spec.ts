@@ -2,11 +2,11 @@ import { render } from "@testing-library/vue";
 import { describe, test, expect, vi } from "vitest";
 import { createEditor, Transforms } from "slate-vue3/core";
 import { withDOM, DOMEditor } from "slate-vue3/dom";
-import { nextTick } from "vue";
-import VueEditor from "./components/VueEditor.vue";
+import { Editable, Slate } from "slate-vue3";
+import { h, nextTick } from "vue";
 
 describe("slate-vue", () => {
-  describe("VueEditor", () => {
+  describe("Editor", () => {
     describe(".focus", () => {
       test("should set focus in top of document with no editor selection", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
@@ -18,8 +18,11 @@ describe("slate-vue", () => {
           focus: { path: [0, 0], offset: 0 },
         };
 
-        render(VueEditor, {
+        render(Slate, {
           props: { editor },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         await nextTick();
@@ -48,8 +51,11 @@ describe("slate-vue", () => {
           focus: { path: [1, 0], offset: 3 },
         };
 
-        render(VueEditor, {
+        render(Slate, {
           props: { editor },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         Transforms.removeNodes(editor, { at: [0] });
@@ -76,11 +82,14 @@ describe("slate-vue", () => {
         editor.children = initialValue;
 
         const onChange = vi.fn();
-        const onValueChange = vi.fn();
-        const onSelectionChange = vi.fn();
+        const onValuechange = vi.fn();
+        const onSelectionchange = vi.fn();
 
-        render(VueEditor, {
-          props: { editor, onChange, onValueChange, onSelectionChange },
+        render(Slate, {
+          props: { editor, onChange, onValuechange, onSelectionchange },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         expect(editor.selection).toBe(null);
@@ -94,8 +103,8 @@ describe("slate-vue", () => {
 
         nextTick(() => {
           expect(onChange).toHaveBeenCalled();
-          expect(onSelectionChange).toHaveBeenCalled();
-          expect(onValueChange).not.toHaveBeenCalled();
+          expect(onSelectionchange).toHaveBeenCalled();
+          expect(onValuechange).not.toHaveBeenCalled();
         });
       });
     });

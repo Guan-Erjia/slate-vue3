@@ -7,11 +7,10 @@ import {
   Transforms,
 } from "slate-vue3/core";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
-import { RenderLeafProps } from "slate-vue3";
+import { Editable, RenderLeafProps, Slate } from "slate-vue3";
 import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
 import { describe, expect, it } from "vitest";
-import DecorateEditor from "./components/DecorateEditor.vue";
 
 const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   const decorations = Object.keys(Node.extractProps(leaf)).sort();
@@ -75,8 +74,11 @@ describe("decorations", () => {
         };
 
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
@@ -108,8 +110,11 @@ describe("decorations", () => {
         };
 
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
@@ -153,8 +158,11 @@ describe("decorations", () => {
         };
 
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
@@ -191,8 +199,11 @@ describe("decorations", () => {
         };
 
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
@@ -251,8 +262,11 @@ describe("decorations", () => {
         };
 
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
@@ -320,8 +334,11 @@ describe("decorations", () => {
         };
 
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
 
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
@@ -373,11 +390,14 @@ describe("decorations", () => {
         };
 
         // rerender won't trigger remount
-        render(DecorateEditor, {
+        render(Slate, {
           props: {
             editor,
             renderLeaf,
             decorate: decorate2,
+          },
+          slots: {
+            default: h(Editable),
           },
         });
 
@@ -418,8 +438,11 @@ describe("decorations", () => {
           return ranges;
         };
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "The quick brown fox", decorations: [] },
@@ -454,8 +477,11 @@ describe("decorations", () => {
         };
 
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "The quick brown box", decorations: ["bold"] },
@@ -493,8 +519,11 @@ describe("decorations", () => {
           return ranges;
         };
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
         expect(getDecoratedLeaves(editor, [0, 0, 0])).toEqual([
           { text: "Hello world!", decorations: [] },
@@ -531,8 +560,11 @@ describe("decorations", () => {
         };
 
         editor.children = initialValue;
-        render(DecorateEditor, {
+        render(Slate, {
           props: { editor, renderLeaf, decorate },
+          slots: {
+            default: h(Editable),
+          },
         });
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "A", decorations: [] },
