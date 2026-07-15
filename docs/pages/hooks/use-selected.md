@@ -3,7 +3,9 @@
 ```typescript
 import { useSelected } from "slate-vue3";
 
-const useSelected: () => ComputedRef<boolean>;
+const useSelected: (options?: {
+  suppressThrow?: boolean;
+}) => ComputedRef<boolean>;
 
 const selected = useSelected();
 ```
