@@ -1,8 +1,8 @@
 import { render } from "@testing-library/vue";
 import { describe, test, expect, vi } from "vitest";
-import { createEditor, Transforms } from "slate-vue3/core";
-import { withDOM, DOMEditor } from "slate-vue3/dom";
-import { Editable, Slate } from "slate-vue3";
+import { Transforms } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
+import { createReactiveEditor, Editable, Slate } from "slate-vue3";
 import { h, nextTick } from "vue";
 
 describe("slate-vue", () => {
@@ -10,7 +10,7 @@ describe("slate-vue", () => {
     describe(".focus", () => {
       test("should set focus in top of document with no editor selection", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor());
+        const editor = createReactiveEditor();
         editor.children = initialValue;
 
         const testSelection = {
@@ -39,7 +39,7 @@ describe("slate-vue", () => {
 
       test("should be able to call .focus without getting toDOMNode errors", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor());
+        const editor = createReactiveEditor();
         editor.children = initialValue;
         const propagatedValue = [
           { type: "block", children: [{ text: "foo" }] },
@@ -63,7 +63,7 @@ describe("slate-vue", () => {
         await nextTick();
         DOMEditor.focus(editor); // Note: calling focus in the middle of these transformations.
         Transforms.select(editor, testSelection);
-
+        await nextTick();
         expect(editor.selection).toEqual(testSelection);
 
         DOMEditor.focus(editor);
@@ -78,7 +78,7 @@ describe("slate-vue", () => {
 
       test("should not trigger onValueChange when focus is called", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor());
+        const editor = createReactiveEditor();
         editor.children = initialValue;
 
         const onChange = vi.fn();

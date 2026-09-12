@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { h, ref, VNode, VNodeArrayChildren } from "vue";
-import { Slate, Editable, type RenderLeafProps } from "slate-vue3";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
-import { createEditor, Descendant, Editor } from "slate-vue3/core";
+import {
+  Slate,
+  Editable,
+  type RenderLeafProps,
+  createReactiveEditor,
+} from "slate-vue3";
+import { DOMEditor } from "slate-vue3/dom";
+import { Descendant, Editor } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 import { isHotkey } from "is-hotkey";
 import Toolbar from "../../../components/Toolbar.vue";
@@ -62,7 +67,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h("span", attributes, _children);
 };
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 const HOTKEYS = {
   "mod+b": "bold",

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { Slate, Editable } from "slate-vue3";
-import { createEditor } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { createReactiveEditor } from "slate-vue3";
 import { withHistory } from "slate-vue3/history";
 
-const editor1 = withHistory(withDOM(createEditor()));
+const editor1 = withHistory(createReactiveEditor());
 editor1.children = [
   {
     type: "paragraph",
@@ -12,7 +11,7 @@ editor1.children = [
   },
 ];
 
-const editor2 = withHistory(withDOM(createEditor()));
+const editor2 = withHistory(createReactiveEditor());
 editor2.children = [
   {
     type: "paragraph",

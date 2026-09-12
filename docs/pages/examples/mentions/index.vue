@@ -6,15 +6,10 @@ import {
   useInheritRef,
   type RenderElementProps,
   type RenderLeafProps,
+  createReactiveEditor,
 } from "slate-vue3";
-import {
-  createEditor,
-  Descendant,
-  Editor,
-  Range,
-  Transforms,
-} from "slate-vue3/core";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { Descendant, Editor, Range, Transforms } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 import Mention from "./Mention.vue";
 import { CHARACTERS } from "./utils";
@@ -115,7 +110,7 @@ const renderLeaf = (props: RenderLeafProps) => {
   return h("span", attributes, children);
 };
 
-const editor = withHistory(withMentions(withDOM(createEditor())));
+const editor = withHistory(withMentions(createReactiveEditor()));
 editor.children = initialValue;
 const target = ref<Range>();
 const index = ref(0);

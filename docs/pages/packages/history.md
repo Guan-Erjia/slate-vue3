@@ -13,7 +13,7 @@ Add `HistoryEditor` interface to an instance of any `Editor`.
 When used with `withDOM`, `withHistory` should be applied inside. For example:
 
 ```typescript
-const editor = withDOM(withHistory(createEditor()));
+const editor = withDOM(withHistory(createReactiveEditor()));
 ```
 
 ## History Editor
@@ -21,7 +21,7 @@ const editor = withDOM(withHistory(createEditor()));
 The `HistoryEditor` interface is added to the `Editor` when it is instantiated using the `withHistory` method.
 
 ```typescript
-const editor = withDOM(withHistory(createEditor()));
+const editor = withDOM(withHistory(createReactiveEditor()));
 ```
 
 This adds properties to `editor` that enables undo and redo in Slate.

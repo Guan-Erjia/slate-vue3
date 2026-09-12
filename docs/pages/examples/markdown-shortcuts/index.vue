@@ -4,12 +4,16 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderElementProps } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  RenderElementProps,
+  createReactiveEditor,
+} from "slate-vue3";
 import { h } from "vue";
 import { withShortcuts } from "./plugin";
-import { createEditor, Descendant } from "slate-vue3/core";
+import { Descendant } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
-import { withDOM } from "slate-vue3/dom";
 
 const initialValue: Descendant[] = [
   {
@@ -47,7 +51,7 @@ const initialValue: Descendant[] = [
   },
 ];
 
-const editor = withHistory(withShortcuts(withDOM(createEditor())));
+const editor = withHistory(withShortcuts(createReactiveEditor()));
 editor.children = initialValue;
 const renderElement = ({
   attributes,

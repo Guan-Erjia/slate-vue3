@@ -26,11 +26,11 @@ import {
   RenderLeafProps,
   useInheritRef,
   toRawWeakMap,
+  createReactiveEditor,
 } from "slate-vue3";
 import { withHistory } from "slate-vue3/history";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { DOMEditor } from "slate-vue3/dom";
 import {
-  createEditor,
   Editor,
   Element,
   NodeEntry,
@@ -71,7 +71,7 @@ const initialValue = [
 ]
 
 const App = () => {
-  const editor = withDOM(createEditor())
+  const editor = createReactiveEditor()
   editor.children = initialValue
 
   return (
@@ -117,7 +117,7 @@ declare module 'slate' {
   },
 ];
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 
 const renderLeaf = (props: RenderLeafProps) => {

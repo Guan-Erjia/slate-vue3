@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { Slate, Editable, useInheritRef } from "slate-vue3";
 import { h } from "vue";
-import type { RenderElementProps } from "slate-vue3";
+import { type RenderElementProps, createReactiveEditor } from "slate-vue3";
 import { CustomElement } from "../../../custom-types";
 import CheckListItem from "./CheckListsItem.vue";
 import { withChecklists } from "./plugin";
-import { withDOM } from "slate-vue3/dom";
-import { createEditor } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: CustomElement[] = [
@@ -71,7 +69,7 @@ const renderElement = ({
   }
 };
 
-const editor = withHistory(withChecklists(withDOM(createEditor())));
+const editor = withHistory(withChecklists(createReactiveEditor()));
 editor.children = initialValue;
 </script>
 

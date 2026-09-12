@@ -55,22 +55,6 @@ export const ElementComp = defineComponent({
 
     const elementRef = ref<HTMLElement | null>(null);
 
-    watch(
-      () => elementRef.value,
-      (ref) => {
-        const key = DOMEditor.findKey(editor, props.element);
-        const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-        if (ref) {
-          KEY_TO_ELEMENT?.set(key, ref);
-          NODE_TO_ELEMENT.set(props.element, ref);
-          ELEMENT_TO_NODE.set(ref, props.element);
-        } else {
-          KEY_TO_ELEMENT?.delete(key);
-          NODE_TO_ELEMENT.delete(props.element);
-        }
-      },
-    );
-
     const readOnly = useReadOnly();
 
     provideIsLastEmptyBlock(props.element);
@@ -114,6 +98,16 @@ export const ElementComp = defineComponent({
         if (dir === "rtl") {
           attributes.dir = dir;
         }
+      }
+      const key = DOMEditor.findKey(editor, props.element);
+      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
+      if (elementRef.value) {
+        KEY_TO_ELEMENT?.set(key, elementRef.value);
+        NODE_TO_ELEMENT.set(props.element, elementRef.value);
+        ELEMENT_TO_NODE.set(elementRef.value, props.element);
+      } else {
+        KEY_TO_ELEMENT?.delete(key);
+        NODE_TO_ELEMENT.delete(props.element);
       }
 
       if (Editor.isVoid(editor, props.element)) {

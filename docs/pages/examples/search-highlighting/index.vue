@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { Slate, Editable, type RenderLeafProps } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  type RenderLeafProps,
+  createReactiveEditor,
+} from "slate-vue3";
 import { h, ref } from "vue";
 import Toolbar from "../../../components/Toolbar.vue";
-import {
-  createEditor,
-  DecoratedRange,
-  Descendant,
-  NodeEntry,
-  Node,
-} from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { DecoratedRange, Descendant, NodeEntry, Node } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
@@ -93,7 +91,7 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   return ranges;
 };
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 const search = ref("");
 </script>

@@ -84,13 +84,12 @@ import {
   unwrapNodes,
   wrapNodes,
 } from "./transforms-node";
-import { shallowReactive } from "vue";
 
 /**
  * Create a new Slate `Editor` object.
  */
 export const createEditor = (): Editor => {
-  const editor: Editor = shallowReactive({
+  const editor: Editor = {
     children: [],
     operations: [],
     selection: null,
@@ -185,7 +184,7 @@ export const createEditor = (): Editor => {
     wrapNodes: (...args) => wrapNodes(editor, ...args),
     shouldMergeNodesRemovePrevNode: (...args) =>
       shouldMergeNodesRemovePrevNode(editor, ...args),
-  });
+  };
 
   return editor;
 };

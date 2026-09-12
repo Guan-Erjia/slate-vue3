@@ -4,6 +4,7 @@ import {
   Editable,
   type RenderElementProps,
   useInheritRef,
+  createReactiveEditor,
 } from "slate-vue3";
 import { h } from "vue";
 import imageExtensions from "image-extensions";
@@ -12,8 +13,7 @@ import { CustomEditor, ImageElement } from "../../../custom-types";
 import ImageComp from "./ImageComp.vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import Button from "../../../components/Button.vue";
-import { createEditor, Descendant, Transforms } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { Descendant, Transforms } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
@@ -126,7 +126,7 @@ const withImages = (editor: CustomEditor) => {
   return editor;
 };
 
-const editor = withHistory(withImages(withDOM(createEditor())));
+const editor = withHistory(withImages(createReactiveEditor()));
 editor.children = initialValue;
 const onClick = () => {
   const url = window.prompt("Enter the URL of the image:");

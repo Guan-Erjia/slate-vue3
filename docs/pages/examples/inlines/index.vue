@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { Slate, Editable, useInheritRef } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  useInheritRef,
+  createReactiveEditor,
+} from "slate-vue3";
 import { computed, h } from "vue";
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import {
@@ -14,15 +19,7 @@ import Button from "../../../components/Button.vue";
 import LinkComponent from "./LinkComponent.vue";
 import BadgeComponent from "./BadgeComponent.vue";
 import ButtonComponent from "./ButtonComponent.vue";
-import {
-  createEditor,
-  Descendant,
-  Editor,
-  Range,
-  Transforms,
-  Node,
-} from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { Descendant, Editor, Range, Transforms, Node } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const isLinkActive = computed(() => {
@@ -177,7 +174,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) =>
     children,
   );
 
-const editor = withHistory(withInlines(withDOM(createEditor())));
+const editor = withHistory(withInlines(createReactiveEditor()));
 editor.children = initialValue;
 const onKeyDown = (event: KeyboardEvent) => {
   // Default left/right behavior is unit:'character'.

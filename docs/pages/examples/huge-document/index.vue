@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { Slate, Editable, type RenderElementProps } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  type RenderElementProps,
+  createReactiveEditor,
+} from "slate-vue3";
 import { h } from "vue";
 import { faker } from "@faker-js/faker";
-import { createEditor, Descendant } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { Descendant } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const HEADINGS = 100;
@@ -37,7 +41,7 @@ const renderElement = ({
       return h("p", attributes, children);
   }
 };
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 </script>
 <template>

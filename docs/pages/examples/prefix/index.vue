@@ -9,14 +9,14 @@ import {
   Editable,
   RenderLeafProps,
   RenderPlaceholderProps,
+  createReactiveEditor,
 } from "slate-vue3";
-import { createEditor, Path, Node, Editor, NodeEntry } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { Path, Editor, NodeEntry } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 import { h } from "vue";
 import PrefixComp from "./PrefixComp.vue";
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = [
   {
     type: "paragraph",
@@ -25,7 +25,7 @@ editor.children = [
 ];
 
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
-  if (leaf.prefix) {
+  if ("prefix" in leaf && leaf.prefix) {
     return h("span", attributes, [h(PrefixComp), children]);
   }
   return h("span", attributes, children);

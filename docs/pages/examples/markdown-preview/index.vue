@@ -4,17 +4,15 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderLeafProps } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  RenderLeafProps,
+  createReactiveEditor,
+} from "slate-vue3";
 import { CSSProperties, h } from "vue";
 import Prism from "../../../utils/prism";
-import {
-  createEditor,
-  DecoratedRange,
-  Descendant,
-  Node,
-  NodeEntry,
-} from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { DecoratedRange, Descendant, Node, NodeEntry } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
@@ -74,7 +72,7 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   return ranges;
 };
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 
 const renderLeaf = (props: RenderLeafProps) => {

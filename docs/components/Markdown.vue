@@ -10,17 +10,11 @@ import {
   RenderElementProps,
   RenderLeafProps,
   useInheritRef,
+  createReactiveEditor,
 } from "slate-vue3";
 import { CSSProperties, h } from "vue";
 import Prism from "../utils/prism";
-import {
-  createEditor,
-  Editor,
-  Element,
-  NodeEntry,
-  Node,
-  Range,
-} from "slate-vue3/core";
+import { Editor, Element, NodeEntry, Node, Range } from "slate-vue3/core";
 import CodeBlock from "./CodeBlock.vue";
 import { CodeElement } from "../custom-types";
 import { normalizeTokens } from "../utils/normalize-tokens";
@@ -29,7 +23,6 @@ import { unified } from "unified";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import { remarkToSlate } from "remark-slate-transformer";
-import { withDOM } from "slate-vue3/dom";
 
 const props = defineProps<{
   content: string;
@@ -51,7 +44,7 @@ slateDescendant
     code.children = toCodeLines(code.children[0].text);
   });
 
-const editor = withDOM(createEditor());
+const editor = createReactiveEditor();
 editor.children = slateDescendant;
 const renderElement = ({
   attributes,

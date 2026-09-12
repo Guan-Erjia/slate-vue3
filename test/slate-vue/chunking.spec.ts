@@ -1,10 +1,5 @@
-import {
-  Descendant,
-  Element,
-  Node,
-  Transforms,
-  createEditor,
-} from "slate-vue3/core";
+import { createReactiveEditor } from "slate-vue3";
+import { Descendant, Element, Node, Transforms } from "slate-vue3/core";
 import {
   withDOM,
   DOMEditor,
@@ -123,7 +118,7 @@ const withChunking = (editor: DOMEditor) => {
 };
 
 const createEditorWithShape = (treeShape: TreeShape[]) => {
-  const editor = withChunking(withDOM(createEditor()));
+  const editor = withChunking(createReactiveEditor());
   const { children, chunkTree } = getChildrenAndTreeForShape(editor, treeShape);
   editor.children = children;
   const key = DOMEditor.findKey(editor, editor);
@@ -150,7 +145,7 @@ const createPRNG = (seed: number) => {
 describe("getChunkTreeForNode", () => {
   describe("chunking initial value", () => {
     const getShapeForInitialCount = (count: number) => {
-      const editor = withChunking(withDOM(createEditor()));
+      const editor = withChunking(createReactiveEditor());
       editor.children = blocks(count);
       const chunkTree = reconcileEditor(editor);
       return getTreeShape(chunkTree);
@@ -235,7 +230,7 @@ describe("getChunkTreeForNode", () => {
     });
 
     it("calls onInsert for initial children", () => {
-      const editor = withChunking(withDOM(createEditor()));
+      const editor = withChunking(createReactiveEditor());
       editor.children = blocks(3);
 
       const onInsert = vi.fn();
@@ -249,7 +244,7 @@ describe("getChunkTreeForNode", () => {
     });
 
     it("sets the index of each chunk leaf", () => {
-      const editor = withChunking(withDOM(createEditor()));
+      const editor = withChunking(createReactiveEditor());
       editor.children = blocks(9);
 
       const chunkTree = reconcileEditor(editor);
@@ -912,7 +907,7 @@ describe("getChunkTreeForNode", () => {
         while (performance.now() < endTime) {
           iteration++;
 
-          const editor = withChunking(withDOM(createEditor()));
+          const editor = withChunking(createReactiveEditor());
 
           const randomPosition = (includeEnd: boolean) =>
             Math.floor(

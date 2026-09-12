@@ -1,7 +1,8 @@
 import { withTest, resolveModules } from "@test-utils";
 import { test, expect, describe } from "vitest";
-import { createEditor, Editor } from "slate-vue3/core";
+import { Editor } from "slate-vue3/core";
 import { cloneDeep } from "lodash-es";
+import { createReactiveEditor } from "slate-vue3";
 
 const withBatchTest = (editor: Editor, dirties: string[]) => {
   const { normalizeNode } = editor;
@@ -23,7 +24,7 @@ describe("slate-transforms-insert-nodes", () => {
   modules1.forEach((module) => {
     const { input, run, path } = module;
     test(path, async () => {
-      const input2 = createEditor();
+      const input2 = createReactiveEditor();
       input2.children = cloneDeep(input.children);
       input2.selection = cloneDeep(input.selection);
 
@@ -46,9 +47,9 @@ describe("slate-transforms-insert-fragment", () => {
     const { input, run, path } = module;
 
     test(path, async () => {
-      const input1 = createEditor();
+      const input1 = createReactiveEditor();
       input1.children = cloneDeep(input.children);
-      const input2 = createEditor();
+      const input2 = createReactiveEditor();
       input2.children = cloneDeep(input.children);
       input1.selection = cloneDeep(input.selection);
       input2.selection = cloneDeep(input.selection);

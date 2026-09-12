@@ -4,12 +4,12 @@ import {
   Editable,
   type RenderElementProps,
   type RenderLeafProps,
+  createReactiveEditor,
 } from "slate-vue3";
 import { CSSProperties, h, onMounted, onUnmounted } from "vue";
 import { CustomElement } from "../../../custom-types";
 import { withCursors, withYHistory, withYjs, YjsEditor } from "slate-vue3/yjs";
-import { withDOM } from "slate-vue3/dom";
-import { createEditor, Node, Path, Transforms } from "slate-vue3/core";
+import { Node, Path, Transforms } from "slate-vue3/core";
 import { XmlText } from "yjs";
 import Toolbar from "../../../components/Toolbar.vue";
 import MarkButton from "../rich-text/MarkButton.vue";
@@ -85,7 +85,7 @@ const props = defineProps<{
 }>();
 
 const editor = withCursors(
-  withYHistory(withYjs(withDOM(createEditor()), props.sharedType)),
+  withYHistory(withYjs(createReactiveEditor(), props.sharedType)),
   props.provider.awareness,
   {
     data: {

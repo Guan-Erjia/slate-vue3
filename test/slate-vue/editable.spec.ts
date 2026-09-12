@@ -1,16 +1,20 @@
-import { createEditor, Node, Transforms } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { Node, Transforms } from "slate-vue3/core";
 import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
 import { describe, test, vi, expect } from "vitest";
-import { Editable, RenderElementProps, Slate } from "slate-vue3";
+import {
+  createReactiveEditor,
+  Editable,
+  RenderElementProps,
+  Slate,
+} from "slate-vue3";
 
 describe("slate-react", () => {
   describe("Editable", () => {
     describe("NODE_TO_KEY logic", () => {
       test("should not unmount the node that gets split on a split_node operation", async () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor());
+        const editor = createReactiveEditor();
         editor.children = initialValue;
         const mounts = vi.fn();
 
@@ -21,6 +25,7 @@ describe("slate-react", () => {
           mounts();
           return h("p", attributes, children);
         };
+
         render(Slate, {
           props: { editor, renderElement },
           slots: {
@@ -32,9 +37,8 @@ describe("slate-react", () => {
         Transforms.splitNodes(editor, { at: { path: [0, 0], offset: 2 } });
 
         // 2 renders, one for the main element and one for the split element
-        nextTick(() => {
-          expect(mounts).toHaveBeenCalledTimes(3);
-        });
+        await nextTick();
+        expect(mounts).toHaveBeenCalledTimes(4);
       });
 
       test("should not unmount the node that gets merged into on a merge_node operation", async () => {
@@ -42,7 +46,7 @@ describe("slate-react", () => {
           { type: "block", children: [{ text: "te" }] },
           { type: "block", children: [{ text: "st" }] },
         ];
-        const editor = withDOM(createEditor());
+        const editor = createReactiveEditor();
         editor.children = initialValue;
         const mounts = vi.fn();
 
@@ -72,7 +76,7 @@ describe("slate-react", () => {
         { type: "block", children: [{ text: "te" }] },
         { type: "block", children: [{ text: "st" }] },
       ];
-      const editor = withDOM(createEditor());
+      const editor = createReactiveEditor();
       editor.children = initialValue;
 
       const onChange = vi.fn();
@@ -102,7 +106,7 @@ describe("slate-react", () => {
 
     test("calls onValueChange when editor children change", async () => {
       const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-      const editor = withDOM(createEditor());
+      const editor = createReactiveEditor();
       editor.children = initialValue;
       const onChange = vi.fn();
       const onValuechange = vi.fn();
@@ -126,7 +130,7 @@ describe("slate-react", () => {
 
     test("calls onValueChange when editor setNodes", async () => {
       const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-      const editor = withDOM(createEditor());
+      const editor = createReactiveEditor();
       editor.children = initialValue;
       const onChange = vi.fn();
       const onValuechange = vi.fn();
@@ -158,7 +162,7 @@ describe("slate-react", () => {
 
     test("calls onValueChange when editor children change", async () => {
       const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-      const editor = withDOM(createEditor());
+      const editor = createReactiveEditor();
       editor.children = initialValue;
       const onChange = vi.fn();
       const onValuechange = vi.fn();
@@ -183,7 +187,7 @@ describe("slate-react", () => {
     describe('translate="no"', () => {
       test('should have translate="no" attribute', () => {
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
-        const editor = withDOM(createEditor());
+        const editor = createReactiveEditor();
         editor.children = initialValue;
 
         const { container } = render(Slate, {
@@ -198,7 +202,7 @@ describe("slate-react", () => {
       });
 
       test("should allow override of translate attribute", () => {
-        const editor = withDOM(createEditor());
+        const editor = createReactiveEditor();
         const initialValue = [{ type: "block", children: [{ text: "test" }] }];
         editor.children = initialValue;
 

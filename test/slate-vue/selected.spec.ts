@@ -1,8 +1,9 @@
-import { createEditor, Transforms } from "slate-vue3/core";
+import { Transforms } from "slate-vue3/core";
 import { render } from "@testing-library/vue";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { DOMEditor } from "slate-vue3/dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  createReactiveEditor,
   Editable,
   RenderElementProps,
   Slate,
@@ -74,7 +75,7 @@ const MockElement = defineComponent({
 describe("useSelected", () => {
   const withChunking = (chunking: boolean) => {
     beforeEach(() => {
-      editor = withDOM(createEditor());
+      editor = createReactiveEditor();
       editor.children = initialValue();
 
       if (chunking) {
@@ -214,7 +215,7 @@ describe("useSelected", () => {
     // Keeps referencing an element after it has been removed from the editor.
 
     const run = async (chunking: boolean) => {
-      const editor = withDOM(createEditor());
+      const editor = createReactiveEditor();
       editor.children = [
         { children: [{ text: "one" }] },
         { children: [{ text: "two" }] },
