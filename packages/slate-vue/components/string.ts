@@ -16,9 +16,9 @@ export const StringComp = defineComponent({
     return () => {
       // COMPAT: Render text inside void nodes with a zero-width space.
       // So the node can contain selection but the text is not visible.
-      if (editor.isVoid(element.value)) {
+      if (editor.isVoid(element)) {
         return ZeroWidthString({
-          length: Node.string(element.value).length,
+          length: Node.string(element).length,
         });
       }
       // COMPAT: If this is the last text node in an empty block, render a zero-
@@ -26,7 +26,7 @@ export const StringComp = defineComponent({
       // to support expected plain text.
       if (
         props.leaf.text === "" &&
-        element.value.children.at(-1) === props.text &&
+        element.children.at(-1) === props.text &&
         isLastEmptyBlock.value
       ) {
         return ZeroWidthString({

@@ -1,19 +1,17 @@
 <script setup lang="ts">
-import { Slate, Editable, type RenderElementProps } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  type RenderElementProps,
+  createReactiveEditor,
+} from "slate-vue3";
 import { h } from "vue";
 import {
   TitleElement,
   ParagraphElement,
   CustomEditor,
 } from "../../../custom-types";
-import { withDOM } from "slate-vue3/dom";
-import {
-  Editor,
-  Transforms,
-  Node,
-  Descendant,
-  createEditor,
-} from "slate-vue3/core";
+import { Editor, Transforms, Node, Descendant } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const withLayout = (editor: CustomEditor) => {
@@ -93,7 +91,7 @@ const renderElement = ({
       return h("p", attributes, children);
   }
 };
-const editor = withHistory(withLayout(withDOM(createEditor())));
+const editor = withHistory(withLayout(createReactiveEditor()));
 editor.children = initialValue;
 </script>
 

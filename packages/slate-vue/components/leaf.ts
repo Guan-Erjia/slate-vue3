@@ -14,29 +14,27 @@ export const LeafComp = defineComponent({
     isLast: boolean;
     leafPosition?: LeafPosition;
   }) {
-    const { text, leaf, isLast, leafPosition } = props;
-
     const renderLeaf = useRenderLeaf();
     const showPlaceholder = usePlaceholderShow();
     return () =>
       renderLeaf({
-        text,
-        leaf,
-        leafPosition,
+        text: props.text,
+        leaf: props.leaf,
+        leafPosition: props.leafPosition,
         attributes: { "data-slate-leaf": true },
         children: showPlaceholder()
           ? [
               h(StringComp, {
-                text,
-                leaf,
+                text: props.text,
+                leaf: props.leaf,
                 isLast: true,
               }),
               h(PlaceholderComp),
             ]
           : h(StringComp, {
-              text,
-              leaf,
-              isLast,
+              text: props.text,
+              leaf: props.leaf,
+              isLast: props.isLast,
             }),
       });
   },

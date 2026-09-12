@@ -14,9 +14,9 @@ export const useSelected = ({
   const editor = useEditor();
 
   return computed(() => {
-    if (!editor.selection || !element?.value) return false;
+    if (!editor.selection || !element) return false;
     try {
-      const path = DOMEditor.findPath(editor, element.value);
+      const path = DOMEditor.findPath(editor, element);
       const range = Editor.range(editor, path);
       return !!Range.intersection(range, editor.selection);
     } catch (e) {

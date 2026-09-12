@@ -4,9 +4,13 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderLeafProps } from "slate-vue3";
-import { createEditor, Descendant } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import {
+  Slate,
+  Editable,
+  RenderLeafProps,
+  createReactiveEditor,
+} from "slate-vue3";
+import { Descendant } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 import { h } from "vue";
 
@@ -20,6 +24,6 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   }
   return h("span", attributes, children);
 };
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = props.value;
 </script>

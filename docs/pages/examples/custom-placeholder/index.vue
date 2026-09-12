@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import { Slate, Editable, type RenderPlaceholderProps } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  type RenderPlaceholderProps,
+  createReactiveEditor,
+} from "slate-vue3";
 import { h } from "vue";
-import { createEditor, Descendant } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { Descendant } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
@@ -22,7 +26,7 @@ const renderPlaceholder = ({
     ),
   ]);
 };
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 </script>
 

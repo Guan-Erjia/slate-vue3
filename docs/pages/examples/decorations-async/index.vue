@@ -33,16 +33,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { h, onMounted, onUnmounted, ref } from "vue";
-import { Editable, RenderLeafProps, Slate } from "slate-vue3";
+import { h, onUnmounted, ref } from "vue";
 import {
-  Descendant,
-  Text,
-  NodeEntry,
-  Range,
-  createEditor,
-} from "slate-vue3/core";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+  createReactiveEditor,
+  Editable,
+  RenderLeafProps,
+  Slate,
+} from "slate-vue3";
+import { Descendant, Text, NodeEntry, Range } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
@@ -99,7 +98,7 @@ const findDuplicateRanges = (editor: DOMEditor): Range[] => {
   return ranges;
 };
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 
 // Compute the initial decorations synchronously on mount.

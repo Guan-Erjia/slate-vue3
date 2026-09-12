@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { Slate, Editable, useInheritRef } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  useInheritRef,
+  createReactiveEditor,
+} from "slate-vue3";
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { jsx } from "slate-vue3/hyperscript";
 import { h } from "vue";
 import ImageElement from "./ImageElement.vue";
-import { withDOM } from "slate-vue3/dom";
-import { createEditor, Descendant, Transforms } from "slate-vue3/core";
+import { Descendant, Transforms } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
 import { CustomEditor } from "../../../custom-types";
 
@@ -188,7 +192,7 @@ const renderLeaf = (props: RenderLeafProps) => {
   return h("span", attributes, children);
 };
 
-const editor = withHistory(withHtml(withDOM(createEditor())));
+const editor = withHistory(withHtml(createReactiveEditor()));
 editor.children = initialValue;
 </script>
 

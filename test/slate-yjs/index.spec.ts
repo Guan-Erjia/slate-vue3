@@ -6,7 +6,8 @@ import {
   slateNodesToInsertDelta,
 } from "slate-vue3/yjs";
 import * as Y from "yjs";
-import { Editor, createEditor, Element, Transforms } from "slate-vue3/core";
+import { Editor, Element, Transforms } from "slate-vue3/core";
+import { createReactiveEditor } from "slate-vue3";
 
 const modules = await resolveModules(import.meta.glob("./**/*.jsx"));
 
@@ -41,7 +42,7 @@ async function withTestingElements(editor: Editor, doc = new Y.Doc()) {
 }
 
 async function normalizedSlateDoc(sharedRoot: Y.XmlText) {
-  const editor = createEditor();
+  const editor = createReactiveEditor();
   editor.children = yTextToSlateElement(sharedRoot).children;
   const e = await withTestingElements(editor);
   Editor.normalize(e, { force: true });
@@ -76,7 +77,10 @@ describe("slate-yjs", () => {
       // Setup remote editor with input base state
       const remoteDoc = new Y.Doc();
       Y.applyUpdateV2(remoteDoc, baseState);
-      const remote = await withTestingElements(createEditor(), remoteDoc);
+      const remote = await withTestingElements(
+        createReactiveEditor(),
+        remoteDoc,
+      );
 
       // Apply changes from 'run'
       Y.applyUpdateV2(

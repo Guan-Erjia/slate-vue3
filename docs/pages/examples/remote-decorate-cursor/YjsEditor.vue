@@ -4,9 +4,9 @@ import {
   Editable,
   type RenderElementProps,
   type RenderLeafProps,
+  createReactiveEditor,
 } from "slate-vue3";
-import { createEditor, Node, Path, Transforms } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
+import { Node, Path, Transforms } from "slate-vue3/core";
 import {
   getRemoteCaretsOnLeaf,
   getRemoteCursorsOnLeaf,
@@ -123,7 +123,7 @@ const props = defineProps<{
 }>();
 
 const editor = withCursors(
-  withYHistory(withYjs(withDOM(createEditor()), props.sharedType)),
+  withYHistory(withYjs(createReactiveEditor(), props.sharedType)),
   props.provider.awareness,
   {
     data: {

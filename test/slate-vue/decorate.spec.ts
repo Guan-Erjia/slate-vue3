@@ -1,13 +1,11 @@
+import { Node, NodeEntry, Path, Editor, Transforms } from "slate-vue3/core";
+import { DOMEditor } from "slate-vue3/dom";
 import {
-  Node,
-  NodeEntry,
-  Path,
-  createEditor as slateCreateEditor,
-  Editor,
-  Transforms,
-} from "slate-vue3/core";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
-import { Editable, RenderLeafProps, Slate } from "slate-vue3";
+  createReactiveEditor,
+  Editable,
+  RenderLeafProps,
+  Slate,
+} from "slate-vue3";
 import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
 import { describe, expect, it } from "vitest";
@@ -43,7 +41,7 @@ const otherNodes = () =>
 describe("decorations", () => {
   const withChunking = (chunking: boolean) => {
     const createEditor = () => {
-      const editor = withDOM(slateCreateEditor());
+      const editor = createReactiveEditor();
 
       if (chunking) {
         editor.getChunkSize = () => 2;
@@ -53,7 +51,7 @@ describe("decorations", () => {
     };
 
     describe("decorating initial value", () => {
-      it("decorates part of a single text node", () => {
+      it("decorates part of a single text node", async () => {
         const editor = createEditor();
 
         const initialValue = [
@@ -80,7 +78,7 @@ describe("decorations", () => {
             default: h(Editable),
           },
         });
-
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "Hello ", decorations: [] },
           { text: "world", decorations: ["bold"] },
@@ -88,7 +86,7 @@ describe("decorations", () => {
         ]);
       });
 
-      it("decorates an entire text node", () => {
+      it("decorates an entire text node", async () => {
         const editor = createEditor();
 
         const initialValue = [
@@ -117,6 +115,7 @@ describe("decorations", () => {
           },
         });
 
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "before", decorations: [] },
         ]);
@@ -130,7 +129,7 @@ describe("decorations", () => {
         ]);
       });
 
-      it("applies multiple overlapping decorations in a single text node", () => {
+      it("applies multiple overlapping decorations in a single text node", async () => {
         const editor = createEditor();
 
         const initialValue = [
@@ -165,6 +164,7 @@ describe("decorations", () => {
           },
         });
 
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "Hello ", decorations: ["bold"] },
           { text: "world", decorations: ["bold", "italic"] },
@@ -172,7 +172,7 @@ describe("decorations", () => {
         ]);
       });
 
-      it("passes down decorations from the parent element", () => {
+      it("passes down decorations from the parent element", async () => {
         const editor = createEditor();
 
         const initialValue = [
@@ -206,6 +206,7 @@ describe("decorations", () => {
           },
         });
 
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "be", decorations: [] },
           { text: "fore", decorations: ["bold"] },
@@ -221,7 +222,7 @@ describe("decorations", () => {
         ]);
       });
 
-      it("passes decorations down from the editor", () => {
+      it("passes decorations down from the editor", async () => {
         const editor = createEditor();
 
         const initialValue = [
@@ -269,6 +270,7 @@ describe("decorations", () => {
           },
         });
 
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "0.0", decorations: [] },
         ]);
@@ -291,7 +293,7 @@ describe("decorations", () => {
     });
 
     describe("redecorating", () => {
-      it("redecorates all nodes when the decorate function changes", () => {
+      it("redecorates all nodes when the decorate function changes", async () => {
         const editor = createEditor();
         const initialValue = [
           {
@@ -341,6 +343,7 @@ describe("decorations", () => {
           },
         });
 
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "0.0", decorations: ["bold"] },
         ]);
@@ -401,6 +404,7 @@ describe("decorations", () => {
           },
         });
 
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "0.0", decorations: [] },
         ]);
@@ -444,6 +448,7 @@ describe("decorations", () => {
             default: h(Editable),
           },
         });
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "The quick brown fox", decorations: [] },
         ]);
@@ -483,6 +488,7 @@ describe("decorations", () => {
             default: h(Editable),
           },
         });
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "The quick brown box", decorations: ["bold"] },
         ]);
@@ -525,6 +531,7 @@ describe("decorations", () => {
             default: h(Editable),
           },
         });
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0, 0])).toEqual([
           { text: "Hello world!", decorations: [] },
         ]);
@@ -566,6 +573,7 @@ describe("decorations", () => {
             default: h(Editable),
           },
         });
+        await nextTick();
         expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
           { text: "A", decorations: [] },
         ]);

@@ -1,15 +1,18 @@
 <script setup lang="ts">
-import { Slate, Editable, RenderLeafProps } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  RenderLeafProps,
+  createReactiveEditor,
+} from "slate-vue3";
 import { h } from "vue";
 import {
-  createEditor,
   Descendant,
   NodeEntry,
   DecoratedRange,
   Node,
   Path,
 } from "slate-vue3/core";
-import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
@@ -45,7 +48,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) =>
     children,
   );
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
   const ranges: DecoratedRange[] = [];

@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { createEditor, Descendant } from "slate-vue3/core";
-import { Slate, Editable } from "slate-vue3";
-import { h } from "vue";
-import { withDOM } from "slate-vue3/dom";
+import { Descendant } from "slate-vue3/core";
+import { Slate, Editable, createReactiveEditor } from "slate-vue3";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [
@@ -20,7 +18,7 @@ const initialValue: Descendant[] = [
   },
 ];
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 </script>
 

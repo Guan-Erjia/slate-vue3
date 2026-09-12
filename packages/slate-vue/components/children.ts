@@ -6,12 +6,12 @@ import {
   NODE_TO_PARENT,
   reconcileChildren,
 } from "slate-vue3/dom";
-import { defineComponent, h, ref, renderList, VNode, watch } from "vue";
+import { defineComponent, h, renderList, VNode } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkCompFc } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
-import { provideElementDR } from "../render/decorate";
+import { getElementDR, injectDecorateFn } from "../render/decorate";
 import { provideIsLastEmptyBlock } from "../render/last";
 import { provideChunkRoot, useRenderChunk } from "../render/chunk";
 
@@ -23,76 +23,65 @@ export const ChildrenComp = defineComponent({
   props: ["element"],
   setup(props: { element: Ancestor }) {
     const editor = useEditor();
-    const element = props.element;
 
-    const isBlock = Node.isElement(element) && !editor.isInline(element);
+    const isBlock =
+      Node.isElement(props.element) && !editor.isInline(props.element);
 
-    const chunkSize = Editor.hasInlines(editor, element)
+    const chunkSize = Editor.hasInlines(editor, props.element)
       ? null
-      : editor.getChunkSize(element);
+      : editor.getChunkSize(props.element);
 
     if (isBlock || chunkSize === null) {
-      provideElementDR(element);
-      provideIsLastEmptyBlock(element);
+      provideIsLastEmptyBlock(props.element);
+      const decorate = injectDecorateFn();
 
-      return () =>
-        renderList(element.children, (n, i): VNode => {
+      return () => {
+        const elementDR = getElementDR(props.element, editor, decorate);
+        return renderList(props.element.children, (n, i): VNode => {
           // Update the index and parent of each child.
           // PERF: If chunking is enabled, this is done while traversing the chunk tree
           // instead to eliminate unnecessary weak map operations.
           NODE_TO_INDEX.set(n, i);
-          NODE_TO_PARENT.set(n, element);
+          NODE_TO_PARENT.set(n, props.element);
           const key = DOMEditor.findKey(editor, n);
           return Node.isText(n)
             ? h(TextComp, {
                 text: n,
                 key: key.id,
-                isLast: i === element.children.length - 1,
+                elementDR,
+                isLast: i === props.element.children.length - 1,
               })
             : h(ElementComp, {
                 element: n,
                 key: key.id,
               });
         });
+      };
     }
 
     const cacheTree = getChunkTreeForNode(editor, props.element);
-
-    const version = ref(0);
-    watch(
-      element.children,
-      () => {
-        version.value++;
-        // console.time("Reconcile children chunks");
-        reconcileChildren(editor, element.children, {
-          chunkTree: cacheTree,
-          chunkSize: chunkSize,
-          onInsert: (n: Descendant, i: number) => {
-            NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, element);
-          },
-          onUpdate: (n: Descendant, i: number) => {
-            NODE_TO_INDEX.set(n, i);
-            NODE_TO_PARENT.set(n, element);
-          },
-          onIndexChange: (n: Descendant, i: number) => {
-            NODE_TO_INDEX.set(n, i);
-          },
-        });
-        // console.timeEnd("Reconcile children chunks");
-      },
-      {
-        deep: false,
-        immediate: true,
-      },
-    );
 
     provideChunkRoot(cacheTree);
     const renderChunk = useRenderChunk();
 
     return () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      version.value;
+      // console.time("Reconcile children chunks");
+      reconcileChildren(editor, props.element.children, {
+        chunkTree: cacheTree,
+        chunkSize: chunkSize,
+        onInsert: (n: Descendant, i: number) => {
+          NODE_TO_INDEX.set(n, i);
+          NODE_TO_PARENT.set(n, props.element);
+        },
+        onUpdate: (n: Descendant, i: number) => {
+          NODE_TO_INDEX.set(n, i);
+          NODE_TO_PARENT.set(n, props.element);
+        },
+        onIndexChange: (n: Descendant, i: number) => {
+          NODE_TO_INDEX.set(n, i);
+        },
+      });
+      // console.timeEnd("Reconcile children chunks");
       return ChunkCompFc(cacheTree, renderChunk, true);
     };
   },

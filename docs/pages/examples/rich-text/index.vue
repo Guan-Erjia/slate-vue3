@@ -4,6 +4,7 @@ import {
   Editable,
   type RenderElementProps,
   type RenderLeafProps,
+  createReactiveEditor,
 } from "slate-vue3";
 import { CSSProperties, h } from "vue";
 import Toolbar from "../../../components/Toolbar.vue";
@@ -12,8 +13,6 @@ import BlockButton from "./BlockButton.vue";
 import AlignButton from "../rich-text/AlignButton.vue";
 import { CustomElement } from "../../../custom-types";
 import { withHistory } from "slate-vue3/history";
-import { withDOM } from "slate-vue3/dom";
-import { createEditor } from "slate-vue3/core";
 
 const initialValue: CustomElement[] = [
   {
@@ -104,7 +103,7 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   );
 };
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 </script>
 

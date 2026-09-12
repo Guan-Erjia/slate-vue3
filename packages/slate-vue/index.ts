@@ -17,3 +17,5 @@ export { useInheritRef } from "./hooks/use-inherit-ref";
 export { useElement, useElementIf } from "./hooks/use-element";
 
 export { toRawWeakMap } from "share-tools";
+
+export { createReactiveEditor } from "./utils/createReactiveEditor";

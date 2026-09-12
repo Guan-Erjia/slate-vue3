@@ -12,7 +12,6 @@ import {
   normalizeNode,
   removeMark,
   shouldNormalize,
-  Descendant,
 } from "./";
 import { apply } from "./core";
 import {
@@ -85,13 +84,12 @@ import {
   unwrapNodes,
   wrapNodes,
 } from "./transforms-node";
-import { ref, shallowReactive } from "vue";
 
 /**
  * Create a new Slate `Editor` object.
  */
 export const createEditor = (): Editor => {
-  const editor: Editor = shallowReactive({
+  const editor: Editor = {
     children: [],
     operations: [],
     selection: null,
@@ -186,17 +184,7 @@ export const createEditor = (): Editor => {
     wrapNodes: (...args) => wrapNodes(editor, ...args),
     shouldMergeNodesRemovePrevNode: (...args) =>
       shouldMergeNodesRemovePrevNode(editor, ...args),
-  });
-
-  const _children = ref<Descendant[]>([]);
-  Object.defineProperty(editor, "children", {
-    get() {
-      return _children.value;
-    },
-    set(value) {
-      _children.value = value;
-    },
-  });
+  };
 
   return editor;
 };

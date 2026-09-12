@@ -7,15 +7,20 @@
   </Slate>
 </template>
 <script lang="ts" setup>
-import { Slate, Editable, RenderElementProps, useInheritRef } from "slate-vue3";
+import {
+  Slate,
+  Editable,
+  RenderElementProps,
+  useInheritRef,
+  createReactiveEditor,
+} from "slate-vue3";
 import Toolbar from "../../../components/Toolbar.vue";
 import EditableVoid from "./EditableVoid.vue";
 import Button from "../../../components/Button.vue";
 import { EditableVoidElement } from "../../../custom-types";
 import { h } from "vue";
-import { createEditor, Descendant, Transforms } from "slate-vue3/core";
+import { Descendant, Transforms } from "slate-vue3/core";
 import { withHistory } from "slate-vue3/history";
-import { withDOM } from "slate-vue3/dom";
 
 const initialValue: Descendant[] = [
   {
@@ -40,7 +45,7 @@ const initialValue: Descendant[] = [
   },
 ];
 
-const editor = withHistory(withDOM(createEditor()));
+const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
 const renderElement = ({
   attributes,
