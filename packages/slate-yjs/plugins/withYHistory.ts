@@ -1,4 +1,4 @@
-import { Editor, Location, Transforms } from "slate-vue3/core";
+import { Editor, Location, Transforms } from "slate";
 import { UndoManager } from "yjs";
 import { HistoryStackItem, RelativeRange } from "../model/types";
 import {

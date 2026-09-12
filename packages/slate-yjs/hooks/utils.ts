@@ -1,5 +1,5 @@
 import { onMounted, onUnmounted, Ref } from "vue";
-import { Editor, Path, Range, Text, Descendant, Node } from "slate-vue3/core";
+import { Editor, Path, Range, Text, Descendant, Node } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { JsonObject } from "@liveblocks/client";
 import { CursorEditor, CursorState } from "../plugins/withCursors";

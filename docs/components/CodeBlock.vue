@@ -5,7 +5,7 @@
   </code>
 </template>
 <script setup lang="ts">
-import { Element, Node } from "slate-vue3/core";
+import { Element, Node } from "slate";
 const props = defineProps<{
   element: Element;
 }>();

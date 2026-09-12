@@ -120,7 +120,7 @@
 </template>
 <script setup lang="ts">
 import { faker } from "@faker-js/faker";
-import { Descendant } from "slate-vue3/core";
+import { Descendant } from "slate";
 import {
   Editable,
   RenderElementProps,

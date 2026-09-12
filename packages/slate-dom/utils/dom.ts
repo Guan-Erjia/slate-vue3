@@ -7,7 +7,7 @@
 // https://github.com/microsoft/TypeScript/issues/35002
 type DOMNode = globalThis.Node;
 type DOMElement = globalThis.Element;
-import { Scrubber } from "slate-vue3/core";
+import { Scrubber } from "slate";
 import { DOMEditor } from "../plugin/dom-editor";
 
 declare global {

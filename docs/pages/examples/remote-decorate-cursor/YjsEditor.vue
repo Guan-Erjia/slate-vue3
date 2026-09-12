@@ -6,7 +6,7 @@ import {
   type RenderLeafProps,
   createReactiveEditor,
 } from "slate-vue3";
-import { Node, Path, Transforms } from "slate-vue3/core";
+import { Node, Path, Transforms } from "slate";
 import {
   getRemoteCaretsOnLeaf,
   getRemoteCursorsOnLeaf,
@@ -25,7 +25,7 @@ import BlockButton from "../rich-text/BlockButton.vue";
 import AlignButton from "../rich-text/AlignButton.vue";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
 import { faker } from "@faker-js/faker";
-import { Text } from "slate-vue3/core";
+import { Text } from "slate";
 
 const initialValue: CustomElement[] = [
   {

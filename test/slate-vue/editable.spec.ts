@@ -1,4 +1,4 @@
-import { Node, Transforms } from "slate-vue3/core";
+import { Node, Transforms } from "slate";
 import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
 import { describe, test, vi, expect } from "vitest";

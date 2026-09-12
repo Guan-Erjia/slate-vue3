@@ -1,4 +1,4 @@
-import { Descendant } from "slate-vue3/core";
+import { Descendant } from "slate";
 import { Key } from "../utils/key";
 
 export interface ChunkTree {

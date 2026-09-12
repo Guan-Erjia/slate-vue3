@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { Descendant, BaseEditor, BaseRange, BaseText } from "slate-vue3/core";
+import { Descendant, BaseEditor, BaseRange, BaseText } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 
 export type BlockQuoteElement = {
@@ -157,7 +157,7 @@ export type EmptyText = {
 
 export type CustomEditor = BaseEditor & DOMEditor;
 
-declare module "slate-vue3/core" {
+declare module "slate" {
   interface CustomTypes {
     Editor: CustomEditor;
     Element: CustomElement;

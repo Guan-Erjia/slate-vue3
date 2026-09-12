@@ -1,5 +1,5 @@
 /** @jsx jsxYjs */
-import { Editor, Transforms } from "slate-vue3/core";
+import { Editor, Transforms } from "slate";
 import { jsxYjs } from "@test-utils";
 
 export const input = (

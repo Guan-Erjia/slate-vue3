@@ -1,4 +1,4 @@
-import { Element, Node } from "slate-vue3/core";
+import { Element, Node } from "slate";
 import { DeltaInsert, InsertDelta } from "../model/types";
 import { yTextToInsertDelta } from "./delta";
 import { getProperties } from "./slate";

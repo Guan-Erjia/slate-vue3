@@ -77,7 +77,7 @@ import {
   unwrapNodes,
   wrapNodes,
   deleteText,
-} from "slate-vue3/core";
+} from "slate";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { shallowReactive } from "vue";
 

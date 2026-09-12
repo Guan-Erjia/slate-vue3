@@ -19,7 +19,7 @@ import EditableVoid from "./EditableVoid.vue";
 import Button from "../../../components/Button.vue";
 import { EditableVoidElement } from "../../../custom-types";
 import { h } from "vue";
-import { Descendant, Transforms } from "slate-vue3/core";
+import { Descendant, Transforms } from "slate";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [

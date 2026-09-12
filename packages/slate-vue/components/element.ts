@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { Editor, Element, Node } from "slate-vue3/core";
+import { Editor, Element, Node } from "slate";
 import { ChildrenComp } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,

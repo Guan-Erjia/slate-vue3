@@ -1,6 +1,6 @@
 import { render } from "@testing-library/vue";
 import { describe, test, expect, vi } from "vitest";
-import { Transforms } from "slate-vue3/core";
+import { Transforms } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { createReactiveEditor, Editable, Slate } from "slate-vue3";
 import { h, nextTick } from "vue";

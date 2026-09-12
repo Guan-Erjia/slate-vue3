@@ -12,7 +12,7 @@ import {
   CustomEditor,
 } from "../../../custom-types";
 import HoveringToolbar from "./HoveringToolbar.vue";
-import { Editor, Transforms, Node, Element, Descendant } from "slate-vue3/core";
+import { Editor, Transforms, Node, Element, Descendant } from "slate";
 import { withHistory } from "slate-vue3/history";
 
 const withLayout = (editor: CustomEditor) => {

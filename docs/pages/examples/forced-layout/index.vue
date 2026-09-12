@@ -11,7 +11,7 @@ import {
   ParagraphElement,
   CustomEditor,
 } from "../../../custom-types";
-import { Editor, Transforms, Node, Descendant } from "slate-vue3/core";
+import { Editor, Transforms, Node, Descendant } from "slate";
 import { withHistory } from "slate-vue3/history";
 
 const withLayout = (editor: CustomEditor) => {

@@ -1,4 +1,4 @@
-import type { BaseSelection } from "slate-vue3/core";
+import type { BaseSelection } from "slate";
 import { type ComputedRef, inject } from "vue";
 import { SLATE_USE_SELECTION } from "../utils/constants";
 

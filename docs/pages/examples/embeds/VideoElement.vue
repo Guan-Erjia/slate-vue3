@@ -18,7 +18,7 @@
 </template>
 <script lang="ts" setup>
 import { useEditor } from "slate-vue3";
-import { Element, Transforms } from "slate-vue3/core";
+import { Element, Transforms } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { computed, HTMLAttributes, useAttrs } from "vue";
 import { VideoElement } from "../../../custom-types";

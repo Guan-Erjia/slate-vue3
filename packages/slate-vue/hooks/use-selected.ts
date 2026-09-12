@@ -1,4 +1,4 @@
-import { Editor, Range } from "slate-vue3/core";
+import { Editor, Range } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { computed, type ComputedRef } from "vue";
 import { useElementIf } from "./use-element";

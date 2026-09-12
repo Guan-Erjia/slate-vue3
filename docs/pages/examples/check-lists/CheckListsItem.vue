@@ -21,7 +21,7 @@ import { useEditor, useReadOnly } from "slate-vue3";
 import { computed, Events } from "vue";
 import { CheckListItemElement, CustomElement } from "../../../custom-types";
 import { DOMEditor } from "slate-vue3/dom";
-import { Transforms } from "slate-vue3/core";
+import { Transforms } from "slate";
 const props = defineProps<{
   element: CheckListItemElement;
 }>();

@@ -7,7 +7,7 @@ import {
   Range,
   RangeRef,
   Text,
-} from "slate-vue3/core";
+} from "slate";
 import { Key } from "./key";
 import { toRawWeakMap } from "share-tools";
 

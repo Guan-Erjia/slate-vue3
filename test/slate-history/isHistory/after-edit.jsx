@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from "@test-utils";
-import { Transforms } from "slate-vue3/core";
+import { Transforms } from "slate";
 
 export const input = (
   <editor>

@@ -40,7 +40,7 @@ import {
   RenderLeafProps,
   Slate,
 } from "slate-vue3";
-import { Descendant, Text, NodeEntry, Range } from "slate-vue3/core";
+import { Descendant, Text, NodeEntry, Range } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 

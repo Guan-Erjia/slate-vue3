@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { Editor, Node, Transforms } from "slate-vue3/core";
+import { Editor, Node, Transforms } from "slate";
 import { useEditor } from "slate-vue3";
 import Button from "../../../components/Button.vue";
 import { computed } from "vue";

@@ -1,4 +1,4 @@
-import { Editor, Text, Range, DecoratedRange } from "slate-vue3/core";
+import { Editor, Text, Range, DecoratedRange } from "slate";
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,

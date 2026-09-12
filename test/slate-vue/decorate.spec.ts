@@ -1,4 +1,4 @@
-import { Node, NodeEntry, Path, Editor, Transforms } from "slate-vue3/core";
+import { Node, NodeEntry, Path, Editor, Transforms } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import {
   createReactiveEditor,

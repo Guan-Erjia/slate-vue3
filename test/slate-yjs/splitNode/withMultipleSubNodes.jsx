@@ -1,6 +1,6 @@
 /* eslint-disable react/void-dom-elements-no-children */
 /** @jsx jsxYjs */
-import { Transforms } from "slate-vue3/core";
+import { Transforms } from "slate";
 import { jsxYjs } from "@test-utils";
 
 export const input = (

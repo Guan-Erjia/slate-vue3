@@ -13,7 +13,7 @@ import { CustomEditor, ImageElement } from "../../../custom-types";
 import ImageComp from "./ImageComp.vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import Button from "../../../components/Button.vue";
-import { Descendant, Transforms } from "slate-vue3/core";
+import { Descendant, Transforms } from "slate";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [

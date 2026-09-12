@@ -9,7 +9,7 @@ import {
 import { CSSProperties, h, onMounted, onUnmounted } from "vue";
 import { CustomElement } from "../../../custom-types";
 import { withCursors, withYHistory, withYjs, YjsEditor } from "slate-vue3/yjs";
-import { Node, Path, Transforms } from "slate-vue3/core";
+import { Node, Path, Transforms } from "slate";
 import { XmlText } from "yjs";
 import Toolbar from "../../../components/Toolbar.vue";
 import MarkButton from "../rich-text/MarkButton.vue";

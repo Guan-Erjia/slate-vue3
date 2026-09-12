@@ -1,5 +1,5 @@
-import { BaseRange, BaseText } from "slate-vue3/core";
-declare module "slate-vue3/core" {
+import { BaseRange, BaseText } from "slate";
+declare module "slate" {
   interface CustomTypes {
     Text: BaseText & {
       // FIXME: is unknown correct here?

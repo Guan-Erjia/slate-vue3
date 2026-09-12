@@ -7,7 +7,7 @@ import {
   PathRef,
   Range,
   Transforms,
-} from "slate-vue3/core";
+} from "slate";
 import {
   getPlainText,
   getSlateFragmentAttribute,

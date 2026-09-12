@@ -1,7 +1,0 @@
-import { Location, Point } from "slate-vue3/core";
-
-export const input = { path: [0, 1], offset: 2 };
-export const test = (value) => {
-  return Location.isPoint(value);
-};
-export const output = true;

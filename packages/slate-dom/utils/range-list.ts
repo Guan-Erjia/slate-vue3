@@ -1,5 +1,5 @@
 import { DOMEditor } from "../plugin/dom-editor";
-import { Ancestor, DecoratedRange, Editor, Range } from "slate-vue3/core";
+import { Ancestor, DecoratedRange, Editor, Range } from "slate";
 
 export const shallowCompare = (
   obj1: { [key: string]: unknown },

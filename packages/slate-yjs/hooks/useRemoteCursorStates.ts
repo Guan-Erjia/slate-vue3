@@ -1,7 +1,7 @@
 import { onMounted, onUnmounted, Ref } from "vue";
 import { JsonObject } from "@liveblocks/client";
 import { ref } from "vue";
-import { BaseEditor } from "slate-vue3/core";
+import { BaseEditor } from "slate";
 import { useEditor } from "slate-vue3";
 import { DOMEditor } from "slate-vue3/dom";
 import {

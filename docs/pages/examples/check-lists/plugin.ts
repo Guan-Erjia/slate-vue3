@@ -1,4 +1,4 @@
-import { Range, Editor, Node, Point, Transforms } from "slate-vue3/core";
+import { Range, Editor, Node, Point, Transforms } from "slate";
 import { CustomEditor, CustomElement } from "../../../custom-types";
 export const withChecklists = (editor: CustomEditor) => {
   const { deleteBackward } = editor;

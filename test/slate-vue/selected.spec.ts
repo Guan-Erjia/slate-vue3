@@ -1,4 +1,4 @@
-import { Transforms } from "slate-vue3/core";
+import { Transforms } from "slate";
 import { render } from "@testing-library/vue";
 import { DOMEditor } from "slate-vue3/dom";
 import { beforeEach, describe, expect, it } from "vitest";

@@ -1,4 +1,4 @@
-import { isObject, Operation, Range } from "slate-vue3/core";
+import { isObject, Operation, Range } from "slate";
 
 interface Batch {
   operations: Operation[];

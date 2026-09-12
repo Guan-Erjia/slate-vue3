@@ -1,4 +1,4 @@
-import { BasePoint } from "slate-vue3/core";
+import { BasePoint } from "slate";
 import { ComputedRef, inject, provide, VNode } from "vue";
 import { RenderPlaceholderProps } from "../utils/interface";
 

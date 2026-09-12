@@ -1,4 +1,4 @@
-import { Node, Text } from "slate-vue3/core";
+import { Node, Text } from "slate";
 import { IS_ANDROID, MARK_PLACEHOLDER_SYMBOL } from "slate-vue3/dom";
 import { defineComponent, h } from "vue";
 import { useEditor } from "../hooks/use-editor";

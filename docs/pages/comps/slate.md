@@ -19,7 +19,7 @@ interface SlateComponentProps {
 You need to create a slate instance through the `creatEditor` API and pass it into the component for context sharing through the **`top-level`** component
 
 ```typescript
-import { Descendant } from "slate-vue3/core";
+import { Descendant } from "slate";
 import { createReactiveEditor } from "slate-vue3";
 const initialValue: Descendant[] = [
   {

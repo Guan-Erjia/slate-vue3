@@ -26,7 +26,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { Descendant } from "slate-vue3/core";
+import { Descendant } from "slate";
 import { computed, ref } from "vue";
 import TestCase from "./test-case.vue";
 import { useRoute, useRouter } from "vue-router";

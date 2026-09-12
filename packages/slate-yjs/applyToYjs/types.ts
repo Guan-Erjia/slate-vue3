@@ -1,4 +1,4 @@
-import { Node, Operation } from "slate-vue3/core";
+import { Node, Operation } from "slate";
 import { XmlText } from "yjs";
 
 export type ApplyFunc<O extends Operation = Operation> = (

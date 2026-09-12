@@ -5,7 +5,7 @@ import {
   normalizeStringDiff,
   StringDiff,
 } from "slate-vue3/dom";
-import { Editor, Node, Path, Point, Range, Transforms } from "slate-vue3/core";
+import { Editor, Node, Path, Point, Range, Transforms } from "slate";
 import { onMounted, ref, type Ref } from "vue";
 import { useEditor } from "./use-editor";
 

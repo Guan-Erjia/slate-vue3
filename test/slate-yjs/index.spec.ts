@@ -6,7 +6,7 @@ import {
   slateNodesToInsertDelta,
 } from "slate-vue3/yjs";
 import * as Y from "yjs";
-import { Editor, Element, Transforms } from "slate-vue3/core";
+import { Editor, Element, Transforms } from "slate";
 import { createReactiveEditor } from "slate-vue3";
 
 const modules = await resolveModules(import.meta.glob("./**/*.jsx"));

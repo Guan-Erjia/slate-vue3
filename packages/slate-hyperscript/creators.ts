@@ -1,11 +1,4 @@
-import {
-  Element,
-  Descendant,
-  Node,
-  Range,
-  Text,
-  Editor,
-} from "slate-vue3/core";
+import { Element, Descendant, Node, Range, Text, Editor } from "slate";
 import {
   AnchorToken,
   FocusToken,

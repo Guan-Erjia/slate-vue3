@@ -1,4 +1,4 @@
-import { Path } from "slate-vue3/core";
+import { Path } from "slate";
 
 export type StringDiff = {
   start: number;

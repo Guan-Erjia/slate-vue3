@@ -30,14 +30,7 @@ import {
 } from "slate-vue3";
 import { withHistory } from "slate-vue3/history";
 import { DOMEditor } from "slate-vue3/dom";
-import {
-  Editor,
-  Element,
-  NodeEntry,
-  Transforms,
-  Node,
-  Range,
-} from "slate-vue3/core";
+import { Editor, Element, NodeEntry, Transforms, Node, Range } from "slate";
 import { computed, h } from "vue";
 import LanguageSelect from "./LanguageSelect.vue";
 import Toolbar from "../../../components/Toolbar.vue";

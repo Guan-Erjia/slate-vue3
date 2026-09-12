@@ -1,6 +1,6 @@
 import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { inject } from "vue";
-import { Element } from "slate-vue3/core";
+import { Element } from "slate";
 
 /**
  * Get the current element.

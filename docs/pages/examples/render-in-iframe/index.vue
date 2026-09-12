@@ -7,7 +7,7 @@ import {
   createReactiveEditor,
 } from "slate-vue3";
 import { DOMEditor } from "slate-vue3/dom";
-import { Descendant, Editor } from "slate-vue3/core";
+import { Descendant, Editor } from "slate";
 import { withHistory } from "slate-vue3/history";
 import { isHotkey } from "is-hotkey";
 import Toolbar from "../../../components/Toolbar.vue";

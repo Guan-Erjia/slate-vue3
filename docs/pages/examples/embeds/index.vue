@@ -14,7 +14,7 @@ import {
 import { h } from "vue";
 import VideoElement from "./VideoElement.vue";
 import { withHistory } from "slate-vue3/history";
-import { Descendant } from "slate-vue3/core";
+import { Descendant } from "slate";
 import { CustomEditor } from "../../../custom-types";
 
 const initialValue: Descendant[] = [

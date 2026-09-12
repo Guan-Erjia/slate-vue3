@@ -30,7 +30,7 @@
 </template>
 <script lang="ts" setup>
 import { useEditor, useFocused } from "slate-vue3";
-import { Editor, Range } from "slate-vue3/core";
+import { Editor, Range } from "slate";
 import { computed, CSSProperties, useTemplateRef } from "vue";
 import Button from "../../../components/Button.vue";
 const menuRef = useTemplateRef<HTMLDivElement>("menu");

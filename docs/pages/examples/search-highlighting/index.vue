@@ -7,7 +7,7 @@ import {
 } from "slate-vue3";
 import { h, ref } from "vue";
 import Toolbar from "../../../components/Toolbar.vue";
-import { DecoratedRange, Descendant, NodeEntry, Node } from "slate-vue3/core";
+import { DecoratedRange, Descendant, NodeEntry, Node } from "slate";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [

@@ -1,4 +1,4 @@
-import { Descendant } from "slate-vue3/core";
+import { Descendant } from "slate";
 import { ChunkLeaf } from "./types";
 import { toRaw } from "vue";
 import { DOMEditor } from "../plugin/dom-editor";

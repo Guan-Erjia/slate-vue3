@@ -8,7 +8,7 @@ import {
   type RenderLeafProps,
   createReactiveEditor,
 } from "slate-vue3";
-import { Descendant, Editor, Range, Transforms } from "slate-vue3/core";
+import { Descendant, Editor, Range, Transforms } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { withHistory } from "slate-vue3/history";
 import Mention from "./Mention.vue";

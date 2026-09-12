@@ -55,9 +55,8 @@ There are many changes made, and almost every package in `slate-react` has been 
 We have consolidated all the packages in `slate-vue3` and introduced them as needed through diagonal lines,
 
 ```typescript
-import { Slate, Editable } from 'slate-vue3';
-import { createEditor, Editor,} from 'slate-vue3/core';
-import { withDOM } from 'slate-vue3/dom';
+import { Slate, Editable, createReactiveEditor } from 'slate-vue3';
+import { Editor, } from 'slate-vue3/core';
 import { withHistory } from 'slate-vue3/history';
 ...
 ```

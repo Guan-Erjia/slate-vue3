@@ -1,7 +1,6 @@
 import { createReactiveEditor } from "slate-vue3";
-import { Descendant, Element, Node, Transforms } from "slate-vue3/core";
+import { Descendant, Element, Node, Transforms } from "slate";
 import {
-  withDOM,
   DOMEditor,
   Key,
   KEY_TO_CHUNK_TREE,

@@ -1,4 +1,4 @@
-import { BaseEditor, Editor } from "slate-vue3/core";
+import { BaseEditor, Editor } from "slate";
 import { History } from "./history";
 
 /**

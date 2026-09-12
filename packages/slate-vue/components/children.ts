@@ -1,4 +1,4 @@
-import { Ancestor, Descendant, Editor, Node } from "slate-vue3/core";
+import { Ancestor, Descendant, Editor, Node } from "slate";
 import {
   DOMEditor,
   getChunkTreeForNode,

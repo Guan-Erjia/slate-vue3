@@ -1,4 +1,4 @@
-import { Ancestor } from "slate-vue3/core";
+import { Ancestor } from "slate";
 import { Key } from "../utils/key";
 import { DOMEditor } from "../plugin/dom-editor";
 import { ChunkTree } from "./types";

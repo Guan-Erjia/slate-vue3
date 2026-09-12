@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Slate, Editable, createReactiveEditor } from "slate-vue3";
-import { Descendant } from "slate-vue3/core";
+import { Descendant } from "slate";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [

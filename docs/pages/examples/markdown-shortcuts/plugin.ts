@@ -4,7 +4,7 @@ import {
   CustomEditor,
   ParagraphElement,
 } from "../../../custom-types";
-import { Range, Editor, Transforms, Point, Node } from "slate-vue3/core";
+import { Range, Editor, Transforms, Point, Node } from "slate";
 
 export const SHORTCUTS = {
   "*": { type: "list-item" },

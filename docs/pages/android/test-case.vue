@@ -10,7 +10,7 @@ import {
   RenderLeafProps,
   createReactiveEditor,
 } from "slate-vue3";
-import { Descendant } from "slate-vue3/core";
+import { Descendant } from "slate";
 import { withHistory } from "slate-vue3/history";
 import { h } from "vue";
 

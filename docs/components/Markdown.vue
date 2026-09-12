@@ -14,7 +14,7 @@ import {
 } from "slate-vue3";
 import { CSSProperties, h } from "vue";
 import Prism from "../utils/prism";
-import { Editor, Element, NodeEntry, Node, Range } from "slate-vue3/core";
+import { Editor, Element, NodeEntry, Node, Range } from "slate";
 import CodeBlock from "./CodeBlock.vue";
 import { CodeElement } from "../custom-types";
 import { normalizeTokens } from "../utils/normalize-tokens";

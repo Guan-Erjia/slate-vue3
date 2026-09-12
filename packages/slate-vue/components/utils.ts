@@ -1,4 +1,4 @@
-import { Editor, Range } from "slate-vue3/core";
+import { Editor, Range } from "slate";
 import { IS_ANDROID, isDOMNode, type DOMEditor } from "slate-vue3/dom";
 import scrollIntoView from "scroll-into-view-if-needed";
 import type {

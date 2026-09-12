@@ -1,5 +1,5 @@
 import { computed, onUpdated, ref, Ref } from "vue";
-import { BaseRange, NodeMatch, Text } from "slate-vue3/core";
+import { BaseRange, NodeMatch, Text } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { useEditor } from "slate-vue3";
 import { JsonObject } from "@liveblocks/client";

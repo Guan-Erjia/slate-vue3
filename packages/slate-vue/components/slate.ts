@@ -23,7 +23,7 @@ import {
   Scrubber,
   Text,
   Range,
-} from "slate-vue3/core";
+} from "slate";
 import type {
   RenderChunkProps,
   RenderElementProps,

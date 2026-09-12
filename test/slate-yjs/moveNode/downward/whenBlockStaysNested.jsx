@@ -1,5 +1,6 @@
 /** @jsx jsxYjs */
-import { jsxYjs, Transforms } from "@test-utils";
+import { jsxYjs } from "@test-utils";
+import { Transforms } from "slate";
 
 export const input = (
   <editor>

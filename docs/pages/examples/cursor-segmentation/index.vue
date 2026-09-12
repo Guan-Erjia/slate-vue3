@@ -6,13 +6,7 @@ import {
   createReactiveEditor,
 } from "slate-vue3";
 import { h } from "vue";
-import {
-  Descendant,
-  NodeEntry,
-  DecoratedRange,
-  Node,
-  Path,
-} from "slate-vue3/core";
+import { Descendant, NodeEntry, DecoratedRange, Node, Path } from "slate";
 import { withHistory } from "slate-vue3/history";
 
 const initialValue: Descendant[] = [

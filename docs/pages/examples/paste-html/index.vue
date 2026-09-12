@@ -9,7 +9,7 @@ import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { jsx } from "slate-vue3/hyperscript";
 import { h } from "vue";
 import ImageElement from "./ImageElement.vue";
-import { Descendant, Transforms } from "slate-vue3/core";
+import { Descendant, Transforms } from "slate";
 import { withHistory } from "slate-vue3/history";
 import { CustomEditor } from "../../../custom-types";
 
