@@ -6,7 +6,7 @@ import {
   type RenderLeafProps,
   createReactiveEditor,
 } from "slate-vue3";
-import { Node, Path, Transforms } from "slate";
+import { Editor, Node, Path, Transforms } from "slate";
 import {
   getRemoteCaretsOnLeaf,
   getRemoteCursorsOnLeaf,
@@ -138,10 +138,10 @@ const { normalizeNode } = editor;
 editor.normalizeNode = (entry: [Node, Path]) => {
   const [node] = entry;
 
-  if (Node.isElement(node) && node.children.length > 0) {
-    return normalizeNode(entry);
+  if (Editor.isEditor(node) && node.children.length === 0) {
+    Transforms.insertNodes(editor, initialValue[0], { at: [0] });
   }
-  Transforms.insertNodes(editor, initialValue[0], { at: [0] });
+  normalizeNode(entry);
 };
 
 onMounted(() => {

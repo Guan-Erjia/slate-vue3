@@ -9,7 +9,7 @@ import {
 import { CSSProperties, h, onMounted, onUnmounted } from "vue";
 import { CustomElement } from "../../../custom-types";
 import { withCursors, withYHistory, withYjs, YjsEditor } from "slate-vue3/yjs";
-import { Node, Path, Transforms } from "slate";
+import { Editor, Node, Path, Transforms } from "slate";
 import { XmlText } from "yjs";
 import Toolbar from "../../../components/Toolbar.vue";
 import MarkButton from "../rich-text/MarkButton.vue";
@@ -100,10 +100,10 @@ const { normalizeNode } = editor;
 editor.normalizeNode = (entry: [Node, Path]) => {
   const [node] = entry;
 
-  if (Node.isElement(node) && node.children.length > 0) {
-    return normalizeNode(entry);
+  if (Editor.isEditor(node) && node.children.length === 0) {
+    Transforms.insertNodes(editor, initialValue[0], { at: [0] });
   }
-  Transforms.insertNodes(editor, initialValue[0], { at: [0] });
+  normalizeNode(entry);
 };
 
 onMounted(() => {
