@@ -1,24 +1,23 @@
 import { Node, Path, Text } from "slate";
-import { toRawWeakMap } from "share-tools";
 import { HyperscriptPointRef, HyperscriptRangeRef } from "./refs";
 
 /**
  * A weak map to hold anchor tokens.
  */
 
-const ANCHORS = new toRawWeakMap<Node, Set<[number, AnchorToken]>>();
+const ANCHORS = new WeakMap<Node, Set<[number, AnchorToken]>>();
 
 /**
  * A weak map to hold focus tokens.
  */
 
-const FOCI = new toRawWeakMap<Node, Set<[number, FocusToken]>>();
+const FOCI = new WeakMap<Node, Set<[number, FocusToken]>>();
 
 /**
  * A weak map to hold point tokens.
  */
 
-const POINTS = new toRawWeakMap<Node, Set<[number, PointToken]>>();
+const POINTS = new WeakMap<Node, Set<[number, PointToken]>>();
 
 /**
  * All tokens inherit from a single constructor for `instanceof` checking.

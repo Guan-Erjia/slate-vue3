@@ -9,7 +9,6 @@ import {
   Text,
 } from "slate";
 import { Key } from "./key";
-import { toRawWeakMap } from "share-tools";
 
 export type Action = { at?: Point | Range; run: () => void };
 
@@ -28,7 +27,7 @@ export const EDITOR_TO_WINDOW = new WeakMap<Editor, Window>();
 export const EDITOR_TO_ELEMENT = new WeakMap<Editor, HTMLElement>();
 export const ELEMENT_TO_NODE = new WeakMap<HTMLElement, Node>();
 export const NODE_TO_ELEMENT = new WeakMap<Node, HTMLElement>();
-export const NODE_TO_KEY = new toRawWeakMap<Node, Key>();
+export const NODE_TO_KEY = new WeakMap<Node, Key>();
 export const EDITOR_TO_KEY_TO_ELEMENT = new WeakMap<
   Editor,
   WeakMap<Key, HTMLElement>

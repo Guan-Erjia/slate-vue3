@@ -25,7 +25,6 @@ import {
   RenderElementProps,
   RenderLeafProps,
   useInheritRef,
-  toRawWeakMap,
   createReactiveEditor,
 } from "slate-vue3";
 import { withHistory } from "slate-vue3/history";
@@ -168,7 +167,7 @@ const onKeydown = (e: KeyboardEvent) => {
 };
 
 const node2Decorations = computed(() => {
-  const decorationsMap = new toRawWeakMap();
+  const decorationsMap = new WeakMap();
   const blockEntries = Editor.nodes(editor, {
     at: [],
     mode: "highest",
