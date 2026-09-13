@@ -351,7 +351,6 @@ export const Editable = defineComponent({
     watch(
       () => editorVersion.value,
       () => {
-        console.log(JSON.stringify(editor.selection));
         // Make sure the DOM selection state is in sync.
         const root = DOMEditor.findDocumentOrShadowRoot(editor);
         const domSelection = getSelection(root);
