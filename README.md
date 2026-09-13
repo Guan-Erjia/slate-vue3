@@ -17,6 +17,12 @@
 </p>
 <br/>
 
+> [!IMPORTANT]
+> **🚧 Major Refactor Notice**
+>
+> This project has undergone a **large-scale refactor**. The core library and all surrounding ecosystem packages have been **fully replaced with implementations identical to the official Slate**.
+> If you are on an older version, please read the migration guide carefully — legacy APIs may no longer be compatible.
+
 ### Why use it?
 
 1. :sparkles: Highly customizable features, use slate core at the bottom level
@@ -30,7 +36,7 @@
 #### 1. Install slate-vue3
 
 ```sh
-npm install slate-vue3
+npm install slate-vue3 slate-history
 ```
 
 #### 2. Now, you can use it in vue-sfc :point_right: [**live demo**](https://guan-erjia.github.io/slate-vue3/examples/rich-text)
@@ -97,11 +103,8 @@ Due to the complexity of maintaining multiple packages and the lack of reusabili
 
 | **Package**                                              |                                                                       **Version** | **Description**                                  |
 | :------------------------------------------------------- | --------------------------------------------------------------------------------: | :----------------------------------------------- |
-| [`slate-vue3/core`](./packages/slate)                    | ![](https://img.shields.io/npm/v/slate.svg?maxAge=3600&label=&colorB=007ec6) | slate's core data model logic.                   |
-| [`slate-vue3/dom`](./packages/slate-dom)                     | ![](https://img.shields.io/npm/v/slate-dom.svg?maxAge=3600&label=&colorB=007ec6) | DOM implementation of slate                      |
-| [`slate-vue3/history`](./packages/slate-history)         | ![](https://img.shields.io/npm/v/slate-history.svg?maxAge=3600&label=&colorB=007ec6) | a plugin that adds undo/redo history to slate.   |
-| [`slate-vue3/hyperscript`](./packages/slate-hyperscript) | ![](https://img.shields.io/npm/v/slate-hyperscript.svg?maxAge=3600&label=&colorB=007ec6) | a hyperscript tool to write JSX slate documents! |
-| [`slate-vue3/yjs`](./packages/slate-yjs)                 | ![](https://img.shields.io/npm/v/slate-yjs.svg?maxAge=3600&label=&colorB=007ec6) | integration of `slate-yjs`                       |
+| [`slate-vue3/dom`](./packages/slate-dom)                 | ![](https://img.shields.io/npm/v/slate-dom.svg?maxAge=3600&label=&colorB=007ec6)  | DOM implementation of slate                      |
+| [`slate-vue3/yjs`](./packages/slate-yjs)                 | ![](https://img.shields.io/npm/v/slate-yjs.svg?maxAge=3600&label=&colorB=007ec6)  | integration of `slate-yjs`                       |
 
 <br />
 

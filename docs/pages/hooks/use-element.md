@@ -3,7 +3,7 @@
 ```typescript
 import { useElement } from "slate-vue3";
 
-const useElement: () =>  ComputedRef<Element>;
+const useElement: () => Element;
 
 const element = useElement();
 ```
@@ -14,7 +14,7 @@ const element = useElement();
 ```typescript
 import { useElementIf } from "slate-vue3";
 
-const useElementIf: () =>  ComputedRef<Element | null>;
+const useElementIf: () => Element | null;
 
 const elementIf = useElementIf();
 ```

@@ -1,1 +1,0 @@
-Provides the same interface as the [**`slate`**](https://docs.slatejs.org/concepts) library

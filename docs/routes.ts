@@ -71,29 +71,14 @@ export const HOOKS_RECORD: RouteRecordRaw[] = [
 
 export const PACKAGES_RECORD: RouteRecordRaw[] = [
   {
-    name: "slate-vue3/core",
-    path: "slate",
-    component: () => import("./pages/packages/core.vue"),
-  },
-  {
     name: "slate-vue3/dom",
     path: "slate-dom",
     component: () => import("./pages/packages/dom.vue"),
   },
   {
-    name: "slate-vue3/history",
-    path: "slate-history",
-    component: () => import("./pages/packages/history.vue"),
-  },
-  {
     name: "slate-vue3/yjs",
     path: "slate-yjs",
     component: () => import("./pages/packages/yjs.vue"),
-  },
-  {
-    name: "slate-vue3/hyperscript",
-    path: "slate-hyperscript",
-    component: () => import("./pages/packages/hyperscript.vue"),
   },
 ];
 

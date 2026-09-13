@@ -50,13 +50,12 @@ This change covers the rendering implementation of `slate-vue3/dom` and `slate-v
 
 ## Packages
 
-There are many changes made, and almost every package in `slate-react` has been modified. Changing the name of each package and publishing it again is obviously unreasonable.
+There are many changes made, and almost every package in `slate-dom` has been modified. Changing the name of each package and publishing it again is obviously unreasonable.
 
 We have consolidated all the packages in `slate-vue3` and introduced them as needed through diagonal lines,
 
 ```typescript
 import { Slate, Editable, createReactiveEditor } from 'slate-vue3';
-import { Editor, } from 'slate-vue3/core';
-import { withHistory } from 'slate-vue3/history';
+import { withHistory } from 'slate-history';
 ...
 ```
