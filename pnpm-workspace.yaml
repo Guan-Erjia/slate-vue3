@@ -1,2 +1,7 @@
 allowBuilds:
   esbuild: false
+minimumReleaseAgeExclude:
+  - ini@1.3.6
+  - ansi-regex@5.0.1
+  - esbuild@0.28.1
+  - '@babel/core@7.29.1'
