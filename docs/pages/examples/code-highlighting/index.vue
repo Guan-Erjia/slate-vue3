@@ -166,7 +166,7 @@ const onKeydown = (e: KeyboardEvent) => {
   }
 };
 
-const node2Decorations = computed(() => {
+const decorate = ([node]: NodeEntry) => {
   const decorationsMap = new WeakMap();
   const blockEntries = Editor.nodes(editor, {
     at: [],
@@ -206,13 +206,8 @@ const node2Decorations = computed(() => {
       });
     },
   );
-
-  return decorationsMap;
-});
-
-const decorate = ([node]: NodeEntry) => {
   if (Node.isElement(node) && node.type === "code-line") {
-    return node2Decorations.value.get(node);
+    return decorationsMap.get(node);
   }
   return [];
 };

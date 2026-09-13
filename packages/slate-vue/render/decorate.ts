@@ -1,7 +1,5 @@
-import { DecoratedRange, Element, NodeEntry } from "slate";
-import { DOMEditor } from "slate-vue3/dom";
+import { DecoratedRange, NodeEntry } from "slate";
 import { inject, provide } from "vue";
-import { DEFAULT_DECORATE_FN } from "../components/utils";
 
 export const SLATE_INNER_RENDER_DECORATE_FN = Symbol(
   "SLATE_INNER_RENDER_DECORATE_FN",
@@ -25,21 +23,4 @@ export const injectDecorateFn = (): ((
     );
   }
   return decorate;
-};
-
-export const SLATE_INNER_RENDER_DECORATE_RANGE = Symbol(
-  "SLATE_INNER_RENDER_DECORATE_RANGE",
-);
-
-export const getElementDR = (
-  element: Element,
-  editor: DOMEditor,
-  decorate: (entry: NodeEntry) => DecoratedRange[],
-) => {
-  const needDecorate = decorate !== DEFAULT_DECORATE_FN;
-  if (!needDecorate) {
-    return [];
-  }
-  const elemPath = DOMEditor.findPath(editor, element);
-  return decorate([element, elemPath]);
 };

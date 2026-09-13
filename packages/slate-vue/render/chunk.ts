@@ -1,22 +1,5 @@
 import { inject, provide, VNode } from "vue";
 import { RenderChunkProps } from "../utils/interface";
-import { ChunkTree } from "../chunking";
-
-export const SLATE_INNER_STATIC_CHUNK_ROOT = Symbol(
-  "SLATE_INNER_STATIC_CHUNK_ROOT",
-);
-export const provideChunkRoot = (chunkRoot: ChunkTree) => {
-  provide(SLATE_INNER_STATIC_CHUNK_ROOT, chunkRoot);
-};
-export const useChunkRoot = () => {
-  const CHUNK_STATIC_ROOT = inject<ChunkTree>(SLATE_INNER_STATIC_CHUNK_ROOT);
-  if (CHUNK_STATIC_ROOT === undefined) {
-    throw new Error(
-      `The \`useStaticChunk\` hook must be used inside the <Slate> component's context.`,
-    );
-  }
-  return CHUNK_STATIC_ROOT;
-};
 
 export const SLATE_INNER_RENDER_CHUNK = Symbol("SLATE_INNER_RENDER_CHUNK");
 export const provideRenderChunk = (fn: (props: RenderChunkProps) => VNode) =>

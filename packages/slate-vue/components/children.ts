@@ -1,23 +1,66 @@
-import { Ancestor, Descendant, Editor, Node } from "slate";
-import { DOMEditor, NODE_TO_INDEX, NODE_TO_PARENT } from "slate-vue3/dom";
-import { defineComponent, h, renderList, VNode } from "vue";
+import { Ancestor, DecoratedRange, Editor, Node, Element } from "slate";
+import {
+  DOMEditor,
+  isElementDecorationsEqual,
+  Key,
+  NODE_TO_INDEX,
+  NODE_TO_PARENT,
+  splitDecorationsByChild,
+} from "slate-vue3/dom";
+import { computed, defineComponent, h, renderList, VNode } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
-import { ChunkCompFc } from "../components/chunk";
+import { ChunkComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
-import { getElementDR, injectDecorateFn } from "../render/decorate";
 import { provideIsLastEmptyBlock } from "../render/last";
-import { provideChunkRoot, useRenderChunk } from "../render/chunk";
-import { reconcileChildren } from "../chunking/reconcile-children";
 import { getChunkTreeForNode } from "../chunking";
+
+const useDecorationsByChild = (
+  editor: DOMEditor,
+  node: Ancestor,
+  decorations: DecoratedRange[],
+) => {
+  const decorationsByChild = splitDecorationsByChild(editor, node, decorations);
+
+  // The value we return is a mutable array of `DecoratedRange[]` arrays. This
+  // lets us avoid passing an immutable array of decorations for each child into
+  // `ChunkTree` using props. Each `DecoratedRange[]` is only updated if the
+  // decorations at that index have changed, which speeds up the equality check
+  // for the `decorations` prop in the memoized `Element` and `Text` components.
+  const mutableDecorationsByChild = decorationsByChild;
+
+  // Track the list of child indices whose decorations have changed, so that we
+  // can tell the chunk tree to re-render these children.
+  const childrenToRedecorate: number[] = [];
+
+  // Resize the mutable array to match the latest result
+  mutableDecorationsByChild.length = decorationsByChild.length;
+
+  for (let i = 0; i < decorationsByChild.length; i++) {
+    const decorations = decorationsByChild[i];
+
+    const previousDecorations: DecoratedRange[] | null =
+      mutableDecorationsByChild[i] ?? null;
+
+    if (!isElementDecorationsEqual(previousDecorations, decorations)) {
+      mutableDecorationsByChild[i] = decorations;
+      childrenToRedecorate.push(i);
+    }
+  }
+
+  return {
+    decorationsByChild: mutableDecorationsByChild,
+    childrenToRedecorate,
+  };
+};
 
 /**
  * Children.
  */
 export const ChildrenComp = defineComponent({
   name: "slate-children",
-  props: ["element"],
-  setup(props: { element: Ancestor }) {
+  props: ["element", "decorations"],
+  setup(props: { element: Ancestor; decorations: DecoratedRange[] }) {
     const editor = useEditor();
 
     const isBlock =
@@ -29,10 +72,16 @@ export const ChildrenComp = defineComponent({
 
     if (isBlock || chunkSize === null) {
       provideIsLastEmptyBlock(props.element);
-      const decorate = injectDecorateFn();
+    }
 
-      return () => {
-        const elementDR = getElementDR(props.element, editor, decorate);
+    const decorations = computed(() => {
+      return useDecorationsByChild(editor, props.element, props.decorations);
+    });
+
+    return () => {
+      const { decorationsByChild, childrenToRedecorate } = decorations.value;
+
+      if (isBlock || chunkSize === null) {
         return renderList(props.element.children, (n, i): VNode => {
           // Update the index and parent of each child.
           // PERF: If chunking is enabled, this is done while traversing the chunk tree
@@ -44,42 +93,53 @@ export const ChildrenComp = defineComponent({
             ? h(TextComp, {
                 text: n,
                 key: key.id,
-                elementDR,
+                decorations: decorationsByChild[i],
                 isLast: i === props.element.children.length - 1,
               })
             : h(ElementComp, {
                 element: n,
                 key: key.id,
+                decorations: decorationsByChild[i],
               });
         });
-      };
-    }
+      }
 
-    const cacheTree = getChunkTreeForNode(editor, props.element);
-
-    provideChunkRoot(cacheTree);
-    const renderChunk = useRenderChunk();
-
-    return () => {
-      // console.time("Reconcile children chunks");
-      reconcileChildren(editor, {
-        chunkTree: cacheTree,
-        children: props.element.children,
-        chunkSize: chunkSize,
-        onInsert: (n: Descendant, i: number) => {
-          NODE_TO_INDEX.set(n, i);
-          NODE_TO_PARENT.set(n, props.element);
-        },
-        onUpdate: (n: Descendant, i: number) => {
-          NODE_TO_INDEX.set(n, i);
-          NODE_TO_PARENT.set(n, props.element);
-        },
-        onIndexChange: (n: Descendant, i: number) => {
-          NODE_TO_INDEX.set(n, i);
+      const chunkTree = getChunkTreeForNode(editor, props.element, {
+        reconcile: {
+          chunkSize,
+          rerenderChildren: childrenToRedecorate,
+          onInsert: (n, i) => {
+            NODE_TO_INDEX.set(n, i);
+            NODE_TO_PARENT.set(n, props.element);
+          },
+          onUpdate: (n, i) => {
+            NODE_TO_INDEX.set(n, i);
+            NODE_TO_PARENT.set(n, props.element);
+          },
+          onIndexChange: (n, i) => {
+            NODE_TO_INDEX.set(n, i);
+          },
         },
       });
-      // console.timeEnd("Reconcile children chunks");
-      return ChunkCompFc(cacheTree, renderChunk, true);
+
+      const renderElementComponent = (
+        n: Element,
+        i: number,
+        cachedKey?: Key,
+      ): VNode => {
+        const key = cachedKey ?? DOMEditor.findKey(editor, n);
+        return h(ElementComp, {
+          decorations: decorationsByChild[i],
+          element: n,
+          key: key.id,
+        });
+      };
+
+      return h(ChunkComp, {
+        root: chunkTree,
+        ancestor: chunkTree,
+        renderElement: renderElementComponent,
+      });
     };
   },
 });

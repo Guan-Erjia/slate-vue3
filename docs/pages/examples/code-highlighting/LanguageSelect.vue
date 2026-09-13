@@ -1,5 +1,5 @@
 <template>
-  <div
+  <code
     v-bind="attrs"
     style="
       font-size: 16px;
@@ -32,7 +32,7 @@
       <option value="typescript">TypeScript</option>
     </select>
     <slot />
-  </div>
+  </code>
 </template>
 <script lang="ts" setup>
 import { HTMLAttributes, useAttrs } from "vue";

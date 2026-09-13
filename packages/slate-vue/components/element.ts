@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { Editor, Element, Node } from "slate";
+import { DecoratedRange, Editor, Element, Node } from "slate";
 import { ChildrenComp } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -19,13 +19,13 @@ import {
   provide,
   ref,
   VNodeRef,
-  watch,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { useEditor } from "../hooks/use-editor";
 import { provideIsLastEmptyBlock } from "../render/last";
 import { useRenderElement } from "../render/fn";
+import { injectDecorateFn } from "../render/decorate";
 
 interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
@@ -47,8 +47,8 @@ const VOID_CHILDREN_ATTRS = {
 
 export const ElementComp = defineComponent({
   name: "slate-element",
-  props: ["element"],
-  setup(props: { element: Element }) {
+  props: ["element", "decorations"],
+  setup(props: { element: Element; decorations: DecoratedRange[] }) {
     const editor = useEditor();
 
     provide(SLATE_USE_ELEMENT, props.element);
@@ -109,6 +109,13 @@ export const ElementComp = defineComponent({
         NODE_TO_ELEMENT.delete(props.element);
       }
 
+      const path = DOMEditor.findPath(editor, props.element);
+      const decorate = injectDecorateFn();
+      const decorations = [
+        ...decorate([props.element, path]),
+        ...props.decorations,
+      ];
+
       if (Editor.isVoid(editor, props.element)) {
         NODE_TO_PARENT.set(text, props.element);
         attributes["data-slate-void"] = true;
@@ -121,7 +128,7 @@ export const ElementComp = defineComponent({
           children: h(
             tag,
             VOID_CHILDREN_ATTRS,
-            h(TextComp, { text, isLast: false, elementDR: [] }),
+            h(TextComp, { text, isLast: false, decorations }),
           ),
           element: props.element,
         });
@@ -129,7 +136,7 @@ export const ElementComp = defineComponent({
 
       return renderElement({
         attributes,
-        children: h(ChildrenComp, { element: props.element }),
+        children: h(ChildrenComp, { element: props.element, decorations }),
         element: props.element,
       });
     };

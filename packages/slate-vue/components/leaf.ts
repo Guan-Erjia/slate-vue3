@@ -22,7 +22,7 @@ export const LeafComp = defineComponent({
         leaf: props.leaf,
         leafPosition: props.leafPosition,
         attributes: { "data-slate-leaf": true },
-        children: showPlaceholder()
+        children: showPlaceholder.value
           ? [
               h(StringComp, {
                 text: props.text,

@@ -29,6 +29,7 @@ import {
   IS_READ_ONLY,
   NODE_TO_ELEMENT,
   containsShadowAware,
+  MARK_PLACEHOLDER_SYMBOL,
 } from "slate-vue3/dom";
 import {
   computed,
@@ -64,6 +65,7 @@ import {
   providePlaceholderResize,
   providePlaceholderShow,
 } from "../render/placeholder";
+import { injectDecorateFn } from "../render/decorate";
 
 export const Editable = defineComponent({
   name: "slate-editable",
@@ -113,9 +115,11 @@ export const Editable = defineComponent({
     const state = reactive<{
       isDraggingInternally: boolean;
       latestElement: globalThis.Element | null;
+      hasMarkPlaceholder: boolean;
     }>({
       isDraggingInternally: false,
       latestElement: null,
+      hasMarkPlaceholder: false,
     });
 
     const placeholderHeight = ref<number>();
@@ -213,23 +217,6 @@ export const Editable = defineComponent({
       NODE_TO_ELEMENT.delete(editor);
     });
 
-    const hasMarkPlaceholder = computed(() => {
-      if (
-        editor.selection &&
-        Range.isCollapsed(editor.selection) &&
-        editor.marks
-      ) {
-        const anchor = editor.selection.anchor;
-        const leaf = Node.leaf(editor, anchor.path);
-        // While marks isn't a 'complete' text, we can still use loose Text.equals
-        // here which only compares marks anyway.
-        if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
-          return true;
-        }
-      }
-      return false;
-    });
-
     const setDomSelection = () => {
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
       const domSelection = getSelection(root);
@@ -284,7 +271,7 @@ export const Editable = defineComponent({
         });
 
         if (slateRange && Range.equals(slateRange, editor.selection)) {
-          if (!hasMarkPlaceholder.value) {
+          if (!state.hasMarkPlaceholder) {
             return;
           }
 
@@ -1445,8 +1432,37 @@ export const Editable = defineComponent({
     providePlaceholderShow(showPlaceholder);
     providePlaceholderResize(onPlaceholderResize);
 
-    return () =>
-      h(
+    const decorate = injectDecorateFn();
+
+    return () => {
+      const { marks } = editor;
+      const decorations = decorate([editor, []]);
+      if (editor.selection && Range.isCollapsed(editor.selection) && marks) {
+        const { anchor } = editor.selection;
+        const leaf = Node.leaf(editor, anchor.path);
+        const { text, ...rest } = leaf;
+
+        // While marks isn't a 'complete' text, we can still use loose Text.equals
+        // here which only compares marks anyway.
+        if (!Text.equals(leaf, marks as Text, { loose: true })) {
+          state.hasMarkPlaceholder = true;
+
+          const unset = Object.fromEntries(
+            Object.keys(rest).map((mark) => [mark, null]),
+          );
+
+          decorations.push({
+            [MARK_PLACEHOLDER_SYMBOL]: true,
+            ...unset,
+            ...marks,
+
+            anchor,
+            focus: anchor,
+          });
+        }
+      }
+
+      return h(
         attributes.is || "div",
         {
           role: readOnly ? undefined : "textbox",
@@ -1478,7 +1494,8 @@ export const Editable = defineComponent({
           onKeydown,
           onPaste,
         },
-        h(ChildrenComp, { element: editor }),
+        h(ChildrenComp, { element: editor, decorations }),
       );
+    };
   },
 });

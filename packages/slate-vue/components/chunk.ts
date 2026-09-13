@@ -1,30 +1,40 @@
-import { h, renderList, VNode } from "vue";
-import { ElementComp } from "./element";
-import { RenderChunkProps } from "../utils/interface";
-import { ChunkAncestor } from "../chunking";
+import { defineComponent, h, renderList, VNode } from "vue";
+import { ChunkAncestor, ChunkTree } from "../chunking";
+import { useRenderChunk } from "../render/chunk";
+import { Key } from "slate-vue3/dom";
+import { Element } from "slate";
 
-export const ChunkCompFc = (
-  ancestor: ChunkAncestor,
-  renderChunk: (props: RenderChunkProps) => VNode,
-  highest?: boolean,
-) =>
-  renderList(ancestor.children, (chunkNode): VNode => {
-    if (chunkNode.type === "chunk") {
-      // Chunking keeps each chunk level homogeneous, so checking the first
-      // child is enough to determine whether this is the lowest chunk layer.
-      const lowest = chunkNode.children[0]?.type === "leaf";
+export const ChunkComp = defineComponent({
+  props: ["root", "ancestor", "renderElement"],
+  setup(props: {
+    root: ChunkTree;
+    ancestor: ChunkAncestor;
+    renderElement: (node: Element, index: number, key: Key) => VNode;
+  }) {
+    const renderChunk = useRenderChunk();
+    return () =>
+      renderList(props.ancestor.children, (chunkNode): VNode => {
+        if (chunkNode.type === "chunk") {
+          // Chunking keeps each chunk level homogeneous, so checking the first
+          // child is enough to determine whether this is the lowest chunk layer.
 
-      return renderChunk({
-        highest: !!highest,
-        lowest,
-        attributes: { "data-slate-chunk": true, key: chunkNode.key.id },
-        children: ChunkCompFc(chunkNode, renderChunk, false),
+          return renderChunk({
+            highest: props.ancestor === props.root,
+            lowest: chunkNode.children.some((c) => c.type === "leaf"),
+            attributes: { "data-slate-chunk": true, key: chunkNode.key.id },
+            children: h(ChunkComp, {
+              root: props.root,
+              ancestor: chunkNode,
+              renderElement: props.renderElement,
+            }),
+          });
+        }
+
+        return props.renderElement(
+          chunkNode.node as unknown as Element,
+          chunkNode.index,
+          chunkNode.key,
+        );
       });
-    }
-
-    return h(ElementComp, {
-      // @ts-expect-error Only blocks containing no inlines are chunked
-      element: chunkNode.node,
-      key: chunkNode.key.id,
-    });
-  });
+  },
+});
