@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { E2E_BASE_URL } from "../test/utils";
+import { nextTick } from "vue";
 
 test.describe("shadow-dom example", () => {
   test.beforeEach(
@@ -25,9 +26,12 @@ test.describe("shadow-dom example", () => {
 
     // Clear any existing text and type new text into the textbox
     await textbox.click();
-    await page.keyboard.press("ControlOrMeta+A");
+    await textbox.selectText();
 
     await page.keyboard.press("Backspace");
+
+    await nextTick();
+
     await page.keyboard.type("Hello, Playwright!");
 
     // Assert that the textbox contains the correct text
