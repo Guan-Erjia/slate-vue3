@@ -31,6 +31,7 @@ test.describe("shadow-dom example", () => {
     await page.keyboard.press("Backspace");
     await sleep();
     await page.keyboard.type("Hello, Playwright!");
+    await sleep();
 
     // Assert that the textbox contains the correct text
     await expect(textbox).toContainText("Hello, Playwright!");

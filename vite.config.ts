@@ -61,10 +61,7 @@ export default defineConfig(({ command, mode }) => {
         lib: {
           entry: {
             index: "./packages/slate-vue/index.ts",
-            core: "./packages/slate/index.ts",
             dom: "./packages/slate-dom/index.ts",
-            history: "./packages/slate-history/index.ts",
-            hyperscript: "./packages/slate-hyperscript/index.ts",
             yjs: "./packages/slate-yjs/index.ts",
           },
           name: "slate-vue3",
