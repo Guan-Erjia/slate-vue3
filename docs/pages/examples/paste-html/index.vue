@@ -6,7 +6,7 @@ import {
   createReactiveEditor,
 } from "slate-vue3";
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
-import { jsx } from "slate-vue3/hyperscript";
+import { jsx } from "slate-hyperscript";
 import { h } from "vue";
 import ImageElement from "./ImageElement.vue";
 import { Descendant, Transforms } from "slate";

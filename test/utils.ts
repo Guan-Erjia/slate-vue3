@@ -1,47 +1,5 @@
-import { Editor } from "slate";
-import { createHyperscript } from "slate-vue3/hyperscript";
+import { createHyperscript } from "slate-hyperscript";
 export { withHistory, History } from "slate-history";
-
-/**
- * 给编辑器对象添加测试相关的扩展方法
- *
- * @param editor 编辑器对象
- * @returns 扩展后的编辑器对象
- */
-export const withTest = (editor: Editor) => {
-  const { isInline, isVoid, isElementReadOnly, isSelectable } = editor;
-
-  editor.isInline = (element) => {
-    return "inline" in element && element.inline === true
-      ? true
-      : isInline(element);
-  };
-
-  editor.isVoid = (element) => {
-    return "void" in element && element.void === true ? true : isVoid(element);
-  };
-
-  editor.isElementReadOnly = (element) => {
-    return "readOnly" in element && element.readOnly === true
-      ? true
-      : isElementReadOnly(element);
-  };
-
-  editor.isSelectable = (element) => {
-    return "nonSelectable" in element && element.nonSelectable === true
-      ? false
-      : isSelectable(element);
-  };
-
-  return editor;
-};
-
-export const jsx = createHyperscript({
-  elements: {
-    block: {},
-    inline: { inline: true },
-  },
-});
 
 export const resolveModules = async (
   modules: Record<string, () => Promise<any>>,
