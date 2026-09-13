@@ -11,6 +11,4 @@ export * from "./utils/hotkeys";
 export * from "./utils/key";
 export * from "./utils/range-list";
 
-export * from "./chunking";
-
 export * from "./utils/weak-maps";

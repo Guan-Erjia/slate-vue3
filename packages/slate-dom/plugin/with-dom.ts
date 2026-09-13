@@ -23,7 +23,7 @@ import {
   NODE_TO_KEY,
 } from "../utils/weak-maps";
 import { DOMEditor } from "./dom-editor";
-import { getChunkTreeForNode } from "../chunking";
+import { getChunkTreeForNode } from "../../slate-vue/chunking";
 
 /**
  * `withDOM` adds DOM specific behaviors to the editor.

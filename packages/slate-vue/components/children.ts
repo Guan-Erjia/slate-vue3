@@ -1,11 +1,5 @@
 import { Ancestor, Descendant, Editor, Node } from "slate";
-import {
-  DOMEditor,
-  getChunkTreeForNode,
-  NODE_TO_INDEX,
-  NODE_TO_PARENT,
-  reconcileChildren,
-} from "slate-vue3/dom";
+import { DOMEditor, NODE_TO_INDEX, NODE_TO_PARENT } from "slate-vue3/dom";
 import { defineComponent, h, renderList, VNode } from "vue";
 import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
@@ -14,6 +8,8 @@ import { useEditor } from "../hooks/use-editor";
 import { getElementDR, injectDecorateFn } from "../render/decorate";
 import { provideIsLastEmptyBlock } from "../render/last";
 import { provideChunkRoot, useRenderChunk } from "../render/chunk";
+import { reconcileChildren } from "../chunking/reconcile-children";
+import { getChunkTreeForNode } from "../chunking";
 
 /**
  * Children.
@@ -66,8 +62,9 @@ export const ChildrenComp = defineComponent({
 
     return () => {
       // console.time("Reconcile children chunks");
-      reconcileChildren(editor, props.element.children, {
+      reconcileChildren(editor, {
         chunkTree: cacheTree,
+        children: props.element.children,
         chunkSize: chunkSize,
         onInsert: (n: Descendant, i: number) => {
           NODE_TO_INDEX.set(n, i);

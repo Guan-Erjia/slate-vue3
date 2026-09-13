@@ -1,12 +1,14 @@
 import { Descendant } from "slate";
+import { DOMEditor } from "slate-vue3/dom";
 import { ChunkTree, ChunkLeaf } from "./types";
 import { ChunkTreeHelper, ChunkTreeHelperOptions } from "./chunk-tree-helper";
 import { ChildrenHelper } from "./children-helper";
-import { DOMEditor } from "../plugin/dom-editor";
 
 export interface ReconcileOptions extends ChunkTreeHelperOptions {
   chunkTree: ChunkTree;
+  children: Descendant[];
   chunkSize: number;
+  rerenderChildren?: number[];
   onInsert?: (node: Descendant, index: number) => void;
   onUpdate?: (node: Descendant, index: number) => void;
   onIndexChange?: (node: Descendant, index: number) => void;
@@ -19,10 +21,11 @@ export interface ReconcileOptions extends ChunkTreeHelperOptions {
  */
 export const reconcileChildren = (
   editor: DOMEditor,
-  children: Descendant[],
   {
     chunkTree,
+    children,
     chunkSize,
+    rerenderChildren = [],
     onInsert,
     onUpdate,
     onIndexChange,
@@ -70,11 +73,9 @@ export const reconcileChildren = (
 
       chunkTreeHelper.insertBefore(leavesToInsert);
 
-      if (onInsert) {
-        for (let i = 0; i < insertedChildren.length; i++) {
-          onInsert(insertedChildren[i], insertedChildrenStartIndex + i);
-        }
-      }
+      insertedChildren.forEach((node, relativeIndex) => {
+        onInsert?.(node, insertedChildrenStartIndex + relativeIndex);
+      });
     }
 
     const matchingChildIndex = childrenHelper.pointerIndex - 1;
@@ -83,6 +84,7 @@ export const reconcileChildren = (
     // node
     if (treeLeaf.node !== matchingChild) {
       treeLeaf.node = matchingChild;
+      chunkTreeHelper.invalidateChunk();
       onUpdate?.(matchingChild, matchingChildIndex);
     }
 
@@ -91,6 +93,12 @@ export const reconcileChildren = (
       treeLeaf.index = matchingChildIndex;
       onIndexChange?.(matchingChild, matchingChildIndex);
     }
+
+    // Manually invalidate chunks containing specific children that we want to
+    // re-render
+    if (rerenderChildren.includes(matchingChildIndex)) {
+      chunkTreeHelper.invalidateChunk();
+    }
   }
 
   // If there are still Slate nodes remaining from the children array that were
@@ -98,23 +106,20 @@ export const reconcileChildren = (
   if (!childrenHelper.reachedEnd) {
     const remainingChildren = childrenHelper.remaining();
 
-    if (remainingChildren.length) {
-      const leavesToInsert = childrenHelper.toChunkLeaves(
-        remainingChildren,
-        childrenHelper.pointerIndex,
-      );
+    const leavesToInsert = childrenHelper.toChunkLeaves(
+      remainingChildren,
+      childrenHelper.pointerIndex,
+    );
 
-      // Move the pointer back to the final leaf in the tree, or the start of the
-      // tree if the tree is currently empty
-      chunkTreeHelper.returnToPreviousLeaf();
+    // Move the pointer back to the final leaf in the tree, or the start of the
+    // tree if the tree is currently empty
+    chunkTreeHelper.returnToPreviousLeaf();
 
-      chunkTreeHelper.insertAfter(leavesToInsert);
-      if (onInsert) {
-        for (let i = 0; i < remainingChildren.length; i++) {
-          onInsert(remainingChildren[i], childrenHelper.pointerIndex + i);
-        }
-      }
-    }
+    chunkTreeHelper.insertAfter(leavesToInsert);
+
+    remainingChildren.forEach((node, relativeIndex) => {
+      onInsert?.(node, childrenHelper.pointerIndex + relativeIndex);
+    });
   }
 
   chunkTree.movedNodeKeys.clear();

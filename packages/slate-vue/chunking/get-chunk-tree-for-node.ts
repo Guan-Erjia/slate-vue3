@@ -1,7 +1,7 @@
 import { Ancestor } from "slate";
-import { Key } from "../utils/key";
-import { DOMEditor } from "../plugin/dom-editor";
+import { DOMEditor, Key } from "slate-vue3/dom";
 import { ChunkTree } from "./types";
+import { ReconcileOptions, reconcileChildren } from "./reconcile-children";
 
 export const KEY_TO_CHUNK_TREE = new WeakMap<Key, ChunkTree>();
 
@@ -12,17 +12,35 @@ export const KEY_TO_CHUNK_TREE = new WeakMap<Key, ChunkTree>();
  * match the current children of the node. The children are chunked
  * automatically using the given chunk size.
  */
-export const getChunkTreeForNode = (editor: DOMEditor, node: Ancestor) => {
+export const getChunkTreeForNode = (
+  editor: DOMEditor,
+  node: Ancestor,
+  // istanbul ignore next
+  options: {
+    reconcile?: Omit<ReconcileOptions, "chunkTree" | "children"> | false;
+  } = {},
+) => {
   const key = DOMEditor.findKey(editor, node);
   let chunkTree = KEY_TO_CHUNK_TREE.get(key);
+
   if (!chunkTree) {
     chunkTree = {
       type: "root",
       movedNodeKeys: new Set(),
+      modifiedChunks: new Set(),
       children: [],
     };
 
     KEY_TO_CHUNK_TREE.set(key, chunkTree);
   }
+
+  if (options.reconcile) {
+    reconcileChildren(editor, {
+      chunkTree,
+      children: node.children,
+      ...options.reconcile,
+    });
+  }
+
   return chunkTree;
 };

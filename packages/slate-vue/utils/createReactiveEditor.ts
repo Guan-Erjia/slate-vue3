@@ -77,9 +77,11 @@ import {
   unwrapNodes,
   wrapNodes,
   deleteText,
+  Node,
 } from "slate";
 import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { shallowReactive } from "vue";
+import { getChunkTreeForNode } from "../chunking";
 
 export const createReactiveEditor = (): DOMEditor => {
   const editor = shallowReactive(createEditor());
@@ -168,5 +170,23 @@ export const createReactiveEditor = (): DOMEditor => {
   editor.shouldMergeNodesRemovePrevNode = (...args) =>
     shouldMergeNodesRemovePrevNode(editor, ...args);
 
-  return withDOM(editor);
+  const domEditor = withDOM(editor);
+  const { apply: domEditorApply } = domEditor;
+  domEditor.apply = (operation) => {
+    if (operation.type === "move_node") {
+      const parent = Node.parent(domEditor, operation.path);
+      const chunking = !!domEditor.getChunkSize(parent);
+
+      if (chunking) {
+        const node = Node.get(domEditor, operation.path);
+        const chunkTree = getChunkTreeForNode(domEditor, parent);
+        const key = DOMEditor.findKey(domEditor, node);
+        chunkTree.movedNodeKeys.add(key);
+      }
+    }
+
+    domEditorApply(operation);
+  };
+
+  return domEditor;
 };

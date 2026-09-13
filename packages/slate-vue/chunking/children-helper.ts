@@ -1,17 +1,14 @@
 import { Descendant } from "slate";
+import { DOMEditor, Key } from "slate-vue3/dom";
 import { ChunkLeaf } from "./types";
-import { toRaw } from "vue";
-import { DOMEditor } from "../plugin/dom-editor";
-import { Key } from "../utils/key";
 
 /**
  * Traverse an array of children, providing helpers useful for reconciling the
  * children array with a chunk tree
  */
 export class ChildrenHelper {
-  private readonly editor: DOMEditor;
-  private readonly children: Descendant[];
-  private readonly rawChildren: Descendant[];
+  private editor: DOMEditor;
+  private children: Descendant[];
 
   /**
    * Sparse array of Slate node keys, each index corresponding to an index in
@@ -28,8 +25,7 @@ export class ChildrenHelper {
 
   constructor(editor: DOMEditor, children: Descendant[]) {
     this.editor = editor;
-    this.children = [...children];
-    this.rawChildren = toRaw(children);
+    this.children = children;
     this.cachedKeys = new Array(children.length);
     this.pointerIndex = 0;
   }
@@ -70,7 +66,7 @@ export class ChildrenHelper {
    * Whether all children have been read
    */
   public get reachedEnd() {
-    return this.pointerIndex >= this.rawChildren.length;
+    return this.pointerIndex >= this.children.length;
   }
 
   /**
@@ -87,14 +83,11 @@ export class ChildrenHelper {
    * by one and compare it to the known key.
    */
   public lookAhead(node: Descendant, key: Key) {
-    const elementResult = this.rawChildren.indexOf(
-      toRaw(node),
-      this.pointerIndex,
-    );
+    const elementResult = this.children.indexOf(node, this.pointerIndex);
     if (elementResult > -1) return elementResult - this.pointerIndex;
 
-    for (let i = this.pointerIndex; i < this.rawChildren.length; i++) {
-      const candidateNode = this.rawChildren[i];
+    for (let i = this.pointerIndex; i < this.children.length; i++) {
+      const candidateNode = this.children[i];
       const candidateKey = this.findKey(candidateNode, i);
       if (candidateKey === key) return i - this.pointerIndex;
     }
@@ -121,7 +114,7 @@ export class ChildrenHelper {
   private findKey(node: Descendant, index: number): Key {
     const cachedKey = this.cachedKeys[index];
     if (cachedKey) return cachedKey;
-    const key = DOMEditor.findKey(this.editor, toRaw(node));
+    const key = DOMEditor.findKey(this.editor, node);
     this.cachedKeys[index] = key;
     return key;
   }

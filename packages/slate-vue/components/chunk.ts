@@ -1,7 +1,7 @@
-import { ChunkAncestor } from "slate-vue3/dom";
 import { h, renderList, VNode } from "vue";
 import { ElementComp } from "./element";
 import { RenderChunkProps } from "../utils/interface";
+import { ChunkAncestor } from "../chunking";
 
 export const ChunkCompFc = (
   ancestor: ChunkAncestor,

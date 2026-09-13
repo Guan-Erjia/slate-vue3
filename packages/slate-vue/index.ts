@@ -19,3 +19,5 @@ export { useElement, useElementIf } from "./hooks/use-element";
 export { toRawWeakMap } from "share-tools";
 
 export { createReactiveEditor } from "./utils/createReactiveEditor";
+
+export * from "./chunking";

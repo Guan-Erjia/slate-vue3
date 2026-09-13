@@ -1,15 +1,11 @@
-import { createReactiveEditor } from "slate-vue3";
-import { Descendant, Element, Node, Transforms } from "slate";
 import {
-  DOMEditor,
-  Key,
-  KEY_TO_CHUNK_TREE,
+  createReactiveEditor,
   getChunkTreeForNode,
   reconcileChildren,
-  NODE_TO_INDEX,
-  NODE_TO_PARENT,
-} from "slate-vue3/dom";
-import type {
+} from "slate-vue3";
+import { Descendant, Element, Node, Transforms } from "slate";
+import { DOMEditor, Key, NODE_TO_INDEX, NODE_TO_PARENT } from "slate-vue3/dom";
+import {
   Chunk,
   ChunkAncestor,
   ChunkDescendant,
@@ -17,7 +13,8 @@ import type {
   ChunkNode,
   ChunkTree,
   ReconcileOptions,
-} from "slate-vue3/dom";
+  KEY_TO_CHUNK_TREE,
+} from "slate-vue3";
 import { describe, vi, it, expect } from "vitest";
 
 const block = (text: string): Element => ({ children: [{ text }] });
@@ -36,9 +33,10 @@ const reconcileEditor = (
 ) => {
   const chunkTree = getChunkTreeForNode(editor, editor);
 
-  reconcileChildren(editor, editor.children, {
+  reconcileChildren(editor, {
     chunkTree: chunkTree,
     chunkSize: 3,
+    children: editor.children,
     onInsert: (n: Descendant, i: number) => {
       NODE_TO_INDEX.set(n, i);
       NODE_TO_PARENT.set(n, editor);
@@ -103,6 +101,7 @@ const getChildrenAndTreeForShape = (
   const chunkTree: ChunkTree = {
     type: "root",
     movedNodeKeys: new Set(),
+    modifiedChunks: new Set(),
     children: [],
   };
 
