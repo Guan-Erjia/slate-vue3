@@ -8,7 +8,7 @@ import {
 } from "slate-vue3";
 import { DOMEditor } from "slate-vue3/dom";
 import { Descendant, Editor } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 import { isHotkey } from "is-hotkey";
 import Toolbar from "../../../components/Toolbar.vue";
 import Button from "../../../components/Button.vue";

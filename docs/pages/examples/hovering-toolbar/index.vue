@@ -13,7 +13,7 @@ import {
 } from "../../../custom-types";
 import HoveringToolbar from "./HoveringToolbar.vue";
 import { Editor, Transforms, Node, Element, Descendant } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const withLayout = (editor: CustomEditor) => {
   const { normalizeNode } = editor;

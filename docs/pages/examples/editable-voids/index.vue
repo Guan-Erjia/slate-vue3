@@ -20,7 +20,7 @@ import Button from "../../../components/Button.vue";
 import { EditableVoidElement } from "../../../custom-types";
 import { h } from "vue";
 import { Descendant, Transforms } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue: Descendant[] = [
   {

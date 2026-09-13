@@ -13,7 +13,7 @@ import {
 } from "slate-vue3";
 import { h } from "vue";
 import VideoElement from "./VideoElement.vue";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 import { Descendant } from "slate";
 import { CustomEditor } from "../../../custom-types";
 

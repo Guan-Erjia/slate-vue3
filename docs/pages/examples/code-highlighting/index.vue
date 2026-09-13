@@ -27,7 +27,7 @@ import {
   useInheritRef,
   createReactiveEditor,
 } from "slate-vue3";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 import { DOMEditor } from "slate-vue3/dom";
 import { Editor, Element, NodeEntry, Transforms, Node, Range } from "slate";
 import { computed, h } from "vue";

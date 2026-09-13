@@ -21,7 +21,7 @@ npm install slate-vue3
 <script setup lang="ts">
 import { Slate, Editable, createReactiveEditor } from "slate-vue3";
 import { withDOM } from "slate-vue3/dom";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue = [{
   type: "paragraph",

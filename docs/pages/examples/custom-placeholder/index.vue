@@ -7,7 +7,7 @@ import {
 } from "slate-vue3";
 import { h } from "vue";
 import { Descendant } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue: Descendant[] = [
   { type: "paragraph", children: [{ text: "" }] },

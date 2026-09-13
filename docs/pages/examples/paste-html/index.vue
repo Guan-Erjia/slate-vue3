@@ -10,7 +10,7 @@ import { jsx } from "slate-vue3/hyperscript";
 import { h } from "vue";
 import ImageElement from "./ImageElement.vue";
 import { Descendant, Transforms } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 import { CustomEditor } from "../../../custom-types";
 
 const allowedSchemes = ["http:", "https:", "mailto:", "tel:"];

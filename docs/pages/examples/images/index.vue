@@ -14,7 +14,7 @@ import ImageComp from "./ImageComp.vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import Button from "../../../components/Button.vue";
 import { Descendant, Transforms } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue: Descendant[] = [
   {

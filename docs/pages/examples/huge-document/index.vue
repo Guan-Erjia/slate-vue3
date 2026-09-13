@@ -8,7 +8,7 @@ import {
 import { h } from "vue";
 import { faker } from "@faker-js/faker";
 import { Descendant } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const HEADINGS = 100;
 const PARAGRAPHS = 7;

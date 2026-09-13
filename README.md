@@ -38,7 +38,7 @@ npm install slate-vue3
 ```vue
 <script setup lang="ts">
 import { Slate, Editable, createReactiveEditor } from "slate-vue3";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue = [
   {

@@ -10,7 +10,7 @@ import {
 } from "slate-vue3";
 import { Descendant, Editor, Range, Transforms } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 import Mention from "./Mention.vue";
 import { CHARACTERS } from "./utils";
 import { CustomEditor } from "../../../custom-types";

@@ -3,7 +3,7 @@ import { Slate, Editable, createReactiveEditor } from "slate-vue3";
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { h } from "vue";
 import { Editor, Range, Point, Descendant, Node } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 import { CustomEditor } from "../../../custom-types";
 
 const withTables = (editor: CustomEditor) => {

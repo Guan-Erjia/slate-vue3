@@ -12,7 +12,7 @@ import {
   createReactiveEditor,
 } from "slate-vue3";
 import { Path, Editor, NodeEntry } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 import { h } from "vue";
 import PrefixComp from "./PrefixComp.vue";
 

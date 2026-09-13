@@ -12,7 +12,7 @@ import MarkButton from "./MarkButton.vue";
 import BlockButton from "./BlockButton.vue";
 import AlignButton from "../rich-text/AlignButton.vue";
 import { CustomElement } from "../../../custom-types";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue: CustomElement[] = [
   {

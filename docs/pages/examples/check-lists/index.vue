@@ -5,7 +5,7 @@ import { type RenderElementProps, createReactiveEditor } from "slate-vue3";
 import { CustomElement } from "../../../custom-types";
 import CheckListItem from "./CheckListsItem.vue";
 import { withChecklists } from "./plugin";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue: CustomElement[] = [
   {

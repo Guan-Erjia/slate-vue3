@@ -13,7 +13,7 @@ import {
 import { CSSProperties, h } from "vue";
 import Prism from "../../../utils/prism";
 import { DecoratedRange, Descendant, Node, NodeEntry } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue: Descendant[] = [
   {

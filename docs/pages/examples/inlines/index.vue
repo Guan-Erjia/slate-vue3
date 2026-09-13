@@ -20,7 +20,7 @@ import LinkComponent from "./LinkComponent.vue";
 import BadgeComponent from "./BadgeComponent.vue";
 import ButtonComponent from "./ButtonComponent.vue";
 import { Descendant, Editor, Range, Transforms, Node } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const isLinkActive = computed(() => {
   const [link] = Editor.nodes(editor, {

@@ -129,7 +129,7 @@ import {
   useInheritRef,
   createReactiveEditor,
 } from "slate-vue3";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 import {
   computed,
   CSSProperties,

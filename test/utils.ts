@@ -1,6 +1,6 @@
 import { Editor } from "slate";
 import { createHyperscript } from "slate-vue3/hyperscript";
-export { withHistory, History } from "slate-vue3/history";
+export { withHistory, History } from "slate-history";
 
 /**
  * 给编辑器对象添加测试相关的扩展方法

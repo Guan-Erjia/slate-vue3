@@ -13,7 +13,7 @@ import {
 import { h } from "vue";
 import { withShortcuts } from "./plugin";
 import { Descendant } from "slate";
-import { withHistory } from "slate-vue3/history";
+import { withHistory } from "slate-history";
 
 const initialValue: Descendant[] = [
   {
