@@ -1,4 +1,4 @@
-import { resolveModules } from "@test-utils";
+import { resolveModules, sleep } from "@test-utils";
 import { test, expect, describe } from "vitest";
 import {
   withYjs,
@@ -12,8 +12,6 @@ import { createReactiveEditor } from "slate-vue3";
 const modules = await resolveModules(import.meta.glob("./**/*.jsx"));
 
 const INLINE_ELEMENTS = ["note-link", "link"];
-
-const sleep = (ms = 0) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function withTestingElements(editor: Editor, doc = new Y.Doc()) {
   const { normalizeNode, isInline } = editor;

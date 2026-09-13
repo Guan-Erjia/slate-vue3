@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { E2E_BASE_URL } from "../test/utils";
-import { nextTick } from "vue";
+import { E2E_BASE_URL, sleep } from "../test/utils";
 
 test.describe("shadow-dom example", () => {
   test.beforeEach(
@@ -26,12 +25,11 @@ test.describe("shadow-dom example", () => {
 
     // Clear any existing text and type new text into the textbox
     await textbox.click();
-    await textbox.selectText();
-
+    await sleep();
+    await page.keyboard.press("ControlOrMeta+A");
+    await sleep();
     await page.keyboard.press("Backspace");
-
-    await nextTick();
-
+    await sleep();
     await page.keyboard.type("Hello, Playwright!");
 
     // Assert that the textbox contains the correct text
@@ -58,7 +56,9 @@ test.describe("shadow-dom example", () => {
     const textbox = innerShadow.getByRole("textbox");
 
     await textbox.click();
+    await sleep();
     await page.keyboard.press("Enter");
+    await sleep();
     await page.keyboard.type("New line text");
 
     expect(consoleErrors, "Console errors occurred").toEqual([]);

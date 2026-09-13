@@ -1,6 +1,9 @@
 import { createHyperscript } from "slate-hyperscript";
 export { withHistory, History } from "slate-history";
 
+export const sleep = (ms?: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
 export const resolveModules = async (
   modules: Record<string, () => Promise<any>>,
 ) =>
