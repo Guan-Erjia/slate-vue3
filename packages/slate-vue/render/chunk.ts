@@ -1,6 +1,6 @@
-import { ChunkTree } from "slate-vue3/dom";
 import { inject, provide, VNode } from "vue";
 import { RenderChunkProps } from "../utils/interface";
+import { ChunkTree } from "../chunking";
 
 export const SLATE_INNER_STATIC_CHUNK_ROOT = Symbol(
   "SLATE_INNER_STATIC_CHUNK_ROOT",
