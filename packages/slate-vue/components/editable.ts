@@ -30,6 +30,7 @@ import {
   NODE_TO_ELEMENT,
   containsShadowAware,
   MARK_PLACEHOLDER_SYMBOL,
+  PLACEHOLDER_SYMBOL,
 } from "slate-vue3/dom";
 import {
   computed,
@@ -37,7 +38,6 @@ import {
   h,
   onMounted,
   onUnmounted,
-  reactive,
   ref,
   toRaw,
   useAttrs,
@@ -60,11 +60,6 @@ import {
   useAndroidManager,
 } from "../hooks/use-android-manager";
 import { useEditorVersion } from "../render/version";
-import {
-  providePlaceholder,
-  providePlaceholderResize,
-  providePlaceholderShow,
-} from "../render/placeholder";
 import { injectDecorateFn } from "../render/decorate";
 
 export const Editable = defineComponent({
@@ -112,15 +107,15 @@ export const Editable = defineComponent({
     );
 
     // Keep track of some state for the event handler logic.
-    const state = reactive<{
+    const state: {
       isDraggingInternally: boolean;
       latestElement: globalThis.Element | null;
       hasMarkPlaceholder: boolean;
-    }>({
+    } = {
       isDraggingInternally: false,
       latestElement: null,
       hasMarkPlaceholder: false,
-    });
+    };
 
     const placeholderHeight = ref<number>();
     const onPlaceholderResize = (h?: number) => (placeholderHeight.value = h);
@@ -1428,15 +1423,25 @@ export const Editable = defineComponent({
         !isComposing.value,
     );
 
-    providePlaceholder(computed(() => placeholder));
-    providePlaceholderShow(showPlaceholder);
-    providePlaceholderResize(onPlaceholderResize);
-
     const decorate = injectDecorateFn();
 
-    return () => {
+    const decorations = computed(() => {
+      const _decorations = decorate([editor, []]);
+      if (showPlaceholder.value) {
+        const start = Editor.start(editor, []);
+        _decorations.push({
+          [PLACEHOLDER_SYMBOL]: true,
+          placeholder,
+          onPlaceholderResize,
+          anchor: start,
+          focus: start,
+        });
+      }
+
       const { marks } = editor;
-      const decorations = decorate([editor, []]);
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      state.hasMarkPlaceholder = false;
+
       if (editor.selection && Range.isCollapsed(editor.selection) && marks) {
         const { anchor } = editor.selection;
         const leaf = Node.leaf(editor, anchor.path);
@@ -1445,13 +1450,14 @@ export const Editable = defineComponent({
         // While marks isn't a 'complete' text, we can still use loose Text.equals
         // here which only compares marks anyway.
         if (!Text.equals(leaf, marks as Text, { loose: true })) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
           state.hasMarkPlaceholder = true;
 
           const unset = Object.fromEntries(
             Object.keys(rest).map((mark) => [mark, null]),
           );
 
-          decorations.push({
+          _decorations.push({
             [MARK_PLACEHOLDER_SYMBOL]: true,
             ...unset,
             ...marks,
@@ -1461,7 +1467,10 @@ export const Editable = defineComponent({
           });
         }
       }
+      return _decorations;
+    });
 
+    return () => {
       return h(
         attributes.is || "div",
         {
@@ -1494,7 +1503,7 @@ export const Editable = defineComponent({
           onKeydown,
           onPaste,
         },
-        h(ChildrenComp, { element: editor, decorations }),
+        h(ChildrenComp, { element: editor, decorations: decorations.value }),
       );
     };
   },

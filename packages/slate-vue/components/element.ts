@@ -76,6 +76,7 @@ export const ElementComp = defineComponent({
     }
 
     const renderElement = useRenderElement();
+    const decorate = injectDecorateFn();
 
     return () => {
       const isInline = editor.isInline(props.element);
@@ -110,7 +111,6 @@ export const ElementComp = defineComponent({
       }
 
       const path = DOMEditor.findPath(editor, props.element);
-      const decorate = injectDecorateFn();
       const decorations = [
         ...decorate([props.element, path]),
         ...props.decorations,

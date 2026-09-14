@@ -1,9 +1,9 @@
 import { Text, LeafPosition } from "slate";
-import { h, defineComponent } from "vue";
+import { h, defineComponent, computed } from "vue";
 import { StringComp } from "./string";
-import { usePlaceholderShow } from "../render/placeholder";
 import { PlaceholderComp } from "./placeholder";
 import { useRenderLeaf } from "../render/fn";
+import { PLACEHOLDER_SYMBOL } from "slate-vue3/dom";
 
 export const LeafComp = defineComponent({
   name: "slate-leaf",
@@ -15,7 +15,7 @@ export const LeafComp = defineComponent({
     leafPosition?: LeafPosition;
   }) {
     const renderLeaf = useRenderLeaf();
-    const showPlaceholder = usePlaceholderShow();
+    const showPlaceholder = computed(() => props.leaf[PLACEHOLDER_SYMBOL]);
     return () =>
       renderLeaf({
         text: props.text,
@@ -29,7 +29,10 @@ export const LeafComp = defineComponent({
                 leaf: props.leaf,
                 isLast: true,
               }),
-              h(PlaceholderComp),
+              h(PlaceholderComp, {
+                placeholder: props.leaf.placeholder,
+                onPlaceholderResize: props.leaf.onPlaceholderResize,
+              }),
             ]
           : h(StringComp, {
               text: props.text,

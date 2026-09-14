@@ -2,6 +2,8 @@ import { BaseRange, BaseText } from "slate";
 declare module "slate" {
   interface CustomTypes {
     Text: BaseText & {
+      placeholder?: string;
+      onPlaceholderResize?: (height?: number) => void;
       // FIXME: is unknown correct here?
       [key: string]: unknown;
     };

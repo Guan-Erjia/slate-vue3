@@ -7,7 +7,6 @@ import {
 } from "slate-vue3/dom";
 import { h, ref, defineComponent, renderList, onUpdated } from "vue";
 import { useEditor } from "../hooks/use-editor";
-import { useMarkPlaceholder } from "../render/placeholder";
 import { injectDecorateFn } from "../render/decorate";
 import { useRenderText } from "../render/fn";
 import { LeafComp } from "./leaf";
@@ -28,7 +27,6 @@ export const TextComp = defineComponent({
       ref: textRef,
     };
 
-    const markPlaceholder = useMarkPlaceholder();
     const editorVersion = useEditorVersion();
 
     // Skip the forced re-render on the initial mount: there is no committed
@@ -42,27 +40,23 @@ export const TextComp = defineComponent({
     // a wrong position.
     onUpdated(() => editorVersion.value++);
 
+    const path = DOMEditor.findPath(editor, props.text);
+    const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
+    const key = DOMEditor.findKey(editor, props.text);
+    let forceKey = 0;
+
     return () => {
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-      if (textRef.value) {
-        KEY_TO_ELEMENT?.set(
-          DOMEditor.findKey(editor, props.text),
-          textRef.value,
-        );
+      if (textRef.value && KEY_TO_ELEMENT) {
+        KEY_TO_ELEMENT.set(key, textRef.value);
         ELEMENT_TO_NODE.set(textRef.value, props.text);
         NODE_TO_ELEMENT.set(props.text, textRef.value);
       }
-      const path = DOMEditor.findPath(editor, props.text);
-      const key = DOMEditor.findKey(editor, props.text);
 
       const decorations = [
         ...decorate([props.text, path]),
         ...props.decorations,
       ];
 
-      if (markPlaceholder.value) {
-        decorations.unshift(markPlaceholder.value);
-      }
       const decoratedLeaves = Text.decorations(props.text, decorations);
 
       return renderText({
@@ -74,7 +68,7 @@ export const TextComp = defineComponent({
             leaf: leaf.leaf,
             isLast: props.isLast && i === decoratedLeaves.length - 1,
             leafPosition: leaf.position,
-            key: `${key.id}-${i}`,
+            key: forceKey++,
           }),
         ),
       });

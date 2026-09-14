@@ -1,9 +1,12 @@
-import { CSSProperties, defineComponent, VNode, ref, computed } from "vue";
 import {
-  usePlaceholder,
-  usePlaceholderResize,
-  useRenderPlaceholder,
-} from "../render/placeholder";
+  CSSProperties,
+  defineComponent,
+  ref,
+  computed,
+  onMounted,
+  onUnmounted,
+} from "vue";
+import { useRenderPlaceholder } from "../render/placeholder";
 import { IS_WEBKIT } from "slate-vue3/dom";
 
 const style: CSSProperties = {
@@ -22,35 +25,43 @@ const style: CSSProperties = {
 
 export const PlaceholderComp = defineComponent({
   name: "slate-placeholder",
-  setup() {
-    const placeholder = usePlaceholder();
-    const onPlaceholderResize = usePlaceholderResize();
-
+  props: ["placeholder", "onPlaceholderResize"],
+  setup(props: {
+    placeholder?: string;
+    onPlaceholderResize?: (height?: number) => void;
+  }) {
     const placeholderResizeObserver = ref<ResizeObserver>();
+    const placeholderRef = ref<HTMLElement>();
+
+    onMounted(() => {
+      placeholderResizeObserver.value = new ResizeObserver(() => {
+        props.onPlaceholderResize?.(
+          placeholderRef.value?.getBoundingClientRect()?.height,
+        );
+      });
+      placeholderResizeObserver.value.observe(
+        placeholderRef.value as HTMLElement,
+      );
+    });
+
+    onUnmounted(() => {
+      placeholderResizeObserver.value?.disconnect();
+      placeholderResizeObserver.value = undefined;
+      props.onPlaceholderResize?.();
+    });
+
     const attributes = computed(() => ({
       "data-slate-placeholder": true,
       style,
       contenteditable: false,
-      onVnodeMounted(vNode: VNode) {
-        if (vNode.el) {
-          placeholderResizeObserver.value = new ResizeObserver(() => {
-            onPlaceholderResize(vNode.el?.getBoundingClientRect()?.height);
-          });
-          placeholderResizeObserver.value.observe(vNode.el as HTMLElement);
-        }
-      },
-      onVnodeUnmounted() {
-        placeholderResizeObserver.value?.disconnect();
-        placeholderResizeObserver.value = undefined;
-        onPlaceholderResize();
-      },
+      ref: placeholderRef,
     }));
 
     const renderPlaceholder = useRenderPlaceholder();
 
     return () =>
       renderPlaceholder({
-        children: placeholder.value,
+        children: props.placeholder,
         attributes: attributes.value,
       });
   },

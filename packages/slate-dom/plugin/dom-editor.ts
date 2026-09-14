@@ -969,17 +969,19 @@ export const DOMEditor: DOMEditorInterface = {
           const anchorAttr =
             anchorNode instanceof HTMLElement ? anchorNode.attributes : null;
           if (anchorAttr?.getNamedItem("data-slate-editor")) {
-            while (
+            if (
               anchorNode instanceof HTMLElement &&
-              anchorNode.firstElementChild
+              focusNode instanceof HTMLElement
             ) {
-              anchorNode = anchorNode.firstElementChild;
-            }
-            while (
-              focusNode instanceof HTMLElement &&
-              focusNode.lastElementChild
-            ) {
-              focusNode = focusNode.lastElementChild;
+              const nodeList = Array.from(
+                anchorNode.querySelectorAll<HTMLElement>(
+                  '[data-slate-string="true"]',
+                ),
+              ).filter(
+                (node) => !node.querySelector('[data-slate-string="true"]'),
+              );
+              anchorNode = nodeList[0];
+              focusNode = nodeList[nodeList.length - 1];
             }
             anchorNode = anchorNode?.firstChild;
             anchorOffset = 0;

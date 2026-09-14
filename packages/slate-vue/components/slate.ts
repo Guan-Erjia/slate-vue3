@@ -51,10 +51,7 @@ import {
   provideRenderText,
 } from "../render/fn";
 import { provideEditorVersion } from "../render/version";
-import {
-  provideMarkPlaceholder,
-  provideRenderPlaceholder,
-} from "../render/placeholder";
+import { provideRenderPlaceholder } from "../render/placeholder";
 import { provideRenderChunk } from "../render/chunk";
 
 export const Slate = defineComponent({
@@ -140,34 +137,6 @@ export const Slate = defineComponent({
     // 记数用，触发 changeEffect
     const editorVersion = ref(0);
     provideEditorVersion(editorVersion);
-
-    const markPlaceholder = computed(() => {
-      if (
-        editor.selection &&
-        Range.isCollapsed(editor.selection) &&
-        editor.marks
-      ) {
-        const anchor = editor.selection.anchor;
-        const leaf = Node.leaf(editor, anchor.path);
-        const { text, ...rest } = leaf;
-        // While marks isn't a 'complete' text, we can still use loose Text.equals
-        // here which only compares marks anyway.
-        if (!Text.equals(leaf, editor.marks as Text, { loose: true })) {
-          const unset = Object.fromEntries(
-            Object.keys(rest).map((mark) => [mark, null]),
-          );
-          return {
-            [MARK_PLACEHOLDER_SYMBOL]: true,
-            ...unset,
-            ...editor.marks,
-            anchor,
-            focus: anchor,
-          };
-        }
-      }
-      return null;
-    });
-    provideMarkPlaceholder(markPlaceholder);
 
     onMounted(() => {
       document.addEventListener("focusin", focusCb);

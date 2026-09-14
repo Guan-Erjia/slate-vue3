@@ -190,18 +190,6 @@ export const getEditableChildAndIndex = (
     i += direction === "forward" ? 1 : -1;
   }
 
-  // compact vue3, get the real node element when renderList in firefox #18
-  while (child.nodeType === 3 && child.textContent === "") {
-    index += direction === "forward" ? 1 : -1;
-    child = childNodes[index];
-  }
-  if (!child) {
-    throw new Error(
-      `Compact on vue3 empty childNode: Failed to find adjacent nodes: ${Scrubber.stringify(
-        child,
-      )}`,
-    );
-  }
   return [child, index];
 };
 
