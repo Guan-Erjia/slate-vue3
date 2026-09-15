@@ -128,6 +128,7 @@ export const ChildrenComp = defineComponent({
         return h(ElementComp, {
           decorations: decorationsByChild[i],
           element: n,
+          i,
           key: key.id,
         });
       };

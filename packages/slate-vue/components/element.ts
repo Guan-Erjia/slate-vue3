@@ -12,6 +12,7 @@ import {
 } from "slate-vue3/dom";
 import { TextComp } from "./text";
 import {
+  computed,
   defineComponent,
   h,
   HTMLAttributes,
@@ -78,7 +79,11 @@ export const ElementComp = defineComponent({
 
     const renderElement = useRenderElement();
     const { decorations, update } = useDecorations(() => props.element);
-    watch(() => props.element, update);
+    onUpdated(update);
+    const decorationsProps = computed(() => [
+      ...props.decorations,
+      ...decorations.value,
+    ]);
 
     return () => {
       const isInline = editor.isInline(props.element);
@@ -127,7 +132,7 @@ export const ElementComp = defineComponent({
             h(TextComp, {
               text,
               isLast: false,
-              decorations: [...props.decorations, ...decorations.value],
+              decorations: decorationsProps.value,
             }),
           ),
           element: props.element,
@@ -138,7 +143,7 @@ export const ElementComp = defineComponent({
         attributes,
         children: h(ChildrenComp, {
           element: props.element,
-          decorations: [...props.decorations, ...decorations.value],
+          decorations: decorationsProps.value,
         }),
         element: props.element,
       });

@@ -11,7 +11,6 @@ import { injectDecorateFn } from "../render/decorate";
 export const useDecorations = (getNode: () => Descendant) => {
   const editor = useEditor();
   const decorate = injectDecorateFn();
-  let latestSubscriptionCallbackError: Error | undefined;
   const decorations = shallowRef<DecoratedRange[]>([]);
 
   const update = () => {
@@ -33,11 +32,6 @@ export const useDecorations = (getNode: () => Descendant) => {
       // is re-rendered, the selectors are called again, and
       // will throw again, if neither props nor store state
       // changed
-      if (err instanceof Error) {
-        latestSubscriptionCallbackError = err;
-      } else {
-        latestSubscriptionCallbackError = new Error(String(err));
-      }
     }
     // don't rerender on equalityFn change since we want to be able to define it inline
   };
