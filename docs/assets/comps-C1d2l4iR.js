@@ -1,0 +1,1 @@
+import{M as e,O as t,h as n,t as r,v as i}from"./index-BGFTbDc-.js";var a={},o={style:{margin:`15px`,padding:`10px`,"padding-bottom":`30px`,"box-sizing":`border-box`,"background-color":`white`,position:`relative`}};function s(r,a){let s=e(`RouterView`);return t(),n(`div`,o,[i(s)])}var c=r(a,[[`render`,s]]);export{c as default};

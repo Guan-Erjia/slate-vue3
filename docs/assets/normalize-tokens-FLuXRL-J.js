@@ -1,0 +1,3 @@
+var e=/\r\n|\r|\n/,t=e=>{e.length===0?e.push({types:[`plain`],content:`
+`,empty:!0}):e.length===1&&e[0].content===``&&(e[0].content=`
+`,e[0].empty=!0)},n=(e,t)=>{let n=e.length;return n>0&&e[n-1]===t?e:e.concat(t)},r=r=>{let i=[[]],a=[r],o=[0],s=[r.length],c,l=0,u=[],d=[u];for(;l>-1;){for(;(c=o[l]++)<s[l];){let r,f=i[l],p=a[l][c];if(typeof p==`string`?(f=l>0?f:[`plain`],r=p):(f=n(f,p.type),p.alias&&(f=n(f,p.alias)),r=p.content),typeof r!=`string`){l++,i.push(f),a.push(r),o.push(0),s.push(r.length);continue}let m=r.split(e),h=m.length;u.push({types:f,content:m[0]});for(let e=1;e<h;e++)t(u),d.push(u=[]),u.push({types:f,content:m[e]})}l--,i.pop(),a.pop(),o.pop(),s.pop()}return t(u),d};export{r as t};

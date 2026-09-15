@@ -1,0 +1,1 @@
+import{O as e,h as t,j as n,t as r}from"./index-BGFTbDc-.js";var i={},a={style:{position:`relative`,"padding-bottom":`8px`,"margin-bottom":`10px`,"border-bottom":`2px solid #eee`},"data-test-id":`menu`};function o(r,i){return e(),t(`div`,a,[n(r.$slots,`default`)])}var s=r(i,[[`render`,o]]);export{s as t};
