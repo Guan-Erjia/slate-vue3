@@ -17,28 +17,10 @@
         "default": "./dist/index.js"
       }
     },
-    "./core": {
-      "import": {
-        "types": "./dist/slate/index.d.ts",
-        "default": "./dist/core.js"
-      }
-    },
     "./dom": {
       "import": {
         "types": "./dist/slate-dom/index.d.ts",
         "default": "./dist/dom.js"
-      }
-    },
-    "./history": {
-      "import": {
-        "types": "./dist/slate-history/index.d.ts",
-        "default": "./dist/history.js"
-      }
-    },
-    "./hyperscript": {
-      "import": {
-        "types": "./dist/slate-hyperscript/index.d.ts",
-        "default": "./dist/hyperscript.js"
       }
     },
     "./yjs": {
