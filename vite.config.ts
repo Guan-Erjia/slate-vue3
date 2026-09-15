@@ -68,7 +68,7 @@ export default defineConfig(({ command, mode }) => {
           formats: ["es"],
         },
         rollupOptions: {
-          external: ["vue", "yjs"],
+          external: ["vue", "yjs", "slate"],
         },
       },
       plugins: [

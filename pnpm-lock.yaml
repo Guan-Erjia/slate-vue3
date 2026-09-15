@@ -20,9 +20,6 @@ importers:
       scroll-into-view-if-needed:
         specifier: ^3.1.0
         version: 3.1.0
-      slate:
-        specifier: ^0.126.2
-        version: 0.126.2
       vue:
         specifier: ^3.0.0
         version: 3.5.42(typescript@6.0.3)
@@ -114,6 +111,9 @@ importers:
       remark-slate-transformer:
         specifier: ^0.9.0
         version: 0.9.0(unified@11.0.5)
+      slate:
+        specifier: ^0.126.2
+        version: 0.126.2
       slate-history:
         specifier: ^0.113.1
         version: 0.113.1(slate@0.126.2)
