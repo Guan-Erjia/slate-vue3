@@ -74,12 +74,9 @@ export const ChildrenComp = defineComponent({
       provideIsLastEmptyBlock(props.element);
     }
 
-    const decorations = computed(() => {
-      return useDecorationsByChild(editor, props.element, props.decorations);
-    });
-
     return () => {
-      const { decorationsByChild, childrenToRedecorate } = decorations.value;
+      const { decorationsByChild, childrenToRedecorate } =
+        useDecorationsByChild(editor, props.element, props.decorations);
 
       if (isBlock || chunkSize === null) {
         return renderList(props.element.children, (n, i): VNode => {

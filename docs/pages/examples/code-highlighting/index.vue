@@ -30,7 +30,7 @@ import {
 import { withHistory } from "slate-history";
 import { DOMEditor } from "slate-vue3/dom";
 import { Editor, Element, NodeEntry, Transforms, Node, Range } from "slate";
-import { computed, h } from "vue";
+import { h } from "vue";
 import LanguageSelect from "./LanguageSelect.vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import Button from "../../../components/Button.vue";
@@ -166,7 +166,7 @@ const onKeydown = (e: KeyboardEvent) => {
   }
 };
 
-const decorate = ([node]: NodeEntry) => {
+const decorate = ([node]: NodeEntry): Range[] => {
   const decorationsMap = new WeakMap();
   const blockEntries = Editor.nodes(editor, {
     at: [],

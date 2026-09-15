@@ -132,7 +132,7 @@ export interface DOMEditorInterface {
   /**
    * Focus the editor.
    */
-  focus: (editor: DOMEditor) => void;
+  focus: (editor: DOMEditor, options?: { retries: number }) => void;
 
   /**
    * Return the host window of the current editor.
@@ -425,7 +425,7 @@ export const DOMEditor: DOMEditorInterface = {
     );
   },
 
-  focus: (editor) => {
+  focus: (editor, options = { retries: 5 }) => {
     // Return if already focused
     if (IS_FOCUSED.get(editor)) {
       return;
@@ -434,6 +434,21 @@ export const DOMEditor: DOMEditorInterface = {
     // Return if no dom node is associated with the editor, which means the editor is not yet mounted
     // or has been unmounted. This can happen especially, while retrying to focus the editor.
     if (!EDITOR_TO_ELEMENT.get(editor)) {
+      return;
+    }
+
+    // Retry setting focus if the editor has pending operations.
+    // The DOM (selection) is unstable while changes are applied.
+    // Retry until retries are exhausted or editor is focused.
+    if (options.retries <= 0) {
+      throw new Error(
+        "Could not set focus, editor seems stuck with pending operations",
+      );
+    }
+    if (editor.operations.length > 0) {
+      setTimeout(() => {
+        DOMEditor.focus(editor, { retries: options.retries - 1 });
+      }, 10);
       return;
     }
 
@@ -717,7 +732,8 @@ export const DOMEditor: DOMEditorInterface = {
         '[contenteditable="false"]',
       );
       const nonEditableNode =
-        potentialNonEditableNode && editorEl.contains(potentialNonEditableNode)
+        potentialNonEditableNode &&
+        containsShadowAware(editorEl, potentialNonEditableNode)
           ? potentialNonEditableNode
           : null;
       let leafNode = parentNode.closest("[data-slate-leaf]");
@@ -960,19 +976,85 @@ export const DOMEditor: DOMEditorInterface = {
       if (isDOMSelection(domRange)) {
         // COMPAT: In firefox the normal seletion way does not work
         // (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
-        anchorNode = domRange.anchorNode;
-        anchorOffset = domRange.anchorOffset;
-        focusNode = domRange.focusNode;
-        focusOffset = domRange.focusOffset;
+        if (IS_FIREFOX && domRange.rangeCount > 1) {
+          focusNode = domRange.focusNode; // Focus node works fine
+          const firstRange = domRange.getRangeAt(0);
+          const lastRange = domRange.getRangeAt(domRange.rangeCount - 1);
+
+          // Here we are in the contenteditable mode of a table in firefox
+          if (
+            focusNode instanceof HTMLTableRowElement &&
+            firstRange.startContainer instanceof HTMLTableRowElement &&
+            lastRange.startContainer instanceof HTMLTableRowElement
+          ) {
+            // HTMLElement, becouse Element is a slate element
+            function getLastChildren(element: HTMLElement): HTMLElement {
+              if (element.childElementCount > 0) {
+                return getLastChildren(<HTMLElement>element.children[0]);
+              } else {
+                return element;
+              }
+            }
+
+            const firstNodeRow = <HTMLTableRowElement>firstRange.startContainer;
+            const lastNodeRow = <HTMLTableRowElement>lastRange.startContainer;
+
+            // This should never fail as "The HTMLElement interface represents any HTML element."
+            const firstNode = getLastChildren(
+              <HTMLElement>firstNodeRow.children[firstRange.startOffset],
+            );
+            const lastNode = getLastChildren(
+              <HTMLElement>lastNodeRow.children[lastRange.startOffset],
+            );
+
+            // Zero, as we allways take the right one as the anchor point
+            focusOffset = 0;
+
+            if (lastNode.childNodes.length > 0) {
+              anchorNode = lastNode.childNodes[0];
+            } else {
+              anchorNode = lastNode;
+            }
+
+            if (firstNode.childNodes.length > 0) {
+              focusNode = firstNode.childNodes[0];
+            } else {
+              focusNode = firstNode;
+            }
+
+            if (lastNode instanceof HTMLElement) {
+              anchorOffset = (<HTMLElement>lastNode).innerHTML.length;
+            } else {
+              // Fallback option
+              anchorOffset = 0;
+            }
+          } else {
+            // This is the read only mode of a firefox table
+            // Right to left
+            if (firstRange.startContainer === focusNode) {
+              anchorNode = lastRange.endContainer;
+              anchorOffset = lastRange.endOffset;
+              focusOffset = firstRange.startOffset;
+            } else {
+              // Left to right
+              anchorNode = firstRange.startContainer;
+              anchorOffset = firstRange.endOffset;
+              focusOffset = lastRange.startOffset;
+            }
+          }
+        } else {
+          anchorNode = domRange.anchorNode;
+          anchorOffset = domRange.anchorOffset;
+          focusNode = domRange.focusNode;
+          focusOffset = domRange.focusOffset;
+        }
 
         if (IS_FIREFOX) {
-          const anchorAttr =
-            anchorNode instanceof HTMLElement ? anchorNode.attributes : null;
-          if (anchorAttr?.getNamedItem("data-slate-editor")) {
-            if (
-              anchorNode instanceof HTMLElement &&
-              focusNode instanceof HTMLElement
-            ) {
+          if (
+            anchorNode instanceof HTMLElement &&
+            anchorNode?.attributes?.getNamedItem("data-slate-editor")
+          ) {
+            if (focusNode instanceof HTMLElement) {
               const nodeList = Array.from(
                 anchorNode.querySelectorAll<HTMLElement>(
                   '[data-slate-string="true"]',
@@ -1001,9 +1083,6 @@ export const DOMEditor: DOMEditorInterface = {
           }
         }
 
-        if (!anchorNode || !focusNode) {
-          return null as T extends true ? Range | null : Range;
-        }
         // COMPAT: There's a bug in chrome that always returns `true` for
         // `isCollapsed` for a Selection that comes from a ShadowRoot.
         // (2020/08/08)

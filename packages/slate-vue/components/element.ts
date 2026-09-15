@@ -19,13 +19,14 @@ import {
   provide,
   ref,
   VNodeRef,
+  watch,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { useEditor } from "../hooks/use-editor";
 import { provideIsLastEmptyBlock } from "../render/last";
 import { useRenderElement } from "../render/fn";
-import { injectDecorateFn } from "../render/decorate";
+import { useDecorations } from "../hooks/use-decorations";
 
 interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
@@ -76,7 +77,8 @@ export const ElementComp = defineComponent({
     }
 
     const renderElement = useRenderElement();
-    const decorate = injectDecorateFn();
+    const { decorations, update } = useDecorations(() => props.element);
+    watch(() => props.element, update);
 
     return () => {
       const isInline = editor.isInline(props.element);
@@ -110,12 +112,6 @@ export const ElementComp = defineComponent({
         NODE_TO_ELEMENT.delete(props.element);
       }
 
-      const path = DOMEditor.findPath(editor, props.element);
-      const decorations = [
-        ...decorate([props.element, path]),
-        ...props.decorations,
-      ];
-
       if (Editor.isVoid(editor, props.element)) {
         NODE_TO_PARENT.set(text, props.element);
         attributes["data-slate-void"] = true;
@@ -128,7 +124,11 @@ export const ElementComp = defineComponent({
           children: h(
             tag,
             VOID_CHILDREN_ATTRS,
-            h(TextComp, { text, isLast: false, decorations }),
+            h(TextComp, {
+              text,
+              isLast: false,
+              decorations: [...props.decorations, ...decorations.value],
+            }),
           ),
           element: props.element,
         });
@@ -136,7 +136,10 @@ export const ElementComp = defineComponent({
 
       return renderElement({
         attributes,
-        children: h(ChildrenComp, { element: props.element, decorations }),
+        children: h(ChildrenComp, {
+          element: props.element,
+          decorations: [...props.decorations, ...decorations.value],
+        }),
         element: props.element,
       });
     };

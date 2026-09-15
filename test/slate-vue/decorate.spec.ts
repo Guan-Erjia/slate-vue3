@@ -553,7 +553,7 @@ describe("decorations", () => {
         const initialValue = [
           { children: [{ text: "A" }] },
           { children: [{ text: "B" }] },
-          // ...otherNodes(),
+          ...otherNodes(),
         ];
         const decorate = ([, path]: NodeEntry) => {
           const ranges = [];

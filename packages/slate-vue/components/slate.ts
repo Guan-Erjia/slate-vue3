@@ -15,15 +15,7 @@ import {
   SLATE_USE_SELECTION,
   SLATE_USE_EDITOR,
 } from "../utils/constants";
-import {
-  DecoratedRange,
-  Node,
-  NodeEntry,
-  Operation,
-  Scrubber,
-  Text,
-  Range,
-} from "slate";
+import { DecoratedRange, Node, NodeEntry, Operation, Scrubber } from "slate";
 import type {
   RenderChunkProps,
   RenderElementProps,
@@ -31,11 +23,7 @@ import type {
   RenderPlaceholderProps,
   RenderTextProps,
 } from "../utils/interface";
-import {
-  DOMEditor,
-  EDITOR_TO_ON_CHANGE,
-  MARK_PLACEHOLDER_SYMBOL,
-} from "slate-vue3/dom";
+import { DOMEditor, EDITOR_TO_ON_CHANGE } from "slate-vue3/dom";
 import {
   DEFAULT_CHUNK_RENDER,
   DEFAULT_DECORATE_FN,

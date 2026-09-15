@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { E2E_BASE_URL } from "../test/utils";
+import { E2E_BASE_URL, sleep } from "../test/utils";
 
 test.describe("On markdown-shortcuts example", () => {
   test.beforeEach(async ({ page }) => {
@@ -16,6 +16,7 @@ test.describe("On markdown-shortcuts example", () => {
     await expect(page.getByRole("textbox").locator("ul")).toHaveCount(0);
 
     await page.getByRole("textbox").click();
+    await sleep();
     await page
       .getByRole("textbox")
       .press(testInfo.project.name === "webkit" ? "Meta+ArrowLeft" : "Home");

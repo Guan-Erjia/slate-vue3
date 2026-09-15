@@ -41,6 +41,10 @@ export const isElementDecorationsEqual = (
     return false;
   }
 
+  if (list.length !== another.length) {
+    return false;
+  }
+
   for (let i = 0; i < list.length; i++) {
     const range = list[i];
     const other = another[i];

@@ -43,7 +43,6 @@ export const TextComp = defineComponent({
     const path = DOMEditor.findPath(editor, props.text);
     const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
     const key = DOMEditor.findKey(editor, props.text);
-    let forceKey = 0;
 
     return () => {
       if (textRef.value && KEY_TO_ELEMENT) {
@@ -68,7 +67,7 @@ export const TextComp = defineComponent({
             leaf: leaf.leaf,
             isLast: props.isLast && i === decoratedLeaves.length - 1,
             leafPosition: leaf.position,
-            key: forceKey++,
+            key: `${props.text.text}-${leaf.position?.end}-${leaf.position?.start}`,
           }),
         ),
       });
