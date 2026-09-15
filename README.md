@@ -36,7 +36,7 @@
 #### 1. Install slate-vue3
 
 ```sh
-npm install slate-vue3 slate-history
+npm install slate-vue3
 ```
 
 #### 2. Now, you can use it in vue-sfc :point_right: [**live demo**](https://guan-erjia.github.io/slate-vue3/examples/rich-text)
@@ -44,7 +44,6 @@ npm install slate-vue3 slate-history
 ```vue
 <script setup lang="ts">
 import { Slate, Editable, createReactiveEditor } from "slate-vue3";
-import { withHistory } from "slate-history";
 
 const initialValue = [
   {
@@ -52,7 +51,7 @@ const initialValue = [
     children: [{ text: "Let's start" }],
   },
 ];
-const editor = withHistory(createReactiveEditor());
+const editor = createReactiveEditor();
 editor.children = initialValue;
 </script>
 
