@@ -594,12 +594,12 @@ describe("decorations", () => {
 
         // A does not become bold even though it now matches the decoration
         expect(getDecoratedLeaves(editor, [1, 0])).toEqual([
-          { text: "A", decorations: ["bold"] },
+          { text: "A", decorations: [] },
         ]);
 
         // B remains bold even though it no longer matches the decoration
         expect(getDecoratedLeaves(editor, [2, 0])).toEqual([
-          { text: "B", decorations: [] },
+          { text: "B", decorations: ["bold"] },
         ]);
       });
     });

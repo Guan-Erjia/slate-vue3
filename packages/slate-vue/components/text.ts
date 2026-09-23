@@ -7,7 +7,7 @@ import {
 } from "slate-vue3/dom";
 import { h, ref, defineComponent, renderList, onUpdated, computed } from "vue";
 import { useEditor } from "../hooks/use-editor";
-import { useDecorations } from "../hooks/use-decorations";
+import { useTextDecorations } from "../hooks/use-decorations";
 import { useRenderText } from "../render/fn";
 import { LeafComp } from "./leaf";
 import { useEditorVersion } from "../render/version";
@@ -39,7 +39,7 @@ export const TextComp = defineComponent({
     // a wrong position.
 
     const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-    const { decorations, update } = useDecorations(() => props.text);
+    const { decorations, update } = useTextDecorations(() => props.text);
     onUpdated(() => {
       editorVersion.value++;
       update();

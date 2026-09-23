@@ -78,7 +78,7 @@ export const ElementComp = defineComponent({
     }
 
     const renderElement = useRenderElement();
-    const { decorations, update } = useDecorations(() => props.element);
+    const { decorations, update } = useDecorations(props.element);
     onUpdated(update);
     const decorationsProps = computed(() => [
       ...props.decorations,
