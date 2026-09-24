@@ -10,7 +10,6 @@ import {
   elementReadOnly,
   end,
   first,
-  fragment,
   getVoid,
   hasBlocks,
   hasInlines,
@@ -51,7 +50,6 @@ import {
   addMark,
   deleteFragment,
   getDirtyPaths,
-  getFragment,
   insertBreak,
   insertFragment,
   insertNode,
@@ -79,9 +77,10 @@ import {
   deleteText,
   Node,
 } from "slate";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import { DOMEditor, fragment, withDOM } from "slate-vue3/dom";
 import { shallowReactive } from "vue";
 import { getChunkTreeForNode } from "../chunking";
+import { getFragment } from "slate-vue3/dom";
 
 export const createReactiveEditor = (): DOMEditor => {
   const editor = shallowReactive(createEditor());

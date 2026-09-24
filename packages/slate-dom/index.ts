@@ -12,3 +12,4 @@ export * from "./utils/key";
 export * from "./utils/range-list";
 
 export * from "./utils/weak-maps";
+export * from "./override";
