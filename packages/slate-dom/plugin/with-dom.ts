@@ -23,7 +23,6 @@ import {
   NODE_TO_KEY,
 } from "../utils/weak-maps";
 import { DOMEditor } from "./dom-editor";
-import { getChunkTreeForNode } from "../../slate-vue/chunking";
 
 /**
  * `withDOM` adds DOM specific behaviors to the editor.
@@ -88,21 +87,6 @@ export const withDOM = <T extends BaseEditor>(
   // This attempts to reset the NODE_TO_KEY entry to the correct value
   // as apply() changes the object reference and hence invalidates the NODE_TO_KEY entry
   e.apply = (op: Operation) => {
-    // On move_node, if the chunking optimization is enabled for the parent of the
-    // node being moved, add the moved node to the movedNodeKeys set of the
-    // parent's chunk tree.
-    if (op.type === "move_node") {
-      const parent = Node.parent(e, op.path);
-      const chunking = !!e.getChunkSize(parent);
-
-      if (chunking) {
-        const node = Node.get(e, op.path);
-        const chunkTree = getChunkTreeForNode(e, parent);
-        const key = DOMEditor.findKey(e, node);
-        chunkTree.movedNodeKeys.add(key);
-      }
-    }
-
     const matches: [Path, Key][] = [];
     const pathRefMatches: [PathRef, Key][] = [];
 

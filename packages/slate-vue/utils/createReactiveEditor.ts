@@ -172,6 +172,9 @@ export const createReactiveEditor = (): DOMEditor => {
   const domEditor = withDOM(editor);
   const { apply: domEditorApply } = domEditor;
   domEditor.apply = (operation) => {
+    // On move_node, if the chunking optimization is enabled for the parent of the
+    // node being moved, add the moved node to the movedNodeKeys set of the
+    // parent's chunk tree.
     if (operation.type === "move_node") {
       const parent = Node.parent(domEditor, operation.path);
       const chunking = !!domEditor.getChunkSize(parent);
