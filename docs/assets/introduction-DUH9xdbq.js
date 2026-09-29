@@ -1,0 +1,1 @@
+import{N as e,g as t,k as n,t as r,y as i}from"./index-ATgPW3p-.js";var a={},o={style:{margin:`15px`,padding:`10px`,"padding-bottom":`30px`,"box-sizing":`border-box`,"background-color":`white`,position:`relative`}};function s(r,a){let s=e(`RouterView`);return n(),t(`div`,o,[i(s)])}var c=r(a,[[`render`,s]]);export{c as default};
