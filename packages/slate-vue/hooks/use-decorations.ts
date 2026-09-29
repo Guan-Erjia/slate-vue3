@@ -8,13 +8,14 @@ import { onScopeDispose, shallowRef, watchEffect } from "vue";
 import { useEditor } from "./use-editor";
 import { injectDecorateFn } from "../render/decorate";
 
-export const useDecorations = (node: Descendant) => {
+export const useDecorations = (getNode: () => Descendant) => {
   const editor = useEditor();
   const decorate = injectDecorateFn();
   const decorations = shallowRef<DecoratedRange[]>([]);
 
-  const path = DOMEditor.findPath(editor, node);
   const update = () => {
+    const node = getNode();
+    const path = DOMEditor.findPath(editor, node);
     try {
       const equalityFn = Node.isText(node)
         ? isTextDecorationsEqual
