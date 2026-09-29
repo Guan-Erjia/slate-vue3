@@ -75,7 +75,11 @@ export default defineConfig(({ command, mode }) => {
         dts({
           tsconfigPath: "./tsconfig.json",
           entryRoot: "packages",
-          exclude: ["./packages/docs/**/*", "./test/**/*"],
+          exclude: [
+            "./packages/docs/**/*",
+            "./test/**/*",
+            "./playwright.config.ts",
+          ],
           compilerOptions: {
             verbatimModuleSyntax: false,
           },
