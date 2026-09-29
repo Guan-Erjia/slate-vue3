@@ -1,5 +1,5 @@
 import { defineComponent, h, onUpdated, renderList, VNode } from "vue";
-import { ChunkAncestor, ChunkTree } from "../chunking";
+import { ChunkAncestor, ChunkLeaf, ChunkTree } from "../chunking";
 import { RenderChunkProps } from "../utils/interface";
 import { Key } from "slate-vue3/dom";
 import { Element } from "slate";
@@ -34,6 +34,7 @@ export const ChunkComp = defineComponent({
     renderChunk: (props: RenderChunkProps) => VNode;
   }) {
     const chunkVNodeCache = new WeakMap<ChunkAncestor, VNode>();
+    const elementVNodeCache = new WeakMap<ChunkLeaf, VNode>();
     return () =>
       renderList(props.ancestor.children, (chunkNode): VNode => {
         if (chunkNode.type === "chunk") {

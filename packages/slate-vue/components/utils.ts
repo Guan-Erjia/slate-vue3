@@ -8,7 +8,7 @@ import type {
   RenderPlaceholderProps,
   RenderChunkProps,
 } from "../utils/interface";
-import { h } from "vue";
+import { cloneVNode, h } from "vue";
 /**
  * Check if an event is overrided by a handler.
  */
@@ -157,8 +157,10 @@ export const DEFAULT_TEXT_RENDER = ({
   children,
 }: RenderTextProps) => h("span", attributes, children);
 
-export const DEFAULT_CHUNK_RENDER = ({ children }: RenderChunkProps) =>
-  children;
+export const DEFAULT_CHUNK_RENDER = ({
+  children,
+  attributes,
+}: RenderChunkProps) => cloneVNode(children, { key: attributes.key });
 
 export const DEFAULT_PLACEHOLDER_RENDER = ({
   attributes,

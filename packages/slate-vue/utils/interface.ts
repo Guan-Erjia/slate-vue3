@@ -13,7 +13,7 @@ import type {
 export interface RenderChunkProps {
   highest: boolean;
   lowest: boolean;
-  children: any;
+  children: VNode;
   attributes: {
     "data-slate-chunk": true;
     key: string;
