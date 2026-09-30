@@ -21,7 +21,7 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
 };
 
 const getDecoratedLeaves = (
-  editor: DOMEditor,
+  editor: Editor,
   path: Path,
 ): { text: string; decorations: string[] }[] => {
   const text = DOMEditor.toDOMNode(editor, Node.leaf(editor, path));

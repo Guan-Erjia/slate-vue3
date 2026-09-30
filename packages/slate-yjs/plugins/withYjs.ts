@@ -12,6 +12,7 @@ import {
   slatePointToRelativePosition,
 } from "../utils/position";
 import { assertDocumentAttachment } from "../utils/yjs";
+import { ReactiveEditor } from "../../slate-vue/utils/reactive-editor";
 
 const DEFAULT_LOCAL_ORIGIN = Symbol("slate-yjs-operation");
 const DEFAULT_POSITION_STORAGE_ORIGIN = Symbol("slate-yjs-position-storage");
@@ -19,7 +20,7 @@ const DEFAULT_POSITION_STORAGE_ORIGIN = Symbol("slate-yjs-position-storage");
 const ORIGIN: WeakMap<Editor, unknown> = new WeakMap();
 const CONNECTED: WeakSet<Editor> = new WeakSet();
 
-export type YjsEditor = BaseEditor & {
+export type YjsEditor = ReactiveEditor & {
   sharedRoot: XmlText;
 
   localOrigin: unknown;

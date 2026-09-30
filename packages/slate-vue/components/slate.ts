@@ -15,7 +15,14 @@ import {
   SLATE_USE_SELECTION,
   SLATE_USE_EDITOR,
 } from "../utils/constants";
-import { DecoratedRange, Node, NodeEntry, Operation, Scrubber } from "slate";
+import {
+  DecoratedRange,
+  Editor,
+  Node,
+  NodeEntry,
+  Operation,
+  Scrubber,
+} from "slate";
 import type {
   RenderChunkProps,
   RenderElementProps,
@@ -77,7 +84,7 @@ export const Slate = defineComponent({
   },
   setup(
     props: {
-      editor: DOMEditor;
+      editor: Editor;
       decorate: (entry: NodeEntry) => DecoratedRange[];
       renderElement: (props: RenderElementProps) => VNode;
       renderLeaf: (props: RenderLeafProps) => VNode;

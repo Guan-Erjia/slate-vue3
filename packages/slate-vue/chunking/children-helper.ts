@@ -1,4 +1,4 @@
-import { Descendant } from "slate";
+import { Descendant, Editor } from "slate";
 import { DOMEditor, Key } from "slate-vue3/dom";
 import { ChunkLeaf } from "./types";
 
@@ -7,7 +7,7 @@ import { ChunkLeaf } from "./types";
  * children array with a chunk tree
  */
 export class ChildrenHelper {
-  private editor: DOMEditor;
+  private editor: Editor;
   private children: Descendant[];
 
   /**
@@ -23,7 +23,7 @@ export class ChildrenHelper {
    */
   public pointerIndex: number;
 
-  constructor(editor: DOMEditor, children: Descendant[]) {
+  constructor(editor: Editor, children: Descendant[]) {
     this.editor = editor;
     this.children = children;
     this.cachedKeys = new Array(children.length);

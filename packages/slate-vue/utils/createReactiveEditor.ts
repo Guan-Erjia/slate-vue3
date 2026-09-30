@@ -196,5 +196,7 @@ export const createReactiveEditor = <T extends BaseEditor>(
     domEditorApply(operation);
   };
 
+  reactiveEditor.getChunkSize = () => null;
+
   return reactiveEditor;
 };

@@ -1,6 +1,7 @@
 import {
   BaseEditor,
   Editor,
+  Location,
   Node,
   Operation,
   Path,
@@ -9,6 +10,12 @@ import {
   Transforms,
 } from "slate";
 import {
+  TextDiff,
+  transformPendingPoint,
+  transformPendingRange,
+  transformTextDiff,
+} from "../utils/diff-text";
+import {
   getPlainText,
   getSlateFragmentAttribute,
   isDOMText,
@@ -16,8 +23,14 @@ import {
 import { Key } from "../utils/key";
 import { findCurrentLineRange } from "../utils/lines";
 import {
+  IS_NODE_MAP_DIRTY,
   EDITOR_TO_KEY_TO_ELEMENT,
   EDITOR_TO_ON_CHANGE,
+  EDITOR_TO_PENDING_ACTION,
+  EDITOR_TO_PENDING_DIFFS,
+  EDITOR_TO_PENDING_INSERTION_MARKS,
+  EDITOR_TO_PENDING_SELECTION,
+  EDITOR_TO_SCHEDULE_FLUSH,
   EDITOR_TO_USER_MARKS,
   EDITOR_TO_USER_SELECTION,
   NODE_TO_KEY,
@@ -33,11 +46,11 @@ import { DOMEditor } from "./dom-editor";
  * See https://docs.slatejs.org/concepts/11-typescript to learn how.
  */
 
-export const withDOM = <T extends BaseEditor>(
-  editor: T,
+export const withDOM = (
+  editor: Editor,
   clipboardFormatKey = "x-slate-fragment",
-): T & DOMEditor => {
-  const e = editor as T & DOMEditor;
+): Editor => {
+  const e = editor;
   const { apply, onChange, deleteBackward, addMark, removeMark } = e;
 
   // The WeakMap which maps a key to a specific HTMLElement must be scoped to the editor instance to
@@ -45,12 +58,32 @@ export const withDOM = <T extends BaseEditor>(
   EDITOR_TO_KEY_TO_ELEMENT.set(e, new WeakMap());
 
   e.addMark = (key, value) => {
+    EDITOR_TO_SCHEDULE_FLUSH.get(e)?.();
+
+    if (
+      !EDITOR_TO_PENDING_INSERTION_MARKS.get(e) &&
+      EDITOR_TO_PENDING_DIFFS.get(e)?.length
+    ) {
+      // Ensure the current pending diffs originating from changes before the addMark
+      // are applied with the current formatting
+      EDITOR_TO_PENDING_INSERTION_MARKS.set(e, null);
+    }
+
     EDITOR_TO_USER_MARKS.delete(e);
 
     addMark(key, value);
   };
 
   e.removeMark = (key) => {
+    if (
+      !EDITOR_TO_PENDING_INSERTION_MARKS.get(e) &&
+      EDITOR_TO_PENDING_DIFFS.get(e)?.length
+    ) {
+      // Ensure the current pending diffs originating from changes before the addMark
+      // are applied with the current formatting
+      EDITOR_TO_PENDING_INSERTION_MARKS.set(e, null);
+    }
+
     EDITOR_TO_USER_MARKS.delete(e);
 
     removeMark(key);
@@ -89,6 +122,32 @@ export const withDOM = <T extends BaseEditor>(
   e.apply = (op: Operation) => {
     const matches: [Path, Key][] = [];
     const pathRefMatches: [PathRef, Key][] = [];
+
+    const pendingDiffs = EDITOR_TO_PENDING_DIFFS.get(e);
+    if (pendingDiffs?.length) {
+      const transformed = pendingDiffs
+        .map((textDiff) => transformTextDiff(textDiff, op))
+        .filter(Boolean) as TextDiff[];
+
+      EDITOR_TO_PENDING_DIFFS.set(e, transformed);
+    }
+
+    const pendingSelection = EDITOR_TO_PENDING_SELECTION.get(e);
+    if (pendingSelection) {
+      EDITOR_TO_PENDING_SELECTION.set(
+        e,
+        transformPendingRange(e, pendingSelection, op),
+      );
+    }
+
+    const pendingAction = EDITOR_TO_PENDING_ACTION.get(e);
+    if (pendingAction?.at) {
+      const at = Location.isPoint(pendingAction?.at)
+        ? transformPendingPoint(e, pendingAction.at, op)
+        : transformPendingRange(e, pendingAction.at, op);
+
+      EDITOR_TO_PENDING_ACTION.set(e, at ? { ...pendingAction, at } : null);
+    }
 
     switch (op.type) {
       case "insert_text":
@@ -144,6 +203,21 @@ export const withDOM = <T extends BaseEditor>(
     }
 
     apply(op);
+
+    switch (op.type) {
+      case "insert_node":
+      case "remove_node":
+      case "merge_node":
+      case "move_node":
+      case "split_node":
+      case "insert_text":
+      case "remove_text":
+      case "set_selection": {
+        // FIXME: Rename to something like IS_DOM_EDITOR_DESYNCED
+        // to better reflect reality, see #5792
+        IS_NODE_MAP_DIRTY.set(e, true);
+      }
+    }
 
     for (const [path, key] of matches) {
       const [node] = Editor.node(e, path);
@@ -289,8 +363,6 @@ export const withDOM = <T extends BaseEditor>(
     return false;
   };
 
-  e.getChunkSize = () => null;
-
   e.onChange = (options) => {
     const onContextChange = EDITOR_TO_ON_CHANGE.get(e);
 
@@ -304,7 +376,7 @@ export const withDOM = <T extends BaseEditor>(
   return e;
 };
 
-const getMatches = (e: DOMEditor, path: Path) => {
+const getMatches = (e: Editor, path: Path) => {
   const matches: [Path, Key][] = [];
   for (const [n, p] of Editor.levels(e, { at: path })) {
     const key = DOMEditor.findKey(e, n);

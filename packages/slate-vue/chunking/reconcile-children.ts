@@ -1,5 +1,4 @@
-import { Descendant } from "slate";
-import { DOMEditor } from "slate-vue3/dom";
+import { Descendant, Editor } from "slate";
 import { ChunkTree, ChunkLeaf } from "./types";
 import { ChunkTreeHelper, ChunkTreeHelperOptions } from "./chunk-tree-helper";
 import { ChildrenHelper } from "./children-helper";
@@ -20,7 +19,7 @@ export interface ReconcileOptions extends ChunkTreeHelperOptions {
  * updating differing nodes
  */
 export const reconcileChildren = (
-  editor: DOMEditor,
+  editor: Editor,
   {
     chunkTree,
     children,

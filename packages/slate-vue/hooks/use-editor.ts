@@ -1,12 +1,13 @@
 import { inject, ShallowReactive } from "vue";
 import { SLATE_USE_EDITOR } from "../utils/constants";
 import type { DOMEditor } from "slate-vue3/dom";
+import { Editor } from "slate";
 
 /**
  * Get the current editor reactive object from the context.
  */
-export const useEditor = (): ShallowReactive<DOMEditor> => {
-  const editor = inject<ShallowReactive<DOMEditor>>(SLATE_USE_EDITOR);
+export const useEditor = (): ShallowReactive<Editor> => {
+  const editor = inject<ShallowReactive<Editor>>(SLATE_USE_EDITOR);
   if (editor === undefined) {
     throw new Error(
       `The \`useEditor\` hook must be used inside the <Slate> component's context.`,

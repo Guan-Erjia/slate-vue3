@@ -1,4 +1,4 @@
-import { Ancestor } from "slate";
+import { Ancestor, Editor } from "slate";
 import { DOMEditor, Key } from "slate-vue3/dom";
 import { ChunkTree } from "./types";
 import { ReconcileOptions, reconcileChildren } from "./reconcile-children";
@@ -13,7 +13,7 @@ export const KEY_TO_CHUNK_TREE = new WeakMap<Key, ChunkTree>();
  * automatically using the given chunk size.
  */
 export const getChunkTreeForNode = (
-  editor: DOMEditor,
+  editor: Editor,
   node: Ancestor,
   // istanbul ignore next
   options: {

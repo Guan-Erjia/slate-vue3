@@ -87,7 +87,7 @@ export type GetSelectionRectsOptions = {
 };
 
 export function getOverlayPosition(
-  editor: DOMEditor,
+  editor: Editor,
   range: Range,
   { yOffset, xOffset, shouldGenerateOverlay }: GetSelectionRectsOptions,
 ): OverlayPosition {
@@ -171,7 +171,7 @@ export function getOverlayPosition(
 }
 
 export function domEditorToDomRangeSafe(
-  editor: DOMEditor,
+  editor: Editor,
   range: Range,
 ): globalThis.Range | null {
   try {

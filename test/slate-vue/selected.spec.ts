@@ -1,4 +1,4 @@
-import { Transforms } from "slate";
+import { Editor, Transforms } from "slate";
 import { render } from "@testing-library/vue";
 import { DOMEditor } from "slate-vue3/dom";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -22,7 +22,7 @@ import {
   watch,
 } from "vue";
 
-let editor: DOMEditor;
+let editor: Editor;
 let elementSelectedRenders: Record<string, boolean[] | undefined>;
 
 const clearRenders = () =>

@@ -3,7 +3,7 @@ import {
   getChunkTreeForNode,
   reconcileChildren,
 } from "slate-vue3";
-import { Descendant, Element, Node, Transforms } from "slate";
+import { Descendant, Editor, Element, Node, Transforms } from "slate";
 import { DOMEditor, Key, NODE_TO_INDEX, NODE_TO_PARENT } from "slate-vue3/dom";
 import {
   Chunk,
@@ -28,7 +28,7 @@ const blocks = (count: number) =>
   );
 
 const reconcileEditor = (
-  editor: DOMEditor,
+  editor: Editor,
   options: Omit<ReconcileOptions, "chunkTree" | "children" | "chunkSize"> = {},
 ) => {
   const chunkTree = getChunkTreeForNode(editor, editor);
@@ -64,7 +64,7 @@ const getTreeShape = (chunkNode: ChunkNode): TreeShape => {
 };
 
 const getChildrenAndTreeForShape = (
-  editor: DOMEditor,
+  editor: Editor,
   treeShape: TreeShape[],
 ): { children: Descendant[]; chunkTree: ChunkTree } => {
   const children: Descendant[] = [];
@@ -110,7 +110,7 @@ const getChildrenAndTreeForShape = (
   return { children, chunkTree };
 };
 
-const withChunking = (editor: DOMEditor) => {
+const withChunking = (editor: Editor) => {
   editor.getChunkSize = (node) => (node === editor ? 3 : null);
   return editor;
 };

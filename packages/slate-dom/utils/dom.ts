@@ -7,7 +7,7 @@
 // https://github.com/microsoft/TypeScript/issues/35002
 type DOMNode = globalThis.Node;
 type DOMElement = globalThis.Element;
-import { Scrubber } from "slate";
+import { Editor } from "slate";
 import { DOMEditor } from "../plugin/dom-editor";
 
 declare global {
@@ -285,7 +285,7 @@ export const getSelection = (root: Document | ShadowRoot): Selection | null => {
  */
 
 export const isTrackedMutation = (
-  editor: DOMEditor,
+  editor: Editor,
   mutation: MutationRecord,
   batch: MutationRecord[],
 ): boolean => {

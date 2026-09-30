@@ -11,7 +11,7 @@ const doRectsIntersect = (rect: DOMRect, compareRect: DOMRect) => {
   return rect.top <= middle && rect.bottom >= middle;
 };
 
-const areRangesSameLine = (editor: DOMEditor, range1: Range, range2: Range) => {
+const areRangesSameLine = (editor: Editor, range1: Range, range2: Range) => {
   const rect1 = DOMEditor.toDOMRange(editor, range1).getBoundingClientRect();
   const rect2 = DOMEditor.toDOMRange(editor, range2).getBoundingClientRect();
 
@@ -27,7 +27,7 @@ const areRangesSameLine = (editor: DOMEditor, range1: Range, range2: Range) => {
  * @returns {Range} A valid portion of the parentRange which is one a single line
  */
 export const findCurrentLineRange = (
-  editor: DOMEditor,
+  editor: Editor,
   parentRange: Range,
 ): Range => {
   const parentRangeBoundary = Editor.range(editor, Range.end(parentRange));
