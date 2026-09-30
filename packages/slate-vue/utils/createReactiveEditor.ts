@@ -76,13 +76,17 @@ import {
   wrapNodes,
   deleteText,
   Node,
+  BaseEditor,
 } from "slate";
 import { DOMEditor, fragment, withDOM } from "slate-vue3/dom";
 import { shallowReactive } from "vue";
 import { getChunkTreeForNode } from "../chunking";
 import { getFragment } from "slate-vue3/dom";
+import { ReactiveEditor } from "./reactive-editor";
 
-export const createReactiveEditor = (): DOMEditor => {
+export const createReactiveEditor = <T extends BaseEditor>(
+  clipboardFormatKey = "x-slate-fragment",
+): T & ReactiveEditor => {
   const editor = shallowReactive(createEditor());
 
   // Core
@@ -169,20 +173,22 @@ export const createReactiveEditor = (): DOMEditor => {
   editor.shouldMergeNodesRemovePrevNode = (...args) =>
     shouldMergeNodesRemovePrevNode(editor, ...args);
 
-  const domEditor = withDOM(editor);
-  const { apply: domEditorApply } = domEditor;
-  domEditor.apply = (operation) => {
+  const reactiveEditor = withDOM(editor, clipboardFormatKey) as T &
+    ReactiveEditor;
+
+  const { apply: domEditorApply } = reactiveEditor;
+  reactiveEditor.apply = (operation) => {
     // On move_node, if the chunking optimization is enabled for the parent of the
     // node being moved, add the moved node to the movedNodeKeys set of the
     // parent's chunk tree.
     if (operation.type === "move_node") {
-      const parent = Node.parent(domEditor, operation.path);
-      const chunking = !!domEditor.getChunkSize(parent);
+      const parent = Node.parent(reactiveEditor, operation.path);
+      const chunking = !!reactiveEditor.getChunkSize(parent);
 
       if (chunking) {
-        const node = Node.get(domEditor, operation.path);
-        const chunkTree = getChunkTreeForNode(domEditor, parent);
-        const key = DOMEditor.findKey(domEditor, node);
+        const node = Node.get(reactiveEditor, operation.path);
+        const chunkTree = getChunkTreeForNode(reactiveEditor, parent);
+        const key = DOMEditor.findKey(reactiveEditor, node);
         chunkTree.movedNodeKeys.add(key);
       }
     }
@@ -190,5 +196,5 @@ export const createReactiveEditor = (): DOMEditor => {
     domEditorApply(operation);
   };
 
-  return domEditor;
+  return reactiveEditor;
 };

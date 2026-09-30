@@ -1,13 +1,18 @@
 import { BaseRange, BaseText } from "slate";
+import { ReactiveEditor } from "./utils/reactive-editor";
+
 declare module "slate" {
   interface CustomTypes {
+    Editor: ReactiveEditor;
     Text: BaseText & {
       placeholder?: string;
-      onPlaceholderResize?: (height?: number) => void;
+      onPlaceholderResize?: (node: HTMLElement | null) => void;
       // FIXME: is unknown correct here?
       [key: string]: unknown;
     };
     Range: BaseRange & {
+      placeholder?: string;
+      onPlaceholderResize?: (node: HTMLElement | null) => void;
       // FIXME: is unknown correct here?
       [key: string]: unknown;
     };
