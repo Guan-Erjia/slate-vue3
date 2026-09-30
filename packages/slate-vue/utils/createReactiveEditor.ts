@@ -78,11 +78,11 @@ import {
   Node,
   BaseEditor,
 } from "slate";
-import { DOMEditor, fragment, withDOM } from "slate-vue3/dom";
+import { DOMEditor, withDOM } from "slate-vue3/dom";
 import { shallowReactive } from "vue";
 import { getChunkTreeForNode } from "../chunking";
-import { getFragment } from "slate-vue3/dom";
 import { ReactiveEditor } from "./reactive-editor";
+import { fragment, getFragment } from "../override";
 
 export const createReactiveEditor = <T extends BaseEditor>(
   clipboardFormatKey = "x-slate-fragment",

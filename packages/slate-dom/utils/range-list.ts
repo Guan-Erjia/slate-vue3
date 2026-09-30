@@ -107,7 +107,7 @@ export const isTextDecorationsEqual = (
  */
 
 export const splitDecorationsByChild = (
-  editor: DOMEditor,
+  editor: Editor,
   node: Ancestor,
   decorations: DecoratedRange[],
 ): DecoratedRange[][] => {
