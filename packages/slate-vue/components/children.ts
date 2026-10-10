@@ -1,6 +1,7 @@
 import { Ancestor, DecoratedRange, Editor, Node, Element } from "slate";
 import {
   DOMEditor,
+  IS_NODE_MAP_DIRTY,
   isElementDecorationsEqual,
   Key,
   NODE_TO_INDEX,
@@ -39,6 +40,8 @@ export const ChildrenComp = defineComponent({
 
     let _mutableDecorationsByChild: DecoratedRange[][] = [];
     return () => {
+      IS_NODE_MAP_DIRTY.set(editor, false);
+
       const renderElementComponent = (
         n: Element,
         i: number,

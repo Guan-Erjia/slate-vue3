@@ -11,9 +11,9 @@ export {
   normalizePoint,
   normalizeRange,
   normalizeStringDiff,
-  StringDiff,
+  type StringDiff,
   targetRange,
-  TextDiff,
+  type TextDiff,
   verifyDiffState,
 } from "./utils/diff-text";
 

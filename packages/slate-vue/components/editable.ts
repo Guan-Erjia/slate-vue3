@@ -1,5 +1,14 @@
 import { direction } from "direction";
-import { Editor, Element, Node, Path, Range, Text, Transforms } from "slate";
+import {
+  BaseSelection,
+  Editor,
+  Node,
+  Path,
+  Point,
+  Range,
+  Text,
+  Transforms,
+} from "slate";
 import {
   DOMEditor,
   getActiveElement,
@@ -31,17 +40,24 @@ import {
   containsShadowAware,
   MARK_PLACEHOLDER_SYMBOL,
   PLACEHOLDER_SYMBOL,
+  EDITOR_TO_FORCE_RENDER,
+  IS_NODE_MAP_DIRTY,
+  EDITOR_TO_PENDING_INSERTION_MARKS,
+  TRIPLE_CLICK,
 } from "slate-vue3/dom";
 import {
   computed,
   defineComponent,
+  getCurrentInstance,
   h,
   onMounted,
   onUnmounted,
+  onUpdated,
   ref,
   toRaw,
   useAttrs,
   watch,
+  normalizeStyle,
 } from "vue";
 import type { CSSProperties, HTMLAttributes } from "vue";
 import { ChildrenComp } from "./children";
@@ -55,12 +71,73 @@ import {
 import { useEditor } from "../hooks/use-editor";
 import { useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
-import {
-  AndroidManager,
-  useAndroidManager,
-} from "../hooks/use-android-manager";
 import { useEditorVersion } from "../render/version";
 import { injectDecorateFn } from "../render/decorate";
+import { RestoreDOM } from "./restore-dom/restore-dom";
+import { useTrackUserInput } from "../hooks/use-track-user-input";
+import { useAndroidInputManager } from "../hooks/android-input-manager/use-android-input-manager";
+import { debounce, throttle } from "lodash-es";
+import { deleteMovedRange, getMovableRange } from "../utils/move-range";
+
+const isSameCaretPosition = (editor: Editor, a: Range, b: Range) => {
+  if (!Range.isCollapsed(a) || !Range.isCollapsed(b)) {
+    return false;
+  }
+
+  const [first, second] = Path.isBefore(a.anchor.path, b.anchor.path)
+    ? [a.anchor, b.anchor]
+    : [b.anchor, a.anchor];
+
+  if (second.offset !== 0 || !Path.equals(Path.next(first.path), second.path)) {
+    return false;
+  }
+
+  const node = Node.get(editor, first.path);
+  return Node.isText(node) && first.offset === node.text.length;
+};
+
+/**
+ * The default placeholder element
+ */
+
+const isInSlateText = (node: unknown) =>
+  isDOMNode(node) &&
+  node.nodeType === node.TEXT_NODE &&
+  !!node.parentElement?.closest("[data-slate-string], [data-slate-zero-width]");
+
+const restoreDomSelection = (
+  editor: Editor,
+  domSelection: Selection,
+  state: { isUpdatingSelection: boolean },
+) => {
+  if (!editor.selection) {
+    return;
+  }
+
+  const domRange = DOMEditor.toDOMRange(editor, editor.selection);
+  state.isUpdatingSelection = true;
+  domSelection.setBaseAndExtent(
+    domRange.startContainer,
+    domRange.startOffset,
+    domRange.endContainer,
+    domRange.endOffset,
+  );
+  setTimeout(() => {
+    state.isUpdatingSelection = false;
+  });
+};
+
+const selectMovableRange = (editor: Editor) => {
+  const { selection } = editor;
+
+  if (selection && Range.isExpanded(selection)) {
+    const movableRange = getMovableRange(editor, selection);
+
+    if (!Range.equals(movableRange, selection)) {
+      Transforms.select(editor, movableRange);
+    }
+  }
+};
 
 export const Editable = defineComponent({
   name: "slate-editable",
@@ -95,6 +172,7 @@ export const Editable = defineComponent({
 
     const editor = useEditor();
     const attributes: HTMLAttributes = useAttrs();
+    const refrestoreDOMContainer = ref<HTMLDivElement | null>(null);
     const isComposing = useComposing();
 
     const isReadOnly = useReadOnly();
@@ -111,10 +189,17 @@ export const Editable = defineComponent({
       isDraggingInternally: boolean;
       latestElement: globalThis.Element | null;
       hasMarkPlaceholder: boolean;
+      pendingSelection: {
+        range: Range;
+        basedOn: Range | null;
+      } | null;
+      isUpdatingSelection: boolean;
     } = {
       isDraggingInternally: false,
       latestElement: null,
       hasMarkPlaceholder: false,
+      pendingSelection: null,
+      isUpdatingSelection: false,
     };
 
     const placeholderHeight = ref<number>();
@@ -122,14 +207,16 @@ export const Editable = defineComponent({
 
     // webkit 内核使用，在影子节点渲染是获取 selection
     const processing = ref(false);
-    // should it be a throttled function?
-    const onDOMSelectionChange = (event?: Event) => {
-      const target = event?.target;
-      const targetElement = target instanceof HTMLElement ? target : null;
-      const targetTagName = targetElement?.tagName;
-      if (targetTagName === "INPUT" || targetTagName === "TEXTAREA") {
+    const { onUserInput, receivedUserInput } = useTrackUserInput();
+    const proxy = getCurrentInstance();
+    EDITOR_TO_FORCE_RENDER.set(editor, () => proxy?.update());
+
+    const onDOMSelectionChange = throttle(() => {
+      if (IS_NODE_MAP_DIRTY.get(editor)) {
+        onDOMSelectionChange();
         return;
       }
+      state.pendingSelection = null;
 
       const el = DOMEditor.toDOMNode(editor, editor);
       const root = el.getRootNode();
@@ -144,11 +231,13 @@ export const Editable = defineComponent({
           Transforms.deselect(editor);
         }
 
+        processing.value = false;
         return;
       }
 
       if (
         (IS_ANDROID || !DOMEditor.isComposing(editor)) &&
+        (!state.isUpdatingSelection || androidManager?.isFlushing()) &&
         !state.isDraggingInternally
       ) {
         const root = DOMEditor.findDocumentOrShadowRoot(editor);
@@ -174,14 +263,40 @@ export const Editable = defineComponent({
           DOMEditor.isTargetInsideNonReadonlyVoid(editor, anchorNode);
 
         const focusNodeInEditor = DOMEditor.hasTarget(editor, focusNode);
+        const isFocusInEditor =
+          isDOMNode(activeElement) && el.contains(activeElement);
 
-        if (anchorNodeSelectable && focusNodeInEditor) {
+        if (
+          anchorNodeSelectable &&
+          focusNodeInEditor &&
+          (readOnly || isFocusInEditor)
+        ) {
           const range = DOMEditor.toSlateRange(editor, domSelection, {
             exactMatch: false,
             suppressThrow: true,
           });
-          if (range && !DOMEditor.isComposing(editor)) {
-            Transforms.select(editor, range);
+
+          if (range) {
+            if (
+              !DOMEditor.isComposing(editor) &&
+              !androidManager?.hasPendingChanges() &&
+              !androidManager?.isFlushing()
+            ) {
+              const isCaretOutsideText =
+                domSelection.isCollapsed && !isInSlateText(anchorNode);
+
+              if (
+                isCaretOutsideText &&
+                editor.selection &&
+                Range.equals(range, editor.selection)
+              ) {
+                restoreDomSelection(editor, domSelection, state);
+              } else {
+                Transforms.select(editor, range);
+              }
+            } else {
+              androidManager?.handleUserSelect(range);
+            }
           }
         }
 
@@ -190,12 +305,16 @@ export const Editable = defineComponent({
           Transforms.deselect(editor);
         }
       }
-    };
+    }, 100);
+
+    const scheduleOnDOMSelectionChange = debounce(onDOMSelectionChange, 0);
+
     const editableRef = ref<HTMLElement>();
-    const androidManager = ref<AndroidManager>();
-    if (IS_ANDROID) {
-      androidManager.value = useAndroidManager(editableRef);
-    }
+    const androidManager = useAndroidInputManager({
+      node: editableRef,
+      onDOMSelectionChange,
+      scheduleOnDOMSelectionChange,
+    });
 
     onMounted(() => {
       // Update element-related weak maps with the DOM element ref.
@@ -212,7 +331,10 @@ export const Editable = defineComponent({
       NODE_TO_ELEMENT.delete(editor);
     });
 
-    const setDomSelection = () => {
+    const setDomSelection = (
+      selection: BaseSelection,
+      forceChange?: boolean,
+    ) => {
       const root = DOMEditor.findDocumentOrShadowRoot(editor);
       const domSelection = getSelection(root);
       if (!domSelection) {
@@ -221,7 +343,7 @@ export const Editable = defineComponent({
       const hasDomSelection = domSelection.type !== "None";
 
       // If the DOM selection is properly unset, we're done.
-      if (!editor.selection && !hasDomSelection) {
+      if (!selection && !hasDomSelection) {
         return;
       }
 
@@ -256,16 +378,21 @@ export const Editable = defineComponent({
       }
 
       // If the DOM selection is in the editor and the editor selection is already correct, we're done.
-      if (hasDomSelection && hasDomSelectionInEditor && editor.selection) {
+      if (
+        hasDomSelection &&
+        hasDomSelectionInEditor &&
+        selection &&
+        !forceChange
+      ) {
         const slateRange = DOMEditor.toSlateRange(editor, domSelection, {
           exactMatch: true,
 
           // domSelection is not necessarily a valid Slate range
-          // (e.g. when clicking on contenteditable:false element)
+          // (e.g. when clicking on contentEditable:false element)
           suppressThrow: true,
         });
 
-        if (slateRange && Range.equals(slateRange, editor.selection)) {
+        if (slateRange && Range.equals(slateRange, selection)) {
           if (!state.hasMarkPlaceholder) {
             return;
           }
@@ -285,7 +412,7 @@ export const Editable = defineComponent({
       // then its children might just change - DOM responds to it on its own
       // but Slate's value is not being updated through any operation
       // and thus it doesn't transform selection on its own
-      if (editor.selection && !DOMEditor.hasRange(editor, editor.selection)) {
+      if (selection && !DOMEditor.hasRange(editor, selection)) {
         editor.selection = DOMEditor.toSlateRange(editor, domSelection, {
           exactMatch: false,
           suppressThrow: true,
@@ -293,19 +420,36 @@ export const Editable = defineComponent({
         return;
       }
 
+      const pending = state.pendingSelection;
+      state.pendingSelection = null;
+
+      if (
+        pending &&
+        !forceChange &&
+        pending.basedOn === selection &&
+        !(selection && Range.equals(pending.range, selection))
+      ) {
+        Transforms.select(editor, pending.range);
+        return;
+      }
+
+      // Otherwise the DOM selection is out of sync, so update it.
+      state.isUpdatingSelection = true;
+
       let newDomRange: globalThis.Range | null = null;
 
       try {
-        newDomRange =
-          editor.selection && DOMEditor.toDOMRange(editor, editor.selection);
+        newDomRange = selection && DOMEditor.toDOMRange(editor, selection);
       } catch (e) {
         // Ignore, dom and state might be out of sync
       }
 
       if (newDomRange) {
         if (DOMEditor.isComposing(editor) && !IS_ANDROID) {
-          domSelection.collapseToEnd();
-        } else if (Range.isBackward(editor.selection!)) {
+          if (domSelection.rangeCount > 0) {
+            domSelection.collapseToEnd();
+          }
+        } else if (Range.isBackward(selection!)) {
           domSelection.setBaseAndExtent(
             newDomRange.endContainer,
             newDomRange.endOffset,
@@ -336,13 +480,62 @@ export const Editable = defineComponent({
         // Make sure the DOM selection state is in sync.
         const root = DOMEditor.findDocumentOrShadowRoot(editor);
         const domSelection = getSelection(root);
-        if (!domSelection || !DOMEditor.isFocused(editor)) {
+        if (
+          !domSelection ||
+          !DOMEditor.isFocused(editor) ||
+          androidManager?.hasPendingAction()
+        ) {
           return;
         }
         // In firefox if there is more then 1 range and we call setDomSelection we remove the ability to select more cells in a table
         if (domSelection.rangeCount <= 1) {
-          setDomSelection();
+          setDomSelection(editor.selection);
         }
+        const ensureSelection = androidManager?.isFlushing() === "action";
+
+        if (!IS_ANDROID || !ensureSelection) {
+          setTimeout(() => {
+            state.isUpdatingSelection = false;
+          });
+          return;
+        }
+
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+        const animationFrameId = requestAnimationFrame(() => {
+          if (ensureSelection) {
+            const ensureDomSelection = (forceChange?: boolean) => {
+              try {
+                const el = DOMEditor.toDOMNode(editor, editor);
+                el.focus();
+
+                setDomSelection(editor.selection, forceChange);
+              } catch (e) {
+                // Ignore, dom and state might be out of sync
+              }
+            };
+
+            // Compat: Android IMEs try to force their selection by manually re-applying it even after we set it.
+            // This essentially would make setting the slate selection during an update meaningless, so we force it
+            // again here. We can't only do it in the setTimeout after the animation frame since that would cause a
+            // visible flicker.
+            ensureDomSelection();
+
+            timeoutId = setTimeout(() => {
+              // COMPAT: While setting the selection in an animation frame visually correctly sets the selection,
+              // it doesn't update GBoards spellchecker state. We have to manually trigger a selection change after
+              // the animation frame to ensure it displays the correct state.
+              ensureDomSelection(true);
+              state.isUpdatingSelection = false;
+            });
+          }
+        });
+
+        return () => {
+          cancelAnimationFrame(animationFrameId);
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+          }
+        };
       },
     );
 
@@ -357,126 +550,126 @@ export const Editable = defineComponent({
       // want to fire for any change to the selection inside the editor.
       // (2019/11/04) https://github.com/facebook/react/issues/5785
       const window = DOMEditor.getWindow(editor);
-      window.document.addEventListener("selectionchange", onDOMSelectionChange);
+      window.document.addEventListener("selectionchange", onSelectionChange);
       window.document.addEventListener("dragend", stoppedDragging);
       window.document.addEventListener("drop", stoppedDragging);
+      if (HAS_BEFORE_INPUT_SUPPORT && editableRef.value) {
+        editableRef.value.addEventListener("beforeinput", onDOMBeforeInput);
+      }
       if (autoFocus) {
         editableRef.value?.focus();
       }
     });
     onUnmounted(() => {
       const window = DOMEditor.getWindow(editor);
-      window.document.removeEventListener(
-        "selectionchange",
-        onDOMSelectionChange,
-      );
+      window.document.removeEventListener("selectionchange", onSelectionChange);
       window.document.removeEventListener("dragend", stoppedDragging);
       window.document.removeEventListener("drop", stoppedDragging);
+      onDOMSelectionChange.cancel();
+      scheduleOnDOMSelectionChange.cancel();
+      EDITOR_TO_ELEMENT.delete(editor);
+      NODE_TO_ELEMENT.delete(editor);
+
+      if (HAS_BEFORE_INPUT_SUPPORT && editableRef.value) {
+        editableRef.value.removeEventListener("beforeinput", onDOMBeforeInput);
+      }
     });
 
-    const deferredOperations = ref<Array<() => void>>([]);
-    const onBeforeinput = (event: InputEvent) => {
-      if (HAS_BEFORE_INPUT_SUPPORT) {
-        handleNativeHistoryEvents(editor, event);
-        const el = DOMEditor.toDOMNode(editor, editor);
-        const root = el.getRootNode();
+    // Listen on the native `beforeinput` event to get real "Level 2" events. This
+    // is required because React's `beforeinput` is fake and never really attaches
+    // to the real event sadly. (2019/11/01)
+    // https://github.com/facebook/react/issues/11211
+    const onDOMBeforeInput = (event: InputEvent) => {
+      handleNativeHistoryEvents(editor, event);
+      const el = DOMEditor.toDOMNode(editor, editor);
+      const root = el.getRootNode();
 
-        if (processing.value && IS_WEBKIT && root instanceof ShadowRoot) {
-          const ranges = event.getTargetRanges();
-          const range = ranges[0];
+      if (processing?.value && IS_WEBKIT && root instanceof ShadowRoot) {
+        const ranges = event.getTargetRanges();
+        const range = ranges[0];
 
-          const newRange = new window.Range();
-          let endContainer = range.endContainer;
-          const endOffset = range.endOffset;
+        const newRange = new globalThis.Range();
 
-          if (
-            endContainer.nodeType === 3 &&
-            endContainer.textContent === "" &&
-            endContainer.previousSibling
-          ) {
-            endContainer = endContainer.previousSibling;
-          }
+        newRange.setStart(range.startContainer, range.startOffset);
+        newRange.setEnd(range.endContainer, range.endOffset);
 
-          while (
-            endContainer instanceof HTMLElement &&
-            !endContainer.attributes.getNamedItem("data-slate-string") &&
-            endContainer.lastElementChild
-          ) {
-            endContainer = endContainer.lastElementChild;
-          }
+        // Unresolvable ranges would throw out of the handler (#3556); suppress and skip the move.
+        const slateRange = DOMEditor.toSlateRange(editor, newRange, {
+          exactMatch: false,
+          suppressThrow: true,
+        });
+        if (slateRange) {
+          Transforms.select(editor, slateRange);
+        }
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        return;
+      }
+      onUserInput();
 
-          if (
-            endContainer instanceof HTMLElement &&
-            endContainer.attributes.getNamedItem("data-slate-string") &&
-            endContainer.lastChild
-          ) {
-            endContainer = endContainer.lastChild;
-          }
+      if (
+        !readOnly &&
+        DOMEditor.hasEditableTarget(editor, event.target) &&
+        !isDOMEventHandled(event, attributes.onBeforeinput)
+      ) {
+        // COMPAT: BeforeInput events aren't cancelable on android, so we have to handle them differently using the android input manager.
+        if (androidManager?.handleDOMBeforeInput) {
+          return androidManager.handleDOMBeforeInput(event);
+        }
 
-          newRange.setStart(range.startContainer, range.startOffset);
-          newRange.setEnd(endContainer, endOffset);
+        // Some IMEs/Chrome extensions like e.g. Grammarly set the selection immediately before
+        // triggering a `beforeinput` expecting the change to be applied to the immediately before
+        // set selection.
+        scheduleOnDOMSelectionChange.flush();
+        onDOMSelectionChange.flush();
 
-          // Unresolvable ranges would throw out of the handler (#3556); suppress and skip the move.
-          const slateRange = DOMEditor.toSlateRange(editor, newRange, {
-            exactMatch: false,
-            suppressThrow: true,
-          });
-          if (slateRange) {
-            Transforms.select(editor, slateRange);
-          }
-          processing.value = false;
-          event.preventDefault();
-          event.stopImmediatePropagation();
+        const { selection } = editor;
+        const { inputType } = event;
+        const data = (event as any).dataTransfer || event.data || undefined;
+
+        const isCompositionChange =
+          inputType === "insertCompositionText" ||
+          inputType === "deleteCompositionText";
+
+        // COMPAT: use composition change events as a hint to where we should insert
+        // composition text if we aren't composing to work around https://github.com/ianstormtaylor/slate/issues/5038
+        if (isCompositionChange && DOMEditor.isComposing(editor)) {
           return;
         }
 
+        let native = false;
         if (
-          !readOnly &&
-          DOMEditor.hasEditableTarget(editor, event.target) &&
-          !isDOMEventHandled(event, attributes.onBeforeinput)
+          inputType === "insertText" &&
+          selection &&
+          Range.isCollapsed(selection) &&
+          // Only use native character insertion for single characters a-z or space for now.
+          // Long-press events (hold a + press 4 = ä) to choose a special character otherwise
+          // causes duplicate inserts.
+          event.data &&
+          event.data.length === 1 &&
+          /[a-z ]/i.test(event.data) &&
+          // Chrome has issues correctly editing the start of nodes: https://bugs.chromium.org/p/chromium/issues/detail?id=1249405
+          // When there is an inline element, e.g. a link, and you select
+          // right after it (the start of the next node).
+          selection.anchor.offset !== 0
         ) {
-          // COMPAT: BeforeInput events aren't cancelable on android, so we have to handle them differently using the android input manager.
-          if (IS_ANDROID) {
-            return androidManager.value?.handleDOMBeforeInput(event);
+          native = true;
+          // Skip native if there are marks, as
+          // `insertText` will insert a node, not just text.
+          if (editor.marks) {
+            native = false;
           }
 
-          const { selection } = editor;
-          const { inputType } = event;
-          const data = (event as any).dataTransfer || event.data || undefined;
+          const domAnchor = getSelection(
+            DOMEditor.findDocumentOrShadowRoot(editor),
+          )?.anchorNode;
 
-          const isCompositionChange =
-            inputType === "insertCompositionText" ||
-            inputType === "deleteCompositionText";
-
-          // COMPAT: use composition change events as a hint to where we should insert
-          // composition text if we aren't composing to work around https://github.com/ianstormtaylor/slate/issues/5038
-          if (isCompositionChange && DOMEditor.isComposing(editor)) {
-            return;
+          if (!isInSlateText(domAnchor)) {
+            native = false;
           }
 
-          let native = false;
-          if (
-            inputType === "insertText" &&
-            selection &&
-            Range.isCollapsed(selection) &&
-            // Only use native character insertion for single characters a-z or space for now.
-            // Long-press events (hold a + press 4 = ä) to choose a special character otherwise
-            // causes duplicate inserts.
-            event.data &&
-            event.data.length === 1 &&
-            /[a-z ]/i.test(event.data) &&
-            // Chrome has issues correctly editing the start of nodes: https://bugs.chromium.org/p/chromium/issues/detail?id=1249405
-            // When there is an inline element, e.g. a link, and you select
-            // right after it (the start of the next node).
-            selection.anchor.offset !== 0
-          ) {
-            native = true;
-            // Skip native if there are marks, as
-            // `insertText` will insert a node, not just text.
-            if (editor.marks) {
-              native = false;
-            }
-
+          // If the NODE_MAP is dirty, we can't trust the selection anchor (eg ReactEditor.toDOMPoint)
+          if (!IS_NODE_MAP_DIRTY.get(editor)) {
             // Chrome also has issues correctly editing the end of anchor elements: https://bugs.chromium.org/p/chromium/issues/detail?id=1259100
             // Therefore we don't allow native events to insert text at the end of anchor nodes.
             const { anchor } = selection;
@@ -521,181 +714,244 @@ export const Editable = defineComponent({
               }
             }
           }
-          // COMPAT: For the deleting forward/backward input types we don't want
-          // to change the selection because it is the range that will be deleted,
-          // and those commands determine that for themselves.
-          // If the NODE_MAP is dirty, we can't trust the selection anchor (eg DOMEditor.toDOMPoint via DOMEditor.toSlateRange)
-          if (
-            !inputType.startsWith("delete") ||
-            inputType.startsWith("deleteBy")
-          ) {
-            const [targetRange] = event.getTargetRanges();
+        }
+        // COMPAT: For the deleting forward/backward input types we don't want
+        // to change the selection because it is the range that will be deleted,
+        // and those commands determine that for themselves.
+        // If the NODE_MAP is dirty, we can't trust the selection anchor (eg ReactEditor.toDOMPoint via ReactEditor.toSlateRange)
+        if (
+          (!inputType.startsWith("delete") ||
+            inputType.startsWith("deleteBy")) &&
+          !IS_NODE_MAP_DIRTY.get(editor)
+        ) {
+          const [targetRange] = (event as any).getTargetRanges();
 
-            if (targetRange) {
-              // Unresolvable ranges would throw out of the handler (#3556); suppress and fall back to synthetic handling.
-              const range = DOMEditor.toSlateRange(editor, targetRange, {
-                exactMatch: false,
-                suppressThrow: true,
-              });
+          if (targetRange) {
+            // Unresolvable ranges would throw out of the handler (#3556); suppress and fall back to synthetic handling.
+            const range = DOMEditor.toSlateRange(editor, targetRange, {
+              exactMatch: false,
+              suppressThrow: true,
+            });
 
-              if (!range) {
-                native = false;
-              } else if (!selection || !Range.equals(selection, range)) {
-                native = false;
+            if (!range) {
+              native = false;
+            } else if (!selection || !Range.equals(selection, range)) {
+              native = false;
 
-                const selectionRef =
-                  !isCompositionChange &&
-                  editor.selection &&
-                  Editor.rangeRef(editor, editor.selection);
+              const selectionRef =
+                !isCompositionChange &&
+                editor.selection &&
+                !isSameCaretPosition(editor, editor.selection, range) &&
+                Editor.rangeRef(editor, editor.selection);
 
-                Transforms.select(editor, range);
+              Transforms.select(editor, range);
 
-                if (selectionRef) {
-                  EDITOR_TO_USER_SELECTION.set(editor, selectionRef);
-                }
+              if (selectionRef) {
+                EDITOR_TO_USER_SELECTION.set(editor, selectionRef);
               }
             }
-          }
-
-          // Composition change types occur while a user is composing text and can't be
-          // cancelled. Let them through and wait for the composition to end.
-          if (isCompositionChange) {
-            return;
-          }
-
-          if (!native) {
-            event.preventDefault();
-          }
-
-          // COMPAT: If the selection is expanded, even if the command seems like
-          // a delete forward/backward command it should delete the selection.
-          if (
-            selection &&
-            Range.isExpanded(selection) &&
-            inputType.startsWith("delete")
-          ) {
-            const direction = inputType.endsWith("Backward")
-              ? "backward"
-              : "forward";
-            Editor.deleteFragment(editor, { direction });
-            return;
-          }
-
-          switch (inputType) {
-            case "deleteByComposition":
-            case "deleteByCut":
-            case "deleteByDrag": {
-              Editor.deleteFragment(editor);
-              break;
-            }
-
-            case "deleteContent":
-            case "deleteContentForward": {
-              Editor.deleteForward(editor);
-              break;
-            }
-
-            case "deleteContentBackward": {
-              Editor.deleteBackward(editor);
-              break;
-            }
-
-            case "deleteEntireSoftLine": {
-              Editor.deleteBackward(editor, { unit: "line" });
-              Editor.deleteForward(editor, { unit: "line" });
-              break;
-            }
-
-            case "deleteHardLineBackward": {
-              Editor.deleteBackward(editor, { unit: "block" });
-              break;
-            }
-
-            case "deleteSoftLineBackward": {
-              Editor.deleteBackward(editor, { unit: "line" });
-              break;
-            }
-
-            case "deleteHardLineForward": {
-              Editor.deleteForward(editor, { unit: "block" });
-              break;
-            }
-
-            case "deleteSoftLineForward": {
-              Editor.deleteForward(editor, { unit: "line" });
-              break;
-            }
-
-            case "deleteWordBackward": {
-              Editor.deleteBackward(editor, { unit: "word" });
-              break;
-            }
-
-            case "deleteWordForward": {
-              Editor.deleteForward(editor, { unit: "word" });
-              break;
-            }
-
-            case "insertLineBreak":
-              Editor.insertSoftBreak(editor);
-              break;
-
-            case "insertParagraph": {
-              Editor.insertBreak(editor);
-              break;
-            }
-
-            case "insertFromComposition":
-            case "insertFromDrop":
-            case "insertFromPaste":
-            case "insertFromYank":
-            case "insertReplacementText":
-            case "insertText": {
-              if (inputType === "insertFromComposition") {
-                // COMPAT: in Safari, `compositionend` is dispatched after the
-                // `beforeinput` for "insertFromComposition". But if we wait for it
-                // then we will abort because we're still composing and the selection
-                // won't be updated properly.
-                // https://www.w3.org/TR/input-events-2/
-                if (DOMEditor.isComposing(editor)) {
-                  isComposing.value = false;
-                  IS_COMPOSING.set(editor, false);
-                }
-              }
-
-              // use a weak comparison instead of 'instanceof' to allow
-              // programmatic access of paste events coming from external windows
-              // like cypress where cy.window does not work realibly
-              if (data?.constructor.name === "DataTransfer") {
-                DOMEditor.insertData(editor, data);
-              } else if (typeof data === "string") {
-                // Only insertText operations use the native functionality, for now.
-                // Potentially expand to single character deletes, as well.
-                if (native) {
-                  deferredOperations.value.push(() =>
-                    Editor.insertText(editor, data),
-                  );
-                } else {
-                  Editor.insertText(editor, data);
-                }
-              }
-
-              break;
-            }
-          }
-
-          // Restore the actual user section if nothing manually set it.
-          const toRestore = EDITOR_TO_USER_SELECTION.get(editor)?.unref();
-          EDITOR_TO_USER_SELECTION.delete(editor);
-
-          if (
-            toRestore &&
-            (!editor.selection || !Range.equals(editor.selection, toRestore))
-          ) {
-            Transforms.select(editor, toRestore);
           }
         }
-      } else if (
+
+        // Composition change types occur while a user is composing text and can't be
+        // cancelled. Let them through and wait for the composition to end.
+        if (isCompositionChange) {
+          return;
+        }
+
+        if (!native) {
+          event.preventDefault();
+        }
+
+        // COMPAT: If the selection is expanded, even if the command seems like
+        // a delete forward/backward command it should delete the selection.
+        if (
+          selection &&
+          Range.isExpanded(selection) &&
+          inputType.startsWith("delete")
+        ) {
+          const direction = inputType.endsWith("Backward")
+            ? "backward"
+            : "forward";
+          Editor.deleteFragment(editor, { direction });
+          return;
+        }
+
+        switch (inputType) {
+          case "deleteByComposition":
+          case "deleteByCut":
+          case "deleteByDrag": {
+            Editor.deleteFragment(editor);
+            break;
+          }
+
+          case "deleteContent":
+          case "deleteContentForward": {
+            Editor.deleteForward(editor);
+            break;
+          }
+
+          case "deleteContentBackward": {
+            Editor.deleteBackward(editor);
+            break;
+          }
+
+          case "deleteEntireSoftLine": {
+            Editor.deleteBackward(editor, { unit: "line" });
+            Editor.deleteForward(editor, { unit: "line" });
+            break;
+          }
+
+          case "deleteHardLineBackward": {
+            Editor.deleteBackward(editor, { unit: "block" });
+            break;
+          }
+
+          case "deleteSoftLineBackward": {
+            Editor.deleteBackward(editor, { unit: "line" });
+            break;
+          }
+
+          case "deleteHardLineForward": {
+            Editor.deleteForward(editor, { unit: "block" });
+            break;
+          }
+
+          case "deleteSoftLineForward": {
+            Editor.deleteForward(editor, { unit: "line" });
+            break;
+          }
+
+          case "deleteWordBackward": {
+            Editor.deleteBackward(editor, { unit: "word" });
+            break;
+          }
+
+          case "deleteWordForward": {
+            Editor.deleteForward(editor, { unit: "word" });
+            break;
+          }
+
+          case "insertLineBreak":
+            Editor.insertSoftBreak(editor);
+            break;
+
+          case "insertParagraph": {
+            Editor.insertBreak(editor);
+            break;
+          }
+
+          case "insertFromComposition":
+          case "insertFromDrop":
+          case "insertFromPaste":
+          case "insertFromYank":
+          case "insertReplacementText":
+          case "insertText": {
+            if (inputType === "insertFromComposition") {
+              // COMPAT: in Safari, `compositionend` is dispatched after the
+              // `beforeinput` for "insertFromComposition". But if we wait for it
+              // then we will abort because we're still composing and the selection
+              // won't be updated properly.
+              // https://www.w3.org/TR/input-events-2/
+              if (DOMEditor.isComposing(editor)) {
+                isComposing.value = false;
+                IS_COMPOSING.set(editor, false);
+              }
+            }
+
+            // use a weak comparison instead of 'instanceof' to allow
+            // programmatic access of paste events coming from external windows
+            // like cypress where cy.window does not work realibly
+            if (data?.constructor.name === "DataTransfer") {
+              DOMEditor.insertData(editor, data);
+            } else if (typeof data === "string") {
+              // Only insertText operations use the native functionality, for now.
+              // Potentially expand to single character deletes, as well.
+              if (native) {
+                deferredOperations.value.push(() =>
+                  Editor.insertText(editor, data),
+                );
+              } else {
+                Editor.insertText(editor, data);
+              }
+            }
+
+            break;
+          }
+        }
+
+        // Restore the actual user section if nothing manually set it.
+        const toRestore = EDITOR_TO_USER_SELECTION.get(editor)?.unref();
+        EDITOR_TO_USER_SELECTION.delete(editor);
+
+        if (
+          toRestore &&
+          (!editor.selection || !Range.equals(editor.selection, toRestore))
+        ) {
+          Transforms.select(editor, toRestore);
+        }
+      }
+    };
+
+    // COMPAT: In Chrome, `selectionchange` events can fire when <input> and
+    // <textarea> elements are appended to the DOM, causing
+    // `editor.selection` to be overwritten in some circumstances.
+    // (2025/01/16) https://issues.chromium.org/issues/389368412
+    const readUnsyncedSelection = () => {
+      if (
+        state.isUpdatingSelection ||
+        state.isDraggingInternally ||
+        DOMEditor.isComposing(editor) ||
+        androidManager?.hasPendingChanges() ||
+        androidManager?.isFlushing() ||
+        IS_NODE_MAP_DIRTY.get(editor)
+      ) {
+        return null;
+      }
+
+      const domSelection = getSelection(
+        DOMEditor.findDocumentOrShadowRoot(editor),
+      );
+
+      if (
+        !domSelection ||
+        !(
+          DOMEditor.hasEditableTarget(editor, domSelection.anchorNode) ||
+          DOMEditor.isTargetInsideNonReadonlyVoid(
+            editor,
+            domSelection.anchorNode,
+          )
+        ) ||
+        !DOMEditor.hasTarget(editor, domSelection.focusNode)
+      ) {
+        return null;
+      }
+
+      const range = DOMEditor.toSlateRange(editor, domSelection, {
+        exactMatch: false,
+        suppressThrow: true,
+      });
+
+      return range ? { range, basedOn: editor.selection } : null;
+    };
+
+    const onSelectionChange = ({ target }: Event) => {
+      const targetElement = target instanceof HTMLElement ? target : null;
+      const targetTagName = targetElement?.tagName;
+      if (targetTagName === "INPUT" || targetTagName === "TEXTAREA") {
+        return;
+      }
+      state.pendingSelection = readUnsyncedSelection();
+      scheduleOnDOMSelectionChange();
+    };
+
+    const deferredOperations = ref<Array<() => void>>([]);
+    const onBeforeinput = (event: InputEvent) => {
+      // COMPAT: Certain browsers don't support the `beforeinput` event, so we
+      // fall back to React's leaky polyfill instead just for it. It
+      // only works for the `insertText` input type.
+      if (
+        !HAS_BEFORE_INPUT_SUPPORT &&
         !readOnly &&
         !isEventHandled(event, attributes.onBeforeinput) &&
         DOMEditor.hasSelectableTarget(editor, event.target)
@@ -709,7 +965,11 @@ export const Editable = defineComponent({
     };
 
     const onInput = (event: InputEvent) => {
-      if (IS_ANDROID || isEventHandled(event, attributes.onInput)) {
+      if (isEventHandled(event, attributes.onInput)) {
+        return;
+      }
+      if (androidManager) {
+        androidManager.handleInput();
         return;
       }
 
@@ -734,6 +994,7 @@ export const Editable = defineComponent({
     const onBlur = (event: FocusEvent) => {
       if (
         readOnly ||
+        state.isUpdatingSelection ||
         !DOMEditor.hasSelectableTarget(editor, event.target) ||
         isEventHandled(event, attributes.onBlur)
       ) {
@@ -778,7 +1039,7 @@ export const Editable = defineComponent({
       ) {
         const node = DOMEditor.toSlateNode(editor, relatedTarget);
 
-        if (Element.isElement(node) && !editor.isVoid(node)) {
+        if (Node.isElement(node) && !editor.isVoid(node)) {
           return;
         }
       }
@@ -814,7 +1075,7 @@ export const Editable = defineComponent({
           return;
         }
 
-        if (event.detail === 3 && path.length >= 1) {
+        if (event.detail === TRIPLE_CLICK && path.length >= 1) {
           let blockPath = path;
           if (!(Node.isElement(node) && Editor.isBlock(editor, node))) {
             const block = Editor.above(editor, {
@@ -840,6 +1101,13 @@ export const Editable = defineComponent({
         const endVoid = Editor.void(editor, { at: end });
 
         if (startVoid && endVoid && Path.equals(startVoid[1], endVoid[1])) {
+          if (event.shiftKey && editor.selection) {
+            const { anchor } = editor.selection;
+            const focus = Point.isBefore(anchor, start) ? end : start;
+            Transforms.select(editor, { anchor, focus });
+            return;
+          }
+
           const range = Editor.range(editor, start);
           Transforms.select(editor, range);
         }
@@ -847,52 +1115,62 @@ export const Editable = defineComponent({
     };
 
     const onCompositionend = (event: CompositionEvent) => {
-      if (
-        isDOMEventTargetInput(event) ||
-        !DOMEditor.hasSelectableTarget(editor, event.target)
-      ) {
+      if (isDOMEventTargetInput(event)) {
         return;
       }
+      if (DOMEditor.hasSelectableTarget(editor, event.target)) {
+        if (DOMEditor.isComposing(editor)) {
+          Promise.resolve().then(() => {
+            isComposing.value = false;
+            IS_COMPOSING.set(editor, false);
+          });
+        }
 
-      if (DOMEditor.isComposing(editor)) {
-        isComposing.value = false;
-        IS_COMPOSING.set(editor, false);
-      }
+        androidManager?.handleCompositionEnd(event);
 
-      if (IS_ANDROID || isEventHandled(event, attributes.onCompositionend)) {
-        return;
-      }
+        if (isEventHandled(event, attributes.onCompositionend) || IS_ANDROID) {
+          return;
+        }
 
-      // COMPAT: In Chrome, `beforeinput` events for compositions
-      // aren't correct and never fire the "insertFromComposition"
-      // type that we need. So instead, insert whenever a composition
-      // ends since it will already have been committed to the DOM.
-      if (
-        !IS_WEBKIT &&
-        !IS_FIREFOX_LEGACY &&
-        !IS_IOS &&
-        !IS_WECHATBROWSER &&
-        !IS_UC_MOBILE &&
-        event.data
-      ) {
-        // Ensure we insert text with the marks the user was actually seeing
+        // COMPAT: In Chrome, `beforeinput` events for compositions
+        // aren't correct and never fire the "insertFromComposition"
+        // type that we need. So instead, insert whenever a composition
+        // ends since it will already have been committed to the DOM.
+        if (
+          !IS_WEBKIT &&
+          !IS_FIREFOX_LEGACY &&
+          !IS_IOS &&
+          !IS_WECHATBROWSER &&
+          !IS_UC_MOBILE &&
+          event.data
+        ) {
+          const placeholderMarks =
+            EDITOR_TO_PENDING_INSERTION_MARKS.get(editor);
+          EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor);
 
-        Editor.insertText(editor, event.data);
+          // Ensure we insert text with the marks the user was actually seeing
+          if (placeholderMarks !== undefined) {
+            EDITOR_TO_USER_MARKS.set(editor, editor.marks);
+            editor.marks = placeholderMarks;
+          }
 
-        const userMarks = EDITOR_TO_USER_MARKS.get(editor);
-        EDITOR_TO_USER_MARKS.delete(editor);
-        if (userMarks !== undefined) {
-          editor.marks = userMarks;
+          Editor.insertText(editor, event.data);
+
+          const userMarks = EDITOR_TO_USER_MARKS.get(editor);
+          EDITOR_TO_USER_MARKS.delete(editor);
+          if (userMarks !== undefined) {
+            editor.marks = userMarks;
+          }
         }
       }
     };
 
     const onCompositionupdate = (event: CompositionEvent) => {
-      if (isEventHandled(event, attributes.onCompositionupdate)) {
-        return;
-      }
-
-      if (DOMEditor.hasSelectableTarget(editor, event.target)) {
+      if (
+        DOMEditor.hasSelectableTarget(editor, event.target) &&
+        !isEventHandled(event, attributes.onCompositionupdate) &&
+        !isDOMEventTargetInput(event)
+      ) {
         if (!DOMEditor.isComposing(editor)) {
           isComposing.value = true;
           IS_COMPOSING.set(editor, true);
@@ -901,24 +1179,26 @@ export const Editable = defineComponent({
     };
 
     const onCompositionstart = (event: CompositionEvent) => {
-      if (
-        isDOMEventTargetInput(event) ||
-        !DOMEditor.hasSelectableTarget(editor, event.target)
-      ) {
+      if (isDOMEventTargetInput(event)) {
         return;
       }
+      if (DOMEditor.hasSelectableTarget(editor, event.target)) {
+        androidManager?.handleCompositionStart(event);
 
-      isComposing.value = true;
-      IS_COMPOSING.set(editor, true);
+        if (
+          isEventHandled(event, attributes.onCompositionstart) ||
+          IS_ANDROID
+        ) {
+          return;
+        }
 
-      if (IS_ANDROID || isEventHandled(event, attributes.onCompositionstart)) {
-        return;
-      }
+        isComposing.value = true;
 
-      const { selection } = editor;
-      if (selection && Range.isExpanded(selection)) {
-        Editor.deleteFragment(editor);
-        return;
+        const { selection } = editor;
+        if (selection && Range.isExpanded(selection)) {
+          Editor.deleteFragment(editor);
+          return;
+        }
       }
     };
 
@@ -943,14 +1223,15 @@ export const Editable = defineComponent({
         !isDOMEventTargetInput(event)
       ) {
         event.preventDefault();
+        selectMovableRange(editor);
         if (event.clipboardData) {
           DOMEditor.setFragmentData(editor, event.clipboardData, "cut");
         }
-        const selection = editor.selection;
+        const { selection } = editor;
 
         if (selection) {
           if (Range.isExpanded(selection)) {
-            Editor.deleteFragment(editor);
+            deleteMovedRange(editor, selection);
           } else {
             const node = Node.parent(editor, selection.anchor.path);
             if (Editor.isVoid(editor, node)) {
@@ -996,6 +1277,7 @@ export const Editable = defineComponent({
           Transforms.select(editor, range);
         }
 
+        selectMovableRange(editor);
         state.isDraggingInternally = true;
 
         if (event.dataTransfer) {
@@ -1021,17 +1303,22 @@ export const Editable = defineComponent({
 
         Transforms.select(editor, range);
 
-        if (state.isDraggingInternally) {
-          if (
-            draggedRange &&
-            !Range.equals(draggedRange, range) &&
-            !Editor.void(editor, { at: range, voids: true })
-          ) {
-            Transforms.delete(editor, {
-              at: draggedRange,
-            });
+        if (state.isDraggingInternally && draggedRange) {
+          if (Range.includes(draggedRange, range.anchor)) {
+            return;
+          }
+
+          if (!Editor.void(editor, { at: range, voids: true })) {
+            const dropRef = Editor.rangeRef(editor, range);
+            deleteMovedRange(editor, draggedRange);
+            const dropRange = dropRef.unref();
+
+            if (dropRange) {
+              Transforms.select(editor, dropRange);
+            }
           }
         }
+
         if (data) {
           DOMEditor.insertData(editor, data);
         }
@@ -1058,6 +1345,7 @@ export const Editable = defineComponent({
     const onFocus = (event: FocusEvent) => {
       if (
         !readOnly &&
+        !state.isUpdatingSelection &&
         DOMEditor.hasEditableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onFocus)
       ) {
@@ -1079,6 +1367,8 @@ export const Editable = defineComponent({
 
     const onKeydown = (event: KeyboardEvent) => {
       if (!readOnly && DOMEditor.hasEditableTarget(editor, event.target)) {
+        androidManager?.handleKeyDown(event);
+
         // COMPAT: The composition end event isn't fired reliably in all browsers,
         // so we sometimes might end up stuck in a composition state even though we
         // aren't composing any more.
@@ -1094,10 +1384,9 @@ export const Editable = defineComponent({
           return;
         }
 
+        const { selection } = editor;
         const element =
-          editor.children[
-            editor.selection !== null ? editor.selection.focus.path[0] : 0
-          ];
+          editor.children[selection !== null ? selection.focus.path[0] : 0];
         const isRTL = direction(Node.string(element)) === "rtl";
 
         // COMPAT: Since we prevent the default behavior on
@@ -1166,7 +1455,7 @@ export const Editable = defineComponent({
         if (Hotkeys.isMoveBackward(event)) {
           event.preventDefault();
 
-          if (editor.selection && Range.isCollapsed(editor.selection)) {
+          if (selection && Range.isCollapsed(selection)) {
             Transforms.move(editor, { reverse: !isRTL });
           } else {
             Transforms.collapse(editor, {
@@ -1180,7 +1469,7 @@ export const Editable = defineComponent({
         if (Hotkeys.isMoveForward(event)) {
           event.preventDefault();
 
-          if (editor.selection && Range.isCollapsed(editor.selection)) {
+          if (selection && Range.isCollapsed(selection)) {
             Transforms.move(editor, { reverse: isRTL });
           } else {
             Transforms.collapse(editor, {
@@ -1194,7 +1483,7 @@ export const Editable = defineComponent({
         if (Hotkeys.isMoveWordBackward(event)) {
           event.preventDefault();
 
-          if (editor.selection && Range.isExpanded(editor.selection)) {
+          if (selection && Range.isExpanded(selection)) {
             Transforms.collapse(editor, { edge: "focus" });
           }
 
@@ -1208,7 +1497,7 @@ export const Editable = defineComponent({
         if (Hotkeys.isMoveWordForward(event)) {
           event.preventDefault();
 
-          if (editor.selection && Range.isExpanded(editor.selection)) {
+          if (selection && Range.isExpanded(selection)) {
             Transforms.collapse(editor, { edge: "focus" });
           }
 
@@ -1249,7 +1538,7 @@ export const Editable = defineComponent({
           if (Hotkeys.isDeleteBackward(event)) {
             event.preventDefault();
 
-            if (editor.selection && Range.isExpanded(editor.selection)) {
+            if (selection && Range.isExpanded(selection)) {
               Editor.deleteFragment(editor, {
                 direction: "backward",
               });
@@ -1263,7 +1552,7 @@ export const Editable = defineComponent({
           if (Hotkeys.isDeleteForward(event)) {
             event.preventDefault();
 
-            if (editor.selection && Range.isExpanded(editor.selection)) {
+            if (selection && Range.isExpanded(selection)) {
               Editor.deleteFragment(editor, {
                 direction: "forward",
               });
@@ -1277,7 +1566,7 @@ export const Editable = defineComponent({
           if (Hotkeys.isDeleteLineBackward(event)) {
             event.preventDefault();
 
-            if (editor.selection && Range.isExpanded(editor.selection)) {
+            if (selection && Range.isExpanded(selection)) {
               Editor.deleteFragment(editor, {
                 direction: "backward",
               });
@@ -1291,7 +1580,7 @@ export const Editable = defineComponent({
           if (Hotkeys.isDeleteLineForward(event)) {
             event.preventDefault();
 
-            if (editor.selection && Range.isExpanded(editor.selection)) {
+            if (selection && Range.isExpanded(selection)) {
               Editor.deleteFragment(editor, {
                 direction: "forward",
               });
@@ -1305,7 +1594,7 @@ export const Editable = defineComponent({
           if (Hotkeys.isDeleteWordBackward(event)) {
             event.preventDefault();
 
-            if (editor.selection && Range.isExpanded(editor.selection)) {
+            if (selection && Range.isExpanded(selection)) {
               Editor.deleteFragment(editor, {
                 direction: "backward",
               });
@@ -1319,7 +1608,7 @@ export const Editable = defineComponent({
           if (Hotkeys.isDeleteWordForward(event)) {
             event.preventDefault();
 
-            if (editor.selection && Range.isExpanded(editor.selection)) {
+            if (selection && Range.isExpanded(selection)) {
               Editor.deleteFragment(editor, {
                 direction: "forward",
               });
@@ -1334,15 +1623,12 @@ export const Editable = defineComponent({
             // COMPAT: Chrome and Safari support `beforeinput` event but do not fire
             // an event when deleting backwards in a selected void inline node
             if (
-              editor.selection &&
+              selection &&
               (Hotkeys.isDeleteBackward(event) ||
                 Hotkeys.isDeleteForward(event)) &&
-              Range.isCollapsed(editor.selection)
+              Range.isCollapsed(selection)
             ) {
-              const currentNode = Node.parent(
-                editor,
-                editor.selection.anchor.path,
-              );
+              const currentNode = Node.parent(editor, selection.anchor.path);
 
               if (
                 Node.isElement(currentNode) &&
@@ -1351,7 +1637,11 @@ export const Editable = defineComponent({
                   Editor.isBlock(editor, currentNode))
               ) {
                 event.preventDefault();
-                Editor.deleteBackward(editor, { unit: "block" });
+                if (Hotkeys.isDeleteForward(event)) {
+                  Editor.deleteForward(editor, { unit: "block" });
+                } else {
+                  Editor.deleteBackward(editor, { unit: "block" });
+                }
 
                 return;
               }
@@ -1387,18 +1677,22 @@ export const Editable = defineComponent({
       }
     };
 
-    const editableStyle = computed<CSSProperties>(() => ({
-      // Allow positioning relative to the editable element.
-      position: "relative",
-      // Preserve adjacent whitespace and new lines.
-      whiteSpace: "pre-wrap",
-      // Allow words to break if they are too long.
-      wordWrap: "break-word",
-      // Make the minimum height that of the placeholder.
-      minHeight: placeholderHeight.value
-        ? placeholderHeight.value + "px"
-        : "unset",
-    }));
+    const editableStyle = computed<CSSProperties>(() => {
+      const normalizedStyle = normalizeStyle(attributes.style) as CSSProperties;
+      return {
+        // Allow positioning relative to the editable element.
+        position: "relative",
+        // Preserve adjacent whitespace and new lines.
+        whiteSpace: "pre-wrap",
+        // Allow words to break if they are too long.
+        wordWrap: "break-word",
+        // Make the minimum height that of the placeholder.
+        minHeight: placeholderHeight.value
+          ? placeholderHeight.value + "px"
+          : "unset",
+        ...normalizedStyle,
+      };
+    });
 
     const spellcheck = computed(() =>
       HAS_BEFORE_INPUT_SUPPORT || !CAN_USE_DOM ? attributes.spellcheck : false,
@@ -1470,40 +1764,70 @@ export const Editable = defineComponent({
       return _decorations;
     });
 
+    // Update EDITOR_TO_MARK_PLACEHOLDER_MARKS in setTimeout useEffect to ensure we don't set it
+    // before we receive the composition end event.
+    onUpdated(() => {
+      const { selection, marks } = editor;
+      if (selection) {
+        const { anchor } = selection;
+        const text = Node.leaf(editor, anchor.path);
+
+        // While marks isn't a 'complete' text, we can still use loose Text.equals
+        // here which only compares marks anyway.
+        if (marks && !Text.equals(text, marks as Text, { loose: true })) {
+          EDITOR_TO_PENDING_INSERTION_MARKS.set(editor, marks);
+          return;
+        }
+      }
+      EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor);
+    });
+
     return () => {
       return h(
-        attributes.is || "div",
+        RestoreDOM,
         {
-          role: readOnly ? undefined : "textbox",
-          "aria-multiline": readOnly ? undefined : true,
-          translate: "no",
-          "data-slate-editor": true,
-          "data-slate-node": "value",
-          zindex: -1,
-          spellcheck: spellcheck.value,
-          autocorrect: autocorrect.value,
-          autocapitalize: autocapitalize.value,
-          contenteditable: !readOnly,
-          ref: editableRef,
-          style: editableStyle.value,
-          onBeforeinput,
-          onInput,
-          onBlur,
-          onClick,
-          onCompositionend,
-          onCompositionupdate,
-          onCompositionstart,
-          onCopy,
-          onCut,
-          onDragover,
-          onDragstart,
-          onDrop,
-          onDragend,
-          onFocus,
-          onKeydown,
-          onPaste,
+          node: refrestoreDOMContainer,
+          receivedUserInput: receivedUserInput.value,
         },
-        h(ChildrenComp, { element: editor, decorations: decorations.value }),
+        () =>
+          h(
+            attributes.is || "div",
+            {
+              role: readOnly ? undefined : "textbox",
+              "aria-multiline": readOnly ? undefined : true,
+              translate: "no",
+              ...attributes,
+              "data-slate-editor": true,
+              "data-slate-node": "value",
+              zindex: -1,
+              spellcheck: spellcheck.value,
+              autocorrect: autocorrect.value,
+              autocapitalize: autocapitalize.value,
+              contenteditable: !readOnly,
+              ref: editableRef,
+              style: editableStyle.value,
+              onBeforeinput,
+              onInput,
+              onBlur,
+              onClick,
+              onCompositionend,
+              onCompositionupdate,
+              onCompositionstart,
+              onCopy,
+              onCut,
+              onDragover,
+              onDragstart,
+              onDrop,
+              onDragend,
+              onFocus,
+              onKeydown,
+              onPaste,
+            },
+            h(ChildrenComp, {
+              element: editor,
+              decorations: decorations.value,
+            }),
+          ),
       );
     };
   },
