@@ -16,4 +16,4 @@ export interface ReactiveEditor extends DOMEditor {
 
 export type ReactiveEditorInterface = DOMEditorInterface;
 
-export const ReactEditor: ReactiveEditorInterface = DOMEditor;
+export const ReactiveEditor: ReactiveEditorInterface = DOMEditor;
