@@ -1057,23 +1057,25 @@ export const DOMEditor: DOMEditorInterface = {
         if (IS_FIREFOX) {
           if (
             anchorNode instanceof HTMLElement &&
-            anchorNode?.attributes?.getNamedItem("data-slate-editor")
+            anchorNode.hasAttribute("data-slate-editor") &&
+            focusNode instanceof HTMLElement
           ) {
-            if (focusNode instanceof HTMLElement) {
-              const nodeList = Array.from(
-                anchorNode.querySelectorAll<HTMLElement>(
-                  '[data-slate-string="true"]',
-                ),
-              ).filter(
-                (node) => !node.querySelector('[data-slate-string="true"]'),
-              );
-              anchorNode = nodeList[0];
-              focusNode = nodeList[nodeList.length - 1];
+            const nodeList = Array.from(
+              anchorNode.querySelectorAll<HTMLElement>(
+                '[data-slate-string="true"]',
+              ),
+            ).filter(
+              (node) => !node.querySelector('[data-slate-string="true"]'),
+            );
+
+            if (nodeList.length > 0) {
+              const firstNode = nodeList[0];
+              const lastNode = nodeList[nodeList.length - 1];
+              anchorNode = firstNode.firstChild ?? firstNode;
+              anchorOffset = 0;
+              focusNode = lastNode.lastChild ?? lastNode;
+              focusOffset = focusNode.textContent?.length ?? 0;
             }
-            anchorNode = anchorNode?.firstChild;
-            anchorOffset = 0;
-            focusNode = focusNode?.lastChild;
-            focusOffset = focusNode?.textContent?.length || 0;
           } else {
             if (anchorNode) {
               const [el, offset] = compatEmptyNode([anchorNode, anchorOffset]);
