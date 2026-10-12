@@ -9,11 +9,21 @@ import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { jsx } from "slate-hyperscript";
 import { h } from "vue";
 import ImageElement from "./ImageElement.vue";
-import { Descendant, Transforms } from "slate";
+import { Descendant, Transforms, Node } from "slate";
 import { withHistory } from "slate-history";
 import { CustomEditor } from "../../../custom-types";
 
 const allowedSchemes = ["http:", "https:", "mailto:", "tel:"];
+
+// COMPAT: `B` is omitted here because Google Docs uses `<b>` in weird ways.
+interface TextAttributes {
+  code?: boolean;
+  strikethrough?: boolean;
+  italic?: boolean;
+  bold?: boolean;
+  underline?: boolean;
+}
+
 const ELEMENT_TAGS = {
   A: (el: HTMLLinkElement) => ({ type: "link", url: el.getAttribute("href") }),
   BLOCKQUOTE: () => ({ type: "blockquote" }),
@@ -44,8 +54,46 @@ const TEXT_TAGS = {
   U: () => ({ underline: true }),
 };
 
+const applyTextAttributes = (child: any, attrs: TextAttributes): any =>
+  Node.isElement(child)
+    ? {
+        ...child,
+        children: child.children.map((grandchild: any) =>
+          applyTextAttributes(grandchild, attrs),
+        ),
+      }
+    : jsx("text", attrs, child);
+
+const BLOCK_TAGS = new Set([
+  "BLOCKQUOTE",
+  "DIV",
+  "H1",
+  "H2",
+  "H3",
+  "H4",
+  "H5",
+  "H6",
+  "LI",
+  "OL",
+  "P",
+  "PRE",
+  "UL",
+]);
+
 const deserialize = (el: any): any => {
   if (el.nodeType === 3) {
+    if (
+      /^[\t\n\r ]*$/.test(el.textContent ?? "") &&
+      ["BODY", "DIV", "BLOCKQUOTE", "UL", "OL"].includes(
+        el.parentElement?.nodeName ?? "",
+      ) &&
+      [el.previousSibling, el.nextSibling].some(
+        (sibling) => sibling && BLOCK_TAGS.has(sibling.nodeName),
+      )
+    ) {
+      return null;
+    }
+
     return el.textContent;
   } else if (el.nodeType !== 1) {
     return null;
@@ -80,7 +128,7 @@ const deserialize = (el: any): any => {
 
   if (nodeName in TEXT_TAGS) {
     const attrs = TEXT_TAGS[nodeName as keyof typeof TEXT_TAGS]();
-    return children.map((child) => jsx("text", attrs, child));
+    return children.map((child) => applyTextAttributes(child, attrs));
   }
 
   return children;
