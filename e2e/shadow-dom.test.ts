@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { E2E_BASE_URL, sleep } from "../test/utils";
+import { clearEditor } from "./support/editor";
 
 test.describe("shadow-dom example", () => {
   test.beforeEach(
@@ -20,21 +21,10 @@ test.describe("shadow-dom example", () => {
     const innerShadow = outerShadow.locator("> div");
     const textbox = innerShadow.getByRole("textbox");
 
-    // Ensure the textbox is present
     await expect(textbox).toHaveCount(1);
-
-    // Clear any existing text and type new text into the textbox
-    await textbox.click();
-    await sleep();
-    await page.keyboard.press("ControlOrMeta+A");
-    await sleep();
-    await page.keyboard.press("Backspace");
-    await sleep();
+    await clearEditor(textbox);
     await page.keyboard.type("Hello, Playwright!");
-    await sleep();
-
-    // Assert that the textbox contains the correct text
-    await expect(textbox).toContainText("Hello, Playwright!");
+    await expect(textbox).toHaveText("Hello, Playwright!");
   });
 
   test("user can type add a new line in editor inside shadow DOM", async ({
