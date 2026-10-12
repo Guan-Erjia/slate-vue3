@@ -364,17 +364,29 @@ export const DOMEditor: DOMEditorInterface = {
     let domRange;
     const { document } = DOMEditor.getWindow(editor);
 
-    // COMPAT: In Firefox, `caretRangeFromPoint` doesn't exist. (2016/07/25)
-    if (document.caretRangeFromPoint) {
+    const root = DOMEditor.findDocumentOrShadowRoot(editor);
+    const shadowRoot = root === document ? null : (root as ShadowRoot);
+
+    const rangeFromCaretPosition = (position: CaretPosition | null) => {
+      if (!position) {
+        return null;
+      }
+
+      const range = document.createRange();
+      range.setStart(position.offsetNode, position.offset);
+      range.setEnd(position.offsetNode, position.offset);
+      return range;
+    };
+
+    if (shadowRoot && document.caretPositionFromPoint) {
+      domRange = rangeFromCaretPosition(
+        document.caretPositionFromPoint(x, y, { shadowRoots: [shadowRoot] }),
+      );
+    } else if (document.caretRangeFromPoint) {
+      // COMPAT: In Firefox, `caretRangeFromPoint` doesn't exist. (2016/07/25)
       domRange = document.caretRangeFromPoint(x, y);
     } else {
-      const position = document.caretPositionFromPoint(x, y);
-
-      if (position) {
-        domRange = document.createRange();
-        domRange.setStart(position.offsetNode, position.offset);
-        domRange.setEnd(position.offsetNode, position.offset);
-      }
+      domRange = rangeFromCaretPosition(document.caretPositionFromPoint(x, y));
     }
 
     if (!domRange) {

@@ -33,8 +33,15 @@ declare global {
     getClientRect(): DOMRect | null;
   }
 
+  interface CaretPositionFromPointOptions {
+    shadowRoots?: ShadowRoot[];
+  }
   interface Document {
-    caretPositionFromPoint(x: number, y: number): CaretPosition | null;
+    caretPositionFromPoint(
+      x: number,
+      y: number,
+      options?: CaretPositionFromPointOptions,
+    ): CaretPosition | null;
   }
 
   interface Node {
