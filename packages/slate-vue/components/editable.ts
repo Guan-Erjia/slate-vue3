@@ -561,7 +561,11 @@ export const Editable = defineComponent({
         editableRef.value.addEventListener("beforeinput", onDOMBeforeInput);
       }
       if (autoFocus) {
-        editableRef.value?.focus();
+        if (editor.children.length > 0) {
+          DOMEditor.focus(editor);
+        } else {
+          editableRef.value?.focus();
+        }
       }
     });
     onUnmounted(() => {
