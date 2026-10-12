@@ -78,6 +78,7 @@ import { useTrackUserInput } from "../hooks/use-track-user-input";
 import { useAndroidInputManager } from "../hooks/android-input-manager/use-android-input-manager";
 import { debounce, throttle } from "lodash-es";
 import { deleteMovedRange, getMovableRange } from "../utils/move-range";
+import { useCompositionDOM } from "../hooks/use-composition-dom";
 
 const isSameCaretPosition = (editor: Editor, a: Range, b: Range) => {
   if (!Range.isCollapsed(a) || !Range.isCollapsed(b)) {
@@ -207,6 +208,9 @@ export const Editable = defineComponent({
 
     // webkit 内核使用，在影子节点渲染是获取 selection
     const processing = ref(false);
+
+    const compositionDOM = useCompositionDOM(editor);
+
     const { onUserInput, receivedUserInput } = useTrackUserInput();
     const proxy = getCurrentInstance();
     EDITOR_TO_FORCE_RENDER.set(editor, () => proxy?.update());
@@ -634,6 +638,9 @@ export const Editable = defineComponent({
         // COMPAT: use composition change events as a hint to where we should insert
         // composition text if we aren't composing to work around https://github.com/ianstormtaylor/slate/issues/5038
         if (isCompositionChange && DOMEditor.isComposing(editor)) {
+          if (IS_CHROME) {
+            compositionDOM.track(event.data);
+          }
           return;
         }
 
@@ -965,6 +972,7 @@ export const Editable = defineComponent({
     };
 
     const onInput = (event: InputEvent) => {
+      compositionDOM.pause();
       if (isEventHandled(event, attributes.onInput)) {
         return;
       }
@@ -1129,6 +1137,7 @@ export const Editable = defineComponent({
         androidManager?.handleCompositionEnd(event);
 
         if (isEventHandled(event, attributes.onCompositionend) || IS_ANDROID) {
+          compositionDOM.clear();
           return;
         }
 
@@ -1154,6 +1163,7 @@ export const Editable = defineComponent({
             editor.marks = placeholderMarks;
           }
 
+          compositionDOM.restore();
           Editor.insertText(editor, event.data);
 
           const userMarks = EDITOR_TO_USER_MARKS.get(editor);
@@ -1162,6 +1172,7 @@ export const Editable = defineComponent({
             editor.marks = userMarks;
           }
         }
+        compositionDOM.clear();
       }
     };
 
@@ -1192,6 +1203,7 @@ export const Editable = defineComponent({
           return;
         }
 
+        compositionDOM.clear();
         isComposing.value = true;
 
         const { selection } = editor;
