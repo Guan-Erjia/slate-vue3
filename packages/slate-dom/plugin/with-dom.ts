@@ -18,6 +18,7 @@ import {
 import {
   getPlainText,
   getSlateFragmentAttribute,
+  isDOMElement,
   isDOMText,
 } from "../utils/dom";
 import { Key } from "../utils/key";
@@ -34,8 +35,32 @@ import {
   EDITOR_TO_USER_MARKS,
   EDITOR_TO_USER_SELECTION,
   NODE_TO_KEY,
+  NODE_TO_PARENT,
 } from "../utils/weak-maps";
 import { DOMEditor } from "./dom-editor";
+
+type DOMNode = globalThis.Node;
+type DOMElement = globalThis.HTMLElement;
+
+const INSERTED_NODES: WeakSet<Node> = new WeakSet();
+
+const isNodeInUse = (node: Node): boolean =>
+  NODE_TO_PARENT.has(node) ||
+  INSERTED_NODES.has(node) ||
+  (Node.isElement(node) && node.children.some(isNodeInUse));
+
+const copyNode = <N extends Node>(node: N): N =>
+  Node.isElement(node)
+    ? { ...node, children: node.children.map(copyNode) }
+    : { ...node };
+
+const markInserted = (node: Node) => {
+  INSERTED_NODES.add(node);
+
+  if (Node.isElement(node)) {
+    node.children.forEach(markInserted);
+  }
+};
 
 /**
  * `withDOM` adds DOM specific behaviors to the editor.
@@ -46,12 +71,52 @@ import { DOMEditor } from "./dom-editor";
  * See https://docs.slatejs.org/concepts/11-typescript to learn how.
  */
 
+const wrapInInlineAncestors = (
+  contents: DocumentFragment,
+  start: DOMNode,
+  editorElement: DOMElement,
+): DocumentFragment => {
+  let wrapped = contents;
+
+  for (
+    let ancestor = isDOMElement(start) ? start : start.parentElement;
+    ancestor && ancestor !== editorElement;
+    ancestor = ancestor.parentElement
+  ) {
+    if (
+      ancestor.getAttribute("data-slate-inline") === "true" &&
+      !ancestor.hasAttribute("data-slate-void")
+    ) {
+      const shell = ancestor.cloneNode(false);
+      shell.appendChild(wrapped);
+      wrapped = ancestor.ownerDocument.createDocumentFragment();
+      wrapped.appendChild(shell);
+    }
+  }
+
+  return wrapped;
+};
+
 export const withDOM = (
   editor: Editor,
   clipboardFormatKey = "x-slate-fragment",
-): Editor => {
+): DOMEditor => {
   const e = editor;
-  const { apply, onChange, deleteBackward, addMark, removeMark } = e;
+  const { apply, onChange, deleteBackward, addMark, removeMark, insertNodes } =
+    e;
+
+  e.insertNodes = (nodes, options) => {
+    const prepare = <N extends Node>(node: N): N => {
+      const prepared = isNodeInUse(node) ? copyNode(node) : node;
+      markInserted(prepared);
+      return prepared;
+    };
+
+    insertNodes(
+      Node.isNode(nodes) ? prepare(nodes) : nodes.map(prepare),
+      options,
+    );
+  };
 
   // The WeakMap which maps a key to a specific HTMLElement must be scoped to the editor instance to
   // avoid collisions between editors in the DOM that share the same value.
@@ -112,6 +177,8 @@ export const withDOM = (
 
         if (!Range.isCollapsed(currentLineRange)) {
           Transforms.delete(e, { at: currentLineRange });
+        } else {
+          deleteBackward("character");
         }
       }
     }
@@ -286,7 +353,10 @@ export const withDOM = (
     Array.from(contents.querySelectorAll("[data-slate-zero-width]")).forEach(
       (zw) => {
         const isNewline = zw.getAttribute("data-slate-zero-width") === "n";
-        zw.textContent = isNewline ? "\n" : "";
+        zw.textContent = "";
+        if (isNewline) {
+          zw.appendChild(zw.ownerDocument.createElement("br"));
+        }
       },
     );
 
@@ -308,6 +378,14 @@ export const withDOM = (
     const encoded = window.btoa(encodeURIComponent(string));
     attach.setAttribute("data-slate-fragment", encoded);
     data.setData(`application/${clipboardFormatKey}`, encoded);
+
+    if (!startVoid && !endVoid) {
+      contents = wrapInInlineAncestors(
+        contents,
+        domRange.commonAncestorContainer,
+        DOMEditor.toDOMNode(e, e),
+      );
+    }
 
     // Add the content to a <div> so that we can get its inner HTML.
     const div = contents.ownerDocument.createElement("div");
