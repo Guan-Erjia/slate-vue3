@@ -50,15 +50,7 @@ export const isDOMElement = (value: any): value is DOMElement => {
 
 export const isDOMNode = (value: any): value is DOMNode => {
   const window = getDefaultView(value);
-  /*
-   * In vue, value may also be created by globalThis.Node
-   * both of which are considered as DOMNode
-   * return !!window && value instanceof window.Node
-   */
-  return (
-    !!window &&
-    (value instanceof window.Node || value instanceof globalThis.Node)
-  );
+  return !!window && value instanceof window.Node;
 };
 
 /**
@@ -222,13 +214,26 @@ export const getPlainText = (domNode: DOMNode) => {
   }
 
   if (isDOMElement(domNode)) {
+    if (domNode.hasAttribute("data-slate-spacer")) {
+      return text;
+    }
+
+    if (
+      domNode.tagName === "BR" &&
+      domNode.parentElement?.getAttribute("data-slate-zero-width") === "n"
+    ) {
+      return text;
+    }
+
     for (const childNode of Array.from(domNode.childNodes)) {
       text += getPlainText(childNode);
     }
 
     const display = getComputedStyle(domNode).getPropertyValue("display");
+    const isBlock = display === "block" || display === "list";
+    const isInsideInline = !!domNode.closest('[data-slate-inline="true"]');
 
-    if (display === "block" || display === "list" || domNode.tagName === "BR") {
+    if (domNode.tagName === "BR" || (isBlock && !isInsideInline)) {
       text += "\n";
     }
   }
@@ -239,7 +244,7 @@ export const getPlainText = (domNode: DOMNode) => {
 /**
  * Get x-slate-fragment attribute from data-slate-fragment
  */
-const catchSlateFragment = /data-slate-fragment="(.+?)"/m;
+const catchSlateFragment = /<[^>]*\sdata-slate-fragment="([^"]+)"/m;
 export const getSlateFragmentAttribute = (
   dataTransfer: DataTransfer,
 ): string | void => {
