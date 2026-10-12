@@ -58,8 +58,14 @@ const isButtonActive = computed(() => {
 });
 
 const withInlines = (editor: CustomEditor) => {
-  const { insertData, insertText, isInline, isElementReadOnly, isSelectable } =
-    editor;
+  const {
+    insertData,
+    insertBreak,
+    insertText,
+    isInline,
+    isElementReadOnly,
+    isSelectable,
+  } = editor;
 
   editor.isInline = (element) =>
     ["link", "button", "badge"].includes(element.type) || isInline(element);
@@ -69,6 +75,25 @@ const withInlines = (editor: CustomEditor) => {
 
   editor.isSelectable = (element) =>
     element.type !== "badge" && isSelectable(element);
+
+  editor.insertBreak = () => {
+    const { selection } = editor;
+
+    if (selection && Range.isCollapsed(selection)) {
+      const link = Editor.above(editor, {
+        match: (n) => Node.isElement(n) && n.type === "link",
+      });
+
+      if (link && Editor.isEnd(editor, selection.anchor, link[1])) {
+        const after = Editor.after(editor, link[1]);
+        if (after) {
+          Transforms.select(editor, after);
+        }
+      }
+    }
+
+    insertBreak();
+  };
 
   editor.insertText = (text) => {
     if (text && isUrl(text)) {
