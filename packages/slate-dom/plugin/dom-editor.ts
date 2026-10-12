@@ -1176,6 +1176,7 @@ export const DOMEditor: DOMEditorInterface = {
       Range.isExpanded(range) &&
       Range.isForward(range) &&
       isDOMElement(focusNode) &&
+      !focusNode.closest('[data-slate-void="true"]') &&
       Editor.void(editor, { at: range.focus, mode: "highest" })
     ) {
       range = Editor.unhangRange(editor, range, { voids: true });
