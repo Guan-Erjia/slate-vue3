@@ -3,7 +3,6 @@ import { h } from "vue";
 import { render } from "@testing-library/vue";
 import { DOMEditor } from "slate-vue3/dom";
 import { createReactiveEditor, Editable, Slate } from "slate-vue3";
-import { sleep } from "@test-utils";
 
 const initialValue = [{ type: "paragraph", children: [{ text: "hello" }] }];
 
