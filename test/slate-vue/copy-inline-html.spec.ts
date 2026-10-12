@@ -1,4 +1,3 @@
-import { sleep } from "@test-utils";
 import { render } from "@testing-library/vue";
 import { Descendant, Editor, Transforms } from "slate";
 import {
@@ -9,7 +8,7 @@ import {
 } from "slate-vue3";
 import { DOMEditor } from "slate-vue3/dom";
 import { describe, expect, test } from "vitest";
-import { h } from "vue";
+import { h, nextTick } from "vue";
 
 const renderElement = ({
   attributes,
@@ -44,7 +43,7 @@ const copy = async (
     },
   });
   select(editor);
-  await sleep(0);
+  await nextTick();
   const data: Record<string, string> = {};
   DOMEditor.setFragmentData(editor, {
     setData: (type: string, value: string) => {
@@ -69,7 +68,7 @@ describe("copying text inside an inline", () => {
     const data = await copy(paragraphWithLink, (editor) =>
       Transforms.select(editor, Editor.range(editor, [0, 1])),
     );
-    await sleep(0);
+    await nextTick();
     const html = document.createElement("div");
     html.innerHTML = data["text/html"];
     const link = html.querySelector("a");
@@ -87,7 +86,7 @@ describe("copying text inside an inline", () => {
         focus: { path: [0, 0], offset: 3 },
       }),
     );
-    await sleep(0);
+    await nextTick();
 
     expect(data["text/html"]).not.toContain("<a");
   });

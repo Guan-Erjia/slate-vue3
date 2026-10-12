@@ -1,4 +1,3 @@
-import { sleep } from "@test-utils";
 import { render } from "@testing-library/vue";
 import { Descendant, Editor, Transforms } from "slate";
 import {
@@ -9,7 +8,7 @@ import {
 } from "slate-vue3";
 import { DOMEditor } from "slate-vue3/dom";
 import { describe, expect, test } from "vitest";
-import { h } from "vue";
+import { h, nextTick } from "vue";
 
 type Mention = { type: "mention"; character: string };
 
@@ -44,7 +43,7 @@ const copyAll = async (initialValue: Descendant[]) => {
 
   Transforms.select(editor, Editor.range(editor, []));
 
-  await sleep(0);
+  await nextTick();
 
   const data: Record<string, string> = {};
   DOMEditor.setFragmentData(editor, {

@@ -1,10 +1,9 @@
-import { Descendant, Editor } from "slate";
+import { Descendant } from "slate";
 import { createReactiveEditor, Editable, Slate } from "slate-vue3";
 import { describe, expect, test } from "vitest";
 import { render } from "@testing-library/vue";
-import { h } from "vue";
+import { h, nextTick } from "vue";
 import { DOMEditor } from "slate-vue3/dom";
-import { sleep } from "@test-utils";
 
 const initialValue: Descendant[] = [
   { type: "paragraph", children: [{ text: "before the void" }] } as Descendant,
@@ -48,7 +47,7 @@ describe("ReactEditor.toSlateRange", () => {
   test("keeps a forward selection that ends inside a block void", async () => {
     const { editor, container } = renderEditor();
 
-    await sleep(0);
+    await nextTick();
     const text = container.querySelector("[data-slate-string]")!.firstChild!;
     const voidContent = container.querySelector(
       '[data-testid="void-content"]',

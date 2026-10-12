@@ -4,7 +4,7 @@ import { h } from "vue";
 import { createReactiveEditor, Editable, Slate } from "slate-vue3";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { DOMEditor } from "slate-vue3/dom";
-import { sleep } from "@test-utils";
+import { nextTick } from "vue";
 
 const initialValue: Descendant[] = [
   { type: "paragraph", children: [{ text: "hello" }] } as Descendant,
@@ -54,7 +54,7 @@ describe("ReactEditor.findEventRange", () => {
       return range;
     });
 
-    await sleep(0);
+    await nextTick();
 
     const range = DOMEditor.findEventRange(editor, {
       clientX: 10,
@@ -85,7 +85,7 @@ describe("ReactEditor.findEventRange", () => {
       return range;
     });
 
-    await sleep(0);
+    await nextTick();
 
     const range = DOMEditor.findEventRange(editor, {
       clientX: 10,
