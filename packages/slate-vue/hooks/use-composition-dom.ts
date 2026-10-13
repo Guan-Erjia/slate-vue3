@@ -13,15 +13,17 @@ export const useCompositionDOM = (editor: Editor) => {
     manager.clear();
   };
 
-  const track = (text: string | null) => {
-    if (!observer) {
-      if (!text?.includes("\n")) return;
-      observer = new MutationObserver(manager.registerMutations);
-    }
+  const observe = () => {
+    observer ??= new MutationObserver(manager.registerMutations);
     observer.observe(DOMEditor.toDOMNode(editor, editor), {
       childList: true,
       subtree: true,
     });
+  };
+
+  const track = (text: string | null) => {
+    if (!observer && !text?.includes("\n")) return;
+    observe();
   };
 
   const pause = () => {
@@ -39,6 +41,7 @@ export const useCompositionDOM = (editor: Editor) => {
 
   return {
     track,
+    observe,
     pause,
     restore,
     clear,

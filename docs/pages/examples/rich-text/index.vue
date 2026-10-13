@@ -13,6 +13,7 @@ import BlockButton from "./BlockButton.vue";
 import AlignButton from "../rich-text/AlignButton.vue";
 import { CustomElement } from "../../../custom-types";
 import { withHistory } from "slate-history";
+import { Editor, Transforms, Range, Element } from "slate";
 
 const initialValue: CustomElement[] = [
   {
@@ -103,7 +104,39 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   );
 };
 
-const editor = withHistory(createReactiveEditor());
+const withRichText = (editor: Editor) => {
+  const { deleteFragment } = editor;
+
+  editor.deleteFragment = (direction) => {
+    const { selection } = editor;
+
+    if (selection && Range.isExpanded(selection)) {
+      const [start, end] = Range.edges(selection);
+
+      if (Editor.isStart(editor, start, []) && Editor.isEnd(editor, end, [])) {
+        Editor.withoutNormalizing(editor, () => {
+          Transforms.removeNodes(editor, {
+            at: [],
+            match: (node) => Element.isElement(node),
+            mode: "highest",
+          });
+          Transforms.insertNodes(
+            editor,
+            { type: "paragraph", children: [{ text: "" }] },
+            { at: [0], select: true },
+          );
+        });
+        return;
+      }
+    }
+
+    deleteFragment(direction);
+  };
+
+  return editor;
+};
+
+const editor = withRichText(withHistory(createReactiveEditor()));
 editor.children = initialValue;
 </script>
 

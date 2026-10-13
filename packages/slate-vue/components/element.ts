@@ -29,6 +29,29 @@ import { provideIsLastEmptyBlock } from "../render/last";
 import { useRenderElement } from "../render/fn";
 import { useDecorations } from "../hooks/use-decorations";
 
+const findSiblingDirection = (siblings: Iterable<Node>) => {
+  for (const sibling of siblings) {
+    const dir = direction(Node.string(sibling));
+
+    if (dir !== "neutral") {
+      return dir;
+    }
+  }
+};
+
+const getEmptyBlockDirection = (element: Element) => {
+  const parent = NODE_TO_PARENT.get(element);
+  const index = NODE_TO_INDEX.get(element);
+
+  if (!parent || index === undefined) {
+    return;
+  }
+
+  const before = parent.children.slice(0, index).reverse();
+  const after = parent.children.slice(index + 1);
+  return findSiblingDirection(before) ?? findSiblingDirection(after);
+};
+
 interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
   "data-slate-void"?: true;
@@ -103,7 +126,8 @@ export const ElementComp = defineComponent({
       } else if (Editor.hasInlines(editor, props.element)) {
         // If it's a block node with inline children, add the proper `dir` attribute for text direction.
         const text = Node.string(props.element);
-        const dir = direction(text);
+        const dir =
+          text === "" ? getEmptyBlockDirection(props.element) : direction(text);
         if (dir === "rtl") {
           attributes.dir = dir;
         }

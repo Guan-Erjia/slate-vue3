@@ -9,11 +9,15 @@ import {
 import { h } from "vue";
 import imageExtensions from "image-extensions";
 import isUrl from "is-url";
-import { CustomEditor, ImageElement } from "../../../custom-types";
+import {
+  CustomEditor,
+  ImageElement,
+  ParagraphElement,
+} from "../../../custom-types";
 import ImageComp from "./ImageComp.vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import Button from "../../../components/Button.vue";
-import { Descendant, Transforms } from "slate";
+import { Descendant, Editor, Path, Transforms, Range } from "slate";
 import { withHistory } from "slate-history";
 
 const initialValue: Descendant[] = [
@@ -91,7 +95,30 @@ const isImageUrl = (url: string) => {
   return ext && imageExtensions.includes(ext);
 };
 const withImages = (editor: CustomEditor) => {
-  const { insertData, isVoid } = editor;
+  const { insertData, isVoid, insertBreak } = editor;
+
+  editor.insertBreak = () => {
+    const { selection } = editor;
+
+    if (selection && Range.isCollapsed(selection)) {
+      const match = Editor.void(editor, { at: selection });
+
+      if (match && Editor.isBlock(editor, match[0])) {
+        const paragraph: ParagraphElement = {
+          type: "paragraph",
+          children: [{ text: "" }],
+        };
+        Transforms.insertNodes(editor, paragraph, {
+          at: Path.next(match[1]),
+          select: true,
+        });
+        return;
+      }
+    }
+
+    insertBreak();
+  };
+
   editor.isVoid = (element) => {
     return element.type === "image" ? true : isVoid(element);
   };
