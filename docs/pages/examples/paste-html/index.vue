@@ -208,7 +208,7 @@ const renderElement = (props: RenderElementProps) => {
         "a",
         {
           ...attributes,
-          href: allowedSchemes.includes(element.url)
+          href: allowedSchemes.includes(new URL(element.url).protocol)
             ? element.url
             : "about:blank",
         },

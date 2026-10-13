@@ -16,16 +16,8 @@ test.describe("paste html example", () => {
           new Event("paste", { bubbles: true, cancelable: true }),
           {
             clipboardData: {
-              getData: (type = "text/html") => {
-                if (type === "text/html") return htmlContent;
-                if (type === "text/plain")
-                  return (
-                    new DOMParser().parseFromString(htmlContent, "text/html")
-                      .body.textContent ?? ""
-                  );
-                return "";
-              },
-              types: ["text/html", "text/plain"],
+              getData: (type = "text/html") => htmlContent,
+              types: ["text/html"],
             },
           },
         );
@@ -52,9 +44,9 @@ test.describe("paste html example", () => {
     const link = page
       .getByRole("textbox")
       .locator('a[href^="https://example.com"]');
-    // await expect(link).toHaveCount(1);
-    // expect(await link.locator("strong").textContent()).toContain("bold link");
-    // expect(errors).toEqual([]);
+    await expect(link).toHaveCount(1);
+    expect(await link.locator("strong").textContent()).toContain("bold link");
+    expect(errors).toEqual([]);
   });
 
   test("pasted code uses <code>", async ({ page }) => {
