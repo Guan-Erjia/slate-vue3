@@ -54,9 +54,12 @@ test.describe("On richtext example", () => {
     await expect(firstParagraph).toBeHidden();
 
     await expect(async () => {
-      await page.evaluate(() =>
-        window.scrollTo(0, document.documentElement.scrollHeight),
-      );
+      await page.evaluate(() => {
+        const container = document.querySelector(
+          '[data-testid="container"]',
+        ) as HTMLElement;
+        container.scrollTo(0, container.scrollHeight);
+      });
       await expect(secondParagraph).not.toBeInViewport({ timeout: 500 });
     }).toPass();
 
@@ -120,13 +123,21 @@ test.describe("On richtext example", () => {
 
     const before = await page.evaluate(() => {
       const caretLine = window.getSelection()!.anchorNode!.parentElement!;
-      window.scrollBy(0, caretLine.getBoundingClientRect().top - 2);
-      return window.scrollY;
+      const container = document.querySelector(
+        '[data-testid="container"]',
+      ) as HTMLElement;
+      container.scrollBy(0, caretLine.getBoundingClientRect().top - 2);
+      return container.scrollTop;
     });
     await page.waitForTimeout(300);
     await page.keyboard.press("ArrowLeft");
     await page.waitForTimeout(300);
-    const after = await page.evaluate(() => window.scrollY);
+    const after = await page.evaluate(() => {
+      const container = document.querySelector(
+        '[data-testid="container"]',
+      ) as HTMLElement;
+      return container.scrollTop;
+    });
 
     expect(before - after).toBeGreaterThan(0);
     expect(before - after).toBeLessThan(120);

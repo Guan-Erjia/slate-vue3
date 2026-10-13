@@ -122,6 +122,8 @@ export const DEFAULT_SCROLL_INTO_VIEW = (
       domFocusPoint.getBoundingClientRect.bind(domFocusPoint);
     scrollIntoView(leafEl, {
       scrollMode: "if-needed",
+      block: "nearest",
+      inline: "nearest",
     });
     // @ts-expect-error an unorthodox delete D:
     delete leafEl.getBoundingClientRect;

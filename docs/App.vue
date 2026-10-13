@@ -35,6 +35,7 @@ const handleContainerClick = () => {
   <div style="display: flex; height: calc(100% - 50px)">
     <Menu />
     <div
+      data-testid="container"
       style="
         min-width: 0;
         flex-grow: 1;
