@@ -15,6 +15,36 @@ import Prism from "../../../utils/prism";
 import { DecoratedRange, Descendant, Node, NodeEntry } from "slate";
 import { withHistory } from "slate-history";
 
+const markdownGrammar = Prism.languages.extend("markdown", {}) as Record<
+  string,
+  Prism.GrammarValue
+>;
+const titles = markdownGrammar.title;
+
+if (Array.isArray(titles)) {
+  for (const title of titles) {
+    if (!(title instanceof RegExp)) {
+      title.inside = {
+        ...title.inside,
+        bold: markdownGrammar.bold,
+        italic: markdownGrammar.italic,
+        "code-snippet": markdownGrammar["code-snippet"],
+      };
+    }
+  }
+}
+
+const decoratedTokenTypes = new Set([
+  "bold",
+  "italic",
+  "underlined",
+  "title",
+  "list",
+  "hr",
+  "blockquote",
+  "code",
+]);
+
 const initialValue: Descendant[] = [
   {
     type: "paragraph",
@@ -41,33 +71,34 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
     return ranges;
   }
 
-  const getLength = (token: any) => {
-    if (typeof token === "string") {
-      return token.length;
-    } else if (typeof token.content === "string") {
-      return token.content.length;
-    } else {
-      return token.content.reduce((l: any, t: any) => l + getLength(t), 0);
+  const decorateTokens = (
+    tokens: Array<string | Prism.Token>,
+    offset: number,
+  ): number => {
+    for (const token of tokens) {
+      const start = offset;
+
+      if (typeof token === "string") {
+        offset += token.length;
+      } else {
+        const content = Array.isArray(token.content)
+          ? token.content
+          : [token.content];
+        offset = decorateTokens(content, offset);
+        if (decoratedTokenTypes.has(token.type)) {
+          ranges.push({
+            [token.type]: true,
+            anchor: { path, offset: start },
+            focus: { path, offset },
+          });
+        }
+      }
     }
+
+    return offset;
   };
 
-  const tokens = Prism.tokenize(node.text, Prism.languages.markdown);
-  let start = 0;
-
-  for (const token of tokens) {
-    const length = getLength(token);
-    const end = start + length;
-
-    if (typeof token !== "string") {
-      ranges.push({
-        [token.type]: true,
-        anchor: { path, offset: start },
-        focus: { path, offset: end },
-      });
-    }
-
-    start = end;
-  }
+  decorateTokens(Prism.tokenize(node.text, markdownGrammar), 0);
 
   return ranges;
 };

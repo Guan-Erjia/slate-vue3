@@ -2,12 +2,12 @@
 import { Slate, Editable, createReactiveEditor } from "slate-vue3";
 import type { RenderElementProps, RenderLeafProps } from "slate-vue3";
 import { h } from "vue";
-import { Editor, Range, Point, Descendant, Node } from "slate";
+import { Editor, Range, Point, Descendant, Node, Transforms } from "slate";
 import { withHistory } from "slate-history";
 import { CustomEditor } from "../../../custom-types";
 
 const withTables = (editor: CustomEditor) => {
-  const { deleteBackward, deleteForward, insertBreak } = editor;
+  const { deleteBackward, deleteForward, deleteFragment, insertBreak } = editor;
   editor.deleteBackward = (unit) => {
     if (editor.selection && Range.isCollapsed(editor.selection)) {
       const [cell] = Editor.nodes(editor, {
@@ -41,6 +41,40 @@ const withTables = (editor: CustomEditor) => {
     }
     deleteForward(unit);
   };
+
+  editor.deleteFragment = (options) => {
+    const { selection } = editor;
+    const isCell = (n: Node) => Node.isElement(n) && n.type === "table-cell";
+
+    if (
+      selection &&
+      Range.isExpanded(selection) &&
+      Editor.above(editor, { at: selection.anchor, match: isCell }) &&
+      Editor.above(editor, { at: selection.focus, match: isCell })
+    ) {
+      const cells = Array.from(Editor.nodes(editor, { match: isCell }));
+
+      if (cells.length > 1) {
+        Editor.withoutNormalizing(editor, () => {
+          for (const [, cellPath] of cells) {
+            const covered = Range.intersection(
+              selection,
+              Editor.range(editor, cellPath),
+            );
+
+            if (covered && Range.isExpanded(covered)) {
+              Transforms.delete(editor, { at: covered });
+            }
+          }
+        });
+        Transforms.collapse(editor, { edge: "start" });
+        return;
+      }
+    }
+
+    deleteFragment(options);
+  };
+
   editor.insertBreak = () => {
     if (editor.selection) {
       const [table] = Editor.nodes(editor, {

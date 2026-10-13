@@ -8,7 +8,7 @@ import {
   type RenderLeafProps,
   createReactiveEditor,
 } from "slate-vue3";
-import { Descendant, Editor, Range, Transforms } from "slate";
+import { Descendant, Editor, Element, Range, Transforms } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { withHistory } from "slate-history";
 import Mention from "./Mention.vue";
@@ -160,19 +160,37 @@ const onKeyDown = (event: KeyboardEvent) => {
 };
 
 const onSlateChange = () => {
-  if (editor.selection && Range.isCollapsed(editor.selection)) {
-    const [start] = Range.edges(editor.selection);
-    const wordBefore = Editor.before(editor, start, { unit: "word" });
-    const before = wordBefore && Editor.before(editor, wordBefore);
+  const { selection } = editor;
+  if (selection && Range.isCollapsed(selection)) {
+    const [start] = Range.edges(selection);
+    const block = Editor.above(editor, {
+      at: start,
+      match: (n) => Element.isElement(n) && Editor.isBlock(editor, n),
+    });
+    const blockStart = block && Editor.start(editor, block[1]);
+    const beforeText =
+      blockStart &&
+      Editor.string(editor, Editor.range(editor, blockStart, start));
+    const beforeMatch = beforeText && beforeText.match(/@([\w-]+)$/);
+    const before =
+      beforeMatch &&
+      Editor.before(editor, start, {
+        distance: beforeMatch[1].length + 1,
+        unit: "character",
+      });
     const beforeRange = before && Editor.range(editor, before, start);
-    const beforeText = beforeRange && Editor.string(editor, beforeRange);
-    const beforeMatch = beforeText && beforeText.match(/^@(\w+)$/);
+    const [voidMatch] = beforeRange
+      ? Editor.nodes(editor, {
+          at: beforeRange,
+          match: (n) => Element.isElement(n) && Editor.isVoid(editor, n),
+        })
+      : [];
     const after = Editor.after(editor, start);
     const afterRange = Editor.range(editor, start, after);
     const afterText = Editor.string(editor, afterRange);
     const afterMatch = afterText.match(/^(\s|$)/);
 
-    if (beforeMatch && afterMatch) {
+    if (beforeRange && beforeMatch && afterMatch && !voidMatch) {
       target.value = beforeRange;
       search.value = beforeMatch[1];
       index.value = 0;
