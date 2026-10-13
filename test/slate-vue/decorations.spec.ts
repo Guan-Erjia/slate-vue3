@@ -51,6 +51,99 @@ describe("decorations", () => {
     };
 
     describe("decorating initial value", () => {
+      for (const scenario of [
+        {
+          name: "ignores a range for a sibling text",
+          anchor: { path: [0, 0], offset: 1 },
+          focus: { path: [0, 0], offset: 3 },
+          expected: [{ text: "middle", decorations: [] }],
+        },
+        {
+          name: "clips a range starting in an earlier text",
+          anchor: { path: [0, 0], offset: 4 },
+          focus: { path: [0, 1], offset: 2 },
+          expected: [
+            { text: "mi", decorations: ["bold"] },
+            { text: "ddle", decorations: [] },
+          ],
+        },
+        {
+          name: "clips a backward range ending in a later text",
+          anchor: { path: [0, 2], offset: 1 },
+          focus: { path: [0, 1], offset: 4 },
+          expected: [
+            { text: "midd", decorations: [] },
+            { text: "le", decorations: ["bold"] },
+          ],
+        },
+        {
+          name: "clips a range spanning the entire text",
+          anchor: { path: [0, 0], offset: 4 },
+          focus: { path: [0, 2], offset: 1 },
+          expected: [{ text: "middle", decorations: ["bold"] }],
+        },
+        {
+          name: "preserves a collapsed decoration at the start",
+          anchor: { path: [0, 1], offset: 0 },
+          focus: { path: [0, 1], offset: 0 },
+          expected: [
+            { text: "\uFEFF", decorations: ["bold"] },
+            { text: "middle", decorations: [] },
+          ],
+        },
+        {
+          name: "preserves a collapsed decoration at the end",
+          anchor: { path: [0, 1], offset: 6 },
+          focus: { path: [0, 1], offset: 6 },
+          expected: [
+            { text: "middle", decorations: [] },
+            { text: "\uFEFF", decorations: ["bold"] },
+          ],
+        },
+      ]) {
+        it(scenario.name, async () => {
+          const editor = createEditor();
+          const initialValue = [
+            {
+              children: [
+                { text: "before" },
+                { text: "middle" },
+                { text: "after" },
+              ],
+            },
+            ...otherNodes(),
+          ];
+          editor.children = initialValue;
+
+          const decorate = ([, path]: NodeEntry) => {
+            const ranges = [];
+            if (Path.equals(path, [0, 1])) {
+              ranges.push({
+                anchor: scenario.anchor,
+                focus: scenario.focus,
+                bold: true,
+              });
+            }
+            return ranges;
+          };
+
+          render(Slate, {
+            props: { editor, renderLeaf, decorate },
+            slots: {
+              default: h(Editable),
+            },
+          });
+          await nextTick();
+          expect(getDecoratedLeaves(editor, [0, 1])).toEqual(scenario.expected);
+          expect(getDecoratedLeaves(editor, [0, 0])).toEqual([
+            { text: "before", decorations: [] },
+          ]);
+          expect(getDecoratedLeaves(editor, [0, 2])).toEqual([
+            { text: "after", decorations: [] },
+          ]);
+        });
+      }
+
       it("decorates part of a single text node", async () => {
         const editor = createEditor();
 
@@ -293,6 +386,55 @@ describe("decorations", () => {
     });
 
     describe("redecorating", () => {
+      it("redecorates when only the decoration paths change", async () => {
+        const editor = createEditor();
+        const initialValue = [
+          { children: [{ text: "before" }, { text: "middle" }] },
+          ...otherNodes(),
+        ];
+        const decorate = (path: Path) => () => {
+          const ranges = [];
+          if (Path.isChild(path, [])) {
+            ranges.push({
+              anchor: { path, offset: 0 },
+              focus: { path, offset: 6 },
+              bold: true,
+            });
+          }
+          return ranges;
+        };
+
+        const view = (path: Path) => {
+          editor.children = initialValue;
+          return h(
+            Slate,
+            {
+              editor,
+              decorate: decorate(path),
+              renderLeaf,
+            },
+            {
+              default: () => h(Editable),
+            },
+          );
+        };
+
+        const { rerender } = render(view([0, 1]));
+
+        await nextTick();
+
+        expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
+          { text: "middle", decorations: ["bold"] },
+        ]);
+        rerender(view([0, 0]));
+        expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
+          { text: "middle", decorations: [] },
+        ]);
+        rerender(view([0, 1]));
+        expect(getDecoratedLeaves(editor, [0, 1])).toEqual([
+          { text: "middle", decorations: ["bold"] },
+        ]);
+      });
       it("redecorates all nodes when the decorate function changes", async () => {
         const editor = createEditor();
         const initialValue = [

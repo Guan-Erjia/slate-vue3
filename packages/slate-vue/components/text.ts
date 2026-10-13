@@ -1,11 +1,18 @@
-import { Text, DecoratedRange } from "slate";
+import { Text, DecoratedRange, Element } from "slate";
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
   ELEMENT_TO_NODE,
   NODE_TO_ELEMENT,
 } from "slate-vue3/dom";
-import { h, ref, defineComponent, renderList, onUpdated, computed } from "vue";
+import {
+  h,
+  defineComponent,
+  renderList,
+  onUpdated,
+  computed,
+  VNodeRef,
+} from "vue";
 import { useEditor } from "../hooks/use-editor";
 import { useTextDecorations } from "../hooks/use-decorations";
 import { useRenderText } from "../render/fn";
@@ -15,10 +22,25 @@ import { RenderTextProps } from "../utils/interface";
 
 export const TextComp = defineComponent({
   name: "slate-text",
-  props: ["text", "isLast", "decorations"],
-  setup(props: { text: Text; isLast: boolean; decorations: DecoratedRange[] }) {
+  props: ["text", "isLast", "decorations", "parent"],
+  setup(props: {
+    text: Text;
+    parent: Element;
+    isLast: boolean;
+    decorations: DecoratedRange[];
+  }) {
     const editor = useEditor();
-    const textRef = ref<HTMLSpanElement>();
+    const textRef: VNodeRef = (ref) => {
+      if (!ref || !(ref instanceof HTMLElement)) {
+        return;
+      }
+      const key = DOMEditor.findKey(editor, props.text);
+      if (ref && KEY_TO_ELEMENT) {
+        KEY_TO_ELEMENT.set(key, ref);
+        ELEMENT_TO_NODE.set(ref, props.text);
+        NODE_TO_ELEMENT.set(props.text, ref);
+      }
+    };
 
     const renderText = useRenderText();
     const renderTextAttributes: RenderTextProps["attributes"] = {
@@ -52,13 +74,6 @@ export const TextComp = defineComponent({
     );
 
     return () => {
-      const key = DOMEditor.findKey(editor, props.text);
-      if (textRef.value && KEY_TO_ELEMENT) {
-        KEY_TO_ELEMENT.set(key, textRef.value);
-        ELEMENT_TO_NODE.set(textRef.value, props.text);
-        NODE_TO_ELEMENT.set(props.text, textRef.value);
-      }
-
       return renderText({
         text: props.text,
         attributes: renderTextAttributes,
@@ -68,6 +83,7 @@ export const TextComp = defineComponent({
             leaf: leaf.leaf,
             isLast: props.isLast && i === decoratedLeaves.value.length - 1,
             leafPosition: leaf.position,
+            parent: props.parent,
             key: `${props.text.text}-${leaf.position?.end}-${leaf.position?.start}`,
           }),
         ),

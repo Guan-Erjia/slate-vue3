@@ -1,13 +1,7 @@
-import {
-  CSSProperties,
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  onUnmounted,
-} from "vue";
+import { CSSProperties, defineComponent, ref, computed, VNodeRef } from "vue";
 import { useRenderPlaceholder } from "../render/placeholder";
-import { IS_WEBKIT } from "slate-vue3/dom";
+import { EDITOR_TO_PLACEHOLDER_ELEMENT, IS_WEBKIT } from "slate-vue3/dom";
+import { useEditor } from "../hooks/use-editor";
 
 const style: CSSProperties = {
   position: "absolute",
@@ -29,33 +23,33 @@ export const PlaceholderComp = defineComponent({
   props: ["placeholder", "onPlaceholderResize"],
   setup(props: {
     placeholder?: string;
-    onPlaceholderResize?: (height?: number) => void;
+    onPlaceholderResize?: (node: HTMLElement | null) => void;
   }) {
+    const editor = useEditor();
     const placeholderResizeObserver = ref<ResizeObserver>();
-    const placeholderRef = ref<HTMLElement>();
+    const placeholderRef: VNodeRef = (ref) => {
+      if (ref === null) {
+        placeholderResizeObserver.value?.disconnect();
+        placeholderResizeObserver.value = undefined;
+        props.onPlaceholderResize?.(null);
+        EDITOR_TO_PLACEHOLDER_ELEMENT.delete(editor);
+        return;
+      }
 
-    onMounted(() => {
-      placeholderResizeObserver.value = new ResizeObserver(() => {
-        props.onPlaceholderResize?.(
-          placeholderRef.value?.getBoundingClientRect()?.height,
-        );
-      });
-      placeholderResizeObserver.value.observe(
-        placeholderRef.value as HTMLElement,
-      );
-    });
-
-    onUnmounted(() => {
-      placeholderResizeObserver.value?.disconnect();
-      placeholderResizeObserver.value = undefined;
-      props.onPlaceholderResize?.();
-    });
+      if (ref instanceof HTMLElement) {
+        placeholderResizeObserver.value?.observe(ref);
+        props.onPlaceholderResize?.(ref);
+        EDITOR_TO_PLACEHOLDER_ELEMENT.set(editor, ref);
+      }
+    };
 
     const attributes = computed(() => ({
       "data-slate-placeholder": true,
+      "aria-hidden": true,
       style,
       contenteditable: false,
       ref: placeholderRef,
+      onPlaceholderResize: props.onPlaceholderResize,
     }));
 
     const renderPlaceholder = useRenderPlaceholder();

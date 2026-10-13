@@ -1,9 +1,9 @@
 import type { Text, Element, LeafPosition, Editor } from "slate";
 import type {
+  CSSProperties,
   HTMLAttributes,
   VNode,
   VNodeChild,
-  VNodeProps,
   VNodeRef,
 } from "vue";
 
@@ -25,11 +25,14 @@ export interface RenderChunkProps {
  */
 export interface RenderPlaceholderProps {
   children?: string;
-  attributes: HTMLAttributes &
-    VNodeProps & {
-      "data-slate-placeholder": boolean;
-      dir?: "rtl";
-    };
+  attributes: {
+    "data-slate-placeholder": boolean;
+    "aria-hidden": boolean;
+    dir?: "rtl";
+    contenteditable: boolean;
+    ref: VNodeRef;
+    style: CSSProperties;
+  };
 }
 
 /**

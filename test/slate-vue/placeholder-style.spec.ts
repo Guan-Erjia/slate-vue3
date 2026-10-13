@@ -5,7 +5,7 @@ import {
   RenderPlaceholderProps,
   Slate,
 } from "slate-vue3";
-import { CSSProperties, h, normalizeStyle } from "vue";
+import { CSSProperties, h, nextTick } from "vue";
 import { render } from "@testing-library/vue";
 
 describe("placeholder style", () => {
@@ -25,14 +25,14 @@ describe("placeholder style", () => {
     vi.unstubAllGlobals();
   });
 
-  test("sets the WebKit-prefixed user-select so iOS Safari cannot select it", () => {
+  test("sets the WebKit-prefixed user-select so iOS Safari cannot select it", async () => {
     const editor = createReactiveEditor();
     const renderedStyles: CSSProperties[] = [];
     const renderPlaceholder = ({
       attributes,
       children,
     }: RenderPlaceholderProps) => {
-      renderedStyles.push(attributes.style as CSSProperties);
+      renderedStyles.push(attributes.style);
       return h("span", attributes, children);
     };
 
@@ -51,9 +51,9 @@ describe("placeholder style", () => {
     });
 
     vi.runAllTimers();
+    await nextTick();
 
     expect(renderedStyles.length).toBeGreaterThan(0);
-    console.log(renderedStyles);
     expect(renderedStyles.at(-1)).toMatchObject({
       WebkitUserSelect: "none",
       userSelect: "none",

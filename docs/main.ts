@@ -9,6 +9,7 @@ import {
   PACKAGES_RECORD,
   EXAMPLE_RECORD,
   ROUTES_RECORD,
+  PLAYWRIGHT_RECORD,
 } from "./routes";
 
 export const router = createRouter({
@@ -43,6 +44,11 @@ export const router = createRouter({
       path: "/examples",
       component: () => import("./pages/examples/index.vue"),
       children: EXAMPLE_RECORD,
+    },
+    {
+      name: "playwright",
+      path: "/playwright",
+      children: PLAYWRIGHT_RECORD,
     },
     ...ROUTES_RECORD,
   ],

@@ -83,3 +83,5 @@ export {
   NODE_TO_PARENT,
   PLACEHOLDER_SYMBOL,
 } from "./utils/weak-maps";
+
+export { copyNodeInUse } from "./utils/node-identity";

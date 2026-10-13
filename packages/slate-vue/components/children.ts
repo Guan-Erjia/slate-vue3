@@ -13,7 +13,6 @@ import { ElementComp } from "../components/element";
 import { TextComp } from "../components/text";
 import { ChunkTreeComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
-import { provideIsLastEmptyBlock } from "../render/last";
 import { getChunkTreeForNode } from "../chunking";
 import { useRenderChunk } from "../render/chunk";
 
@@ -33,10 +32,6 @@ export const ChildrenComp = defineComponent({
     const chunkSize = Editor.hasInlines(editor, props.element)
       ? null
       : editor.getChunkSize(props.element);
-
-    if (isBlock || chunkSize === null) {
-      provideIsLastEmptyBlock(props.element);
-    }
 
     let _mutableDecorationsByChild: DecoratedRange[][] = [];
     return () => {
@@ -93,6 +88,7 @@ export const ChildrenComp = defineComponent({
                 key: key.id,
                 decorations: mutableDecorationsByChild[i],
                 isLast: i === props.element.children.length - 1,
+                parent: props.element,
               })
             : h(ElementComp, {
                 element: n,

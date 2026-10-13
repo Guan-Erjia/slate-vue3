@@ -6,13 +6,13 @@ declare module "slate" {
     Editor: ReactiveEditor;
     Text: BaseText & {
       placeholder?: string;
-      onPlaceholderResize?: (height?: number) => void;
+      onPlaceholderResize?: (node: HTMLElement | null) => void;
       // FIXME: is unknown correct here?
       [key: string]: unknown;
     };
     Range: BaseRange & {
       placeholder?: string;
-      onPlaceholderResize?: (height?: number) => void;
+      onPlaceholderResize?: (node: HTMLElement | null) => void;
       // FIXME: is unknown correct here?
       [key: string]: unknown;
     };

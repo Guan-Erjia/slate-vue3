@@ -231,6 +231,24 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
   },
 ];
 
+export const PLAYWRIGHT_RECORD: RouteRecordRaw[] = [
+  {
+    name: "editable-islands",
+    path: "editable-islands",
+    component: () => import("./pages/playwright/editable-islands.vue"),
+  },
+  {
+    name: "inline-boundaries",
+    path: "inline-boundaries",
+    component: () => import("./pages/playwright/inline-boundaries.vue"),
+  },
+  {
+    name: "onclick-selection",
+    path: "onclick-selection",
+    component: () => import("./pages/playwright/onclick-selection.vue"),
+  },
+];
+
 export const ROUTES_RECORD: RouteRecordRaw[] = [
   {
     path: "/",

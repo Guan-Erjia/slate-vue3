@@ -112,14 +112,14 @@ importers:
         specifier: ^0.9.0
         version: 0.9.0(unified@11.0.5)
       slate:
-        specifier: ^0.133.1
-        version: 0.133.1
+        specifier: ^0.146.0
+        version: 0.146.0
       slate-history:
-        specifier: ^0.113.1
-        version: 0.113.1(slate@0.133.1)
+        specifier: ^0.140.0
+        version: 0.140.0(slate@0.146.0)
       slate-hyperscript:
-        specifier: ^0.129.1
-        version: 0.129.1(slate@0.133.1)
+        specifier: ^0.138.3
+        version: 0.138.3(slate@0.146.0)
       typescript:
         specifier: ~6.0.3
         version: 6.0.3
@@ -1221,8 +1221,8 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
-  baseline-browser-mapping@2.11.28:
-    resolution: {integrity: sha512-br0LOmjJqr6Rt4AEkadbcNf67Zpo7EPwKsWbjnRrJIa1QYFHQBqM4C7F2WTbV8ahTEcg1Eo+Y0aWjjORInYFyA==}
+  baseline-browser-mapping@2.11.29:
+    resolution: {integrity: sha512-YeesxhUmR4h5y5V8KF8iBCqJb8YFrBJ++XBTeGcWIaQOYXGN19JM0FoiOjAhwuDoln8owMgXcWBmgHtYSkky2w==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1262,8 +1262,8 @@ packages:
     resolution: {integrity: sha512-+ys997U96po4Kx/ABpBCqhA9EuxJaQWDQg7295H4hBphv3IZg0boBKuwYpt4YXp6MZ5AmZQnU/tyMTlRpaSejg==}
     engines: {node: '>= 0.4'}
 
-  caniuse-lite@1.0.30001815:
-    resolution: {integrity: sha512-uDybUEyfgbyJJ93J1vikTylBX31AkdVYeVPeffMQpf8XN7hSfr0oZOn4VFOIMNvtU5+rHvC5Udg2TgtJKHm23Q==}
+  caniuse-lite@1.0.30001816:
+    resolution: {integrity: sha512-+8Yx7BXCoqk6IF8yTicjfUR6D/ldJzdlsodlEOiOSPmhK844WIgk67/zIQaGAOxNkZyyvBlrRFnLvqKIoqbAFw==}
 
   ccount@2.0.1:
     resolution: {integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==}
@@ -1399,8 +1399,8 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  electron-to-chromium@1.5.452:
-    resolution: {integrity: sha512-cVvk1YBSj6571VmV6hdJTqj94Y79xSu8cj6Y9t6ae4Y4431z8/7EJFvu3rVp90xhfuv9BpPKUmaLfTo4+FOGBg==}
+  electron-to-chromium@1.5.458:
+    resolution: {integrity: sha512-/hIH2gRSmxrf4/X4Nw/t/Wc8PVS22l8/3HnWjWTWsTOM5dsnMUPZF/+u+yr3LqweNuTBJE1rq6qAQzKkZVwMfA==}
 
   entities@7.0.1:
     resolution: {integrity: sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==}
@@ -1749,10 +1749,6 @@ packages:
   is-plain-obj@4.1.0:
     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
     engines: {node: '>=12'}
-
-  is-plain-object@5.1.0:
-    resolution: {integrity: sha512-bUi/yjmtKYcRVUtWRGr0UA6xEFh2I6zWUwMrUXB3s7bmYCaZ8a+0ZsTRkrawh/mzlSD1Y0Ph8bp/U+TvBpWDNw==}
-    engines: {node: '>=0.10.0'}
 
   is-potential-custom-element-name@1.0.1:
     resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
@@ -2144,8 +2140,8 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  node-releases@2.0.58:
-    resolution: {integrity: sha512-BdiKAgbfRlvfMq/XzO/AF9NPmaA8a+YpLAyAFTVFBj3gARrAIfWvNq7Q7NE4se3KgFu0KkrvQMxTS0XVnsGzHg==}
+  node-releases@2.0.59:
+    resolution: {integrity: sha512-5qr2okC4ItAI0hG5SaV0HoYMpnM/Y6+Oqr7AmPYy/2uEoGvS+GbSKLeRxSS1uAdu59yz0ouzcuXievSgg///WA==}
     engines: {node: '>=18'}
 
   nopt@10.0.1:
@@ -2401,18 +2397,18 @@ packages:
   siginfo@2.0.0:
     resolution: {integrity: sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==}
 
-  slate-history@0.113.1:
-    resolution: {integrity: sha512-J9NSJ+UG2GxoW0lw5mloaKcN0JI0x2IA5M5FxyGiInpn+QEutxT1WK7S/JneZCMFJBoHs1uu7S7e6pxQjubHmQ==}
-    peerDependencies:
-      slate: '>=0.65.3'
-
-  slate-hyperscript@0.129.1:
-    resolution: {integrity: sha512-PMKWvzz3AjM2kIjmi4Sj8Po7qzg40J87DfM8zefMy0Xl94ckVc7TAh8wH5nslsYrgx1reywrXZz8ifuzyuDLpg==}
+  slate-history@0.140.0:
+    resolution: {integrity: sha512-z9BHtDrFFJNfHCRxzedj1bVyccRDP8kRXJrnQ2kmxvKzx0t/t7BntMNl1BCBhZ3PwQaEptcBSGuYdkOlS2g5/A==}
     peerDependencies:
       slate: '>=0.114.3'
 
-  slate@0.133.1:
-    resolution: {integrity: sha512-KpBNdco+NNv/KVDSaAi6AEQTBIIIhKo4dfvOZnGBNZjdAbq57pB9vJqyLphtEDJ6b+g7HH85QtrVBTr2RKO+mA==}
+  slate-hyperscript@0.138.3:
+    resolution: {integrity: sha512-rsKTeNQ+eu99nxo7a3eBOW0mhG0v3yYCMDwyURNXl+wmS0xv+SIci0un1j2DTcjWJ184ubCEF7d3ySIJB40KFw==}
+    peerDependencies:
+      slate: '>=0.114.3'
+
+  slate@0.146.0:
+    resolution: {integrity: sha512-MWu3mbJdnY71IdXoh4xSm9WG64Ytn+WFR7MeMCpfEe4XdGNiN4bpOyqq4p6mAKTCWrA/PbwJ0YhSmlKmcErkew==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -3923,7 +3919,7 @@ snapshots:
 
   balanced-match@4.0.4: {}
 
-  baseline-browser-mapping@2.11.28: {}
+  baseline-browser-mapping@2.11.29: {}
 
   bidi-js@1.1.0:
     dependencies:
@@ -3939,10 +3935,10 @@ snapshots:
 
   browserslist@4.29.3:
     dependencies:
-      baseline-browser-mapping: 2.11.28
-      caniuse-lite: 1.0.30001815
-      electron-to-chromium: 1.5.452
-      node-releases: 2.0.58
+      baseline-browser-mapping: 2.11.29
+      caniuse-lite: 1.0.30001816
+      electron-to-chromium: 1.5.458
+      node-releases: 2.0.59
       update-browserslist-db: 1.3.4(browserslist@4.29.3)
 
   buffer-from@1.1.2:
@@ -3973,7 +3969,7 @@ snapshots:
       call-bind-apply-helpers: 1.0.2
       get-intrinsic: 1.3.0
 
-  caniuse-lite@1.0.30001815: {}
+  caniuse-lite@1.0.30001816: {}
 
   ccount@2.0.1: {}
 
@@ -4113,7 +4109,7 @@ snapshots:
       minimatch: 10.2.6
       semver: 7.8.5
 
-  electron-to-chromium@1.5.452: {}
+  electron-to-chromium@1.5.458: {}
 
   entities@7.0.1: {}
 
@@ -4474,8 +4470,6 @@ snapshots:
       has-tostringtag: 1.0.2
 
   is-plain-obj@4.1.0: {}
-
-  is-plain-object@5.1.0: {}
 
   is-potential-custom-element-name@1.0.1: {}
 
@@ -5036,7 +5030,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  node-releases@2.0.58: {}
+  node-releases@2.0.59: {}
 
   nopt@10.0.1:
     dependencies:
@@ -5362,16 +5356,15 @@ snapshots:
 
   siginfo@2.0.0: {}
 
-  slate-history@0.113.1(slate@0.133.1):
+  slate-history@0.140.0(slate@0.146.0):
     dependencies:
-      is-plain-object: 5.1.0
-      slate: 0.133.1
+      slate: 0.146.0
 
-  slate-hyperscript@0.129.1(slate@0.133.1):
+  slate-hyperscript@0.138.3(slate@0.146.0):
     dependencies:
-      slate: 0.133.1
+      slate: 0.146.0
 
-  slate@0.133.1: {}
+  slate@0.146.0: {}
 
   source-map-js@1.2.1: {}
 

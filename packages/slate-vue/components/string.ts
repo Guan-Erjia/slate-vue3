@@ -1,37 +1,38 @@
-import { Node, Text } from "slate";
-import { IS_ANDROID, MARK_PLACEHOLDER_SYMBOL } from "slate-vue3/dom";
-import { defineComponent, h } from "vue";
+import { Editor, Node, Path, Text, Element } from "slate";
+import { DOMEditor, IS_FIREFOX, MARK_PLACEHOLDER_SYMBOL } from "slate-vue3/dom";
+import { defineComponent, h, VNodeRef } from "vue";
 import { useEditor } from "../hooks/use-editor";
-import { useElement } from "../hooks/use-element";
-import { injectIsLastEmptyBlock } from "../render/last";
 
 export const StringComp = defineComponent({
   name: "slate-string",
-  props: ["leaf", "text", "isLast"],
-  setup(props: { leaf: Text; text: Text; isLast: boolean }) {
+  props: ["leaf", "text", "isLast", "parent"],
+  setup(props: { leaf: Text; text: Text; isLast: boolean; parent: Element }) {
     const editor = useEditor();
-    const element = useElement();
-    const isLastEmptyBlock = injectIsLastEmptyBlock();
 
     return () => {
+      const isMarkPlaceholder = Boolean(props.leaf[MARK_PLACEHOLDER_SYMBOL]);
       // COMPAT: Render text inside void nodes with a zero-width space.
       // So the node can contain selection but the text is not visible.
-      if (editor.isVoid(element)) {
+      if (editor.isVoid(props.parent)) {
         return ZeroWidthString({
-          length: Node.string(element).length,
+          length: Node.string(props.parent).length,
         });
       }
       // COMPAT: If this is the last text node in an empty block, render a zero-
       // width space that will convert into a line break when copying and pasting
       // to support expected plain text.
+      const path = DOMEditor.findPath(editor, props.text);
+      const parentPath = Path.parent(path);
       if (
         props.leaf.text === "" &&
-        element.children.at(-1) === props.text &&
-        isLastEmptyBlock.value
+        props.parent.children[props.parent.children.length - 1] ===
+          props.text &&
+        !editor.isInline(props.parent) &&
+        Editor.string(editor, parentPath) === ""
       ) {
         return ZeroWidthString({
           isLineBreak: true,
-          isMarkPlaceholder: props.leaf[MARK_PLACEHOLDER_SYMBOL] === true,
+          isMarkPlaceholder: isMarkPlaceholder,
         });
       }
 
@@ -40,7 +41,7 @@ export const StringComp = defineComponent({
       // inserted next to it still.
       if (props.leaf.text === "") {
         return ZeroWidthString({
-          isMarkPlaceholder: props.leaf[MARK_PLACEHOLDER_SYMBOL] === true,
+          isMarkPlaceholder: isMarkPlaceholder,
         });
       }
 
@@ -58,9 +59,31 @@ export const StringComp = defineComponent({
 });
 
 const TextString = (props: { text: string; isTrailing?: boolean }) => {
+  const setRef: VNodeRef = (el) => {
+    if (!el) return;
+    const span = el as HTMLSpanElement;
+
+    if (IS_FIREFOX) {
+      span.toggleAttribute("data-slate-trailing", !!props.isTrailing);
+    }
+
+    const textNode = span.firstChild;
+    if (
+      IS_FIREFOX &&
+      props.isTrailing &&
+      span.childNodes.length === 1 &&
+      textNode?.nodeType === 3
+    ) {
+      (textNode as globalThis.Text).splitText(props.text.length);
+    }
+  };
+
   return h(
     "span",
-    { "data-slate-string": true },
+    {
+      "data-slate-string": true,
+      ref: setRef,
+    },
     `${props.text ?? ""}${props.isTrailing ? "\n" : ""}`,
   );
 };
@@ -78,16 +101,17 @@ const ZeroWidthString = (props: {
   // be because accepting an IME suggestion when at the start of a block (no
   // preceding \uFEFF) removes one or more DOM elements that `toSlateRange`
   // depends on. (https://github.com/ianstormtaylor/slate/issues/5703)
-  return h(
-    "span",
-    {
-      "data-slate-zero-width": props.isLineBreak ? "n" : "z",
-      "data-slate-length": props.length,
-      "data-slate-mark-placeholder": props.isMarkPlaceholder ? true : undefined,
-    },
-    [
-      !IS_ANDROID || !props.isLineBreak ? "\uFEFF" : null,
-      props.isLineBreak ? h("br") : null,
-    ],
-  );
+  const attributes: {
+    "data-slate-zero-width": string;
+    "data-slate-length": number;
+    "data-slate-mark-placeholder"?: boolean;
+  } = {
+    "data-slate-zero-width": props.isLineBreak ? "n" : "z",
+    "data-slate-length": length,
+  };
+
+  if (props.isMarkPlaceholder) {
+    attributes["data-slate-mark-placeholder"] = true;
+  }
+  return h("span", attributes, ["\uFEFF", props.isLineBreak ? h("br") : null]);
 };

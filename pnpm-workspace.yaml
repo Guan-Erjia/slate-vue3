@@ -5,3 +5,4 @@ minimumReleaseAgeExclude:
   - ansi-regex@5.0.1
   - esbuild@0.28.1
   - '@babel/core@7.29.1'
+  - slate@0.146.0
