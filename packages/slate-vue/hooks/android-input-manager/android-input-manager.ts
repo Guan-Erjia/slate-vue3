@@ -301,7 +301,7 @@ export function createAndroidInputManager({
 
     const userMarks = EDITOR_TO_USER_MARKS.get(editor);
     EDITOR_TO_USER_MARKS.delete(editor);
-    if (userMarks !== undefined) {
+    if (userMarks !== undefined && userMarks !== editor.marks) {
       editor.marks = userMarks;
       editor.onChange();
     }
@@ -411,6 +411,10 @@ export function createAndroidInputManager({
 
     if (hasPendingAction()) {
       flush();
+    }
+
+    if (actionTimeoutId) {
+      clearTimeout(actionTimeoutId);
     }
 
     EDITOR_TO_PENDING_ACTION.set(editor, { at, run });
@@ -562,11 +566,16 @@ export function createAndroidInputManager({
           const range = Editor.range(editor, point, point);
           handleUserSelect(range);
 
-          return storeDiff(targetRange.anchor.path, {
+          storeDiff(targetRange.anchor.path, {
             text: "",
             end: end.offset,
             start: start.offset,
           });
+
+          if (type === "deleteContentBackward") {
+            scheduleFlush();
+          }
+          return;
         }
 
         return scheduleAction(
@@ -621,11 +630,13 @@ export function createAndroidInputManager({
           Range.isCollapsed(targetRange) &&
           anchor.offset > 0
         ) {
-          return storeDiff(anchor.path, {
+          storeDiff(anchor.path, {
             text: "",
             start: anchor.offset - 1,
             end: anchor.offset,
           });
+          scheduleFlush();
+          return;
         }
 
         return scheduleAction(() => Editor.deleteBackward(editor), {
@@ -897,6 +908,9 @@ export function createAndroidInputManager({
 
   const scheduleFlush = () => {
     if (!hasPendingAction()) {
+      if (actionTimeoutId) {
+        clearTimeout(actionTimeoutId);
+      }
       actionTimeoutId = setTimeout(flush);
     }
   };
