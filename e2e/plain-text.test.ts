@@ -10,8 +10,8 @@ import {
 const typeLines = async (page: Page, lines: string[]) => {
   const textbox = page.getByRole("textbox");
   await textbox.click();
-  await textbox.selectText();
-  await textbox.press("Backspace");
+  await page.keyboard.press("ControlOrMeta+A");
+  await page.keyboard.press("Backspace");
   for (const [index, line] of lines.entries()) {
     if (index > 0) {
       await textbox.press("Enter");
