@@ -93,14 +93,21 @@ test.describe("On richtext example", () => {
     await page.getByRole("textbox").click();
     await page.evaluate(() => {
       const element = document.querySelector("[data-slate-editor]")!;
-      const fiberKey = Object.keys(element).find((key) =>
-        key.startsWith("__reactFiber$"),
-      )!;
-      let fiber = (element as any)[fiberKey];
-      while (fiber && !fiber.memoizedProps?.editor) {
-        fiber = fiber.return;
+
+      let instance = (element as any).__vueParentComponent;
+      while (
+        instance &&
+        !instance.props?.editor &&
+        !instance.setupState?.editor
+      ) {
+        instance = instance.parent;
       }
-      const editor = fiber.memoizedProps.editor;
+      const editor = (instance?.props?.editor ??
+        instance?.setupState?.editor) as any;
+      if (!editor) {
+        throw new Error("Slate editor not found in Vue component tree");
+      }
+
       const lines = Array.from({ length: 60 }, (_, index) => ({
         type: "paragraph",
         children: [{ text: `Line ${index}` }],

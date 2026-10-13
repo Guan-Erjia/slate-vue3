@@ -53,14 +53,21 @@ test.describe("table example", () => {
   const withEditor = <T>(page: Page, fn: string) =>
     page.evaluate((source) => {
       const element = document.querySelector("[data-slate-editor]")!;
-      const fiberKey = Object.keys(element).find((key) =>
-        key.startsWith("__reactFiber$"),
-      )!;
-      let fiber = (element as any)[fiberKey];
-      while (fiber && !fiber.memoizedProps?.editor) {
-        fiber = fiber.return;
+
+      let instance = (element as any).__vueParentComponent;
+      while (
+        instance &&
+        !instance.props?.editor &&
+        !instance.setupState?.editor
+      ) {
+        instance = instance.parent;
       }
-      return new Function("editor", source)(fiber.memoizedProps.editor);
+
+      const editor = instance?.props?.editor ?? instance?.setupState?.editor;
+      if (!editor) {
+        throw new Error("Slate editor not found in Vue component tree");
+      }
+      return new Function("editor", source)(editor);
     }, fn) as Promise<T>;
 
   const lastCellText = (page: Page) =>

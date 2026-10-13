@@ -103,14 +103,20 @@ test.describe("plaintext example", () => {
     const insertWhileBlurred = (text: string) =>
       page.evaluate((text) => {
         const element = document.querySelector("[data-slate-editor]")!;
-        const fiberKey = Object.keys(element).find((key) =>
-          key.startsWith("__reactFiber$"),
-        )!;
-        let fiber = (element as any)[fiberKey];
-        while (fiber && !fiber.memoizedProps?.editor) {
-          fiber = fiber.return;
+
+        let instance = (element as any).__vueParentComponent;
+        while (
+          instance &&
+          !instance.props?.editor &&
+          !instance.setupState?.editor
+        ) {
+          instance = instance.parent;
         }
-        const editor = fiber.memoizedProps.editor;
+        const editor = instance?.props?.editor ?? instance?.setupState?.editor;
+        if (!editor) {
+          throw new Error("Slate editor not found in Vue component tree");
+        }
+
         let outside = document.querySelector<HTMLButtonElement>("#outside");
         if (!outside) {
           outside = document.createElement("button");
