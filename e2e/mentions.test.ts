@@ -14,7 +14,7 @@ test.describe("mentions example", () => {
 
   test("shows list of mentions", async ({ page }) => {
     await page.getByRole("textbox").click();
-    await page.getByRole("textbox").selectText();
+    await page.keyboard.press("ControlOrMeta+A");
     await page.getByRole("textbox").press("Backspace");
     await page.getByRole("textbox").pressSequentially(" @ma");
     await expect(page.locator('[data-cy="mentions-portal"]')).toHaveCount(1);
@@ -124,7 +124,7 @@ test.describe("mentions example", () => {
 
   test("inserts on enter from list", async ({ page }) => {
     await page.getByRole("textbox").click();
-    await page.getByRole("textbox").selectText();
+    await page.keyboard.press("ControlOrMeta+A");
     await page.getByRole("textbox").press("Backspace");
     await page.getByRole("textbox").pressSequentially(" @Ja");
     await page.getByRole("textbox").press("Enter");

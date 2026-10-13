@@ -236,7 +236,11 @@ const menuStyle = computed(() => {
       spellcheck
     />
     <Teleport to="body">
-      <div :style="menuStyle" data-cy="mentions-portal">
+      <div
+        v-if="target && chars.length"
+        :style="menuStyle"
+        data-cy="mentions-portal"
+      >
         <div
           v-for="(char, i) in chars"
           :key="char"
