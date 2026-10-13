@@ -44,6 +44,8 @@ const VOID_CHILDREN_ATTRS = {
     color: "transparent",
     outline: "none",
     position: "absolute",
+    userSelect: "none",
+    WebkitUserSelect: "none",
   },
 };
 
