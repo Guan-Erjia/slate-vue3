@@ -9,12 +9,7 @@ const initialValue: Descendant[] = [
 ];
 
 const App = defineComponent({
-  props: {
-    editor: {
-      type: Object as () => ReturnType<typeof createReactiveEditor>,
-      required: true,
-    },
-  },
+  props: ["editor"],
   setup(props) {
     return () =>
       h(

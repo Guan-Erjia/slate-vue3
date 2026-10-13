@@ -52,6 +52,7 @@ import { provideRenderChunk } from "../render/chunk";
 export const Slate = defineComponent({
   name: "slate-editor",
   emits: ["change", "selectionchange", "valuechange"],
+  inheritAttrs: false,
   props: {
     editor: {
       type: Object,
