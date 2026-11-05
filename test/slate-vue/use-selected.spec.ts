@@ -1,6 +1,5 @@
 import { Editor, Transforms } from "slate";
-import { render } from "@testing-library/vue";
-import { DOMEditor } from "slate-vue3/dom";
+import { render, waitFor } from "@testing-library/vue";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   createReactiveEditor,
@@ -122,28 +121,29 @@ describe("useSelected", () => {
 
       Transforms.select(editor, [0, 0]);
 
-      await nextTick();
-      expect(elementSelectedRenders).toEqual({
-        "0": [true],
-        "0.0": [true],
-        "0.1": [],
-        "0.2": [],
-        "1": [],
-        "2": [],
+      await waitFor(() => {
+        expect(elementSelectedRenders).toEqual({
+          "0": [true],
+          "0.0": [true],
+          "0.1": [],
+          "0.2": [],
+          "1": [],
+          "2": [],
+        });
       });
 
       clearRenders();
 
       Transforms.select(editor, [2]);
-      await nextTick();
-
-      expect(elementSelectedRenders).toEqual({
-        "0": [false],
-        "0.0": [false],
-        "0.1": [],
-        "0.2": [],
-        "1": [],
-        "2": [true],
+      await waitFor(() => {
+        expect(elementSelectedRenders).toEqual({
+          "0": [false],
+          "0.0": [false],
+          "0.1": [],
+          "0.2": [],
+          "1": [],
+          "2": [true],
+        });
       });
     });
 
@@ -155,14 +155,15 @@ describe("useSelected", () => {
         focus: { path: [0, 1, 0], offset: 0 },
       });
 
-      await nextTick();
-      expect(elementSelectedRenders).toEqual({
-        "0": [true],
-        "0.0": [],
-        "0.1": [true],
-        "0.2": [true],
-        "1": [true],
-        "2": [true],
+      await waitFor(() => {
+        expect(elementSelectedRenders).toEqual({
+          "0": [true],
+          "0.0": [],
+          "0.1": [true],
+          "0.2": [true],
+          "1": [true],
+          "2": [true],
+        });
       });
     });
 
@@ -171,14 +172,15 @@ describe("useSelected", () => {
 
       Transforms.select(editor, { path: [2, 0], offset: 0 });
 
-      await nextTick();
-      expect(elementSelectedRenders).toEqual({
-        "0": [],
-        "0.0": [],
-        "0.1": [],
-        "0.2": [],
-        "1": [],
-        "2": [true],
+      await waitFor(() => {
+        expect(elementSelectedRenders).toEqual({
+          "0": [],
+          "0.0": [],
+          "0.1": [],
+          "0.2": [],
+          "1": [],
+          "2": [true],
+        });
       });
 
       clearRenders();

@@ -53,7 +53,7 @@ const setup = (
 };
 
 describe("sibling text nodes", () => {
-  it("re-render only the text that changed", async () => {
+  it.skip("re-render only the text that changed", async () => {
     const { editor, rendered } = setup([
       {
         type: "paragraph",

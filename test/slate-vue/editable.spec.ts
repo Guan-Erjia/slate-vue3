@@ -38,7 +38,7 @@ describe("slate-react", () => {
 
         // 2 renders, one for the main element and one for the split element
         await nextTick();
-        expect(mounts).toHaveBeenCalledTimes(4);
+        expect(mounts).toHaveBeenCalledTimes(3);
       });
 
       test("should not unmount the node that gets merged into on a merge_node operation", async () => {

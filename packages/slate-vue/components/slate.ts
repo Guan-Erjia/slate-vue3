@@ -48,6 +48,7 @@ import {
 import { provideEditorVersion } from "../render/version";
 import { provideRenderPlaceholder } from "../render/placeholder";
 import { provideRenderChunk } from "../render/chunk";
+import { useSelectorContext } from "../hooks/use-slate-selector";
 
 export const Slate = defineComponent({
   name: "slate-editor",
@@ -134,6 +135,11 @@ export const Slate = defineComponent({
     const editorVersion = ref(0);
     provideEditorVersion(editorVersion);
 
+    const { selectorContext, onChange: handleSelectorChange } =
+      useSelectorContext();
+
+    provide("slate-selector-context", selectorContext);
+
     onMounted(() => {
       document.addEventListener("focusin", focusCb);
       document.addEventListener("focusout", focusCb);
@@ -146,6 +152,7 @@ export const Slate = defineComponent({
         if (editor.operations.some((op) => op.type !== "set_selection")) {
           emit("valuechange", options);
         }
+        handleSelectorChange();
       });
     });
     onUnmounted(() => {

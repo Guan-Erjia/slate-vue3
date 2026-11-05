@@ -18,9 +18,7 @@ import {
   HTMLAttributes,
   onUpdated,
   provide,
-  ref,
   VNodeRef,
-  watch,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
@@ -77,27 +75,36 @@ export const ElementComp = defineComponent({
   setup(props: { element: Element; decorations: DecoratedRange[] }) {
     const editor = useEditor();
 
-    provide(SLATE_USE_ELEMENT, props.element);
+    provide(SLATE_USE_ELEMENT, props);
 
-    const elementRef = ref<HTMLElement | null>(null);
-
+    const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
+    const elementRef: VNodeRef = (ref) => {
+      const key = DOMEditor.findKey(editor, props.element);
+      if (!ref) {
+        KEY_TO_ELEMENT?.delete(key);
+        NODE_TO_ELEMENT.delete(props.element);
+        return;
+      }
+      if (ref && ref instanceof HTMLElement) {
+        KEY_TO_ELEMENT?.set(key, ref);
+        NODE_TO_ELEMENT.set(props.element, ref);
+        ELEMENT_TO_NODE.set(ref, props.element);
+        if (IS_FIREFOX) {
+          const nodes = ref.childNodes;
+          if (!nodes.length) {
+            return;
+          }
+          const lastIndex = nodes.length - 1;
+          if (
+            nodes[lastIndex].nodeType === 3 &&
+            nodes[lastIndex].textContent !== ""
+          ) {
+            nodes[lastIndex].textContent = "";
+          }
+        }
+      }
+    };
     const readOnly = useReadOnly();
-
-    if (IS_FIREFOX) {
-      onUpdated(() => {
-        const nodes = elementRef.value?.childNodes;
-        if (!nodes?.length) {
-          return;
-        }
-        const lastIndex = nodes.length - 1;
-        if (
-          nodes[lastIndex].nodeType === 3 &&
-          nodes[lastIndex].textContent !== ""
-        ) {
-          nodes[lastIndex].textContent = "";
-        }
-      });
-    }
 
     const renderElement = useRenderElement();
     const { decorations, update } = useDecorations(() => props.element);
@@ -128,16 +135,6 @@ export const ElementComp = defineComponent({
         if (dir === "rtl") {
           attributes.dir = dir;
         }
-      }
-      const key = DOMEditor.findKey(editor, props.element);
-      const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-      if (elementRef.value) {
-        KEY_TO_ELEMENT?.set(key, elementRef.value);
-        NODE_TO_ELEMENT.set(props.element, elementRef.value);
-        ELEMENT_TO_NODE.set(elementRef.value, props.element);
-      } else {
-        KEY_TO_ELEMENT?.delete(key);
-        NODE_TO_ELEMENT.delete(props.element);
       }
 
       if (Editor.isVoid(editor, props.element)) {

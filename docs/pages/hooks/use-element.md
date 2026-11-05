@@ -1,20 +1,19 @@
 > Get the current element object. Re-renders whenever the element or any of its descendants changes.
 
 ```typescript
-import { useElement } from "slate-vue3";
+import { useElementProps } from "slate-vue3";
 
-const useElement: () => Element;
+const useElementProps: () => Element;
 
-const element = useElement();
+const element = useElementProps();
 ```
-  
-  
-  
-> The same as useElement() but returns null instead of throwing an error when not inside an element.
+
+> The same as useElementProps() but returns null instead of throwing an error when not inside an element.
+
 ```typescript
-import { useElementIf } from "slate-vue3";
+import { useElementPropsIf } from "slate-vue3";
 
-const useElementIf: () => Element | null;
+const useElementPropsIf: () => { element: Element | null };
 
-const elementIf = useElementIf();
+const elementIf = useElementPropsIf();
 ```

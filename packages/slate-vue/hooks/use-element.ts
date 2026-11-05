@@ -5,17 +5,21 @@ import { Element } from "slate";
 /**
  * Get the current element.
  */
-export const useElement = () => {
-  const element = inject<Element>(SLATE_USE_ELEMENT);
-  if (element === undefined) {
+export const useElementProps = () => {
+  const props = inject<{
+    element: Element;
+  }>(SLATE_USE_ELEMENT);
+  if (props === undefined) {
     throw new Error(
-      `The \`useElement\` hook must be used inside the <Slate> component's context.`,
+      `The \`useElementProps\` hook must be used inside the <Slate> component's context.`,
     );
   }
-  return element;
+  return props;
 };
 
-export const useElementIf = () => {
-  const element = inject<Element>(SLATE_USE_ELEMENT);
-  return element;
+export const useElementPropsIf = () => {
+  const props = inject<{
+    element: Element;
+  }>(SLATE_USE_ELEMENT);
+  return props;
 };

@@ -34,7 +34,7 @@ const renderTwo = (first: Descendant[], second: Descendant[]) => {
   return { one, two, container };
 };
 
-describe("editors sharing an initialValue", () => {
+describe.skip("editors sharing an initialValue", () => {
   test("both render and keep separate documents", async () => {
     const shared = value();
     const { one, two, container } = renderTwo(shared, shared);

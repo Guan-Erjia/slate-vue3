@@ -1,10 +1,10 @@
-import { DecoratedRange, Descendant, Node } from "slate";
+import { DecoratedRange, Descendant, Editor, Node, Range } from "slate";
 import {
   isTextDecorationsEqual,
   isElementDecorationsEqual,
   DOMEditor,
 } from "slate-vue3/dom";
-import { onScopeDispose, shallowRef, watchEffect } from "vue";
+import { onScopeDispose, shallowRef, watch } from "vue";
 import { useEditor } from "./use-editor";
 import { injectDecorateFn } from "../render/decorate";
 
@@ -16,61 +16,27 @@ export const useDecorations = (getNode: () => Descendant) => {
   const update = () => {
     const node = getNode();
     const path = DOMEditor.findPath(editor, node);
-    try {
-      const equalityFn = Node.isText(node)
-        ? isTextDecorationsEqual
-        : isElementDecorationsEqual;
-      const newDecorations = decorate([node, path]);
+    const ranges = decorate([node, path]);
+    const equalityFn = Node.isText(node)
+      ? isTextDecorationsEqual
+      : isElementDecorationsEqual;
+    const newDecorations = Node.isText(node)
+      ? ranges.flatMap((decoration) => {
+          const intersection = Range.intersection(
+            decoration,
+            Editor.range(editor, path),
+          );
+          return intersection ? [intersection] : [];
+        })
+      : ranges;
 
-      if (equalityFn(decorations.value, newDecorations)) {
-        return;
-      }
-      decorations.value = newDecorations;
-    } catch (err) {
-      console.log(err);
-      // we ignore all errors here, since when the component
-      // is re-rendered, the selectors are called again, and
-      // will throw again, if neither props nor store state
-      // changed
+    if (equalityFn(decorations.value, newDecorations)) {
+      return;
     }
-    // don't rerender on equalityFn change since we want to be able to define it inline
+    decorations.value = newDecorations;
   };
 
-  const stop = watchEffect(update);
-  onScopeDispose(stop);
-
-  return {
-    decorations,
-    update,
-  };
-};
-
-export const useTextDecorations = (getText: () => Descendant) => {
-  const editor = useEditor();
-  const decorate = injectDecorateFn();
-  const decorations = shallowRef<DecoratedRange[]>([]);
-
-  const path = DOMEditor.findPath(editor, getText());
-  const update = () => {
-    const node = getText();
-    try {
-      const newDecorations = decorate([node, path]);
-
-      if (isTextDecorationsEqual(decorations.value, newDecorations)) {
-        return;
-      }
-      decorations.value = newDecorations;
-    } catch (err) {
-      console.log(err);
-      // we ignore all errors here, since when the component
-      // is re-rendered, the selectors are called again, and
-      // will throw again, if neither props nor store state
-      // changed
-    }
-    // don't rerender on equalityFn change since we want to be able to define it inline
-  };
-
-  const stop = watchEffect(update);
+  const stop = watch([getNode, () => decorate], update, { immediate: true });
   onScopeDispose(stop);
 
   return {

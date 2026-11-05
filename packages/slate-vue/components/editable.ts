@@ -81,6 +81,7 @@ import { deleteMovedRange, getMovableRange } from "../utils/move-range";
 import { useCompositionDOM } from "../hooks/use-composition-dom";
 import { getPointAboveTrailingNewline } from "../utils/trailing-newline";
 import { getCharacterMoveUnit } from "../utils/character-move";
+import { useFlushDeferredSelectorsOnRender } from "../hooks/use-slate-selector";
 
 const isSameCaretPosition = (editor: Editor, a: Range, b: Range) => {
   if (!Range.isCollapsed(a) || !Range.isCollapsed(b)) {
@@ -506,10 +507,12 @@ export const Editable = defineComponent({
     };
 
     const editorVersion = useEditorVersion();
+    const flushDeferred = useFlushDeferredSelectorsOnRender();
 
     watch(
       () => editorVersion.value,
       () => {
+        flushDeferred();
         // Make sure the DOM selection state is in sync.
         previousChildren.value = editor.children;
         previousSelection.value = editor.selection;

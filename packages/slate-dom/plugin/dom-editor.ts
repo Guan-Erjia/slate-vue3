@@ -38,6 +38,7 @@ import {
   NODE_TO_KEY,
   NODE_TO_PARENT,
 } from "../utils/weak-maps";
+import { toRaw } from "vue";
 
 type DOMElement = globalThis.Element;
 type DOMNode = globalThis.Node;
@@ -424,8 +425,9 @@ export const DOMEditor: DOMEditorInterface = {
       }
 
       const i = NODE_TO_INDEX.get(child);
+      const rawParent = toRaw(parent);
 
-      if (i == null || parent.children[i] !== child) {
+      if (i == null || rawParent.children[i] !== child) {
         break;
       }
 
