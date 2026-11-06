@@ -1,9 +1,8 @@
 {
   "include": [
     "./packages/**/*",
-    "./test/**/*",
+    "./integration/**/*",
     "./playwright.config.ts",
-    "./e2e/**/*"
   ],
   "exclude": ["./docs/**/*"],
   "compilerOptions": {
@@ -27,7 +26,7 @@
       "slate-vue3/dom": ["./packages/slate-dom"],
       "slate-vue3/yjs": ["./packages/slate-yjs"],
       "slate-vue3": ["./packages/slate-vue"],
-      "@test-utils": ["./test/utils.ts"]
+      "@test-utils": ["./integration/support/utils.ts"]
     }
   }
 }

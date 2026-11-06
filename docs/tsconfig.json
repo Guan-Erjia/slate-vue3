@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "include": ["./**/*"],
-  "exclude": ["../packages/**/*", "../test/**/*", "../playwright.config.ts"],
+  "exclude": ["../packages/**/*", "../integration/**/*", "../playwright.config.ts"],
   "compilerOptions": {
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
   }

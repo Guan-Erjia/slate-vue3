@@ -1,4 +1,4 @@
-import { resolveModules, sleep } from "@test-utils";
+import { resolveModules, sleep } from "../../../integration/support/utils";
 import { test, expect, describe } from "vitest";
 import {
   withYjs,

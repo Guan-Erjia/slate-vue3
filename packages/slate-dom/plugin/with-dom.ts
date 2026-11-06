@@ -52,11 +52,13 @@ type DOMElement = globalThis.HTMLElement;
  * See https://docs.slatejs.org/concepts/11-typescript to learn how.
  */
 
-const wrapInInlineAncestors = (
+const wrapInClipboardAncestors = (
   contents: DocumentFragment,
   start: DOMNode,
   editorElement: DOMElement,
+  includeInlines: boolean,
 ): DocumentFragment => {
+  const includeLists = contents.querySelector("li") !== null;
   let wrapped = contents;
 
   for (
@@ -65,8 +67,10 @@ const wrapInInlineAncestors = (
     ancestor = ancestor.parentElement
   ) {
     if (
-      ancestor.getAttribute("data-slate-inline") === "true" &&
-      !ancestor.hasAttribute("data-slate-void")
+      (includeLists && ["OL", "UL", "LI"].includes(ancestor.nodeName)) ||
+      (includeInlines &&
+        ancestor.getAttribute("data-slate-inline") === "true" &&
+        !ancestor.hasAttribute("data-slate-void"))
     ) {
       const shell = ancestor.cloneNode(false);
       shell.appendChild(wrapped);
@@ -295,6 +299,7 @@ export const withDOM = (
     // fragment to the HTML, to decode on future pastes.
     const domRange = DOMEditor.toDOMRange(e, selection);
     let contents = domRange.cloneContents();
+    let commonAncestor = domRange.commonAncestorContainer;
     let attach = contents.childNodes[0] as HTMLElement;
 
     // Make sure attach is non-empty, since empty nodes will not get copied.
@@ -313,6 +318,7 @@ export const withDOM = (
       const domNode = DOMEditor.toDOMNode(e, voidNode);
       r.setEndAfter(domNode);
       contents = r.cloneContents();
+      commonAncestor = r.commonAncestorContainer;
     }
 
     // COMPAT: If the start node is a void node, we need to attach the encoded
@@ -354,13 +360,12 @@ export const withDOM = (
     attach.setAttribute("data-slate-fragment", encoded);
     data.setData(`application/${clipboardFormatKey}`, encoded);
 
-    if (!startVoid && !endVoid) {
-      contents = wrapInInlineAncestors(
-        contents,
-        domRange.commonAncestorContainer,
-        DOMEditor.toDOMNode(e, e),
-      );
-    }
+    contents = wrapInClipboardAncestors(
+      contents,
+      commonAncestor,
+      DOMEditor.toDOMNode(e, e),
+      !startVoid && !endVoid,
+    );
 
     // Add the content to a <div> so that we can get its inner HTML.
     const div = contents.ownerDocument.createElement("div");

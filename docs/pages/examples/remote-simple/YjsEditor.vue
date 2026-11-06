@@ -12,9 +12,9 @@ import { withYHistory, withYjs, YjsEditor } from "slate-vue3/yjs";
 import { Node, Element, Transforms, Editor, Path } from "slate";
 import { XmlText } from "yjs";
 import Toolbar from "../../../components/Toolbar.vue";
-import MarkButton from "../rich-text/MarkButton.vue";
-import BlockButton from "../rich-text/BlockButton.vue";
-import AlignButton from "../rich-text/AlignButton.vue";
+import MarkButton from "../richtext/MarkButton.vue";
+import BlockButton from "../richtext/BlockButton.vue";
+import AlignButton from "../richtext/AlignButton.vue";
 
 const initialValue: CustomElement[] = [
   {

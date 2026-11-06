@@ -10,8 +10,8 @@ import { CSSProperties, h } from "vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import MarkButton from "./MarkButton.vue";
 import BlockButton from "./BlockButton.vue";
-import AlignButton from "../rich-text/AlignButton.vue";
-import { CustomElement } from "../../../custom-types";
+import AlignButton from "./AlignButton.vue";
+import { CustomElement } from "../../../custom-types.js";
 import { withHistory } from "slate-history";
 import { Editor, Transforms, Range, Element } from "slate";
 

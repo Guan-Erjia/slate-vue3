@@ -39,7 +39,7 @@
 npm install slate-vue3
 ```
 
-#### 2. Now, you can use it in vue-sfc :point_right: [**live demo**](https://guan-erjia.github.io/slate-vue3/examples/rich-text)
+#### 2. Now, you can use it in vue-sfc :point_right: [**live demo**](https://guan-erjia.github.io/slate-vue3/examples/richtext)
 
 ```vue
 <script setup lang="ts">
@@ -68,7 +68,7 @@ editor.children = initialValue;
 
 To get a sense for how you might use Slate, check out a few of the examples:
 
-- [**Rich text**](https://guan-erjia.github.io/slate-vue3/examples/rich-text) — the features you'd expect from a basic editor.
+- [**Rich text**](https://guan-erjia.github.io/slate-vue3/examples/richtext) — the features you'd expect from a basic editor.
 - [**Collaborative editing**](https://guan-erjia.github.io/slate-vue3/examples/remote-cursor) — to achieve collaborative editing and cursor.
 - [**Markdown preview**](https://guan-erjia.github.io/slate-vue3/examples/markdown-preview) — to add key handlers for Markdown-like shortcuts.
 - [**Inlines**](https://guan-erjia.github.io/slate-vue3/examples/inlines) — wrap text in inline nodes with associated data.

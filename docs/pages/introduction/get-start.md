@@ -55,4 +55,4 @@ editor.children = initialValue;
 
 #### So, what other reasons are needed? just directly install `slate-vue3` and start your cool development journey
 
-[click and see more example](/slate-vue3/examples/rich-text)
+[click and see more example](/slate-vue3/examples/richtext)

@@ -172,6 +172,7 @@ export const getEditableChildAndIndex = (
   // keep iterating to find a sibling non-void, non-comment node.
   while (
     isDOMComment(child) ||
+    (isDOMText(child) && child.textContent === "") ||
     (isDOMElement(child) && child.childNodes.length === 0) ||
     (isDOMElement(child) && child.getAttribute("contenteditable") === "false")
   ) {

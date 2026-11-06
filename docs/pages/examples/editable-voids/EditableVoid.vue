@@ -27,7 +27,7 @@
 </template>
 <script lang="ts" setup>
 import { HTMLAttributes, ref, useAttrs } from "vue";
-import RichTextEditor from "../rich-text/index.vue";
+import RichTextEditor from "../richtext/index.vue";
 const inputValue = ref("");
 const attrs: HTMLAttributes = useAttrs();
 </script>

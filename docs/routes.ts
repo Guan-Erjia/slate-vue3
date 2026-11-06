@@ -84,9 +84,9 @@ export const PACKAGES_RECORD: RouteRecordRaw[] = [
 
 export const EXAMPLE_RECORD: RouteRecordRaw[] = [
   {
-    name: "rich-text",
-    path: "rich-text",
-    component: () => import("./pages/examples/rich-text/index.vue"),
+    name: "richtext",
+    path: "richtext",
+    component: () => import("./pages/examples/richtext/index.vue"),
   },
   {
     name: "remote-simple",
@@ -190,9 +190,9 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/prefix/index.vue"),
   },
   {
-    name: "plain-text",
-    path: "plain-text",
-    component: () => import("./pages/examples/plain-text/index.vue"),
+    name: "plaintext",
+    path: "plaintext",
+    component: () => import("./pages/examples/plaintext/index.vue"),
   },
   {
     name: "read-only",
