@@ -102,7 +102,9 @@ for (const layout of ["document", "nested", "following paragraph"]) {
 test("character movement inside an inline keeps an emoji grapheme intact", async ({
   page,
 }) => {
-  await page.goto("/playwright/inline-boundaries");
+  await page.goto(
+    "http://localhost:5173/slate-vue3/playwright/inline-boundaries",
+  );
   const element = page.getByRole("textbox");
   await element.click();
   const editor = await getEditorHandle(element);
@@ -128,7 +130,9 @@ for (const reverse of [true, false]) {
   test(`leaves a padded RTL inline ${
     reverse ? "backward" : "forward"
   }`, async ({ page }) => {
-    await page.goto("/playwright/inline-boundaries");
+    await page.goto(
+      "http://localhost:5173/slate-vue3/playwright/inline-boundaries",
+    );
     const element = page.getByRole("textbox");
     await element.click();
     const editor = await getEditorHandle(element);

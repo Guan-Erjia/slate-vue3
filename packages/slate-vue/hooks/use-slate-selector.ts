@@ -100,6 +100,7 @@ export function useSelectorContext() {
 
     return () => {
       eventListeners.delete(callback);
+      deferredEventListeners.delete(callbackProp);
     };
   };
 

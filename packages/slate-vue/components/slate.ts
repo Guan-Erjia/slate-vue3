@@ -17,6 +17,7 @@ import {
 } from "../utils/constants";
 import {
   DecoratedRange,
+  Descendant,
   Editor,
   Node,
   NodeEntry,
@@ -60,7 +61,7 @@ export const Slate = defineComponent({
   props: {
     editor: {
       type: Object,
-      require: true,
+      required: true,
     },
     decorate: {
       type: Function,
@@ -127,7 +128,7 @@ export const Slate = defineComponent({
     const selection = computed(() => editor.selection);
     provide(SLATE_USE_FOCUSED, isFocus);
 
-    // 只用作上下文分享，在editable.tsx组件中修改 value
+    // 只用作上下文分享，在editable组件中修改 value
     provide(SLATE_USE_COMPOSING, ref(false));
     provide(SLATE_USE_READ_ONLY, ref(false));
     provide(SLATE_USE_SELECTION, selection);
@@ -143,25 +144,42 @@ export const Slate = defineComponent({
 
     provide(SLATE_INNER_SELECTOR_CONTEXT, selectorContext);
 
+    const appliedChildren = ref<Descendant[] | undefined>(undefined);
+
+    const onContextChange = (options?: { operation?: Operation }) => {
+      const changed = editor.operations.some(
+        (op) => op.type !== "set_selection",
+      );
+      const external = changed && editor.children === appliedChildren.value;
+      appliedChildren.value = undefined;
+
+      editorVersion.value++;
+
+      emit("change", options);
+
+      if (editor.operations.some((op) => op.type === "set_selection")) {
+        emit("selectionchange", options);
+      }
+
+      if (changed && !external) {
+        emit("valuechange", options);
+      }
+
+      handleSelectorChange();
+    };
+
     onMounted(() => {
       document.addEventListener("focusin", focusCb);
       document.addEventListener("focusout", focusCb);
-      EDITOR_TO_ON_CHANGE.set(editor, (options?: { operation?: Operation }) => {
-        editorVersion.value++;
-        emit("change", options);
-        if (editor.operations.some((op) => op.type === "set_selection")) {
-          emit("selectionchange", options);
-        }
-        if (editor.operations.some((op) => op.type !== "set_selection")) {
-          emit("valuechange", options);
-        }
-        handleSelectorChange();
-      });
+      EDITOR_TO_ON_CHANGE.set(editor, onContextChange);
     });
+
     onUnmounted(() => {
       document.removeEventListener("focusin", focusCb);
       document.removeEventListener("focusout", focusCb);
-      EDITOR_TO_ON_CHANGE.delete(editor);
+      if (EDITOR_TO_ON_CHANGE.get(editor) === onContextChange) {
+        EDITOR_TO_ON_CHANGE.delete(editor);
+      }
     });
 
     return () => renderSlot(slots, "default");

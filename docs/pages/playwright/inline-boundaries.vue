@@ -38,7 +38,7 @@ const renderElement = ({
 </script>
 
 <template>
-  <Slate :editor="editor">
-    <Editable :render-element="renderElement" />
+  <Slate :editor :render-element>
+    <Editable />
   </Slate>
 </template>

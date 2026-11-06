@@ -50,6 +50,7 @@ import {
   useAttrs,
   watch,
   normalizeStyle,
+  nextTick,
 } from "vue";
 import type { CSSProperties, HTMLAttributes, VNodeRef } from "vue";
 import { ChildrenComp } from "./children";
@@ -407,10 +408,14 @@ export const Editable = defineComponent({
     });
 
     const editorVersion = useEditorVersion();
+    const flushDeferred = useFlushDeferredSelectorsOnRender();
+    onUpdated(flushDeferred);
     watch(
       () => editorVersion.value,
       (_version, _previousVersion, onCleanup) => {
-        flushDeferred();
+        nextTick(() => {
+          flushDeferred();
+        });
         // Make sure the DOM selection state is in sync.
         const { selection } = editor;
         const scrollForInput = pendingInputScroll.value;
@@ -1196,8 +1201,6 @@ export const Editable = defineComponent({
 
       EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor);
     });
-
-    const flushDeferred = useFlushDeferredSelectorsOnRender();
 
     const onBeforeinput = (event: InputEvent) => {
       if (props.readOnly) {
