@@ -54,7 +54,6 @@ export const IS_WECHATBROWSER =
   /.*Wechat/.test(navigator.userAgent) &&
   !/.*MacWechat/.test(navigator.userAgent) && // avoid lookbehind (buggy in safari < 16.4)
   (!IS_CHROME || IS_CHROME_LEGACY); // wechat and low chrome is real wechat
-
 // Check if DOM is available as React does internally.
 // https://github.com/facebook/react/blob/master/packages/shared/ExecutionEnvironment.js
 export const CAN_USE_DOM = !!(
@@ -76,7 +75,8 @@ export const IS_SAFARI_LEGACY =
 // COMPAT: Firefox/Edge Legacy don't support the `beforeinput` event
 // Chrome Legacy doesn't support `beforeinput` correctly
 export const HAS_BEFORE_INPUT_SUPPORT =
-  (!IS_CHROME_LEGACY || !IS_ANDROID_CHROME_LEGACY) &&
+  !IS_CHROME_LEGACY &&
+  !IS_ANDROID_CHROME_LEGACY &&
   !IS_EDGE_LEGACY &&
   // globalThis is undefined in older browsers
   typeof globalThis !== "undefined" &&

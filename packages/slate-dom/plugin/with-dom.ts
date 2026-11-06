@@ -1,6 +1,7 @@
 import {
-  BaseEditor,
+  Descendant,
   Editor,
+  Element,
   Location,
   Node,
   Operation,
@@ -16,6 +17,8 @@ import {
   transformTextDiff,
 } from "../utils/diff-text";
 import {
+  DOMElement,
+  DOMNode,
   getPlainText,
   getSlateFragmentAttribute,
   isDOMElement,
@@ -35,13 +38,9 @@ import {
   EDITOR_TO_USER_MARKS,
   EDITOR_TO_USER_SELECTION,
   NODE_TO_KEY,
-  NODE_TO_PARENT,
 } from "../utils/weak-maps";
-import { DOMEditor } from "./dom-editor";
 import { copyNodeInUse } from "../utils/node-identity";
-
-type DOMNode = globalThis.Node;
-type DOMElement = globalThis.HTMLElement;
+import { DOMEditor } from "./dom-editor";
 
 /**
  * `withDOM` adds DOM specific behaviors to the editor.
@@ -280,6 +279,16 @@ export const withDOM = (
     }
   };
 
+  e.onDOMError = (error: unknown) => {
+    if (typeof globalThis.reportError === "function") {
+      globalThis.reportError(error);
+    } else {
+      setTimeout(() => {
+        throw error;
+      });
+    }
+  };
+
   e.setFragmentData = (data: Pick<DataTransfer, "getData" | "setData">) => {
     const { selection } = e;
 
@@ -404,21 +413,29 @@ export const withDOM = (
   e.insertTextData = (data: DataTransfer): boolean => {
     const text = data.getData("text/plain");
 
-    if (text) {
-      const lines = text.split(/\r\n|\r|\n/);
-      let split = false;
+    if (!text) {
+      return false;
+    }
 
-      for (const line of lines) {
-        if (split) {
-          Transforms.splitNodes(e, { always: true });
-        }
+    const lines = text.split(/\r\n|\r|\n/);
 
-        e.insertText(line);
-        split = true;
-      }
+    if (lines.length === 1) {
+      e.insertText(text);
       return true;
     }
-    return false;
+
+    if (isInsideInline(e)) {
+      insertLinesInsideInline(e, lines);
+      return true;
+    }
+
+    const fragment = getPlainTextFragment(e, lines);
+
+    if (fragment) {
+      e.insertFragment(fragment);
+    }
+
+    return true;
   };
 
   e.onChange = (options) => {
@@ -441,4 +458,76 @@ const getMatches = (e: Editor, path: Path) => {
     matches.push([p, key]);
   }
   return matches;
+};
+
+const isInsideInline = (editor: Editor) =>
+  !!editor.selection &&
+  !!Editor.above(editor, {
+    at: Range.start(editor.selection),
+    match: (node) => Element.isElement(node) && Editor.isInline(editor, node),
+  });
+
+const insertLinesInsideInline = (editor: Editor, lines: string[]) => {
+  const marks = Editor.marks(editor) ?? {};
+  const middle = lines.slice(1, -1);
+
+  editor.insertText(lines[0]);
+  Transforms.splitNodes(editor, { always: true });
+
+  if (middle.length && editor.selection) {
+    const { anchor } = editor.selection;
+    const [[{ children, ...blockProps }, blockPath]] = Editor.nodes(editor, {
+      at: anchor,
+      match: (node) => Element.isElement(node) && Editor.isBlock(editor, node),
+      mode: "lowest",
+    });
+    const inlines = Array.from(
+      Editor.nodes(editor, {
+        at: anchor,
+        match: (node) =>
+          Element.isElement(node) && Editor.isInline(editor, node),
+      }),
+      ([{ children, ...inlineProps }]) => inlineProps,
+    );
+    const wrap = (line: string) =>
+      inlines.reduceRight<Descendant>(
+        (child, inlineProps) =>
+          ({ ...inlineProps, children: [child] }) as Element,
+        { ...marks, text: line },
+      );
+
+    Transforms.insertNodes(
+      editor,
+      middle.map(
+        (line) => ({ ...blockProps, children: [wrap(line)] }) as Element,
+      ),
+      { at: blockPath, select: false },
+    );
+  }
+
+  editor.insertText(lines[lines.length - 1]);
+};
+
+const getPlainTextFragment = (editor: Editor, lines: string[]) => {
+  if (!editor.selection) {
+    return null;
+  }
+
+  const entry = Editor.above(editor, {
+    at: Range.start(editor.selection),
+    match: (node) => Element.isElement(node) && Editor.isBlock(editor, node),
+    mode: "lowest",
+  });
+
+  if (!entry) {
+    return null;
+  }
+
+  const [{ children, ...blockProps }] = entry;
+  const marks = Editor.marks(editor) ?? {};
+
+  return lines.map((line) => ({
+    ...blockProps,
+    children: [{ ...marks, text: line }],
+  })) as Element[];
 };

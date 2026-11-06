@@ -69,7 +69,7 @@ const create = (key: string) => {
  * Hotkeys.
  */
 
-export const Hotkeys = {
+export default {
   isBold: create("bold"),
   isCompose: create("compose"),
   isMoveBackward: create("moveBackward"),

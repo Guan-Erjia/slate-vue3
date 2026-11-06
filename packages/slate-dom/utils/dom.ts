@@ -13,7 +13,6 @@ import DOMText = globalThis.Text;
 import DOMRange = globalThis.Range;
 import DOMSelection = globalThis.Selection;
 import DOMStaticRange = globalThis.StaticRange;
-type DOMPoint = [DOMNode, number];
 import { DOMEditor } from "../plugin/dom-editor";
 
 export {
@@ -24,7 +23,6 @@ export {
   DOMRange,
   DOMSelection,
   DOMStaticRange,
-  DOMPoint,
 };
 
 declare global {
@@ -34,6 +32,8 @@ declare global {
     Node: (typeof Node)["constructor"];
   }
 }
+
+export type DOMPoint = [Node, number];
 
 /**
  * Returns the host window of a DOM node
@@ -49,7 +49,7 @@ export const getDefaultView = (value: any): Window | null => {
  * Check if a DOM node is a comment node.
  */
 
-export const isDOMComment = (value: any): value is globalThis.Comment => {
+export const isDOMComment = (value: any): value is DOMComment => {
   return isDOMNode(value) && value.nodeType === 8;
 };
 
@@ -74,7 +74,7 @@ export const isDOMNode = (value: any): value is DOMNode => {
  * Check if a value is a DOM selection.
  */
 
-export const isDOMSelection = (value: any): value is globalThis.Selection => {
+export const isDOMSelection = (value: any): value is DOMSelection => {
   const window = value && value.anchorNode && getDefaultView(value.anchorNode);
   return !!window && value instanceof window.Selection;
 };
@@ -83,7 +83,7 @@ export const isDOMSelection = (value: any): value is globalThis.Selection => {
  * Check if a DOM node is an element node.
  */
 
-export const isDOMText = (value: any): value is globalThis.Text => {
+export const isDOMText = (value: any): value is DOMText => {
   return isDOMNode(value) && value.nodeType === 3;
 };
 
@@ -162,6 +162,7 @@ export const getEditableChildAndIndex = (
   if (typeof index !== "number") {
     throw new Error("Expected index to be a number");
   }
+
   const { childNodes } = parent;
   let child = childNodes[index];
   let i = index;
@@ -172,7 +173,6 @@ export const getEditableChildAndIndex = (
   // keep iterating to find a sibling non-void, non-comment node.
   while (
     isDOMComment(child) ||
-    (isDOMText(child) && child.textContent === "") ||
     (isDOMElement(child) && child.childNodes.length === 0) ||
     (isDOMElement(child) && child.getAttribute("contenteditable") === "false")
   ) {
@@ -312,7 +312,7 @@ export const isTrackedMutation = (
   batch: MutationRecord[],
 ): boolean => {
   const { target } = mutation;
-  if (isDOMElement(target) && target.matches('[contenteditable="false"]')) {
+  if (isDOMElement(target) && target.matches('[contentEditable="false"]')) {
     return false;
   }
 
@@ -362,7 +362,7 @@ export const getActiveElement = () => {
 export const isBefore = (node: DOMNode, otherNode: DOMNode): boolean =>
   Boolean(
     node.compareDocumentPosition(otherNode) &
-    globalThis.Node.DOCUMENT_POSITION_PRECEDING,
+    DOMNode.DOCUMENT_POSITION_PRECEDING,
   );
 
 /**
@@ -371,7 +371,7 @@ export const isBefore = (node: DOMNode, otherNode: DOMNode): boolean =>
 export const isAfter = (node: DOMNode, otherNode: DOMNode): boolean =>
   Boolean(
     node.compareDocumentPosition(otherNode) &
-    globalThis.Node.DOCUMENT_POSITION_FOLLOWING,
+    DOMNode.DOCUMENT_POSITION_FOLLOWING,
   );
 
 /**

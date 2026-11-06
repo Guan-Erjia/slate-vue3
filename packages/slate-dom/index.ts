@@ -11,9 +11,9 @@ export {
   normalizePoint,
   normalizeRange,
   normalizeStringDiff,
-  type StringDiff,
+  StringDiff,
   targetRange,
-  type TextDiff,
+  TextDiff,
   verifyDiffState,
 } from "./utils/diff-text";
 
@@ -22,7 +22,7 @@ export {
   containsShadowAware,
   DOMElement,
   DOMNode,
-  type DOMPoint,
+  DOMPoint,
   DOMRange,
   DOMSelection,
   DOMStaticRange,
@@ -54,7 +54,7 @@ export {
   IS_WECHATBROWSER,
 } from "./utils/environment";
 
-export { Hotkeys } from "./utils/hotkeys";
+export { default as Hotkeys } from "./utils/hotkeys";
 
 export { Key } from "./utils/key";
 
