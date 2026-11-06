@@ -141,7 +141,7 @@ for (const example of ["rich-text", "tables", "mentions", "shadow-dom"]) {
                 },
               ],
             }
-          : example === "richtext"
+          : example === "rich-text"
             ? {
                 type: "bulleted-list",
                 children: [{ type: "list-item", children: [{ text: "abc" }] }],

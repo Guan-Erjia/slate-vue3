@@ -35,7 +35,7 @@ for (const contentEditable of ["true", "", "plaintext-only"]) {
       .evaluate((voidElement, value) => {
         const inner = document.createElement("div");
         inner.setAttribute("contenteditable", value);
-        inner.setAttribute("data-test-id", "nested-editor");
+        inner.setAttribute("data-testid", "nested-editor");
         inner.textContent = "inner";
         voidElement
           .querySelector('[contenteditable="false"]')!
@@ -80,7 +80,7 @@ for (const eventType of ["beforeinput", "input"]) {
       .evaluate((voidElement) => {
         const inner = document.createElement("div");
         inner.contentEditable = "true";
-        inner.setAttribute("data-test-id", "nested-editor");
+        inner.setAttribute("data-testid", "nested-editor");
         inner.textContent = "inner";
         voidElement
           .querySelector('[contenteditable="false"]')!

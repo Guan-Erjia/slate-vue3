@@ -169,7 +169,7 @@ for (const layout of ["heading", "paragraph-heading", "list"]) {
     test(`clearing ${layout} ${
       backward ? "backward" : "forward"
     } resets the document`, async ({ page }) => {
-      await page.goto("/examples/richtext");
+      await page.goto(`${E2E_BASE_URL}rich-text`);
       const element = page.getByRole("textbox");
       await element.click();
       const editor = await getEditorHandle(element);
@@ -231,7 +231,7 @@ for (const layout of ["heading", "paragraph-heading", "list"]) {
 test("deleting part of a heading preserves its formatting", async ({
   page,
 }) => {
-  await page.goto("/examples/richtext");
+  await page.goto(`${E2E_BASE_URL}rich-text`);
   const element = page.getByRole("textbox");
   await element.click();
   const editor = await getEditorHandle(element);

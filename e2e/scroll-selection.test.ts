@@ -1,6 +1,5 @@
 import { test, expect } from "@playwright/test";
 import { getEditorHandle } from "./support/editor";
-import { E2E_BASE_URL } from "@test-utils";
 
 for (const { container, direction, layout } of [
   { container: "page", direction: "above", layout: "paragraph" },
@@ -16,8 +15,8 @@ for (const { container, direction, layout } of [
     await page.setViewportSize({ width: 800, height: 600 });
     await page.goto(
       layout === "shadow"
-        ? `${E2E_BASE_URL}shadow-dom`
-        : `${E2E_BASE_URL}rich-text`,
+        ? "http://localhost:5173/slate-vue3/examples/shadow-dom"
+        : "http://localhost:5173/slate-vue3/examples/rich-text",
     );
 
     const textbox = page.getByRole("textbox");
@@ -55,10 +54,14 @@ for (const { container, direction, layout } of [
       layout === "list" ? "li" : ":scope > [data-slate-node=element]",
     );
     await expect(blocks).toHaveCount(60);
+    await blocks.nth(target).scrollIntoViewIfNeeded();
     await expect(blocks.nth(target)).toBeInViewport();
     await textbox.evaluate(
       (element, { container, direction }) => {
-        const scroller = container === "editor" ? element : window;
+        const scroller =
+          container === "editor"
+            ? element
+            : document.querySelector<HTMLElement>('[data-testid="container"]')!;
         scroller.scrollTo(0, direction === "below" ? 0 : element.scrollHeight);
       },
       { container, direction },
@@ -117,10 +120,13 @@ for (const { container, direction, layout } of [
             range.collapse(true);
           }
           const rect = range.getBoundingClientRect();
-          const viewport =
+          const viewport = (
             container === "editor"
-              ? element.getBoundingClientRect()
-              : { top: 0, bottom: innerHeight };
+              ? element
+              : document.querySelector<HTMLElement>(
+                  '[data-testid="container"]',
+                )!
+          ).getBoundingClientRect();
           return (
             rect.height > 0 &&
             rect.top >= viewport.top - 1 &&
@@ -132,3 +138,59 @@ for (const { container, direction, layout } of [
     await editor.dispose();
   });
 }
+
+test("native line movement calls custom scrolling below a sticky header", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "Desktop keyboard navigation");
+  await page.setViewportSize({ width: 800, height: 600 });
+  await page.goto(
+    "http://localhost:5173/slate-vue3/playwright/scroll-selection",
+  );
+  const textbox = page.getByRole("textbox");
+  await textbox.click();
+  const editor = await getEditorHandle(textbox);
+  const text = await textbox.innerText();
+  const offset = text.indexOf("Line 20:");
+  await editor.evaluate(
+    (editor, offset) => editor.select({ path: [0, 0], offset }),
+    offset,
+  );
+  await expect
+    .poll(() => textbox.evaluate(() => window.getSelection()?.focusOffset))
+    .toBe(offset);
+  const header = page.getByTestId("sticky-header");
+  const headerBottom = await header.evaluate(
+    (element) => element.getBoundingClientRect().bottom,
+  );
+  await page
+    .getByTestId("container")
+    .evaluate(
+      (element, headerBottom) =>
+        element.scrollBy(
+          0,
+          window.getSelection()!.getRangeAt(0).getBoundingClientRect().top -
+            headerBottom -
+            25,
+        ),
+      headerBottom,
+    );
+  const counter = page.getByTestId("scroll-calls");
+  let before = Number(await counter.getAttribute("data-count"));
+  for (let i = 0; i < 6; i++) {
+    await page.keyboard.press("ArrowUp");
+    await expect
+      .poll(async () => Number(await counter.getAttribute("data-count")))
+      .toBeGreaterThan(before);
+    before = Number(await counter.getAttribute("data-count"));
+  }
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () => window.getSelection()!.getRangeAt(0).getBoundingClientRect().top,
+      ),
+    )
+    .toBeGreaterThanOrEqual(headerBottom - 1);
+  await editor.dispose();
+});

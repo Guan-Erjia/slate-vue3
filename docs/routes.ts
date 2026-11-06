@@ -247,6 +247,11 @@ export const PLAYWRIGHT_RECORD: RouteRecordRaw[] = [
     path: "onclick-selection",
     component: () => import("./pages/playwright/onclick-selection.vue"),
   },
+  {
+    name: "scroll-selection",
+    path: "scroll-selection",
+    component: () => import("./pages/playwright/scroll-selection.vue"),
+  },
 ];
 
 export const ROUTES_RECORD: RouteRecordRaw[] = [
