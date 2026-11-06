@@ -563,9 +563,7 @@ export const Editable = defineComponent({
                 newDomRange.endOffset,
               );
             }
-            if (selectionChangedByInput) {
-              scrollSelectionIntoView(editor, newDomRange);
-            }
+            scrollSelectionIntoView(editor, newDomRange);
           } else {
             domSelection.removeAllRanges();
           }

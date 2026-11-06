@@ -4,6 +4,7 @@ import { render } from "@testing-library/vue";
 import { h, nextTick } from "vue";
 import { createReactiveEditor, Editable, Slate } from "slate-vue3";
 import { DOMEditor } from "slate-vue3/dom";
+import { sleep } from "@test-utils";
 
 const setup = async () => {
   const editor = createReactiveEditor();
@@ -32,7 +33,7 @@ const setup = async () => {
   DOMEditor.focus(editor);
   Transforms.select(editor, { path: [1, 0], offset: 0 });
 
-  await nextTick();
+  await sleep();
 
   scrollSelectionIntoView.mockClear();
   return { editor, scrollSelectionIntoView };
