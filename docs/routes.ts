@@ -252,6 +252,16 @@ export const PLAYWRIGHT_RECORD: RouteRecordRaw[] = [
     path: "scroll-selection",
     component: () => import("./pages/playwright/scroll-selection.vue"),
   },
+  {
+    name: "triple-click",
+    path: "triple-click",
+    component: () => import("./pages/playwright/triple-click.vue"),
+  },
+  {
+    name: "keyboard-focus",
+    path: "keyboard-focus",
+    component: () => import("./pages/playwright/keyboard-focus.vue"),
+  },
 ];
 
 export const ROUTES_RECORD: RouteRecordRaw[] = [
