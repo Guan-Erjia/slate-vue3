@@ -48,7 +48,10 @@ import {
 import { provideEditorVersion } from "../render/version";
 import { provideRenderPlaceholder } from "../render/placeholder";
 import { provideRenderChunk } from "../render/chunk";
-import { useSelectorContext } from "../hooks/use-slate-selector";
+import {
+  SLATE_INNER_SELECTOR_CONTEXT,
+  useSelectorContext,
+} from "../hooks/use-slate-selector";
 
 export const Slate = defineComponent({
   name: "slate-editor",
@@ -138,7 +141,7 @@ export const Slate = defineComponent({
     const { selectorContext, onChange: handleSelectorChange } =
       useSelectorContext();
 
-    provide("slate-selector-context", selectorContext);
+    provide(SLATE_INNER_SELECTOR_CONTEXT, selectorContext);
 
     onMounted(() => {
       document.addEventListener("focusin", focusCb);

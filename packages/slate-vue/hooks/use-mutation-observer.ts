@@ -1,7 +1,7 @@
 import { onBeforeUpdate, onMounted, onUnmounted, onUpdated, Ref } from "vue";
 
 export function useMutationObserver(
-  node: Ref<HTMLElement | undefined>,
+  node: Ref<HTMLElement | null>,
   callback: MutationCallback,
   options: MutationObserverInit,
 ) {

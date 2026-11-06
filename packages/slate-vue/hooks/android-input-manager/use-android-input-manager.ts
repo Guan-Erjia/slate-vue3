@@ -8,7 +8,7 @@ import { useEditor } from "../use-editor";
 import { onMounted, ref, Ref } from "vue";
 
 type UseAndroidInputManagerOptions = {
-  node: Ref<HTMLElement | undefined>;
+  node: Ref<HTMLElement | null>;
 } & Omit<
   CreateAndroidInputManagerOptions,
   "editor" | "onUserInput" | "receivedUserInput"

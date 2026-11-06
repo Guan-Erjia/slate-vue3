@@ -5,10 +5,27 @@
 // COMPAT: This is required to prevent TypeScript aliases from doing some very
 // weird things for Slate's types with the same name as globals. (2019/11/27)
 // https://github.com/microsoft/TypeScript/issues/35002
-type DOMNode = globalThis.Node;
-type DOMElement = globalThis.Element;
 import { Editor } from "slate";
+import DOMNode = globalThis.Node;
+import DOMComment = globalThis.Comment;
+import DOMElement = globalThis.Element;
+import DOMText = globalThis.Text;
+import DOMRange = globalThis.Range;
+import DOMSelection = globalThis.Selection;
+import DOMStaticRange = globalThis.StaticRange;
+type DOMPoint = [DOMNode, number];
 import { DOMEditor } from "../plugin/dom-editor";
+
+export {
+  DOMNode,
+  DOMComment,
+  DOMElement,
+  DOMText,
+  DOMRange,
+  DOMSelection,
+  DOMStaticRange,
+  DOMPoint,
+};
 
 declare global {
   interface Window {
@@ -86,7 +103,6 @@ export const isPlainTextOnlyPaste = (event: ClipboardEvent) => {
  * Normalize a DOM point so that it always refers to a text node.
  */
 
-type DOMPoint = [DOMNode, number];
 export const normalizeDOMPoint = (domPoint: DOMPoint): DOMPoint => {
   let [node, offset] = domPoint;
 

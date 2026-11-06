@@ -20,6 +20,13 @@ export {
 export {
   closestShadowAware,
   containsShadowAware,
+  DOMElement,
+  DOMNode,
+  type DOMPoint,
+  DOMRange,
+  DOMSelection,
+  DOMStaticRange,
+  DOMText,
   getActiveElement,
   getDefaultView,
   getSelection,

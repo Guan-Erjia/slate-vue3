@@ -57,7 +57,7 @@
     "scroll-into-view-if-needed": "^3.1.0"
   },
   "peerDependencies": {
-    "slate": "^0.146.0",
+    "slate": "^0.147.4",
     "vue": "^3.0.0"
   },
   "devDependencies": {
@@ -90,7 +90,7 @@
     "remark-gfm": "^4.0.1",
     "remark-parse": "^11.0.0",
     "remark-slate-transformer": "^0.9.0",
-    "slate": "^0.146.0",
+    "slate": "^0.147.4",
     "slate-history": "^0.140.0",
     "slate-hyperscript": "^0.138.3",
     "typescript": "~6.0.3",

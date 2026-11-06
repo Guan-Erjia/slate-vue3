@@ -115,7 +115,7 @@ for (const backward of [false, true]) {
   });
 }
 
-for (const example of ["richtext", "tables", "mentions", "shadow-dom"]) {
+for (const example of ["rich-text", "tables", "mentions", "shadow-dom"]) {
   test(`a trailing soft break keeps editing in ${example}`, async ({
     page,
     browserName,

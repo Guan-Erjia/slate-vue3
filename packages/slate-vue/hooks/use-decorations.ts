@@ -1,10 +1,10 @@
-import { DecoratedRange, Descendant, Editor, Node, Range } from "slate";
+import { DecoratedRange, Descendant, Editor, Node, Path, Range } from "slate";
 import {
   isTextDecorationsEqual,
   isElementDecorationsEqual,
   DOMEditor,
 } from "slate-vue3/dom";
-import { onScopeDispose, shallowRef, watch } from "vue";
+import { onScopeDispose, shallowRef, watchEffect } from "vue";
 import { useEditor } from "./use-editor";
 import { injectDecorateFn } from "../render/decorate";
 
@@ -12,10 +12,16 @@ export const useDecorations = (getNode: () => Descendant) => {
   const editor = useEditor();
   const decorate = injectDecorateFn();
   const decorations = shallowRef<DecoratedRange[]>([]);
+  const nodePath = shallowRef<Path>(DOMEditor.findPath(editor, getNode()));
+  let currentDecorations: DecoratedRange[] = [];
 
   const update = () => {
+    nodePath.value = DOMEditor.findPath(editor, getNode());
+  };
+
+  const stop = watchEffect(() => {
     const node = getNode();
-    const path = DOMEditor.findPath(editor, node);
+    const path = nodePath.value;
     const ranges = decorate([node, path]);
     const equalityFn = Node.isText(node)
       ? isTextDecorationsEqual
@@ -30,13 +36,11 @@ export const useDecorations = (getNode: () => Descendant) => {
         })
       : ranges;
 
-    if (equalityFn(decorations.value, newDecorations)) {
-      return;
+    if (!equalityFn(currentDecorations, newDecorations)) {
+      currentDecorations = newDecorations;
+      decorations.value = newDecorations;
     }
-    decorations.value = newDecorations;
-  };
-
-  const stop = watch([getNode, () => decorate], update, { immediate: true });
+  });
   onScopeDispose(stop);
 
   return {

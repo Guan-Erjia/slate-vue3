@@ -1,5 +1,8 @@
 import { inject, type Ref } from "vue";
 import { SLATE_USE_COMPOSING } from "../utils/constants";
+import { ReactiveEditor } from "../utils/reactive-editor";
+
+export const EDITOR_TO_COMPOSING = new WeakMap<ReactiveEditor, boolean>();
 
 /**
  * Get the current `composing` state of the editor.

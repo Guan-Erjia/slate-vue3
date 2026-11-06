@@ -1,10 +1,11 @@
 import { Editor } from "slate";
 import { useEditor } from "./use-editor";
 import { useGenericSelector } from "./use-generic-selector";
-import { inject, onUnmounted, onUpdated, provide, ShallowRef } from "vue";
+import { inject, onUnmounted, onUpdated, ShallowRef } from "vue";
 
 type Callback = () => void;
 
+export const SLATE_INNER_SELECTOR_CONTEXT = "SLATE_INNER_SELECTOR_CONTEXT";
 export interface SlateSelectorOptions {
   /**
    * If true, defer calling the selector function until after `Editable` has
@@ -44,7 +45,7 @@ export function useSlateSelector<T>(
   equalityFn: (a: T | null, b: T) => boolean = refEquality,
   { deferred }: SlateSelectorOptions = {},
 ): ShallowRef<T> {
-  const context = inject<SlateSelectorContext>("slate-selector-context");
+  const context = inject<SlateSelectorContext>(SLATE_INNER_SELECTOR_CONTEXT);
   if (!context) {
     throw new Error(
       `The \`useSlateSelector\` hook must be used inside the <Slate> component's context.`,
@@ -59,7 +60,6 @@ export function useSlateSelector<T>(
     equalityFn,
   );
 
-  // console.log("Selected state:", selectedState.value);
   const unsubscribe = addEventListener(update, { deferred });
   onUpdated(() => {
     update();
@@ -112,7 +112,7 @@ export function useSelectorContext() {
 }
 
 export function useFlushDeferredSelectorsOnRender() {
-  const context = inject<SlateSelectorContext>("slate-selector-context");
+  const context = inject<SlateSelectorContext>(SLATE_INNER_SELECTOR_CONTEXT);
   if (!context) {
     throw new Error(
       `The deferred selector hook must be used inside the <Slate> component's context.`,

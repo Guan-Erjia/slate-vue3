@@ -1,5 +1,5 @@
 import { Editor, Range } from "slate";
-import { IS_ANDROID, isDOMNode, type DOMEditor } from "slate-vue3/dom";
+import { DOMEditor, IS_ANDROID, isDOMNode } from "slate-vue3/dom";
 import scrollIntoView from "scroll-into-view-if-needed";
 import type {
   RenderElementProps,
@@ -69,19 +69,20 @@ export const handleNativeHistoryEvents = (
   editor: Editor,
   event: InputEvent,
 ) => {
+  const maybeHistoryEditor: any = editor;
   if (
     event.inputType === "historyUndo" &&
-    "undo" in editor &&
-    typeof editor.undo === "function"
+    typeof maybeHistoryEditor.undo === "function"
   ) {
-    editor.undo();
+    maybeHistoryEditor.undo();
+    return;
   }
   if (
     event.inputType === "historyRedo" &&
-    "redo" in editor &&
-    typeof editor.redo === "function"
+    typeof maybeHistoryEditor.redo === "function"
   ) {
-    editor.redo();
+    maybeHistoryEditor.redo();
+    return;
   }
 };
 
@@ -89,12 +90,20 @@ export const handleNativeHistoryEvents = (
  * A default implement to scroll dom range into view.
  */
 export const DEFAULT_SCROLL_INTO_VIEW = (
-  editor: DOMEditor,
+  editor: Editor,
   domRange: globalThis.Range,
 ) => {
   // Scroll to the focus point of the selection, in case the selection is expanded
-  const isBackward = !!editor.selection && Range.isBackward(editor.selection);
-  const domFocusPoint = domRange.cloneRange();
+  const { selection } = editor;
+  const isBackward = !!selection && Range.isBackward(selection);
+  const unhung =
+    selection && !isBackward && Range.isExpanded(selection)
+      ? Editor.unhangRange(editor, selection)
+      : selection;
+  const domFocusPoint =
+    unhung && selection && !Range.equals(unhung, selection)
+      ? (DOMEditor.resolveDOMRange(editor, unhung) ?? domRange.cloneRange())
+      : domRange.cloneRange();
   domFocusPoint.collapse(isBackward);
 
   if (domFocusPoint.getBoundingClientRect) {
@@ -117,6 +126,7 @@ export const DEFAULT_SCROLL_INTO_VIEW = (
         return;
       }
     }
+
     // Default behavior: use domFocusPoint's getBoundingClientRect
     leafEl.getBoundingClientRect =
       domFocusPoint.getBoundingClientRect.bind(domFocusPoint);
@@ -125,6 +135,7 @@ export const DEFAULT_SCROLL_INTO_VIEW = (
       block: "nearest",
       inline: "nearest",
     });
+
     // @ts-expect-error an unorthodox delete D:
     delete leafEl.getBoundingClientRect;
   }

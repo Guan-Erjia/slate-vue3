@@ -6,7 +6,7 @@ import {
   Slate,
   type RenderElementProps,
 } from "slate-vue3";
-import { h } from "vue";
+import { h, watch } from "vue";
 
 const editor = createReactiveEditor();
 
@@ -22,16 +22,25 @@ const renderElement = ({ attributes, children }: RenderElementProps) =>
       "span",
       {
         contenteditable: true,
-        suppresscontenteditablewarning: true,
-        "data-test-id": "island",
+        "data-testid": "island",
       },
       children,
     ),
   ]);
+
+watch(
+  () => editor,
+  () => {
+    console.log(JSON.stringify(editor.selection));
+  },
+  {
+    deep: true,
+  },
+);
 </script>
 
 <template>
-  <Slate :editor="editor">
-    <Editable :render-element="renderElement" />
+  <Slate :editor="editor" :render-element>
+    <Editable />
   </Slate>
 </template>

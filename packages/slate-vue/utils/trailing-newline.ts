@@ -2,7 +2,15 @@ import { Editor, Node, Point } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 
 const caretTop = (editor: Editor, point: Point) => {
-  const range = DOMEditor.toDOMRange(editor, { anchor: point, focus: point });
+  const range = DOMEditor.resolveDOMRange(editor, {
+    anchor: point,
+    focus: point,
+  });
+
+  if (!range) {
+    return null;
+  }
+
   const [rect] = Array.from(range.getClientRects());
   return (rect ?? range.getBoundingClientRect()).top;
 };
@@ -27,12 +35,16 @@ export const getPointAboveTrailingNewline = (
     return null;
   }
 
-  if (
-    !Point.equals(point, blockStart) &&
-    Math.abs(caretTop(editor, point) - caretTop(editor, blockStart)) > 2
-  ) {
+  if (Point.equals(point, blockStart)) {
+    return before;
+  }
+
+  const pointTop = caretTop(editor, point);
+  const blockStartTop = caretTop(editor, blockStart);
+
+  if (pointTop === null || blockStartTop === null) {
     return null;
   }
 
-  return before;
+  return Math.abs(pointTop - blockStartTop) > 2 ? null : before;
 };

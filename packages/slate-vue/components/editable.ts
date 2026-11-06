@@ -1,14 +1,5 @@
 import { direction } from "direction";
-import {
-  BaseSelection,
-  Editor,
-  Node,
-  Path,
-  Point,
-  Range,
-  Text,
-  Transforms,
-} from "slate";
+import { Editor, Node, Path, Point, Range, Text, Transforms } from "slate";
 import {
   DOMEditor,
   getActiveElement,
@@ -54,12 +45,13 @@ import {
   onUnmounted,
   onUpdated,
   ref,
+  shallowRef,
   toRaw,
   useAttrs,
   watch,
   normalizeStyle,
 } from "vue";
-import type { CSSProperties, HTMLAttributes } from "vue";
+import type { CSSProperties, HTMLAttributes, VNodeRef } from "vue";
 import { ChildrenComp } from "./children";
 import {
   DEFAULT_SCROLL_INTO_VIEW,
@@ -69,7 +61,7 @@ import {
   isEventHandled,
 } from "./utils";
 import { useEditor } from "../hooks/use-editor";
-import { useComposing } from "../hooks/use-composing";
+import { EDITOR_TO_COMPOSING, useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
 import { useEditorVersion } from "../render/version";
 import { injectDecorateFn } from "../render/decorate";
@@ -79,9 +71,15 @@ import { useAndroidInputManager } from "../hooks/android-input-manager/use-andro
 import { debounce, throttle } from "lodash-es";
 import { deleteMovedRange, getMovableRange } from "../utils/move-range";
 import { useCompositionDOM } from "../hooks/use-composition-dom";
+import { useNativeFormatDOM } from "../hooks/use-native-format-dom";
+import { removeStrayComposition } from "../utils/misplaced-composition";
 import { getPointAboveTrailingNewline } from "../utils/trailing-newline";
 import { getCharacterMoveUnit } from "../utils/character-move";
 import { useFlushDeferredSelectorsOnRender } from "../hooks/use-slate-selector";
+import { AndroidInputManager } from "../hooks/android-input-manager/android-input-manager";
+
+const isTextDOMNode = (node: unknown): node is globalThis.Text =>
+  isDOMNode(node) && node.nodeType === 3;
 
 const isSameCaretPosition = (editor: Editor, a: Range, b: Range) => {
   if (!Range.isCollapsed(a) || !Range.isCollapsed(b)) {
@@ -98,6 +96,17 @@ const isSameCaretPosition = (editor: Editor, a: Range, b: Range) => {
 
   const node = Node.get(editor, first.path);
   return Node.isText(node) && first.offset === node.text.length;
+};
+
+const isDeletingInVoid = (editor: Editor, event: KeyboardEvent) => {
+  const { selection } = editor;
+
+  return (
+    !!selection &&
+    Range.isCollapsed(selection) &&
+    (Hotkeys.isDeleteBackward(event) || Hotkeys.isDeleteForward(event)) &&
+    !!Editor.void(editor, { at: selection })
+  );
 };
 
 /**
@@ -118,13 +127,19 @@ const restoreDomSelection = (
     return;
   }
 
-  const domRange = DOMEditor.toDOMRange(editor, editor.selection);
+  const domRange = DOMEditor.resolveDOMRange(editor, editor.selection);
+
+  if (!domRange) {
+    return;
+  }
+
+  const backward = Range.isBackward(editor.selection);
   state.isUpdatingSelection = true;
   domSelection.setBaseAndExtent(
-    domRange.startContainer,
-    domRange.startOffset,
-    domRange.endContainer,
-    domRange.endOffset,
+    backward ? domRange.endContainer : domRange.startContainer,
+    backward ? domRange.endOffset : domRange.startOffset,
+    backward ? domRange.startContainer : domRange.endContainer,
+    backward ? domRange.startOffset : domRange.endOffset,
   );
   setTimeout(() => {
     state.isUpdatingSelection = false;
@@ -172,58 +187,108 @@ export const Editable = defineComponent({
     ) => void;
     autoFocus: boolean;
   }) {
-    const { placeholder, readOnly, scrollSelectionIntoView, autoFocus } = props;
+    const { placeholder, scrollSelectionIntoView } = props;
+    const attributes: HTMLAttributes = useAttrs();
 
     const editor = useEditor();
-    const attributes: HTMLAttributes = useAttrs();
-    const refrestoreDOMContainer = ref<HTMLDivElement | null>(null);
+    // Rerender editor when composition status changed
     const isComposing = useComposing();
+    watch(
+      () => isComposing.value,
+      (composing, _, onCleanup) => {
+        EDITOR_TO_COMPOSING.set(editor, composing);
+        onCleanup(() => {
+          EDITOR_TO_COMPOSING.delete(editor);
+        });
+      },
+      { immediate: true },
+    );
+
+    const restoreDOMContainer = ref<HTMLDivElement | null>(null);
+    const previousChildren = shallowRef(editor.children);
+    const previousSelection = shallowRef(editor.selection);
+    const pendingInputScroll = ref(false);
+    const pendingNavigationScroll = ref(false);
+    const deferredOperations = shallowRef<Array<() => void>>([]);
+    const lastNativeInsertion = shallowRef<{
+      point: Point;
+      text: string;
+      domNode: globalThis.Text;
+      domOffset: number;
+      domText: string;
+      char: string;
+    } | null>(null);
+    const placeholderHeight = ref<number>();
+
+    // webkit 内核使用，在影子节点渲染是获取 selection
+    const processing = ref(false);
+    const compositionDOM = useCompositionDOM(editor);
+    const nativeFormatDOM = useNativeFormatDOM(editor);
+    const deleteOnCompositionEndRef = ref(false);
+
+    const { onUserInput, receivedUserInput } = useTrackUserInput();
+
+    const proxy = getCurrentInstance();
+    EDITOR_TO_FORCE_RENDER.set(editor, () => proxy?.update());
 
     const isReadOnly = useReadOnly();
+    // Update internal state on each render.
     watch(
-      () => readOnly,
+      () => props.readOnly,
       (current) => {
         IS_READ_ONLY.set(editor, current);
         isReadOnly.value = current;
       },
+      { immediate: true },
     );
 
     // Keep track of some state for the event handler logic.
     const state: {
+      isBlurring: boolean;
       isDraggingInternally: boolean;
-      latestElement: globalThis.Element | null;
-      hasMarkPlaceholder: boolean;
+      isTabbing: boolean;
       pendingSelection: {
         range: Range;
         basedOn: Range | null;
       } | null;
       isUpdatingSelection: boolean;
+      latestElement: globalThis.Element | null;
+      hasMarkPlaceholder: boolean;
     } = {
+      isBlurring: false,
       isDraggingInternally: false,
-      latestElement: null,
-      hasMarkPlaceholder: false,
+      isTabbing: false,
       pendingSelection: null,
       isUpdatingSelection: false,
+      latestElement: null,
+      hasMarkPlaceholder: false,
     };
 
-    const placeholderHeight = ref<number>();
-    const placeHolderResizeHandler = (placeholderEl: HTMLElement | null) => {
-      if (placeholderEl && showPlaceholder) {
-        placeholderHeight.value = placeholderEl.getBoundingClientRect()?.height;
-      } else {
-        placeholderHeight.value = undefined;
+    onMounted(() => {
+      if (!restoreDOMContainer.value || !props.autoFocus) {
+        return;
       }
-    };
-    // webkit 内核使用，在影子节点渲染是获取 selection
-    const processing = ref(false);
+      if (editor.children.length > 0) {
+        DOMEditor.focus(editor);
+      } else {
+        restoreDOMContainer.value?.focus();
+      }
+    });
 
-    const compositionDOM = useCompositionDOM(editor);
-    const deleteOnCompositionEndRef = ref(false);
+    /**
+     * The AndroidInputManager object has a cyclical dependency on onDOMSelectionChange
+     *
+     * It is defined as a reference to simplify hook dependencies and clarify that
+     * it needs to be initialized.
+     */
+    // eslint-disable-next-line prefer-const
+    let androidManager: AndroidInputManager | null | undefined;
 
-    const { onUserInput, receivedUserInput } = useTrackUserInput();
-    const proxy = getCurrentInstance();
-    EDITOR_TO_FORCE_RENDER.set(editor, () => proxy?.update());
-
+    // Listen on the native `selectionchange` event to be able to update any time
+    // the selection changes. This is required because React's `onSelect` is leaky
+    // and non-standard so it doesn't fire until after a selection has been
+    // released. This causes issues in situations where another change happens
+    // while a selection is being dragged.
     const onDOMSelectionChange = throttle(() => {
       if (IS_NODE_MAP_DIRTY.get(editor)) {
         onDOMSelectionChange();
@@ -236,6 +301,7 @@ export const Editable = defineComponent({
 
       if (!processing.value && IS_WEBKIT && root instanceof ShadowRoot) {
         processing.value = true;
+
         const active = getActiveElement();
 
         if (active) {
@@ -258,7 +324,10 @@ export const Editable = defineComponent({
         const el = DOMEditor.toDOMNode(editor, editor);
         const domSelection = getSelection(root);
 
-        if (activeElement === el) {
+        if (
+          activeElement === el ||
+          (activeElement && DOMEditor.hasEditableTarget(editor, activeElement))
+        ) {
           state.latestElement = activeElement;
           IS_FOCUSED.set(editor, true);
         } else {
@@ -282,7 +351,7 @@ export const Editable = defineComponent({
         if (
           anchorNodeSelectable &&
           focusNodeInEditor &&
-          (readOnly || isFocusInEditor)
+          (props.readOnly || isFocusInEditor || state.isBlurring)
         ) {
           const range = DOMEditor.toSlateRange(editor, domSelection, {
             exactMatch: false,
@@ -314,7 +383,7 @@ export const Editable = defineComponent({
         }
 
         // Deselect the editor if the dom selection is not selectable in readonly mode
-        if (readOnly && (!anchorNodeSelectable || !focusNodeInEditor)) {
+        if (props.readOnly && (!anchorNodeSelectable || !focusNodeInEditor)) {
           Transforms.deselect(editor);
         }
       }
@@ -331,193 +400,34 @@ export const Editable = defineComponent({
       onDOMSelectionChange.flush();
     };
 
-    const editableRef = ref<HTMLElement>();
-    const androidManager = useAndroidInputManager({
-      node: editableRef,
+    androidManager = useAndroidInputManager({
+      node: restoreDOMContainer,
       onDOMSelectionChange,
       scheduleOnDOMSelectionChange,
     });
 
-    onMounted(() => {
-      // Update element-related weak maps with the DOM element ref.
-      let window;
-      if (editableRef.value && (window = getDefaultView(editableRef.value))) {
-        EDITOR_TO_WINDOW.set(editor, window);
-        EDITOR_TO_ELEMENT.set(editor, editableRef.value);
-        NODE_TO_ELEMENT.set(editor, editableRef.value);
-        ELEMENT_TO_NODE.set(editableRef.value, editor);
-      }
-    });
-    onUnmounted(() => {
-      EDITOR_TO_ELEMENT.delete(editor);
-      NODE_TO_ELEMENT.delete(editor);
-    });
-
-    const setDomSelection = (
-      selection: BaseSelection,
-      forceChange?: boolean,
-    ) => {
-      const root = DOMEditor.findDocumentOrShadowRoot(editor);
-      const domSelection = getSelection(root);
-      if (!domSelection) {
-        return;
-      }
-      const hasDomSelection = domSelection.type !== "None";
-
-      // If the DOM selection is properly unset, we're done.
-      if (!selection && !hasDomSelection) {
-        return;
-      }
-
-      // Get anchorNode and focusNode
-      const focusNode = domSelection.focusNode;
-      let anchorNode;
-
-      // COMPAT: In firefox the normal selection way does not work
-      // (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
-      if (IS_FIREFOX && domSelection.rangeCount > 1) {
-        const firstRange = domSelection.getRangeAt(0);
-        const lastRange = domSelection.getRangeAt(domSelection.rangeCount - 1);
-
-        // Right to left
-        if (firstRange.startContainer === focusNode) {
-          anchorNode = lastRange.endContainer;
-        } else {
-          // Left to right
-          anchorNode = firstRange.startContainer;
-        }
-      } else {
-        anchorNode = domSelection.anchorNode;
-      }
-      // verify that the dom selection is in the editor
-      const editorElement = EDITOR_TO_ELEMENT.get(editor)!;
-      let hasDomSelectionInEditor = false;
-      if (
-        containsShadowAware(editorElement, anchorNode) &&
-        containsShadowAware(editorElement, focusNode)
-      ) {
-        hasDomSelectionInEditor = true;
-      }
-
-      // If the DOM selection is in the editor and the editor selection is already correct, we're done.
-      if (
-        hasDomSelection &&
-        hasDomSelectionInEditor &&
-        selection &&
-        !forceChange
-      ) {
-        const slateRange = DOMEditor.toSlateRange(editor, domSelection, {
-          exactMatch: true,
-
-          // domSelection is not necessarily a valid Slate range
-          // (e.g. when clicking on contentEditable:false element)
-          suppressThrow: true,
-        });
-
-        if (
-          slateRange &&
-          Range.equals(slateRange, selection) &&
-          (!state.hasMarkPlaceholder ||
-            anchorNode?.parentElement?.hasAttribute(
-              "data-slate-mark-placeholder",
-            ))
-        ) {
-          const scrollForInput = pendingInputScroll.value;
-          pendingInputScroll.value = false;
-          const selectionChangedByEdit =
-            scrollForInput &&
-            previousChildren.value !== editor.children &&
-            !!editor.selection &&
-            (!previousSelection.value ||
-              !Range.equals(previousSelection.value, editor.selection));
-          if (selectionChangedByEdit) {
-            scrollSelectionIntoView(editor, domSelection.getRangeAt(0));
-          }
-          return;
-        }
-      }
-
-      // when <Editable/> is being controlled through external value
-      // then its children might just change - DOM responds to it on its own
-      // but Slate's value is not being updated through any operation
-      // and thus it doesn't transform selection on its own
-      if (selection && !Editor.hasRange(editor, selection)) {
-        editor.selection = DOMEditor.toSlateRange(editor, domSelection, {
-          exactMatch: false,
-          suppressThrow: true,
-        });
-        return;
-      }
-
-      const pending = state.pendingSelection;
-      state.pendingSelection = null;
-
-      if (
-        pending &&
-        !forceChange &&
-        pending.basedOn === selection &&
-        !(selection && Range.equals(pending.range, selection))
-      ) {
-        Transforms.select(editor, pending.range);
-        return;
-      }
-
-      // Otherwise the DOM selection is out of sync, so update it.
-      state.isUpdatingSelection = true;
-
-      let newDomRange: globalThis.Range | null = null;
-
-      try {
-        newDomRange = selection && DOMEditor.toDOMRange(editor, selection);
-      } catch (e) {
-        // Ignore, dom and state might be out of sync
-      }
-
-      if (newDomRange) {
-        if (DOMEditor.isComposing(editor) && !IS_ANDROID) {
-          if (domSelection.rangeCount > 0) {
-            domSelection.collapseToEnd();
-          }
-        } else if (Range.isBackward(selection!)) {
-          domSelection.setBaseAndExtent(
-            newDomRange.endContainer,
-            newDomRange.endOffset,
-            newDomRange.startContainer,
-            newDomRange.startOffset,
-          );
-        } else {
-          domSelection.setBaseAndExtent(
-            newDomRange.startContainer,
-            newDomRange.startOffset,
-            newDomRange.endContainer,
-            newDomRange.endOffset,
-          );
-        }
-
-        if (pendingInputScroll.value) {
-          scrollSelectionIntoView(editor, newDomRange);
-          pendingInputScroll.value = false;
-        }
-      } else {
-        domSelection.removeAllRanges();
-        pendingInputScroll.value = false;
-      }
-
-      return newDomRange;
-    };
-
     const editorVersion = useEditorVersion();
-    const flushDeferred = useFlushDeferredSelectorsOnRender();
-
     watch(
       () => editorVersion.value,
-      () => {
+      (_version, _previousVersion, onCleanup) => {
         flushDeferred();
         // Make sure the DOM selection state is in sync.
+        const { selection } = editor;
+        const scrollForInput = pendingInputScroll.value;
+        pendingInputScroll.value = false;
+        const scrollForNavigation = pendingNavigationScroll.value;
+        pendingNavigationScroll.value = false;
+        const selectionChangedByInput =
+          ((scrollForInput && previousChildren.value !== editor.children) ||
+            scrollForNavigation) &&
+          !!selection &&
+          (!previousSelection.value ||
+            !Range.equals(previousSelection.value, selection));
         previousChildren.value = editor.children;
-        previousSelection.value = editor.selection;
+        previousSelection.value = selection;
         const root = DOMEditor.findDocumentOrShadowRoot(editor);
         const domSelection = getSelection(root);
+
         if (
           !domSelection ||
           !DOMEditor.isFocused(editor) ||
@@ -525,9 +435,142 @@ export const Editable = defineComponent({
         ) {
           return;
         }
+
+        const setDomSelection = (forceChange?: boolean) => {
+          const hasDomSelection = domSelection.type !== "None";
+
+          // If the DOM selection is properly unset, we're done.
+          if (!selection && !hasDomSelection) {
+            return;
+          }
+
+          // Get anchorNode and focusNode
+          const focusNode = domSelection.focusNode;
+          let anchorNode;
+
+          // COMPAT: In firefox the normal selection way does not work
+          // (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
+          if (IS_FIREFOX && domSelection.rangeCount > 1) {
+            const firstRange = domSelection.getRangeAt(0);
+            const lastRange = domSelection.getRangeAt(
+              domSelection.rangeCount - 1,
+            );
+
+            // Right to left
+            if (firstRange.startContainer === focusNode) {
+              anchorNode = lastRange.endContainer;
+            } else {
+              // Left to right
+              anchorNode = firstRange.startContainer;
+            }
+          } else {
+            anchorNode = domSelection.anchorNode;
+          }
+
+          // verify that the dom selection is in the editor
+          const editorElement = EDITOR_TO_ELEMENT.get(editor)!;
+          let hasDomSelectionInEditor = false;
+          if (
+            containsShadowAware(editorElement, anchorNode) &&
+            containsShadowAware(editorElement, focusNode)
+          ) {
+            hasDomSelectionInEditor = true;
+          }
+
+          // If the DOM selection is in the editor and the editor selection is already correct, we're done.
+          if (
+            hasDomSelection &&
+            hasDomSelectionInEditor &&
+            selection &&
+            !forceChange
+          ) {
+            const slateRange = DOMEditor.toSlateRange(editor, domSelection, {
+              exactMatch: true,
+
+              // domSelection is not necessarily a valid Slate range
+              // (e.g. when clicking on contentEditable:false element)
+              suppressThrow: true,
+            });
+
+            if (
+              slateRange &&
+              Range.equals(slateRange, selection) &&
+              (!state.hasMarkPlaceholder ||
+                anchorNode?.parentElement?.hasAttribute(
+                  "data-slate-mark-placeholder",
+                ))
+            ) {
+              if (selectionChangedByInput) {
+                scrollSelectionIntoView(editor, domSelection.getRangeAt(0));
+              }
+              return;
+            }
+          }
+
+          // when <Editable/> is being controlled through external value
+          // then its children might just change - DOM responds to it on its own
+          // but Slate's value is not being updated through any operation
+          // and thus it doesn't transform selection on its own
+          if (selection && !DOMEditor.hasRange(editor, selection)) {
+            editor.selection = DOMEditor.toSlateRange(editor, domSelection, {
+              exactMatch: false,
+              suppressThrow: true,
+            });
+            return;
+          }
+
+          const pending = state.pendingSelection;
+          state.pendingSelection = null;
+
+          if (
+            pending &&
+            !forceChange &&
+            pending.basedOn === selection &&
+            !(selection && Range.equals(pending.range, selection))
+          ) {
+            Transforms.select(editor, pending.range);
+            return;
+          }
+
+          // Otherwise the DOM selection is out of sync, so update it.
+          state.isUpdatingSelection = true;
+
+          const newDomRange =
+            selection && DOMEditor.resolveDOMRange(editor, selection);
+
+          if (newDomRange) {
+            if (DOMEditor.isComposing(editor) && !IS_ANDROID) {
+              if (domSelection.rangeCount > 0) {
+                domSelection.collapseToEnd();
+              }
+            } else if (Range.isBackward(selection!)) {
+              domSelection.setBaseAndExtent(
+                newDomRange.endContainer,
+                newDomRange.endOffset,
+                newDomRange.startContainer,
+                newDomRange.startOffset,
+              );
+            } else {
+              domSelection.setBaseAndExtent(
+                newDomRange.startContainer,
+                newDomRange.startOffset,
+                newDomRange.endContainer,
+                newDomRange.endOffset,
+              );
+            }
+            if (selectionChangedByInput) {
+              scrollSelectionIntoView(editor, newDomRange);
+            }
+          } else {
+            domSelection.removeAllRanges();
+          }
+
+          return newDomRange;
+        };
+
         // In firefox if there is more then 1 range and we call setDomSelection we remove the ability to select more cells in a table
         if (domSelection.rangeCount <= 1) {
-          setDomSelection(editor.selection);
+          setDomSelection();
         }
         const ensureSelection = androidManager?.isFlushing() === "action";
 
@@ -542,14 +585,12 @@ export const Editable = defineComponent({
         const animationFrameId = requestAnimationFrame(() => {
           if (ensureSelection) {
             const ensureDomSelection = (forceChange?: boolean) => {
-              try {
-                const el = DOMEditor.toDOMNode(editor, editor);
-                el.focus();
-
-                setDomSelection(editor.selection, forceChange);
-              } catch (e) {
-                // Ignore, dom and state might be out of sync
+              const el = DOMEditor.toDOMNode(editor, editor);
+              if (!el) {
+                return;
               }
+
+              setDomSelection(forceChange);
             };
 
             // Compat: Android IMEs try to force their selection by manually re-applying it even after we set it.
@@ -568,60 +609,25 @@ export const Editable = defineComponent({
           }
         });
 
-        return () => {
+        onCleanup(() => {
           cancelAnimationFrame(animationFrameId);
           if (timeoutId) {
             clearTimeout(timeoutId);
           }
-        };
+        });
       },
+      { flush: "post" },
     );
-
-    // Listen for dragend and drop globally. In Firefox, if a drop handler
-    // initiates an operation that causes the originally dragged element to
-    // unmount, that element will not emit a dragend event. (2024/06/21)
-    const stoppedDragging = () => (state.isDraggingInternally = false);
-    onMounted(() => {
-      // Attach a native DOM event handler for `selectionchange`, because React's
-      // built-in `onSelect` handler doesn't fire for all selection changes. It's
-      // a leaky polyfill that only fires on keypresses or clicks. Instead, we
-      // want to fire for any change to the selection inside the editor.
-      // (2019/11/04) https://github.com/facebook/react/issues/5785
-      const window = DOMEditor.getWindow(editor);
-      window.document.addEventListener("selectionchange", onSelectionChange);
-      window.document.addEventListener("dragend", stoppedDragging);
-      window.document.addEventListener("drop", stoppedDragging);
-      if (HAS_BEFORE_INPUT_SUPPORT && editableRef.value) {
-        editableRef.value.addEventListener("beforeinput", onDOMBeforeInput);
-      }
-      if (autoFocus) {
-        if (editor.children.length > 0) {
-          DOMEditor.focus(editor);
-        } else {
-          editableRef.value?.focus();
-        }
-      }
-    });
-    onUnmounted(() => {
-      const window = DOMEditor.getWindow(editor);
-      window.document.removeEventListener("selectionchange", onSelectionChange);
-      window.document.removeEventListener("dragend", stoppedDragging);
-      window.document.removeEventListener("drop", stoppedDragging);
-      onDOMSelectionChange.cancel();
-      scheduleOnDOMSelectionChange.cancel();
-      EDITOR_TO_ELEMENT.delete(editor);
-      NODE_TO_ELEMENT.delete(editor);
-
-      if (HAS_BEFORE_INPUT_SUPPORT && editableRef.value) {
-        editableRef.value.removeEventListener("beforeinput", onDOMBeforeInput);
-      }
-    });
 
     // Listen on the native `beforeinput` event to get real "Level 2" events. This
     // is required because React's `beforeinput` is fake and never really attaches
     // to the real event sadly. (2019/11/01)
     // https://github.com/facebook/react/issues/11211
     const onDOMBeforeInput = (event: InputEvent) => {
+      if (props.readOnly) {
+        isDOMEventHandled(event, attributes.onBeforeinput);
+        return;
+      }
       if (!DOMEditor.hasEditableTarget(editor, event.target)) {
         return;
       }
@@ -654,7 +660,7 @@ export const Editable = defineComponent({
       onUserInput();
       pendingInputScroll.value = true;
 
-      if (!readOnly && !isDOMEventHandled(event, attributes.onBeforeinput)) {
+      if (!isDOMEventHandled(event, attributes.onBeforeinput)) {
         // COMPAT: BeforeInput events aren't cancelable on android, so we have to handle them differently using the android input manager.
         if (androidManager?.handleDOMBeforeInput) {
           return androidManager.handleDOMBeforeInput(event);
@@ -683,6 +689,7 @@ export const Editable = defineComponent({
         }
 
         let native = false;
+        let nativePoint: [globalThis.Text, number] | null = null;
         if (
           inputType === "insertText" &&
           selection &&
@@ -701,13 +708,21 @@ export const Editable = defineComponent({
           native = true;
           // Skip native if there are marks, as
           // `insertText` will insert a node, not just text.
-          if (editor.marks) {
+          if (
+            editor.marks ||
+            (typeof Editor.insertionPoint === "function" &&
+              !Point.equals(
+                Editor.insertionPoint(editor, selection.anchor),
+                selection.anchor,
+              ))
+          ) {
             native = false;
           }
 
-          const domAnchor = getSelection(
+          const domSelection = getSelection(
             DOMEditor.findDocumentOrShadowRoot(editor),
-          )?.anchorNode;
+          );
+          const domAnchor = domSelection?.anchorNode;
 
           if (!isInSlateText(domAnchor)) {
             native = false;
@@ -719,43 +734,55 @@ export const Editable = defineComponent({
             // Therefore we don't allow native events to insert text at the end of anchor nodes.
             const { anchor } = selection;
 
-            const [node, offset] = DOMEditor.toDOMPoint(editor, anchor);
-            const anchorNode = node.parentElement?.closest("a");
+            const domPoint = DOMEditor.resolveDOMPoint(editor, anchor);
+            if (!domPoint) {
+              native = false;
+            } else {
+              const [node, offset] = domPoint;
+              const anchorNode = node.parentElement?.closest("a");
 
-            const window = DOMEditor.getWindow(editor);
-
-            if (
-              native &&
-              anchorNode &&
-              DOMEditor.hasDOMNode(editor, anchorNode)
-            ) {
-              // Find the last text node inside the anchor.
-              const lastText = window?.document
-                .createTreeWalker(anchorNode, NodeFilter.SHOW_TEXT)
-                .lastChild() as globalThis.Text | null;
+              const window = DOMEditor.getWindow(editor);
 
               if (
-                lastText === node &&
-                lastText.textContent?.length === offset
+                native &&
+                anchorNode &&
+                DOMEditor.hasDOMNode(editor, anchorNode)
               ) {
-                native = false;
+                // Find the last text node inside the anchor.
+                const lastText = window?.document
+                  .createTreeWalker(anchorNode, NodeFilter.SHOW_TEXT)
+                  .lastChild() as globalThis.Text | null;
+
+                if (
+                  lastText === node &&
+                  lastText.textContent?.length === offset
+                ) {
+                  native = false;
+                }
               }
-            }
 
-            // Chrome has issues with the presence of tab characters inside elements with whiteSpace = 'pre'
-            // causing abnormal insert behavior: https://bugs.chromium.org/p/chromium/issues/detail?id=1219139
-            if (
-              native &&
-              node.parentElement &&
-              window?.getComputedStyle(node.parentElement)?.whiteSpace === "pre"
-            ) {
-              const block = Editor.above(editor, {
-                at: anchor.path,
-                match: (n) => Node.isElement(n) && Editor.isBlock(editor, n),
-              });
+              // Chrome has issues with the presence of tab characters inside elements with whiteSpace = 'pre'
+              // causing abnormal insert behavior: https://bugs.chromium.org/p/chromium/issues/detail?id=1219139
+              if (
+                native &&
+                node.parentElement &&
+                window?.getComputedStyle(node.parentElement)?.whiteSpace ===
+                  "pre"
+              ) {
+                const block = Editor.above(editor, {
+                  at: anchor.path,
+                  match: (n) => Node.isElement(n) && Editor.isBlock(editor, n),
+                });
 
-              if (block && Node.string(block[0]).includes("\t")) {
-                native = false;
+                if (block && Node.string(block[0]).includes("\t")) {
+                  native = false;
+                }
+              }
+              if (native && isTextDOMNode(node)) {
+                nativePoint =
+                  domSelection?.isCollapsed && isTextDOMNode(domAnchor)
+                    ? [domAnchor, domSelection.anchorOffset]
+                    : [node, offset];
               }
             }
           }
@@ -769,7 +796,7 @@ export const Editable = defineComponent({
             inputType.startsWith("deleteBy")) &&
           !IS_NODE_MAP_DIRTY.get(editor)
         ) {
-          const [targetRange] = (event as any).getTargetRanges();
+          const [targetRange] = event.getTargetRanges();
 
           if (targetRange) {
             // Unresolvable ranges would throw out of the handler (#3556); suppress and fall back to synthetic handling.
@@ -795,6 +822,12 @@ export const Editable = defineComponent({
                 EDITOR_TO_USER_SELECTION.set(editor, selectionRef);
               }
             }
+            if (native && isTextDOMNode(targetRange.startContainer)) {
+              nativePoint = [
+                targetRange.startContainer,
+                targetRange.startOffset,
+              ];
+            }
           }
         }
 
@@ -805,6 +838,7 @@ export const Editable = defineComponent({
         }
 
         if (!native) {
+          lastNativeInsertion.value = null;
           event.preventDefault();
         }
 
@@ -913,6 +947,19 @@ export const Editable = defineComponent({
               // Only insertText operations use the native functionality, for now.
               // Potentially expand to single character deletes, as well.
               if (native) {
+                lastNativeInsertion.value = null;
+                if (nativePoint && selection) {
+                  const [node] = Editor.leaf(editor, selection.anchor);
+                  const [domNode, domOffset] = nativePoint;
+                  lastNativeInsertion.value = {
+                    point: selection.anchor,
+                    text: node.text,
+                    domNode,
+                    domOffset,
+                    domText: domNode.data,
+                    char: data,
+                  };
+                }
                 deferredOperations.value.push(() =>
                   Editor.insertText(editor, data),
                 );
@@ -936,6 +983,48 @@ export const Editable = defineComponent({
           Transforms.select(editor, toRestore);
         }
       }
+    };
+
+    const callbackRef: VNodeRef = (node) => {
+      if (!(node instanceof HTMLDivElement || node === null)) {
+        return;
+      }
+      if (node == null) {
+        onDOMSelectionChange.cancel();
+        scheduleOnDOMSelectionChange.cancel();
+
+        EDITOR_TO_ELEMENT.delete(editor);
+        NODE_TO_ELEMENT.delete(editor);
+
+        if (restoreDOMContainer.value && HAS_BEFORE_INPUT_SUPPORT) {
+          restoreDOMContainer.value.removeEventListener(
+            "beforeinput",
+            onDOMBeforeInput,
+          );
+        }
+        NODE_TO_ELEMENT.delete(editor);
+      } else {
+        // Attach a native DOM event handler for `beforeinput` events, because React's
+        // built-in `onBeforeInput` is actually a leaky polyfill that doesn't expose
+        // real `beforeinput` events sadly... (2019/11/04)
+        // https://github.com/facebook/react/issues/11211
+        if (HAS_BEFORE_INPUT_SUPPORT) {
+          node.addEventListener("beforeinput", onDOMBeforeInput);
+        }
+        let window;
+        if ((window = getDefaultView(node))) {
+          EDITOR_TO_WINDOW.set(editor, window);
+          EDITOR_TO_ELEMENT.set(editor, node);
+          NODE_TO_ELEMENT.set(editor, node);
+          ELEMENT_TO_NODE.set(node, editor);
+        }
+      }
+
+      restoreDOMContainer.value = node;
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      state.isTabbing = event.key === "Tab";
     };
 
     // COMPAT: In Chrome, `selectionchange` events can fire when <input> and
@@ -989,18 +1078,137 @@ export const Editable = defineComponent({
       state.pendingSelection = readUnsyncedSelection();
       scheduleOnDOMSelectionChange();
     };
+    const clearTabbing = () => {
+      state.isTabbing = false;
+    };
+    // Listen for dragend and drop globally. In Firefox, if a drop handler
+    // initiates an operation that causes the originally dragged element to
+    // unmount, that element will not emit a dragend event. (2024/06/21)
+    const stoppedDragging = () => {
+      state.isDraggingInternally = false;
+    };
+    onMounted(() => {
+      const window = DOMEditor.getWindow(editor);
 
-    const previousChildren = ref(editor.children);
-    const previousSelection = ref(editor.selection);
-    const pendingInputScroll = ref(false);
-    const deferredOperations = ref<Array<() => void>>([]);
+      // Attach a native DOM event handler for `selectionchange`, because React's
+      // built-in `onSelect` handler doesn't fire for all selection changes. It's
+      // a leaky polyfill that only fires on keypresses or clicks. Instead, we
+      // want to fire for any change to the selection inside the editor.
+      // (2019/11/04) https://github.com/facebook/react/issues/5785
+      window.document.addEventListener("selectionchange", onSelectionChange);
+
+      window.document.addEventListener("keydown", onKeyDown, true);
+      window.document.addEventListener("keyup", clearTabbing, true);
+      window.document.addEventListener("pointerdown", clearTabbing, true);
+
+      window.document.addEventListener("dragend", stoppedDragging);
+      window.document.addEventListener("drop", stoppedDragging);
+    });
+
+    onUnmounted(() => {
+      window.document.removeEventListener("selectionchange", onSelectionChange);
+      window.document.removeEventListener("keydown", onKeyDown, true);
+      window.document.removeEventListener("keyup", clearTabbing, true);
+      window.document.removeEventListener("pointerdown", clearTabbing, true);
+      window.document.removeEventListener("dragend", stoppedDragging);
+      window.document.removeEventListener("drop", stoppedDragging);
+    });
+
+    const decorate = injectDecorateFn();
+
+    const showPlaceholder = computed(
+      () =>
+        Boolean(placeholder) &&
+        editor.children?.length === 1 &&
+        Array.from(Node.texts(editor)).length === 1 &&
+        Node.string(editor) === "" &&
+        !isComposing.value,
+    );
+
+    const placeHolderResizeHandler = (placeholderEl: HTMLElement | null) => {
+      if (placeholderEl && showPlaceholder) {
+        placeholderHeight.value = placeholderEl.getBoundingClientRect()?.height;
+      } else {
+        placeholderHeight.value = undefined;
+      }
+    };
+
+    const decorations = computed(() => {
+      const _decorations = decorate([editor, []]);
+      if (showPlaceholder.value) {
+        const start = Editor.start(editor, []);
+        _decorations.push({
+          [PLACEHOLDER_SYMBOL]: true,
+          placeholder,
+          onPlaceholderResize: placeHolderResizeHandler,
+          anchor: start,
+          focus: start,
+        });
+      }
+
+      const { marks } = editor;
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      state.hasMarkPlaceholder = false;
+
+      if (editor.selection && Range.isCollapsed(editor.selection) && marks) {
+        const { anchor } = editor.selection;
+        const leaf = Node.leaf(editor, anchor.path);
+        const { text, ...rest } = leaf;
+
+        // While marks isn't a 'complete' text, we can still use loose Text.equals
+        // here which only compares marks anyway.
+        if (!Text.equals(leaf, marks as Text, { loose: true })) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          state.hasMarkPlaceholder = true;
+
+          const unset = Object.fromEntries(
+            Object.keys(rest).map((mark) => [mark, null]),
+          );
+
+          _decorations.push({
+            [MARK_PLACEHOLDER_SYMBOL]: true,
+            ...unset,
+            ...marks,
+
+            anchor,
+            focus: anchor,
+          });
+        }
+      }
+      return _decorations;
+    });
+
+    // Update EDITOR_TO_MARK_PLACEHOLDER_MARKS in setTimeout useEffect to ensure we don't set it
+    // before we receive the composition end event.
+    onUpdated(() => {
+      const { selection, marks } = editor;
+      if (selection) {
+        const { anchor } = selection;
+        const text = Node.leaf(editor, anchor.path);
+
+        // While marks isn't a 'complete' text, we can still use loose Text.equals
+        // here which only compares marks anyway.
+        if (marks && !Text.equals(text, marks as Text, { loose: true })) {
+          EDITOR_TO_PENDING_INSERTION_MARKS.set(editor, marks);
+          return;
+        }
+      }
+
+      EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor);
+    });
+
+    const flushDeferred = useFlushDeferredSelectorsOnRender();
+
     const onBeforeinput = (event: InputEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onBeforeinput);
+        return;
+      }
       // COMPAT: Certain browsers don't support the `beforeinput` event, so we
       // fall back to React's leaky polyfill instead just for it. It
       // only works for the `insertText` input type.
       if (
         !HAS_BEFORE_INPUT_SUPPORT &&
-        !readOnly &&
         !isEventHandled(event, attributes.onBeforeinput) &&
         DOMEditor.hasSelectableTarget(editor, event.target)
       ) {
@@ -1013,6 +1221,10 @@ export const Editable = defineComponent({
     };
 
     const onInput = (event: InputEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onInput);
+        return;
+      }
       if (!DOMEditor.hasEditableTarget(editor, event.target)) {
         return;
       }
@@ -1026,6 +1238,20 @@ export const Editable = defineComponent({
         return;
       }
 
+      if (event.inputType?.startsWith("format")) {
+        const domSelection = getSelection(
+          DOMEditor.findDocumentOrShadowRoot(editor),
+        );
+        const range =
+          domSelection && DOMEditor.resolveSlateRange(editor, domSelection);
+        nativeFormatDOM.revert();
+        if (domSelection && range) {
+          Transforms.select(editor, range);
+          restoreDomSelection(editor, domSelection, state);
+        }
+        return;
+      }
+
       // Flush native operations, as native events will have propogated
       // and we can correctly compare DOM text values in components
       // to stop rendering, so that browser functions like autocorrect
@@ -1034,6 +1260,33 @@ export const Editable = defineComponent({
         op();
       }
       deferredOperations.value = [];
+
+      const nativeInsertion = lastNativeInsertion.value;
+      lastNativeInsertion.value = null;
+      if (nativeInsertion) {
+        const { point, text, domNode, domOffset, domText, char } =
+          nativeInsertion;
+        const node = Node.getIf(editor, point.path);
+        if (
+          Text.isText(node) &&
+          node.text === text &&
+          domNode.isConnected &&
+          domNode.data ===
+            domText.slice(0, domOffset) + char + domText.slice(domOffset)
+        ) {
+          domNode.deleteData(domOffset, char.length);
+          if (
+            editor.selection &&
+            Range.isCollapsed(editor.selection) &&
+            Point.equals(editor.selection.anchor, point)
+          ) {
+            getSelection(DOMEditor.findDocumentOrShadowRoot(editor))?.collapse(
+              domNode,
+              domOffset,
+            );
+          }
+        }
+      }
 
       // COMPAT: Since `beforeinput` doesn't fully `preventDefault`,
       // there's a chance that content might be placed in the browser's undo stack.
@@ -1045,8 +1298,11 @@ export const Editable = defineComponent({
     };
 
     const onBlur = (event: FocusEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onBlur);
+        return;
+      }
       if (
-        readOnly ||
         state.isUpdatingSelection ||
         !DOMEditor.hasSelectableTarget(editor, event.target) ||
         isEventHandled(event, attributes.onBlur)
@@ -1100,6 +1356,13 @@ export const Editable = defineComponent({
       // COMPAT: Safari doesn't always remove the selection even if the content-
       // editable element no longer has focus. Refer to:
       // https://stackoverflow.com/questions/12353247/force-contenteditable-div-to-stop-accepting-input-after-it-loses-focus-under-web
+      state.isBlurring = true;
+      try {
+        flushDOMSelectionChange();
+      } finally {
+        state.isBlurring = false;
+      }
+
       if (IS_WEBKIT) {
         const domSelection = getSelection(root);
         domSelection?.removeAllRanges();
@@ -1118,7 +1381,12 @@ export const Editable = defineComponent({
         isDOMNode(event.target)
       ) {
         const node = DOMEditor.toSlateNode(editor, event.target);
-        const path = DOMEditor.findPath(editor, node);
+        let path: Path;
+        try {
+          path = DOMEditor.findPath(editor, node);
+        } catch {
+          return;
+        }
 
         // At this time, the Slate document may be arbitrarily different,
         // because onClick handlers can change the document before we get here.
@@ -1142,12 +1410,19 @@ export const Editable = defineComponent({
             blockPath = block?.[1] ?? path.slice(0, 1);
           }
 
-          const range = Editor.range(editor, blockPath);
-          Transforms.select(editor, range);
-          return;
+          const isIsolated = Editor.above(editor, {
+            at: Editor.start(editor, blockPath),
+            match: (node) =>
+              Node.isElement(node) && !!editor.isIsolated?.(node),
+          });
+          if (blockPath.length > 1 || isIsolated) {
+            const range = Editor.range(editor, blockPath);
+            Transforms.select(editor, range);
+            return;
+          }
         }
 
-        if (readOnly) {
+        if (props.readOnly) {
           return;
         }
 
@@ -1166,7 +1441,8 @@ export const Editable = defineComponent({
           !Path.isAncestor(selectedVoid[1], path) &&
           !(startVoid && Path.equals(startVoid[1], selectedVoid[1]))
         ) {
-          const clicked = DOMEditor.findEventRange(editor, event);
+          const clicked = DOMEditor.resolveEventRange(editor, event);
+          if (!clicked) return;
           const voidStart = Editor.start(editor, selectedVoid[1]);
           const voidEnd = Editor.end(editor, selectedVoid[1]);
           const anchor = Point.isBefore(clicked.anchor, voidStart)
@@ -1194,16 +1470,18 @@ export const Editable = defineComponent({
     };
 
     const onCompositionend = (event: CompositionEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onCompositionend);
+        return;
+      }
       if (isDOMEventTargetInput(event)) {
         return;
       }
       if (DOMEditor.hasSelectableTarget(editor, event.target)) {
-        if (DOMEditor.isComposing(editor)) {
-          Promise.resolve().then(() => {
-            isComposing.value = false;
-            IS_COMPOSING.set(editor, false);
-          });
-        }
+        Promise.resolve().then(() => {
+          isComposing.value = false;
+          IS_COMPOSING.set(editor, false);
+        });
 
         androidManager?.handleCompositionEnd(event);
 
@@ -1243,6 +1521,7 @@ export const Editable = defineComponent({
           }
 
           compositionDOM.restore();
+          removeStrayComposition(editor, event.data);
           Editor.insertText(editor, event.data);
 
           const userMarks = EDITOR_TO_USER_MARKS.get(editor);
@@ -1256,6 +1535,10 @@ export const Editable = defineComponent({
     };
 
     const onCompositionupdate = (event: CompositionEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onCompositionupdate);
+        return;
+      }
       if (
         DOMEditor.hasSelectableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onCompositionupdate) &&
@@ -1269,6 +1552,10 @@ export const Editable = defineComponent({
     };
 
     const onCompositionstart = (event: CompositionEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onCompositionstart);
+        return;
+      }
       if (isDOMEventTargetInput(event)) {
         return;
       }
@@ -1284,6 +1571,7 @@ export const Editable = defineComponent({
 
         compositionDOM.clear();
         isComposing.value = true;
+
         flushDOMSelectionChange();
 
         const { selection } = editor;
@@ -1313,8 +1601,11 @@ export const Editable = defineComponent({
     };
 
     const onCut = (event: ClipboardEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onCut);
+        return;
+      }
       if (
-        !readOnly &&
         DOMEditor.hasSelectableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onCut) &&
         !isDOMEventTargetInput(event)
@@ -1340,6 +1631,10 @@ export const Editable = defineComponent({
     };
 
     const onDragover = (event: DragEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onDragover);
+        return;
+      }
       if (
         DOMEditor.hasTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onDragover)
@@ -1356,8 +1651,11 @@ export const Editable = defineComponent({
     };
 
     const onDragstart = (event: DragEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onDragstart);
+        return;
+      }
       if (
-        !readOnly &&
         DOMEditor.hasTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onDragstart)
       ) {
@@ -1384,8 +1682,11 @@ export const Editable = defineComponent({
     };
 
     const onDrop = (event: DragEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onDrop);
+        return;
+      }
       if (
-        !readOnly &&
         DOMEditor.hasTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onDrop)
       ) {
@@ -1394,26 +1695,41 @@ export const Editable = defineComponent({
         // Keep a reference to the dragged range before updating selection
         const draggedRange = editor.selection;
 
-        // Find the range where the drop happened
-        const range = DOMEditor.findEventRange(editor, event);
+        // Find the range where the drop happened. It is resolved from
+        // the drop coordinates, which can point outside of the editor
+        // even though the event's target is inside it (e.g. when the
+        // page scrolled during the drag), leaving no range to drop at.
+        const range = DOMEditor.findEventRange(editor, event, {
+          suppressThrow: true,
+        });
         const data = event.dataTransfer;
 
-        Transforms.select(editor, range);
+        if (!range && state.isDraggingInternally) {
+          // The dragged content already sits in the editor, so without
+          // a target it stays where it is.
+          return;
+        }
 
-        if (state.isDraggingInternally && draggedRange) {
-          if (Range.includes(draggedRange, range.anchor)) {
-            return;
-          }
+        if (range) {
+          Transforms.select(editor, range);
 
-          if (!Editor.void(editor, { at: range, voids: true })) {
-            const dropRef = Editor.rangeRef(editor, range);
-            deleteMovedRange(editor, draggedRange);
-            const dropRange = dropRef.unref();
+          if (state.isDraggingInternally && draggedRange) {
+            if (Range.includes(draggedRange, range.anchor)) {
+              return;
+            }
 
-            if (dropRange) {
-              Transforms.select(editor, dropRange);
+            if (!Editor.void(editor, { at: range, voids: true })) {
+              const dropRef = Editor.rangeRef(editor, range);
+              deleteMovedRange(editor, draggedRange);
+              const dropRange = dropRef.unref();
+
+              if (dropRange) {
+                Transforms.select(editor, dropRange);
+              }
             }
           }
+        } else if (!editor.selection && editor.children.length > 0) {
+          Transforms.select(editor, Editor.end(editor, []));
         }
 
         if (data) {
@@ -1429,8 +1745,11 @@ export const Editable = defineComponent({
     };
 
     const onDragend = (event: DragEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onDragend);
+        return;
+      }
       if (
-        !readOnly &&
         state.isDraggingInternally &&
         attributes.onDragend &&
         DOMEditor.hasTarget(editor, event.target)
@@ -1440,8 +1759,11 @@ export const Editable = defineComponent({
     };
 
     const onFocus = (event: FocusEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onFocus);
+        return;
+      }
       if (
-        !readOnly &&
         !state.isUpdatingSelection &&
         DOMEditor.hasEditableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onFocus)
@@ -1459,17 +1781,33 @@ export const Editable = defineComponent({
         }
 
         IS_FOCUSED.set(editor, true);
+
+        if (state.isTabbing && event.target === el) {
+          const domSelection = getSelection(root);
+          if (domSelection && editor.selection) {
+            state.pendingSelection = null;
+            restoreDomSelection(editor, domSelection, state);
+          }
+          state.isTabbing = false;
+        }
       }
     };
 
     const onKeydown = (event: KeyboardEvent) => {
-      if (!readOnly && DOMEditor.hasEditableTarget(editor, event.target)) {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onKeydown);
+        return;
+      }
+      if (DOMEditor.hasEditableTarget(editor, event.target)) {
         androidManager?.handleKeyDown(event);
 
         // COMPAT: The composition end event isn't fired reliably in all browsers,
         // so we sometimes might end up stuck in a composition state even though we
         // aren't composing any more.
-        if (DOMEditor.isComposing(editor) && event.isComposing === false) {
+        if (
+          DOMEditor.isComposing(editor) &&
+          (event.isComposing === false || isDeletingInVoid(editor, event))
+        ) {
           IS_COMPOSING.set(editor, false);
           isComposing.value = false;
         }
@@ -1480,6 +1818,17 @@ export const Editable = defineComponent({
         ) {
           return;
         }
+
+        pendingNavigationScroll.value = [
+          "ArrowUp",
+          "ArrowDown",
+          "ArrowLeft",
+          "ArrowRight",
+          "Home",
+          "End",
+          "PageUp",
+          "PageDown",
+        ].includes(event.key);
 
         const { selection } = editor;
         const element =
@@ -1577,8 +1926,8 @@ export const Editable = defineComponent({
 
           if (selection && Range.isCollapsed(selection)) {
             Transforms.move(editor, {
-              reverse: isRTL,
-              unit: getCharacterMoveUnit(editor, selection.focus, isRTL),
+              reverse: !isRTL,
+              unit: getCharacterMoveUnit(editor, selection.focus, !isRTL),
             });
           } else {
             Transforms.collapse(editor, {
@@ -1606,30 +1955,34 @@ export const Editable = defineComponent({
           return;
         }
 
-        if (Hotkeys.isMoveWordBackward(event)) {
+        const wordBackward = Hotkeys.isMoveWordBackward(event);
+        if (wordBackward || Hotkeys.isMoveWordForward(event)) {
           event.preventDefault();
 
+          const root = DOMEditor.findDocumentOrShadowRoot(editor);
+          const domSelection = getSelection(root);
+          if (domSelection?.modify) {
+            domSelection.modify(
+              "move",
+              wordBackward ? "left" : "right",
+              "word",
+            );
+            const range = DOMEditor.toSlateRange(editor, domSelection, {
+              exactMatch: false,
+              suppressThrow: true,
+            });
+            if (range) {
+              Transforms.select(editor, range);
+              return;
+            }
+          }
           if (selection && Range.isExpanded(selection)) {
             Transforms.collapse(editor, { edge: "focus" });
           }
 
           Transforms.move(editor, {
             unit: "word",
-            reverse: !isRTL,
-          });
-          return;
-        }
-
-        if (Hotkeys.isMoveWordForward(event)) {
-          event.preventDefault();
-
-          if (selection && Range.isExpanded(selection)) {
-            Transforms.collapse(editor, { edge: "focus" });
-          }
-
-          Transforms.move(editor, {
-            unit: "word",
-            reverse: isRTL,
+            reverse: wordBackward ? !isRTL : isRTL,
           });
           return;
         }
@@ -1798,8 +2151,11 @@ export const Editable = defineComponent({
     };
 
     const onPaste = (event: ClipboardEvent) => {
+      if (props.readOnly) {
+        isEventHandled(event, attributes.onPaste);
+        return;
+      }
       if (
-        !readOnly &&
         DOMEditor.hasEditableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onPaste)
       ) {
@@ -1854,93 +2210,22 @@ export const Editable = defineComponent({
         : undefined,
     );
 
-    const showPlaceholder = computed(
-      () =>
-        Boolean(placeholder) &&
-        editor.children?.length === 1 &&
-        Array.from(Node.texts(editor)).length === 1 &&
-        Node.string(editor) === "" &&
-        !isComposing.value,
-    );
-
-    const decorate = injectDecorateFn();
-
-    const decorations = computed(() => {
-      const _decorations = decorate([editor, []]);
-      if (showPlaceholder.value) {
-        const start = Editor.start(editor, []);
-        _decorations.push({
-          [PLACEHOLDER_SYMBOL]: true,
-          placeholder,
-          onPlaceholderResize: placeHolderResizeHandler,
-          anchor: start,
-          focus: start,
-        });
-      }
-
-      const { marks } = editor;
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      state.hasMarkPlaceholder = false;
-
-      if (editor.selection && Range.isCollapsed(editor.selection) && marks) {
-        const { anchor } = editor.selection;
-        const leaf = Node.leaf(editor, anchor.path);
-        const { text, ...rest } = leaf;
-
-        // While marks isn't a 'complete' text, we can still use loose Text.equals
-        // here which only compares marks anyway.
-        if (!Text.equals(leaf, marks as Text, { loose: true })) {
-          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-          state.hasMarkPlaceholder = true;
-
-          const unset = Object.fromEntries(
-            Object.keys(rest).map((mark) => [mark, null]),
-          );
-
-          _decorations.push({
-            [MARK_PLACEHOLDER_SYMBOL]: true,
-            ...unset,
-            ...marks,
-
-            anchor,
-            focus: anchor,
-          });
-        }
-      }
-      return _decorations;
-    });
-
-    // Update EDITOR_TO_MARK_PLACEHOLDER_MARKS in setTimeout useEffect to ensure we don't set it
-    // before we receive the composition end event.
-    onUpdated(() => {
-      const { selection, marks } = editor;
-      if (selection) {
-        const { anchor } = selection;
-        const text = Node.leaf(editor, anchor.path);
-
-        // While marks isn't a 'complete' text, we can still use loose Text.equals
-        // here which only compares marks anyway.
-        if (marks && !Text.equals(text, marks as Text, { loose: true })) {
-          EDITOR_TO_PENDING_INSERTION_MARKS.set(editor, marks);
-          return;
-        }
-      }
-      EDITOR_TO_PENDING_INSERTION_MARKS.delete(editor);
-    });
-
     return () => {
       return h(
         RestoreDOM,
         {
-          node: refrestoreDOMContainer,
+          node: restoreDOMContainer,
           receivedUserInput: receivedUserInput.value,
         },
         () =>
           h(
             attributes.is || "div",
             {
-              role: readOnly ? undefined : "textbox",
-              "aria-multiline": readOnly ? undefined : true,
+              role: props.readOnly ? undefined : "textbox",
+              "aria-multiline": props.readOnly ? undefined : true,
+              "aria-placeholder": showPlaceholder.value
+                ? placeholder
+                : undefined,
               translate: "no",
               ...attributes,
               "data-slate-editor": true,
@@ -1949,8 +2234,8 @@ export const Editable = defineComponent({
               spellcheck: spellcheck.value,
               autocorrect: autocorrect.value,
               autocapitalize: autocapitalize.value,
-              contenteditable: !readOnly,
-              ref: editableRef,
+              contenteditable: !props.readOnly,
+              ref: callbackRef,
               style: editableStyle.value,
               onBeforeinput,
               onInput,

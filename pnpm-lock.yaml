@@ -112,14 +112,14 @@ importers:
         specifier: ^0.9.0
         version: 0.9.0(unified@11.0.5)
       slate:
-        specifier: ^0.146.0
-        version: 0.146.0
+        specifier: ^0.147.4
+        version: 0.147.4
       slate-history:
         specifier: ^0.140.0
-        version: 0.140.0(slate@0.146.0)
+        version: 0.140.0(slate@0.147.4)
       slate-hyperscript:
         specifier: ^0.138.3
-        version: 0.138.3(slate@0.146.0)
+        version: 0.138.3(slate@0.147.4)
       typescript:
         specifier: ~6.0.3
         version: 6.0.3
@@ -2407,8 +2407,8 @@ packages:
     peerDependencies:
       slate: '>=0.114.3'
 
-  slate@0.146.0:
-    resolution: {integrity: sha512-MWu3mbJdnY71IdXoh4xSm9WG64Ytn+WFR7MeMCpfEe4XdGNiN4bpOyqq4p6mAKTCWrA/PbwJ0YhSmlKmcErkew==}
+  slate@0.147.4:
+    resolution: {integrity: sha512-AaoMVtj+6AUhMAvMubk9OZn7cdA5MsZLWbt+jx5RvHimd3lDRhQhKVgLy6uegwT2lEYB8lDKqWGcN6vU8W2V9w==}
 
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
@@ -5356,15 +5356,15 @@ snapshots:
 
   siginfo@2.0.0: {}
 
-  slate-history@0.140.0(slate@0.146.0):
+  slate-history@0.140.0(slate@0.147.4):
     dependencies:
-      slate: 0.146.0
+      slate: 0.147.4
 
-  slate-hyperscript@0.138.3(slate@0.146.0):
+  slate-hyperscript@0.138.3(slate@0.147.4):
     dependencies:
-      slate: 0.146.0
+      slate: 0.147.4
 
-  slate@0.146.0: {}
+  slate@0.147.4: {}
 
   source-map-js@1.2.1: {}
 

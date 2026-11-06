@@ -1,6 +1,9 @@
 import {
   BaseEditor,
+  createEditor,
+  Descendant,
   Editor,
+  EditorWordOptions,
   Node,
   Path,
   Point,
@@ -87,6 +90,7 @@ export interface DOMEditor extends BaseEditor {
     editor: Editor,
     target: EventTarget | null,
   ) => boolean;
+  onDOMError: (error: unknown) => void;
   setFragmentData: (
     data: DataTransfer,
     originEvent?: "drag" | "copy" | "cut",
@@ -121,8 +125,16 @@ export interface DOMEditorInterface {
 
   /**
    * Get the target range from a DOM `event`.
+   *
+   * The range is resolved from the event's coordinates, which can point
+   * outside of the editor even when the event's target lies inside it. With
+   * `suppressThrow`, `null` is returned instead of throwing in that case.
    */
-  findEventRange: (editor: Editor, event: any) => Range;
+  findEventRange: <T extends boolean = false>(
+    editor: Editor,
+    event: any,
+    options?: { suppressThrow?: T },
+  ) => T extends true ? Range | null : Range;
 
   /**
    * Find a key for a Slate node.
@@ -162,6 +174,11 @@ export interface DOMEditorInterface {
   ) => target is DOMNode;
 
   /**
+   *
+   */
+  hasRange: (editor: Editor, range: Range) => boolean;
+
+  /**
    * Check if the target can be selectable
    */
   hasSelectableTarget: (editor: Editor, target: EventTarget | null) => boolean;
@@ -191,6 +208,11 @@ export interface DOMEditorInterface {
    */
   isComposing: (editor: Editor) => boolean;
 
+  getWord: (
+    editor: Editor,
+    options?: EditorWordOptions,
+  ) => { range: Range; text: string } | undefined;
+
   /**
    * Check if the editor is focused.
    */
@@ -219,6 +241,31 @@ export interface DOMEditorInterface {
     data: DataTransfer,
     originEvent?: "drag" | "copy" | "cut",
   ) => void;
+
+  resolveDOMPoint: (editor: Editor, point: Point) => DOMPoint | null;
+
+  resolveDOMRange: (editor: Editor, range: Range) => DOMRange | null;
+
+  resolveEventRange: (editor: Editor, event: any) => Range | null;
+
+  resolveDOMNode: (editor: Editor, node: Node) => HTMLElement | null;
+
+  resolveSlateNode: (editor: Editor, domNode: DOMNode) => Node | null;
+
+  resolveSlatePoint: (
+    editor: Editor,
+    domPoint: DOMPoint,
+    options?: {
+      exactMatch?: boolean;
+      searchDirection?: "forward" | "backward";
+    },
+  ) => Point | null;
+
+  resolveSlateRange: (
+    editor: Editor,
+    domRange: DOMRange | DOMStaticRange | DOMSelection,
+    options?: { exactMatch?: boolean },
+  ) => Range | null;
 
   /**
    * Find the native DOM element from a Slate node.
@@ -317,7 +364,13 @@ export const DOMEditor: DOMEditorInterface = {
     return el.ownerDocument;
   },
 
-  findEventRange: (editor, event) => {
+  findEventRange: <T extends boolean = false>(
+    editor: Editor,
+    event: any,
+    options: { suppressThrow?: T } = {},
+  ): T extends true ? Range | null : Range => {
+    const { suppressThrow = false } = options;
+
     if ("nativeEvent" in event) {
       event = event.nativeEvent;
     }
@@ -325,13 +378,32 @@ export const DOMEditor: DOMEditorInterface = {
     const { clientX: x, clientY: y, target } = event;
 
     if (x == null || y == null) {
+      if (suppressThrow) {
+        return null as T extends true ? Range | null : Range;
+      }
       throw new Error(
         `Cannot resolve a Slate range from a DOM event: ${event}`,
       );
     }
 
-    const node = DOMEditor.toSlateNode(editor, event.target);
-    const path = DOMEditor.findPath(editor, node);
+    let node;
+    try {
+      node = DOMEditor.toSlateNode(editor, event.target);
+    } catch (e) {
+      if (suppressThrow) {
+        return null as T extends true ? Range | null : Range;
+      }
+      throw e;
+    }
+    let path;
+    try {
+      path = DOMEditor.findPath(editor, node);
+    } catch (e) {
+      if (suppressThrow) {
+        return null as T extends true ? Range | null : Range;
+      }
+      throw e;
+    }
 
     // If the drop target is inside a void node, move it into either the
     // next or previous node, depending on which side the `x` and `y`
@@ -351,14 +423,13 @@ export const DOMEditor: DOMEditorInterface = {
 
       if (point) {
         const range = Editor.range(editor, point);
-        return range;
+        return range as T extends true ? Range | null : Range;
       }
     }
 
     // Else resolve a range from the caret position where the drop occured.
     let domRange;
     const { document } = DOMEditor.getWindow(editor);
-
     const root = DOMEditor.findDocumentOrShadowRoot(editor);
     const shadowRoot = root === document ? null : (root as ShadowRoot);
 
@@ -385,6 +456,9 @@ export const DOMEditor: DOMEditorInterface = {
     }
 
     if (!domRange) {
+      if (suppressThrow) {
+        return null as T extends true ? Range | null : Range;
+      }
       throw new Error(
         `Cannot resolve a Slate range from a DOM event: ${event}`,
       );
@@ -393,9 +467,9 @@ export const DOMEditor: DOMEditorInterface = {
     // Resolve a Slate range from the DOM range.
     const range = DOMEditor.toSlateRange(editor, domRange, {
       exactMatch: false,
-      suppressThrow: false,
+      suppressThrow,
     });
-    return range;
+    return range as T extends true ? Range | null : Range;
   },
 
   findKey: (editor, node) => {
@@ -426,7 +500,6 @@ export const DOMEditor: DOMEditorInterface = {
 
       const i = NODE_TO_INDEX.get(child);
       const rawParent = toRaw(parent);
-
       if (i == null || rawParent.children[i] !== child) {
         break;
       }
@@ -580,6 +653,17 @@ export const DOMEditor: DOMEditorInterface = {
     isDOMNode(target) &&
     DOMEditor.hasDOMNode(editor, target, { editable: true }),
 
+  hasRange: (editor, range) => {
+    if (typeof editor.hasRange === "function") {
+      return editor.hasRange(range);
+    }
+
+    const { anchor, focus } = range;
+    return (
+      Editor.hasPath(editor, anchor.path) && Editor.hasPath(editor, focus.path)
+    );
+  },
+
   hasSelectableTarget: (editor, target) =>
     DOMEditor.hasEditableTarget(editor, target) ||
     DOMEditor.isTargetInsideNonReadonlyVoid(editor, target),
@@ -597,6 +681,23 @@ export const DOMEditor: DOMEditorInterface = {
 
   isComposing: (editor) => {
     return !!IS_COMPOSING.get(editor);
+  },
+
+  getWord: (editor, options = {}) => {
+    if (typeof Editor.word !== "function") {
+      throw new Error("DOMEditor.getWord needs slate 0.136.0 or later");
+    }
+
+    const composing = DOMEditor.isComposing(editor)
+      ? getComposingView(editor)
+      : undefined;
+    const view = composing?.view ?? editor;
+    const range = Editor.word(view, {
+      ...options,
+      at: options.at ?? composing?.point,
+    });
+
+    return range && { range, text: Editor.string(view, range) };
   },
 
   isFocused: (editor) => !!IS_FOCUSED.get(editor),
@@ -617,13 +718,7 @@ export const DOMEditor: DOMEditorInterface = {
     editor.setFragmentData(data, originEvent),
 
   toDOMNode: (editor, node) => {
-    const domNode =
-      node === editor
-        ? EDITOR_TO_ELEMENT.get(editor)
-        : EDITOR_TO_KEY_TO_ELEMENT.get(editor)?.get(
-            DOMEditor.findKey(editor, node),
-          );
-
+    const domNode = DOMEditor.resolveDOMNode(editor, node);
     if (!domNode) {
       throw new Error(
         `Cannot resolve a DOM node from Slate node: ${Scrubber.stringify(node)}`,
@@ -633,76 +728,92 @@ export const DOMEditor: DOMEditorInterface = {
     return domNode;
   },
 
+  resolveDOMPoint: (editor, point) => {
+    if (!Node.has(editor, point.path)) {
+      return null;
+    }
+
+    const el = EDITOR_TO_KEY_TO_ELEMENT.get(editor)?.get(
+      DOMEditor.findKey(editor, Node.get(editor, point.path)),
+    );
+    return el ? findDOMPointInElement(editor, el, point) : null;
+  },
+
+  resolveDOMRange: (editor, range) => {
+    const domAnchor = DOMEditor.resolveDOMPoint(editor, range.anchor);
+
+    if (!domAnchor) {
+      return null;
+    }
+
+    const domFocus = Range.isCollapsed(range)
+      ? domAnchor
+      : DOMEditor.resolveDOMPoint(editor, range.focus);
+    const window =
+      EDITOR_TO_WINDOW.get(editor) ?? domAnchor[0].ownerDocument?.defaultView;
+
+    if (!domFocus || !window) {
+      return null;
+    }
+
+    try {
+      return createDOMRange(
+        window,
+        domAnchor,
+        domFocus,
+        Range.isBackward(range),
+      );
+    } catch {
+      return null;
+    }
+  },
+
+  resolveEventRange: (editor, event) =>
+    DOMEditor.findEventRange(editor, event, { suppressThrow: true }),
+
+  resolveDOMNode: (editor, node) =>
+    (node === editor
+      ? EDITOR_TO_ELEMENT.get(editor)
+      : EDITOR_TO_KEY_TO_ELEMENT.get(editor)?.get(
+          DOMEditor.findKey(editor, node),
+        )) ?? null,
+
+  resolveSlateNode: (editor, domNode) => {
+    const domEl = closestSlateElement(domNode);
+
+    return (domEl && ELEMENT_TO_NODE.get(domEl)) ?? null;
+  },
+
+  resolveSlatePoint: (editor, domPoint, options = {}) => {
+    try {
+      return DOMEditor.toSlatePoint(editor, domPoint, {
+        exactMatch: options.exactMatch ?? false,
+        searchDirection: options.searchDirection,
+        suppressThrow: true,
+      });
+    } catch {
+      return null;
+    }
+  },
+
+  resolveSlateRange: (editor, domRange, options = {}) => {
+    try {
+      return DOMEditor.toSlateRange(editor, domRange, {
+        exactMatch: options.exactMatch ?? false,
+        suppressThrow: true,
+      });
+    } catch {
+      return null;
+    }
+  },
+
   toDOMPoint: (editor, point) => {
     const [node] = Editor.node(editor, point.path);
     const el = DOMEditor.toDOMNode(editor, node);
-    let domPoint: DOMPoint | undefined;
-
-    // If we're inside a void node, force the offset to 0, otherwise the zero
-    // width spacing character will result in an incorrect offset of 1
-    if (Editor.void(editor, { at: point })) {
-      point = { path: point.path, offset: 0 };
-    }
-
-    // For each leaf, we need to isolate its content, which means filtering
-    // to its direct text and zero-width spans. (We have to filter out any
-    // other siblings that may have been rendered alongside them.)
-    const selector = `[data-slate-string], [data-slate-zero-width]`;
-    const texts = Array.from(el.querySelectorAll(selector));
-    let start = 0;
-
-    for (let i = 0; i < texts.length; i++) {
-      const text = texts[i];
-      const domNode = text.childNodes[0] as HTMLElement;
-
-      if (domNode == null || domNode.textContent == null) {
-        continue;
-      }
-
-      const { length } = domNode.textContent;
-      const attr = text.getAttribute("data-slate-length");
-      const trueLength = attr == null ? length : parseInt(attr, 10);
-      const end = start + trueLength;
-
-      // Prefer putting the selection inside the mark placeholder to ensure
-      // composed text is displayed with the correct marks.
-      const nextText = texts[i + 1];
-      if (
-        point.offset === end &&
-        nextText?.hasAttribute("data-slate-mark-placeholder")
-      ) {
-        const domText = nextText.childNodes[0];
-
-        domPoint = [
-          // COMPAT: If we don't explicity set the dom point to be on the actual
-          // dom text element, chrome will put the selection behind the actual dom
-          // text element, causing domRange.getBoundingClientRect() calls on a collapsed
-          // selection to return incorrect zero values (https://bugs.chromium.org/p/chromium/issues/detail?id=435438)
-          // which will cause issues when scrolling to it.
-          domText instanceof globalThis.Text ? domText : nextText,
-          nextText.textContent?.startsWith("\uFEFF") ? 1 : 0,
-        ];
-        break;
-      }
-
-      if (point.offset <= end) {
-        const offset = Math.min(length, Math.max(0, point.offset - start));
-        domPoint =
-          offset === length && text.hasAttribute("data-slate-trailing")
-            ? [text.lastChild!, 0]
-            : [domNode, offset];
-        break;
-      }
-
-      start = end;
-    }
+    const domPoint = findDOMPointInElement(editor, el, point);
 
     if (!domPoint) {
-      throw new Error(
-        `Cannot resolve a DOM point from Slate point: ${Scrubber.stringify(
-          point,
-        )}`,
-      );
+      throw new Error(unresolvedPointMessage(point));
     }
 
     return domPoint;
@@ -710,42 +821,22 @@ export const DOMEditor: DOMEditorInterface = {
 
   toDOMRange: (editor, range) => {
     const { anchor, focus } = range;
-    const isBackward = Range.isBackward(range);
     const domAnchor = DOMEditor.toDOMPoint(editor, anchor);
     const domFocus = Range.isCollapsed(range)
       ? domAnchor
       : DOMEditor.toDOMPoint(editor, focus);
 
-    const window = DOMEditor.getWindow(editor);
-    const domRange = window.document.createRange();
-    const [startNode, startOffset] = isBackward ? domFocus : domAnchor;
-    const [endNode, endOffset] = isBackward ? domAnchor : domFocus;
-
-    // A slate Point at zero-width Leaf always has an offset of 0 but a native DOM selection at
-    // zero-width node has an offset of 1 so we have to check if we are in a zero-width node and
-    // adjust the offset accordingly.
-    const startEl = (
-      isDOMElement(startNode) ? startNode : startNode.parentElement
-    ) as HTMLElement;
-    const isStartAtZeroWidth = !!startEl.getAttribute("data-slate-zero-width");
-    const endEl = (
-      isDOMElement(endNode) ? endNode : endNode.parentElement
-    ) as HTMLElement;
-    const isEndAtZeroWidth = !!endEl.getAttribute("data-slate-zero-width");
-
-    domRange.setStart(startNode, isStartAtZeroWidth ? 1 : startOffset);
-    domRange.setEnd(endNode, isEndAtZeroWidth ? 1 : endOffset);
-    return domRange;
+    return createDOMRange(
+      DOMEditor.getWindow(editor),
+      domAnchor,
+      domFocus,
+      Range.isBackward(range),
+    );
   },
 
   toSlateNode: (editor, domNode) => {
-    let domEl = isDOMElement(domNode) ? domNode : domNode.parentElement;
-
-    if (domEl && !domEl.hasAttribute("data-slate-node")) {
-      domEl = domEl.closest(`[data-slate-node]`);
-    }
-
-    const node = domEl ? ELEMENT_TO_NODE.get(domEl as HTMLElement) : null;
+    const domEl = closestSlateElement(domNode);
+    const node = domEl ? ELEMENT_TO_NODE.get(domEl) : null;
 
     if (!node) {
       throw new Error(`Cannot resolve a Slate node from DOM node: ${domEl}`);
@@ -764,9 +855,9 @@ export const DOMEditor: DOMEditorInterface = {
     },
   ): T extends true ? Point | null : Point => {
     const { exactMatch, suppressThrow } = options;
-    const [nearestNode, nearestOffset] = compatEmptyNode(
-      exactMatch ? domPoint : normalizeDOMPoint(domPoint),
-    );
+    const [nearestNode, nearestOffset] = exactMatch
+      ? domPoint
+      : normalizeDOMPoint(domPoint);
     const parentNode = nearestNode.parentNode as DOMElement;
     let searchDirection = options.searchDirection;
     let textNode: DOMElement | null = null;
@@ -955,7 +1046,7 @@ export const DOMEditor: DOMEditorInterface = {
       }
     }
 
-    if (IS_ANDROID && !textNode && !exactMatch) {
+    if (IS_ANDROID && parentNode && !textNode && !exactMatch) {
       const node = parentNode.hasAttribute("data-slate-node")
         ? parentNode
         : parentNode.closest("[data-slate-node]");
@@ -1111,42 +1202,6 @@ export const DOMEditor: DOMEditorInterface = {
           focusOffset = domRange.focusOffset;
         }
 
-        if (IS_FIREFOX) {
-          if (
-            anchorNode instanceof HTMLElement &&
-            anchorNode.hasAttribute("data-slate-editor") &&
-            focusNode instanceof HTMLElement
-          ) {
-            const nodeList = Array.from(
-              anchorNode.querySelectorAll<HTMLElement>(
-                '[data-slate-string="true"]',
-              ),
-            ).filter(
-              (node) => !node.querySelector('[data-slate-string="true"]'),
-            );
-
-            if (nodeList.length > 0) {
-              const firstNode = nodeList[0];
-              const lastNode = nodeList[nodeList.length - 1];
-              anchorNode = firstNode.firstChild ?? firstNode;
-              anchorOffset = 0;
-              focusNode = lastNode.lastChild ?? lastNode;
-              focusOffset = focusNode.textContent?.length ?? 0;
-            }
-          } else {
-            if (anchorNode) {
-              const [el, offset] = compatEmptyNode([anchorNode, anchorOffset]);
-              anchorNode = el;
-              anchorOffset = offset;
-            }
-            if (focusNode) {
-              const [el, offset] = compatEmptyNode([focusNode, focusOffset]);
-              focusNode = el;
-              focusOffset = offset;
-            }
-          }
-        }
-
         // COMPAT: There's a bug in chrome that always returns `true` for
         // `isCollapsed` for a Selection that comes from a ShadowRoot.
         // (2020/08/08)
@@ -1165,18 +1220,6 @@ export const DOMEditor: DOMEditorInterface = {
         focusNode = domRange.endContainer;
         focusOffset = domRange.endOffset;
         isCollapsed = domRange.collapsed;
-        if (IS_FIREFOX) {
-          if (anchorNode) {
-            const [el, offset] = compatEmptyNode([anchorNode, anchorOffset]);
-            anchorNode = el;
-            anchorOffset = offset;
-          }
-          if (focusNode) {
-            const [el, offset] = compatEmptyNode([focusNode, focusOffset]);
-            focusNode = el;
-            focusOffset = offset;
-          }
-        }
       }
     }
 
@@ -1242,4 +1285,162 @@ export const DOMEditor: DOMEditorInterface = {
 
     return range as unknown as T extends true ? Range | null : Range;
   },
+};
+
+const replaceText = (
+  nodes: Descendant[],
+  path: Path,
+  text: string,
+): Descendant[] =>
+  nodes.map((node, index) => {
+    if (index !== path[0]) {
+      return node;
+    }
+
+    if (path.length === 1) {
+      return { ...node, text };
+    }
+
+    return {
+      ...node,
+      children: replaceText(
+        (node as { children: Descendant[] }).children,
+        path.slice(1),
+        text,
+      ),
+    };
+  });
+
+const getComposingView = (editor: Editor) => {
+  const domSelection = DOMEditor.getWindow(editor).getSelection();
+
+  if (!domSelection?.focusNode) {
+    return undefined;
+  }
+
+  const point = DOMEditor.toSlatePoint(
+    editor,
+    [domSelection.focusNode, domSelection.focusOffset],
+    { exactMatch: false, suppressThrow: true },
+  );
+
+  if (!point) {
+    return undefined;
+  }
+
+  const textElement = DOMEditor.toDOMNode(editor, Node.get(editor, point.path));
+  const text = (textElement.textContent ?? "").replace(/\uFEFF/g, "");
+  const view = createEditor();
+  view.isInline = editor.isInline;
+  view.isVoid = editor.isVoid;
+  view.children = replaceText(editor.children, point.path, text);
+
+  return { view, point };
+};
+
+const closestSlateElement = (domNode: DOMNode) => {
+  const domEl = isDOMElement(domNode) ? domNode : domNode.parentElement;
+
+  return domEl?.hasAttribute("data-slate-node")
+    ? (domEl as HTMLElement)
+    : (domEl?.closest<HTMLElement>("[data-slate-node]") ?? null);
+};
+
+const unresolvedPointMessage = (point: Point) =>
+  `Cannot resolve a DOM point from Slate point: ${Scrubber.stringify(point)}`;
+
+const findDOMPointInElement = (
+  editor: Editor,
+  el: HTMLElement,
+  point: Point,
+): DOMPoint | null => {
+  let domPoint: DOMPoint | null = null;
+
+  // If we're inside a void node, force the offset to 0, otherwise the zero
+  // width spacing character will result in an incorrect offset of 1
+  if (Editor.void(editor, { at: point })) {
+    point = { path: point.path, offset: 0 };
+  }
+
+  // For each leaf, we need to isolate its content, which means filtering
+  // to its direct text and zero-width spans. (We have to filter out any
+  // other siblings that may have been rendered alongside them.)
+  const selector = `[data-slate-string], [data-slate-zero-width]`;
+  const texts = Array.from(el.querySelectorAll(selector));
+  let start = 0;
+
+  for (let i = 0; i < texts.length; i++) {
+    const text = texts[i];
+    const domNode = text.childNodes[0] as HTMLElement;
+
+    if (domNode == null || domNode.textContent == null) {
+      continue;
+    }
+
+    const { length } = domNode.textContent;
+    const attr = text.getAttribute("data-slate-length");
+    const trueLength = attr == null ? length : parseInt(attr, 10);
+    const end = start + trueLength;
+
+    // Prefer putting the selection inside the mark placeholder to ensure
+    // composed text is displayed with the correct marks.
+    const nextText = texts[i + 1];
+    if (
+      point.offset === end &&
+      nextText?.hasAttribute("data-slate-mark-placeholder")
+    ) {
+      const domText = nextText.childNodes[0];
+
+      domPoint = [
+        // COMPAT: If we don't explicity set the dom point to be on the actual
+        // dom text element, chrome will put the selection behind the actual dom
+        // text element, causing domRange.getBoundingClientRect() calls on a collapsed
+        // selection to return incorrect zero values (https://bugs.chromium.org/p/chromium/issues/detail?id=435438)
+        // which will cause issues when scrolling to it.
+        domText instanceof globalThis.Text ? domText : nextText,
+        nextText.textContent?.startsWith("\uFEFF") ? 1 : 0,
+      ];
+      break;
+    }
+
+    if (point.offset <= end) {
+      const offset = Math.min(length, Math.max(0, point.offset - start));
+      domPoint =
+        offset === length && text.hasAttribute("data-slate-trailing")
+          ? [text.lastChild!, 0]
+          : [domNode, offset];
+      break;
+    }
+
+    start = end;
+  }
+
+  return domPoint;
+};
+
+const createDOMRange = (
+  window: Window,
+  domAnchor: DOMPoint,
+  domFocus: DOMPoint,
+  isBackward: boolean,
+): DOMRange => {
+  const domRange = window.document.createRange();
+  const [startNode, startOffset] = isBackward ? domFocus : domAnchor;
+  const [endNode, endOffset] = isBackward ? domAnchor : domFocus;
+
+  // A slate Point at zero-width Leaf always has an offset of 0 but a native DOM selection at
+  // zero-width node has an offset of 1 so we have to check if we are in a zero-width node and
+  // adjust the offset accordingly.
+  const startEl = (
+    isDOMElement(startNode) ? startNode : startNode.parentElement
+  ) as HTMLElement;
+  const isStartAtZeroWidth = !!startEl.getAttribute("data-slate-zero-width");
+  const endEl = (
+    isDOMElement(endNode) ? endNode : endNode.parentElement
+  ) as HTMLElement;
+  const isEndAtZeroWidth = !!endEl.getAttribute("data-slate-zero-width");
+
+  domRange.setStart(startNode, isStartAtZeroWidth ? 1 : startOffset);
+  domRange.setEnd(endNode, isEndAtZeroWidth ? 1 : endOffset);
+  return domRange;
 };
