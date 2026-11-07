@@ -77,12 +77,26 @@ import {
   deleteText,
   Node,
   BaseEditor,
+  Operation,
 } from "slate";
-import { DOMEditor, withDOM } from "slate-vue3/dom";
+import {
+  DOMEditor,
+  EDITOR_TO_PENDING_SELECTION,
+  IS_ANDROID,
+  withDOM,
+} from "slate-vue3/dom";
 import { shallowReactive } from "vue";
 import { getChunkTreeForNode } from "../chunking";
 import { ReactiveEditor } from "./reactive-editor";
 import { fragment, getFragment } from "../override";
+import { EDITOR_TO_FLUSH_DEFERRED_DIFFS } from "../hooks/android-input-manager/android-input-manager";
+
+const RERENDERING_OPERATIONS = new Set<Operation["type"]>([
+  "insert_node",
+  "move_node",
+  "remove_node",
+  "set_node",
+]);
 
 export const createReactiveEditor = <T extends BaseEditor>(
   clipboardFormatKey = "x-slate-fragment",
@@ -176,11 +190,16 @@ export const createReactiveEditor = <T extends BaseEditor>(
   const reactiveEditor = withDOM(editor, clipboardFormatKey) as T &
     ReactiveEditor;
 
-  const { apply: domEditorApply } = reactiveEditor;
+  const { apply: domEditorApply, insertText: domEditorInsertText } =
+    reactiveEditor;
+  // On move_node, if the chunking optimization is enabled for the parent of the
+  // node being moved, add the moved node to the movedNodeKeys set of the
+  // parent's chunk tree.
   reactiveEditor.apply = (operation) => {
-    // On move_node, if the chunking optimization is enabled for the parent of the
-    // node being moved, add the moved node to the movedNodeKeys set of the
-    // parent's chunk tree.
+    if (IS_ANDROID && RERENDERING_OPERATIONS.has(operation.type)) {
+      EDITOR_TO_FLUSH_DEFERRED_DIFFS.get(reactiveEditor)?.();
+    }
+
     if (operation.type === "move_node") {
       const parent = Node.parent(reactiveEditor, operation.path);
       const chunking = !!reactiveEditor.getChunkSize(parent);
@@ -197,6 +216,20 @@ export const createReactiveEditor = <T extends BaseEditor>(
   };
 
   reactiveEditor.getChunkSize = () => null;
+
+  if (IS_ANDROID) {
+    reactiveEditor.insertText = (text, options) => {
+      // COMPAT: Android devices, specifically Samsung devices, experience cursor jumping.
+      // This issue occurs when the ⁠insertText function is called immediately after typing.
+      // The problem arises because typing schedules a selection change.
+      // However, this selection change is only executed after the ⁠insertText function.
+      // As a result, the already obsolete selection is applied, leading to incorrect
+      // final cursor position.
+      EDITOR_TO_PENDING_SELECTION.delete(reactiveEditor);
+
+      return domEditorInsertText(text, options);
+    };
+  }
 
   return reactiveEditor;
 };
