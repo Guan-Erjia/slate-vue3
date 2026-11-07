@@ -41,7 +41,7 @@ const initialValue: CustomElement[] = [
     ],
   },
   {
-    type: "blockquote",
+    type: "block-quote",
     children: [{ text: "A wise quote." }],
   },
   {
@@ -63,7 +63,7 @@ const renderElement = ({
     },
   };
   switch (element.type) {
-    case "blockquote":
+    case "block-quote":
       return h("blockquote", attributes, children);
 
     case "bulleted-list":
@@ -149,7 +149,7 @@ editor.children = initialValue;
       <MarkButton format="code" icon="code" />
       <BlockButton format="heading" :depth="1" icon="looks_one" />
       <BlockButton format="heading" :depth="2" icon="looks_two" />
-      <BlockButton format="blockquote" icon="format_quote" />
+      <BlockButton format="block-quote" icon="format_quote" />
       <BlockButton format="numbered-list" icon="format_list_numbered" />
       <BlockButton format="bulleted-list" icon="format_list_bulleted" />
       <AlignButton direction="left" icon="format_align_left" />

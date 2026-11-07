@@ -2192,7 +2192,7 @@ export const Editable = defineComponent({
         // Make the minimum height that of the placeholder.
         minHeight: placeholderHeight.value
           ? placeholderHeight.value + "px"
-          : "unset",
+          : undefined,
         ...normalizedStyle,
       };
     });

@@ -32,18 +32,19 @@ editor2.children = [
       />
     </Slate>
     <Slate :editor="editor2">
-      <Editable
-        style="
-          background-color: rgb(218, 225, 255);
-          padding: 40px;
-          font-size: 20px;
-          min-height: 150px;
-          outline: 3px dashed rgb(0, 94, 128);
-          border-radius: 20px;
-          outline-offset: -10px;
-          white-space: pre-wrap;
-        "
-      />
+      <Editable class="fancy" />
     </Slate>
   </div>
 </template>
+<style>
+.fancy {
+  background-color: rgb(218, 225, 255);
+  padding: 40px;
+  font-size: 20px;
+  min-height: 150px;
+  outline: 3px dashed rgb(0, 94, 128);
+  border-radius: 20px;
+  outline-offset: -20px;
+  white-space: pre-wrap;
+}
+</style>

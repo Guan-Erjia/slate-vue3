@@ -169,10 +169,12 @@ export const getEditableChildAndIndex = (
   let triedForward = false;
   let triedBackward = false;
 
-  // While the child is a comment node, or an element node with no children,
-  // keep iterating to find a sibling non-void, non-comment node.
+  // While the child is a comment node, an empty text node (Vue renders these as
+  // fragment anchors), or an element node with no children, keep iterating to
+  // find a sibling non-void, non-comment node.
   while (
     isDOMComment(child) ||
+    (isDOMText(child) && child.length === 0) ||
     (isDOMElement(child) && child.childNodes.length === 0) ||
     (isDOMElement(child) && child.getAttribute("contenteditable") === "false")
   ) {

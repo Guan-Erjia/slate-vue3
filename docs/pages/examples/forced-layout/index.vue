@@ -97,6 +97,10 @@ editor.children = initialValue;
 
 <template>
   <Slate :editor :render-element>
-    <Editable placeholder="Enter a title…" spellcheck />
+    <Editable
+      placeholder="Enter a title…"
+      aria-label="Document with a forced title"
+      spellcheck
+    />
   </Slate>
 </template>

@@ -1,5 +1,10 @@
 <template>
-  <Button :active="isBlockActive" @click="onClick" @pointerdown="onPointerDown">
+  <Button
+    :active="isBlockActive"
+    @click="onClick"
+    @pointerdown="onPointerDown"
+    :data-testid="`block-button-${format}`"
+  >
     {{ props.icon }}
   </Button>
 </template>
