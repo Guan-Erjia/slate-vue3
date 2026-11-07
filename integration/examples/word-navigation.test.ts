@@ -66,7 +66,8 @@ for (const text of [
         const start = direction === "Right" ? 0 : text.length;
         await input.focus();
         await input.evaluate(
-          (input, start) => input.setSelectionRange(start, start),
+          (input, start) =>
+            (input as HTMLInputElement).setSelectionRange(start, start),
           start,
         );
         const expected = await offsets(input, direction, text.length, true);
