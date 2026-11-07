@@ -138,6 +138,7 @@ export const ElementComp = defineComponent({
           );
         }
       },
+      { immediate: true },
     );
 
     const renderElement = useRenderElement();
