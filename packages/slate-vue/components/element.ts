@@ -16,9 +16,11 @@ import {
   defineComponent,
   h,
   HTMLAttributes,
+  nextTick,
   onUpdated,
   provide,
   VNodeRef,
+  watch,
 } from "vue";
 import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
@@ -48,6 +50,16 @@ const getEmptyBlockDirection = (element: Element) => {
   const after = parent.children.slice(index + 1);
   return findSiblingDirection(before) ?? findSiblingDirection(after);
 };
+
+const getMountedChildren = (editor: Editor, element: Element): Node[] =>
+  Editor.isVoid(editor, element)
+    ? [Node.texts(element).next().value![0]]
+    : element.children;
+
+const findUnmountedChild = (editor: Editor, element: Element) =>
+  getMountedChildren(editor, element).findIndex(
+    (child) => !NODE_TO_ELEMENT.has(child),
+  );
 
 interface ElementAttributes extends HTMLAttributes {
   "data-slate-node": "element";
@@ -105,6 +117,28 @@ export const ElementComp = defineComponent({
       }
     };
     const readOnly = useReadOnly();
+
+    watch(
+      () => props.element,
+      async () => {
+        await nextTick();
+        const index = findUnmountedChild(editor, props.element);
+
+        if (index !== -1) {
+          const type = (props.element as { type?: unknown }).type;
+          const path = DOMEditor.findPath(editor, props.element);
+          editor.onDOMError(
+            new Error(
+              `renderElement didn't render the children of the ${
+                typeof type === "string" ? `"${type}" ` : ""
+              }element at path ${JSON.stringify(
+                path,
+              )}: child ${index} has no DOM node. Render the \`children\` prop inside the element.`,
+            ),
+          );
+        }
+      },
+    );
 
     const renderElement = useRenderElement();
     const { decorations, update } = useDecorations(() => props.element);
