@@ -111,6 +111,9 @@ importers:
       remark-slate-transformer:
         specifier: ^0.9.0
         version: 0.9.0(unified@11.0.5)
+      remark-stringify:
+        specifier: ^11.0.0
+        version: 11.0.0
       slate:
         specifier: ^0.147.4
         version: 0.147.4

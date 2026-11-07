@@ -57,7 +57,7 @@ for (const text of [
       await expect(editable).toHaveText(text);
       await page.evaluate((text) => {
         const input = document.createElement("input");
-        input.setAttribute("data-test-id", "native-word-input");
+        input.setAttribute("data-testid", "native-word-input");
         input.value = text;
         document.body.prepend(input);
       }, text);

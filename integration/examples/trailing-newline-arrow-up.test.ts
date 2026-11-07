@@ -41,7 +41,8 @@ const pressFrom = async (
 };
 
 test.describe("ArrowUp into a block that ends with a newline", () => {
-  test.beforeEach((_, info) => {
+  // eslint-disable-next-line no-empty-pattern
+  test.beforeEach(({}, info) => {
     test.skip(
       info.project.name === "mobile",
       "Hardware arrow keys on desktop browsers",

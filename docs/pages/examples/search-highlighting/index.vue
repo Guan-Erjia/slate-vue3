@@ -5,7 +5,7 @@ import {
   type RenderLeafProps,
   createReactiveEditor,
 } from "slate-vue3";
-import { h, ref } from "vue";
+import { computed, h, ref } from "vue";
 import Toolbar from "../../../components/Toolbar.vue";
 import { DecoratedRange, Descendant, NodeEntry, Node } from "slate";
 import { withHistory } from "slate-history";
@@ -44,21 +44,29 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   );
 };
 
+const search = ref("");
+const searchPattern = computed(() =>
+  search.value
+    ? new RegExp(search.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "giu")
+    : null,
+);
+
 const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
-  const ranges = [];
+  const ranges: DecoratedRange[] = [];
+  const pattern = searchPattern.value;
   if (
-    search.value &&
+    pattern &&
     Node.isElement(node) &&
     Array.isArray(node.children) &&
     node.children.every(Node.isText)
   ) {
     const texts = node.children.map((it) => it.text);
     const str = texts.join("");
-    const length = search.value.length;
-    let start = str.indexOf(search.value);
     let index = 0;
     let iterated = 0;
-    while (start !== -1) {
+    for (const match of str.matchAll(pattern)) {
+      const start = match.index!;
+      const length = match[0].length;
       // Skip already iterated strings
       while (index < texts.length && start >= iterated + texts[index].length) {
         iterated = iterated + texts[index].length;
@@ -84,8 +92,6 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
           index++;
         }
       }
-      // Looking for next search block
-      start = str.indexOf(search.value, start + search.value.length);
     }
   }
   return ranges;
@@ -93,7 +99,6 @@ const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
 
 const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;
-const search = ref("");
 </script>
 
 <template>

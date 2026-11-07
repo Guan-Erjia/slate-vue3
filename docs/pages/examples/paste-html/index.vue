@@ -26,7 +26,7 @@ interface TextAttributes {
 
 const ELEMENT_TAGS = {
   A: (el: HTMLLinkElement) => ({ type: "link", url: el.getAttribute("href") }),
-  BLOCKQUOTE: () => ({ type: "blockquote" }),
+  BLOCKQUOTE: () => ({ type: "block-quote" }),
   H1: () => ({ type: "heading", depth: 1 }),
   H2: () => ({ type: "heading", depth: 2 }),
   H3: () => ({ type: "heading", depth: 3 }),
@@ -123,6 +123,33 @@ const deserialize = (el: any): any => {
 
   if (nodeName in ELEMENT_TAGS) {
     const attrs = ELEMENT_TAGS[nodeName as keyof typeof ELEMENT_TAGS](el);
+
+    if (
+      nodeName === "P" &&
+      children.some((child) => Node.isElement(child) && child.type === "image")
+    ) {
+      const blocks: Descendant[] = [];
+      let paragraphChildren: (Descendant | string | null)[] = [];
+
+      for (const child of children) {
+        if (Node.isElement(child) && child.type === "image") {
+          if (paragraphChildren.length > 0) {
+            blocks.push(jsx("element", attrs, paragraphChildren));
+            paragraphChildren = [];
+          }
+          blocks.push(child);
+        } else {
+          paragraphChildren.push(child);
+        }
+      }
+
+      if (paragraphChildren.length > 0) {
+        blocks.push(jsx("element", attrs, paragraphChildren));
+      }
+
+      return blocks;
+    }
+
     return jsx("element", attrs, children);
   }
 
@@ -191,7 +218,7 @@ const renderElement = (props: RenderElementProps) => {
   switch (element.type) {
     default:
       return h("p", attributes, children);
-    case "blockquote":
+    case "block-quote":
       return h("blockquote", attributes, children);
     case "code-block":
       return h("pre", null, h("code", attributes, children));

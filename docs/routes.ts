@@ -89,6 +89,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/richtext/index.vue"),
   },
   {
+    name: "controlled-value",
+    path: "controlled-value",
+    component: () => import("./pages/examples/controlled-value/index.vue"),
+  },
+  {
     name: "remote-simple",
     path: "remote-simple",
     component: () => import("./pages/examples/remote-simple/index.vue"),
@@ -103,6 +108,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     path: "remote-decorate-cursor",
     component: () =>
       import("./pages/examples/remote-decorate-cursor/index.vue"),
+  },
+  {
+    name: "collaboration",
+    path: "collaboration",
+    component: () => import("./pages/examples/collaboration/index.vue"),
   },
   {
     name: "check-lists",
@@ -165,6 +175,16 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     component: () => import("./pages/examples/inlines/index.vue"),
   },
   {
+    name: "input-events",
+    path: "input-events",
+    component: () => import("./pages/examples/input-events/index.vue"),
+  },
+  {
+    name: "insert-text-noop",
+    path: "insert-text-noop",
+    component: () => import("./pages/examples/insert-text-noop/index.vue"),
+  },
+  {
     name: "markdown-preview",
     path: "markdown-preview",
     component: () => import("./pages/examples/markdown-preview/index.vue"),
@@ -173,6 +193,11 @@ export const EXAMPLE_RECORD: RouteRecordRaw[] = [
     name: "markdown-shortcuts",
     path: "markdown-shortcuts",
     component: () => import("./pages/examples/markdown-shortcuts/index.vue"),
+  },
+  {
+    name: "markdown-sync",
+    path: "markdown-sync",
+    component: () => import("./pages/examples/markdown-sync/index.vue"),
   },
   {
     name: "mentions",

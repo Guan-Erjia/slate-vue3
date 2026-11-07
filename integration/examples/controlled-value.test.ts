@@ -42,7 +42,7 @@ test("holds streamed updates until composition ends", async ({ page }) => {
   await textbox.dispatchEvent("compositionstart", { data: "" });
   await page
     .getByRole("button", { name: "Start stream" })
-    .evaluate((button) => button.click());
+    .evaluate((button) => (button as HTMLElement).click());
   await expect(page.locator("output")).toHaveText("Complete");
   expect(await editor.evaluate((editor) => editor.string([1]))).toBe(
     "Stream output will appear here.",
@@ -73,7 +73,7 @@ test("keeps a completed stream when native composition commits in the other bloc
   });
   await page
     .getByRole("button", { name: "Start stream" })
-    .evaluate((button) => button.click());
+    .evaluate((button) => (button as HTMLElement).click());
   await expect(page.locator("output")).toHaveText("Complete");
   expect(await editor.evaluate((editor) => editor.string([1]))).toBe(
     "Stream output will appear here.",

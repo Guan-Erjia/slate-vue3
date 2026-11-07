@@ -127,8 +127,7 @@ test("dragging a block void into the middle of a word splits the paragraph", asy
     .locator("p")
     .first()
     .evaluate((paragraph) => {
-      const walker = document.createTreeWalker(paragraph, NodeFilter.SHOW_TEXT);
-      const text = walker.nextNode()!;
+      const text = paragraph.querySelector("[data-slate-string]")!.firstChild!;
       const range = document.createRange();
       range.setStart(text, 2);
       range.setEnd(text, 3);

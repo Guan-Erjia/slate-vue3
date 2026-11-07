@@ -46,6 +46,7 @@ test.describe("On richtext example", () => {
   test("undo scrolls back to restored text after deletion and scroll away", async ({
     page,
   }) => {
+    await page.setViewportSize({ width: 800, height: 400 });
     const editor = page.getByRole("textbox");
 
     await editor.press("ControlOrMeta+A");

@@ -1,7 +1,7 @@
 import { ComponentPublicInstance, VNode, VNodeProps } from "vue";
 
 export const useInheritRef = (attribute: VNodeProps) => {
-  attribute.onVnodeMounted = (vNode: VNode) => {
+  const setRef = (vNode: VNode) => {
     const ref = attribute.ref;
     if (ref) {
       if (typeof ref === "function") {
@@ -11,6 +11,11 @@ export const useInheritRef = (attribute: VNodeProps) => {
       }
     }
   };
+
+  attribute.onVnodeMounted = setRef;
+  // Slate replaces node objects when their descendants change, so the element
+  // maps must be refreshed on updates as well as on mount.
+  attribute.onVnodeUpdated = setRef;
   attribute.onVnodeUnmounted = () => {
     const ref = attribute.ref;
     if (ref) {

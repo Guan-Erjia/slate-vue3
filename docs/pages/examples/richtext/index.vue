@@ -104,8 +104,28 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   );
 };
 
+const LIST_TYPES = ["numbered-list", "bulleted-list"] as const;
+
+const isListType = (type: string) =>
+  (LIST_TYPES as readonly string[]).includes(type);
+
 const withRichText = (editor: Editor) => {
-  const { deleteFragment } = editor;
+  const { deleteFragment, normalizeNode } = editor;
+
+  editor.normalizeNode = (entry, options) => {
+    const [node, path] = entry;
+
+    if (Element.isElement(node) && isListType(node.type as string)) {
+      for (const [index, child] of node.children.entries()) {
+        if (Element.isElement(child) && isListType(child.type as string)) {
+          Transforms.unwrapNodes(editor, { at: path.concat(index) });
+          return;
+        }
+      }
+    }
+
+    normalizeNode(entry, options);
+  };
 
   editor.deleteFragment = (direction) => {
     const { selection } = editor;
