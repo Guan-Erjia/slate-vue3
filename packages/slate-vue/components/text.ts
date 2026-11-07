@@ -11,11 +11,14 @@ import {
   renderList,
   onUpdated,
   computed,
+  shallowRef,
+  watch,
   VNodeRef,
 } from "vue";
 import { useEditor } from "../hooks/use-editor";
 import { useDecorations } from "../hooks/use-decorations";
 import { useRenderText } from "../render/fn";
+import { isTextParentEquivalent } from "../utils/text-parent";
 import { LeafComp } from "./leaf";
 import { useEditorVersion } from "../render/version";
 import { RenderTextProps } from "../utils/interface";
@@ -62,6 +65,25 @@ export const TextComp = defineComponent({
 
     const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
     const { decorations, update } = useDecorations(() => props.text);
+
+    // Slate 在修改文本时会重建父元素，即使父元素的属性没有变化。这里复用
+    // 语义等价的旧父元素，避免未修改的兄弟文本跟着重新渲染。
+    const parent = shallowRef(props.parent);
+    watch(
+      () => [props.parent, props.text] as const,
+      ([nextParent, nextText], previous) => {
+        const [prevParent, prevText] = previous ?? [nextParent, nextText];
+
+        if (
+          nextText !== prevText ||
+          !isTextParentEquivalent(prevParent, nextParent, prevText, nextText)
+        ) {
+          parent.value = nextParent;
+        }
+      },
+      { flush: "sync" },
+    );
+
     onUpdated(() => {
       editorVersion.value++;
       update();
@@ -83,7 +105,7 @@ export const TextComp = defineComponent({
             leaf: leaf.leaf,
             isLast: props.isLast && i === decoratedLeaves.value.length - 1,
             leafPosition: leaf.position,
-            parent: props.parent,
+            parent: parent.value,
             key: `${props.text.text}-${leaf.position?.end}-${leaf.position?.start}`,
           }),
         ),

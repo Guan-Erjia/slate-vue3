@@ -11,9 +11,9 @@ export {
   normalizePoint,
   normalizeRange,
   normalizeStringDiff,
-  StringDiff,
+  type StringDiff,
   targetRange,
-  TextDiff,
+  type TextDiff,
   verifyDiffState,
 } from "./utils/diff-text";
 
@@ -22,7 +22,7 @@ export {
   containsShadowAware,
   DOMElement,
   DOMNode,
-  DOMPoint,
+  type DOMPoint,
   DOMRange,
   DOMSelection,
   DOMStaticRange,
