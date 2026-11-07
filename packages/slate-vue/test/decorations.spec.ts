@@ -14,7 +14,7 @@ import {
   Slate,
 } from "slate-vue3";
 import { render } from "@testing-library/vue";
-import { h, nextTick } from "vue";
+import { h, nextTick, shallowRef } from "vue";
 import { describe, expect, it } from "vitest";
 
 const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
@@ -411,26 +411,30 @@ describe("decorations", () => {
     });
 
     describe("redecorating", () => {
-      it.skip("redecorates when only the decoration paths change", async () => {
+      it("redecorates when only the decoration paths change", async () => {
         const editor = createEditor();
         const initialValue = () => [
           { children: [{ text: "before" }, { text: "middle" }] },
           ...otherNodes(),
         ];
 
-        const decorate = (path: Path) =>
-          decoratePaths(editor, [
+        const decorationPath = shallowRef<Path>([0, 1]);
+        const decorate = (path: Path) => {
+          decorationPath.value = path;
+
+          return decoratePaths(editor, [
             {
               path: [0, 1],
               decorations: () => [
                 {
-                  anchor: { path, offset: 0 },
-                  focus: { path, offset: 6 },
+                  anchor: { path: decorationPath.value, offset: 0 },
+                  focus: { path: decorationPath.value, offset: 6 },
                   bold: true,
                 },
               ],
             },
           ]);
+        };
 
         const view = (path: Path) => {
           editor.children = initialValue();

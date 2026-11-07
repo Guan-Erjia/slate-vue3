@@ -806,7 +806,7 @@ describe("getChunkTreeForNode", () => {
       expect(getTreeShape(chunkTree)).toEqual(["0", [["x"]], "2"]);
     });
 
-    it.skip("calls onUpdate for updated Slate nodes", () => {
+    it("calls onUpdate for updated Slate nodes", () => {
       const editor = createEditorWithShape(["0", "1", "2", "3"]);
       Transforms.setNodes(editor, { updated: true }, { at: [1] });
       Transforms.setNodes(editor, { updated: true }, { at: [2] });
