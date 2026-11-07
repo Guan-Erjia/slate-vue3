@@ -1,4 +1,6 @@
 import { DebouncedFunc } from "lodash-es";
+// Default import: the UMD build resolves react-dom through its CommonJS entry,
+// whose named exports rollup cannot discover statically.
 import { Editor, Location, Node, Path, Point, Range, Transforms } from "slate";
 import {
   applyStringDiff,
@@ -12,7 +14,12 @@ import {
   TextDiff,
   verifyDiffState,
 } from "slate-vue3/dom";
-import { isDOMSelection, isTrackedMutation } from "slate-vue3/dom";
+import {
+  isDOMSelection,
+  isDOMNode,
+  isTrackedMutation,
+  IS_FIREFOX,
+} from "slate-vue3/dom";
 import {
   EDITOR_TO_FORCE_RENDER,
   EDITOR_TO_PENDING_ACTION,
@@ -51,6 +58,22 @@ const debug = (..._: unknown[]) => {};
 const isDataTransfer = (value: any): value is DataTransfer =>
   value?.constructor.name === "DataTransfer";
 
+const wordEndingAt = (
+  editor: Editor,
+  point: Point,
+  replacement: string,
+): Range | null => {
+  const start = Editor.before(editor, point, { unit: "word" });
+  if (!start || !Path.equals(start.path, point.path)) {
+    return null;
+  }
+  const typed = Editor.string(editor, { anchor: start, focus: point });
+  return !/\s/.test(typed) &&
+    replacement[0]?.toLowerCase() === typed[0].toLowerCase()
+    ? { anchor: start, focus: point }
+    : null;
+};
+
 export type CreateAndroidInputManagerOptions = {
   editor: Editor;
 
@@ -58,8 +81,11 @@ export type CreateAndroidInputManagerOptions = {
   onDOMSelectionChange: DebouncedFunc<() => void>;
 };
 
+export const EDITOR_TO_FLUSH_DEFERRED_DIFFS = new WeakMap<Editor, () => void>();
+
 export type AndroidInputManager = {
   flush: () => void;
+  flushDeferredDiffs: () => void;
   scheduleFlush: () => void;
 
   hasPendingDiffs: () => boolean;
@@ -83,11 +109,14 @@ export function createAndroidInputManager({
   onDOMSelectionChange,
 }: CreateAndroidInputManagerOptions): AndroidInputManager {
   let flushing: "action" | boolean = false;
+  let flushingDeferredDiffs = false;
   let compositionEndTimeoutId: ReturnType<typeof setTimeout> | null = null;
   let flushTimeoutId: ReturnType<typeof setTimeout> | null = null;
   let actionTimeoutId: ReturnType<typeof setTimeout> | null = null;
   let lastCompositionActivity = 0;
+  let lastInsertText = 0;
   let compositionCleared = false;
+  let hasUnrenderedMutations = false;
 
   let idCounter = 0;
   let insertPositionHint: StringDiff | null | false = false;
@@ -109,6 +138,16 @@ export function createAndroidInputManager({
   };
 
   const performAction = () => {
+    const { children } = editor;
+    runPendingAction();
+
+    if (hasUnrenderedMutations && editor.children === children) {
+      EDITOR_TO_FORCE_RENDER.get(editor)?.();
+    }
+    hasUnrenderedMutations = false;
+  };
+
+  const runPendingAction = () => {
     const action = EDITOR_TO_PENDING_ACTION.get(editor);
     EDITOR_TO_PENDING_ACTION.delete(editor);
     if (!action) {
@@ -172,6 +211,11 @@ export function createAndroidInputManager({
       }
     });
 
+  const hasPendingDiffsInNewLeaf = () =>
+    hasPendingDiffsInEmptyLeaf() ||
+    (hasPendingDiffs() &&
+      EDITOR_TO_PENDING_INSERTION_MARKS.get(editor) !== undefined);
+
   const flush = () => {
     if (flushTimeoutId) {
       clearTimeout(flushTimeoutId);
@@ -188,8 +232,12 @@ export function createAndroidInputManager({
     // Composing into a leaf that already has text is unaffected: applying the
     // diff there only updates `textContent`, so the value still updates on
     // every `compositionupdate`.
-    if (isCompositionLive() && hasPendingDiffsInEmptyLeaf()) {
-      debug("deferring flush during composition in empty leaf");
+    if (
+      !flushingDeferredDiffs &&
+      isCompositionLive() &&
+      hasPendingDiffsInNewLeaf()
+    ) {
+      debug("deferring flush during composition in new leaf");
       flushTimeoutId = setTimeout(flush, COMPOSITION_RECHECK_DELAY);
       return;
     }
@@ -248,13 +296,13 @@ export function createAndroidInputManager({
 
       // Remove diff only after we have applied it to account for it when transforming
       // pending ranges.
-      const diffs = EDITOR_TO_PENDING_DIFFS.get(editor);
-      if (diffs) {
-        EDITOR_TO_PENDING_DIFFS.set(
-          editor,
-          diffs.filter(({ id }) => id !== diff!.id),
-        );
-      }
+      EDITOR_TO_PENDING_DIFFS.set(
+        editor,
+        // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+        EDITOR_TO_PENDING_DIFFS.get(editor)?.filter(
+          ({ id }) => id !== diff!.id,
+        )!,
+      );
 
       if (!verifyDiffState(editor, diff)) {
         debug("invalid diff state");
@@ -307,6 +355,20 @@ export function createAndroidInputManager({
     }
   };
 
+  const flushDeferredDiffs = () => {
+    if (flushing || !isCompositionLive() || !hasPendingDiffsInNewLeaf()) {
+      return;
+    }
+
+    debug("flushing deferred diffs before a structural change");
+    flushingDeferredDiffs = true;
+    try {
+      flush();
+    } finally {
+      flushingDeferredDiffs = false;
+    }
+  };
+
   const handleCompositionEnd = (_event: CompositionEvent) => {
     if (compositionEndTimeoutId) {
       clearTimeout(compositionEndTimeoutId);
@@ -316,7 +378,7 @@ export function createAndroidInputManager({
     // that compose one syllable at a time (Hangul, kana) start the next
     // composition in the same tick as this event, so an asynchronous render
     // would replace the text node that composition has already started in.
-    if (hasPendingDiffsInEmptyLeaf() && !flushing) {
+    if (hasPendingDiffsInNewLeaf() && !flushing) {
       IS_COMPOSING.set(editor, false);
       flush();
       updatePlaceholderVisibility();
@@ -433,6 +495,14 @@ export function createAndroidInputManager({
 
     const isNodeMapDirty = IS_NODE_MAP_DIRTY.get(editor);
     const { inputType: type } = event;
+    const continuesFirefoxInsert =
+      IS_FIREFOX &&
+      type === "insertText" &&
+      Date.now() - lastInsertText < RESOLVE_DELAY;
+
+    if (type === "insertText") {
+      lastInsertText = Date.now();
+    }
 
     if (type === "insertCompositionText" || type === "deleteCompositionText") {
       lastCompositionActivity = Date.now();
@@ -478,6 +548,9 @@ export function createAndroidInputManager({
     }
 
     let [nativeTargetRange] = (event as any).getTargetRanges();
+    const targetOutsideEditor =
+      !!nativeTargetRange &&
+      !DOMEditor.hasDOMNode(editor, nativeTargetRange.startContainer);
     if (nativeTargetRange && !isNodeMapDirty) {
       targetRange = DOMEditor.toSlateRange(editor, nativeTargetRange, {
         exactMatch: false,
@@ -571,7 +644,6 @@ export function createAndroidInputManager({
             end: end.offset,
             start: start.offset,
           });
-
           if (type === "deleteContentBackward") {
             scheduleFlush();
           }
@@ -729,6 +801,22 @@ export function createAndroidInputManager({
           text = text.replace("\uFEFF", "");
         }
 
+        if (
+          continuesFirefoxInsert &&
+          editor.selection &&
+          !Range.equals(targetRange, editor.selection)
+        ) {
+          event.preventDefault();
+          return scheduleAction(() => Editor.insertText(editor, text));
+        }
+
+        if (targetOutsideEditor && Range.isCollapsed(targetRange)) {
+          event.preventDefault();
+          return scheduleAction(() => Editor.insertText(editor, text), {
+            at: wordEndingAt(editor, targetRange.anchor, text) ?? targetRange,
+          });
+        }
+
         // Pastes from the Android clipboard will generate `insertText` events.
         // If the copied text contains any newlines, Android will append an
         // extra newline to the end of the copied text.
@@ -750,6 +838,41 @@ export function createAndroidInputManager({
                   Editor.insertSoftBreak(editor);
                 }
               });
+            },
+            {
+              at: targetRange,
+            },
+          );
+        }
+
+        if (
+          type === "insertText" &&
+          !DOMEditor.isComposing(editor) &&
+          Range.isCollapsed(targetRange) &&
+          typeof Editor.insertionPoint === "function" &&
+          !Point.equals(
+            Editor.insertionPoint(editor, targetRange.anchor),
+            targetRange.anchor,
+          )
+        ) {
+          const node = isDOMSelection(nativeTargetRange)
+            ? nativeTargetRange.anchorNode
+            : nativeTargetRange?.startContainer;
+          const snapshot =
+            isDOMNode(node) && node.nodeType === 3
+              ? { node, text: node.textContent }
+              : null;
+          event.preventDefault();
+          return scheduleAction(
+            () => {
+              if (
+                snapshot &&
+                snapshot.node.isConnected &&
+                snapshot.node.textContent !== snapshot.text
+              ) {
+                snapshot.node.textContent = snapshot.text;
+              }
+              Editor.insertText(editor, text);
             },
             {
               at: targetRange,
@@ -819,15 +942,7 @@ export function createAndroidInputManager({
                 offset: start.offset + text.length,
               };
 
-              scheduleAction(
-                () => {
-                  Transforms.select(editor, {
-                    anchor: newPoint,
-                    focus: newPoint,
-                  });
-                },
-                { at: newPoint },
-              );
+              scheduleAction(() => {}, { at: newPoint });
             }
             return;
           }
@@ -916,23 +1031,31 @@ export function createAndroidInputManager({
   };
 
   const handleDomMutations = (mutations: MutationRecord[]) => {
-    if (hasPendingDiffs() || hasPendingAction()) {
+    if (hasPendingDiffs()) {
       return;
     }
 
     if (
-      mutations.some((mutation) =>
+      !mutations.some((mutation) =>
         isTrackedMutation(editor, mutation, mutations),
       )
     ) {
-      // Cause a re-render to restore the dom state if we encounter tracked mutations without
-      // a corresponding pending action.
-      EDITOR_TO_FORCE_RENDER.get(editor)?.();
+      return;
     }
+
+    if (hasPendingAction()) {
+      hasUnrenderedMutations = true;
+      return;
+    }
+
+    // Cause a re-render to restore the dom state if we encounter tracked mutations without
+    // a corresponding pending action.
+    EDITOR_TO_FORCE_RENDER.get(editor)?.();
   };
 
   return {
     flush,
+    flushDeferredDiffs,
     scheduleFlush,
 
     hasPendingDiffs,

@@ -2,10 +2,12 @@ import { IS_ANDROID, EDITOR_TO_SCHEDULE_FLUSH } from "slate-vue3/dom";
 import {
   createAndroidInputManager,
   CreateAndroidInputManagerOptions,
+  EDITOR_TO_FLUSH_DEFERRED_DIFFS,
 } from "./android-input-manager";
+import { useIsMounted } from "../use-is-mounted";
 import { useMutationObserver } from "../use-mutation-observer";
 import { useEditor } from "../use-editor";
-import { onMounted, ref, Ref } from "vue";
+import { Ref } from "vue";
 
 type UseAndroidInputManagerOptions = {
   node: Ref<HTMLElement | null>;
@@ -28,6 +30,7 @@ export const useAndroidInputManager = !IS_ANDROID
       }
 
       const editor = useEditor();
+      const isMounted = useIsMounted();
 
       const inputManager = createAndroidInputManager({
         editor,
@@ -41,9 +44,13 @@ export const useAndroidInputManager = !IS_ANDROID
       );
 
       EDITOR_TO_SCHEDULE_FLUSH.set(editor, inputManager.scheduleFlush);
-      onMounted(() => {
+      EDITOR_TO_FLUSH_DEFERRED_DIFFS.set(
+        editor,
+        inputManager.flushDeferredDiffs,
+      );
+      if (isMounted.value) {
         inputManager.flush();
-      });
+      }
 
       return inputManager;
     };
