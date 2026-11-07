@@ -112,10 +112,14 @@ const setup = async (decorated: boolean, offset: number) => {
       window.getSelection()!.collapse(node, domOffset + data.length);
     }
 
-    await fireEvent.input(editable, {
-      inputType: "insertText",
-      data,
-    });
+    await fireEvent(
+      editable,
+      new InputEvent("input", {
+        inputType: "insertText",
+        data,
+        bubbles: true,
+      }),
+    );
 
     await nextTick();
   };

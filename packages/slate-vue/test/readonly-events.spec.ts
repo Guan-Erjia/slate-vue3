@@ -46,7 +46,11 @@ const events = [
   ["onDragend", fireEvent.dragEnd],
   ["onDragover", fireEvent.dragOver],
   ["onDrop", fireEvent.drop],
-  ["onInput", fireEvent.input],
+  [
+    "onInput",
+    (element: HTMLElement) =>
+      fireEvent(element, new InputEvent("input", { bubbles: true })),
+  ],
   ["onCompositionstart", fireEvent.compositionStart],
   ["onCompositionupdate", fireEvent.compositionUpdate],
   ["onCompositionend", fireEvent.compositionEnd],

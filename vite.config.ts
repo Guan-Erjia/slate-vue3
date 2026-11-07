@@ -24,8 +24,8 @@ const BaseConfig: UserConfig = {
   base: "/slate-vue3/",
   test: {
     include: [
-      "./test/slate-yjs/**/index.spec.ts",
-      "./test/slate-vue/**/*.spec.ts",
+      "./packages/slate-yjs/test/index.spec.ts",
+      "./packages/slate-vue/test/**/*.spec.ts",
     ],
     environment: "jsdom",
   },
@@ -43,7 +43,10 @@ const BaseConfig: UserConfig = {
         import.meta.dirname,
         "./packages/slate-vue/index.ts",
       ),
-      "@test-utils": path.resolve(import.meta.dirname, "./test/utils.ts"),
+      "@test-utils": path.resolve(
+        import.meta.dirname,
+        "./integration/support/utils.ts",
+      ),
     },
   },
 };
