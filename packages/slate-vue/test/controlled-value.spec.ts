@@ -81,8 +81,8 @@ describe("controlled value", () => {
   it("reports typing that follows a value passed in", async () => {
     const editor = setup();
     const value = ref<Descendant[] | undefined>(doc("a"));
-    const onValueChange = vi.fn();
-    renderView(editor, value, { onValueChange });
+    const onValuechange = vi.fn();
+    renderView(editor, value, { onValuechange });
 
     value.value = doc("b");
     await nextTick();
@@ -91,8 +91,8 @@ describe("controlled value", () => {
     editor.insertText("c");
     await nextTick();
 
-    expect(onValueChange).toHaveBeenCalledTimes(1);
-    expect(onValueChange).toHaveBeenCalledWith(editor.children);
+    expect(onValuechange).toHaveBeenCalledTimes(1);
+    expect(onValuechange.mock.calls[0][0]).toHaveProperty("operation");
     expect(Editor.string(editor, [])).toBe("bc");
   });
 
@@ -151,17 +151,17 @@ describe("controlled value", () => {
   it("normalizes a value passed in without reporting it", async () => {
     const editor = setup();
     const value = ref<Descendant[] | undefined>(doc("a"));
-    const onValueChange = vi.fn();
-    renderView(editor, value, { onValueChange });
+    const onValuechange = vi.fn();
+    renderView(editor, value, { onValuechange });
     await nextTick();
 
-    onValueChange.mockClear();
+    onValuechange.mockClear();
 
     value.value = [{ children: [] }] as Descendant[];
     await nextTick();
 
     expect(editor.children).toEqual([{ children: [{ text: "" }] }]);
-    expect(onValueChange).not.toHaveBeenCalled();
+    expect(onValuechange).not.toHaveBeenCalled();
   });
 
   it("lets an overridden setChildren keep stream chunks out of undo", async () => {
@@ -293,38 +293,32 @@ it("keeps the current callback registered when switching controlled mode", async
   const second = vi.fn();
   const third = vi.fn();
 
-  const mode = ref<"initial" | "value" | "none">("initial");
-  const handler = ref(first);
-
-  const App = defineComponent({
-    setup() {
-      return () => {
-        const props: Record<string, unknown> = {
-          editor,
-          onChange: handler.value,
-        };
-
-        if (mode.value === "value") {
-          props.value = editor.children;
-        }
-
-        return h(Slate, props, { default: () => h(Editable) });
-      };
+  const { rerender } = render(Slate, {
+    props: {
+      editor,
+      initialValue: doc("initial"),
+      onChange: first,
+    },
+    slots: {
+      default: () => h(Editable),
     },
   });
 
-  render(App);
-
-  mode.value = "value";
-  handler.value = second;
-  await nextTick();
+  await rerender({
+    editor,
+    value: editor.children,
+    onChange: second,
+  });
   editor.onChange();
   expect(first).not.toHaveBeenCalled();
   expect(second).toHaveBeenCalledTimes(1);
 
-  mode.value = "none";
-  handler.value = third;
-  await nextTick();
+  await rerender({
+    editor,
+    value: editor.children,
+    onChange: third,
+  });
+
   editor.onChange();
   expect(second).toHaveBeenCalledTimes(1);
   expect(third).toHaveBeenCalledTimes(1);

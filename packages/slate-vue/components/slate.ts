@@ -83,10 +83,6 @@ export const Slate = defineComponent({
       type: Array as PropType<Descendant[]>,
       default: undefined,
     },
-    onValueChange: {
-      type: Function as PropType<(value: Descendant[]) => void>,
-      default: undefined,
-    },
     decorate: {
       type: Function,
       default: DEFAULT_DECORATE_FN,
@@ -117,7 +113,6 @@ export const Slate = defineComponent({
       editor: Editor;
       initialValue?: Descendant[];
       value?: Descendant[];
-      onValueChange?: (value: Descendant[]) => void;
       decorate: (entry: NodeEntry) => DecoratedRange[];
       renderElement: (props: RenderElementProps) => VNode;
       renderLeaf: (props: RenderLeafProps) => VNode;
@@ -254,7 +249,6 @@ export const Slate = defineComponent({
 
       if (changed && !external) {
         emit("valuechange", options);
-        props.onValueChange?.(editor.children);
       }
 
       handleSelectorChange();
