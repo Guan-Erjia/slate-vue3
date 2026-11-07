@@ -11,20 +11,18 @@ const value = () =>
 const renderTwo = (first: Descendant[], second: Descendant[]) => {
   const one = createReactiveEditor();
   const two = createReactiveEditor();
-  one.children = first;
-  two.children = second;
 
   const { container } = render({
     render() {
       return [
         h(
           Slate,
-          { editor: one },
+          { editor: one, initialValue: first },
           { default: () => h(Editable, { "data-testid": "one" }) },
         ),
         h(
           Slate,
-          { editor: two },
+          { editor: two, initialValue: second },
           { default: () => h(Editable, { "data-testid": "two" }) },
         ),
       ];
@@ -34,7 +32,7 @@ const renderTwo = (first: Descendant[], second: Descendant[]) => {
   return { one, two, container };
 };
 
-describe.skip("editors sharing an initialValue", () => {
+describe("editors sharing an initialValue", () => {
   test("both render and keep separate documents", async () => {
     const shared = value();
     const { one, two, container } = renderTwo(shared, shared);
@@ -52,7 +50,7 @@ describe.skip("editors sharing an initialValue", () => {
     expect(DOMEditor.findPath(two, two.children[0])).toEqual([0]);
   });
 
-  test.skip("the first editor keeps the objects it was given", () => {
+  test("the first editor keeps the objects it was given", () => {
     const shared = value();
     const { one, two } = renderTwo(shared, shared);
 

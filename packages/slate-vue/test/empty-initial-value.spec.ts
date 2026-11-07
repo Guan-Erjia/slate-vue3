@@ -5,8 +5,7 @@ import { describe, expect, test } from "vitest";
 import { h } from "vue";
 
 describe("an empty initialValue", () => {
-  // no initialValue props here
-  test.skip("loads one empty block so the editor can hold a cursor and take input", async () => {
+  test("loads one empty block so the editor can hold a cursor and take input", async () => {
     const editor = createReactiveEditor();
 
     render(Slate, {

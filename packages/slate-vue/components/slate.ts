@@ -195,7 +195,9 @@ export const Slate = defineComponent({
         ? nextValue
         : copied;
 
-      editor.children = children;
+      // Fall back to one empty block, matching the editor's default document.
+      editor.children =
+        children.length > 0 ? children : [{ children: [{ text: "" }] }];
       initializedEditor = editor;
       lastEmittedValue = undefined;
       lastAppliedValue = controlledValue;
