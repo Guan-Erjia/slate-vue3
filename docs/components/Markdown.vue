@@ -1,5 +1,11 @@
 <template>
-  <Slate :editor :render-element :render-leaf :decorate>
+  <Slate
+    :editor
+    :render-element
+    :render-leaf
+    :decorate
+    :initial-value="slateDescendant"
+  >
     <Editable class="slate-markdown" :read-only="true" spellcheck />
   </Slate>
 </template>
@@ -14,15 +20,15 @@ import {
 } from "slate-vue3";
 import { CSSProperties, h } from "vue";
 import Prism from "../utils/prism";
-import { Editor, Element, NodeEntry, Node, Range } from "slate";
+import { Descendant, Editor, Element, NodeEntry, Node, Range } from "slate";
 import CodeBlock from "./CodeBlock.vue";
-import { CodeElement } from "../custom-types";
 import { normalizeTokens } from "../utils/normalize-tokens";
 
 import { unified } from "unified";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import { remarkToSlate } from "remark-slate-transformer";
+import { CodeElement } from "../custom-types";
 
 const props = defineProps<{
   content: string;
@@ -30,7 +36,8 @@ const props = defineProps<{
 
 const processor = unified().use(remarkParse).use(remarkGfm).use(remarkToSlate);
 
-const slateDescendant = processor.processSync(props.content).result;
+const slateDescendant = processor.processSync(props.content)
+  .result as Descendant[];
 
 const toChildren = (content: string) => [{ text: content }];
 const toCodeLines = (content: string): Element[] =>
@@ -38,11 +45,11 @@ const toCodeLines = (content: string): Element[] =>
     .split("\n")
     .map((line) => ({ type: "code-line", children: toChildren(line) }));
 
-slateDescendant
-  .filter((i) => i.type === "code")
-  .forEach((code) => {
-    code.children = toCodeLines(code.children[0].text);
-  });
+slateDescendant.forEach((node) => {
+  if (Element.isElement(node) && node.type === "code") {
+    node.children = toCodeLines(Node.string(node.children[0]));
+  }
+});
 
 const editor = createReactiveEditor();
 editor.children = slateDescendant;
@@ -65,7 +72,11 @@ const renderElement = ({
     case "listItem":
       return h("li", attributes, children);
     case "link":
-      return h("a", { href: element.url, target: "_blank" }, children);
+      return h(
+        "a",
+        { ...attributes, href: element.url, target: "_blank" },
+        children,
+      );
     case "blockquote":
       return h("blockquote", attributes, children);
     default:
@@ -107,12 +118,21 @@ const blockEntries = Editor.nodes(editor, {
 
 Array.from(blockEntries).forEach(
   ([block, blockPath]: NodeEntry<CodeElement>) => {
+    if (!Element.isElement(block) || block.type !== "code") {
+      return;
+    }
+
+    const grammar = Prism.languages[block.lang];
+    if (!grammar) {
+      return;
+    }
+
     const text = block.children.map((line) => Node.string(line)).join("\n");
-    const tokens = Prism.tokenize(text, Prism.languages[block.lang]);
+    const tokens = Prism.tokenize(text, grammar);
     const normalizedTokens = normalizeTokens(tokens); // make tokens flat and grouped by line
 
     for (let index = 0; index < normalizedTokens.length; index++) {
-      const tokens = normalizedTokens[index];
+      const lineTokens = normalizedTokens[index];
       const element = block.children[index];
 
       if (!decorationsMap.has(element)) {
@@ -120,7 +140,7 @@ Array.from(blockEntries).forEach(
       }
 
       let start = 0;
-      for (const token of tokens) {
+      for (const token of lineTokens) {
         const length = token.content.length;
         if (!length) {
           continue;

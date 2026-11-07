@@ -3,7 +3,7 @@ import { Descendant, BaseEditor, BaseRange, BaseText } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 
 export type BlockQuoteElement = {
-  type: "block-quote";
+  type: "block-quote" | "blockquote";
   align?: string;
   children: Descendant[];
 };
