@@ -34,9 +34,7 @@ const initialValue: Descendant[] = [
   createStreamBlock("Stream output will appear here."),
 ];
 
-const withStreamOutsideHistory = (
-  editor: ReturnType<typeof createReactiveEditor>,
-) => {
+const withStreamOutsideHistory = <T extends HistoryEditor>(editor: T): T => {
   const { setChildren } = editor;
   editor.setChildren = (children) =>
     HistoryEditor.withoutSaving(editor, () => setChildren(children));
@@ -106,7 +104,7 @@ onUnmounted(() => {
   <output aria-live="polite">
     {{ streaming ? "Streaming" : complete ? "Complete" : "Ready" }}
   </output>
-  <Slate :editor :value :on-value-change="updateTypedBlocks">
+  <Slate :editor :value @valuechange="updateTypedBlocks(editor.children)">
     <Editable aria-label="Controlled editor" placeholder="Type here..." />
   </Slate>
 </template>

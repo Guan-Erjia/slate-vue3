@@ -212,7 +212,7 @@ const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
     <Slate
       :editor
       :value
-      :on-value-change="editValue"
+      @valuechange="editValue(editor.children)"
       :render-element="renderElement"
       :render-leaf="renderLeaf"
     >

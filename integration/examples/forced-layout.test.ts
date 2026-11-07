@@ -2,8 +2,8 @@ import { test, expect } from "@playwright/test";
 
 test.describe("forced layout example", () => {
   const elements = [
-    { tag: "h2", count: 1 },
-    { tag: "p", count: 1 },
+    { tag: "[role='textbox'] h2", count: 1 },
+    { tag: "[role='textbox'] p", count: 1 },
   ];
 
   test.beforeEach(async ({ page }) => {
