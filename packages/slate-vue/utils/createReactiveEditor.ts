@@ -78,6 +78,11 @@ import {
   Node,
   BaseEditor,
   Operation,
+  setChildren,
+  getSplitProperties,
+  insertionPoint,
+  word,
+  hasRange,
 } from "slate";
 import {
   DOMEditor,
@@ -120,6 +125,7 @@ export const createReactiveEditor = <T extends BaseEditor>(
   editor.normalizeNode = (...args) => normalizeNode(editor, ...args);
   editor.removeMark = (...args) => removeMark(editor, ...args);
   editor.getDirtyPaths = (...args) => getDirtyPaths(editor, ...args);
+  editor.getSplitProperties = (...args) => getSplitProperties(editor, ...args);
   editor.shouldNormalize = (...args) => shouldNormalize(editor, ...args);
 
   // Editor interface
@@ -138,8 +144,10 @@ export const createReactiveEditor = <T extends BaseEditor>(
   editor.hasBlocks = (...args) => hasBlocks(editor, ...args);
   editor.hasInlines = (...args) => hasInlines(editor, ...args);
   editor.hasPath = (...args) => hasPath(editor, ...args);
+  editor.hasRange = (...args) => hasRange(editor, ...args);
   editor.hasTexts = (...args) => hasTexts(editor, ...args);
   editor.insertNodes = (...args) => insertNodes(editor, ...args);
+  editor.insertionPoint = (...args) => insertionPoint(editor, ...args);
   editor.isBlock = (...args) => isBlock(editor, ...args);
   editor.isEdge = (...args) => isEdge(editor, ...args);
   editor.isEmpty = (...args) => isEmpty(editor, ...args);
@@ -171,6 +179,7 @@ export const createReactiveEditor = <T extends BaseEditor>(
   editor.rangeRefs = (...args) => rangeRefs(editor, ...args);
   editor.removeNodes = (...args) => removeNodes(editor, ...args);
   editor.select = (...args) => select(editor, ...args);
+  editor.setChildren = (...args) => setChildren(editor, ...args);
   editor.setNodes = (...args) => setNodes(editor, ...args);
   editor.setNormalizing = (...args) => setNormalizing(editor, ...args);
   editor.setPoint = (...args) => setPoint(editor, ...args);
@@ -182,6 +191,7 @@ export const createReactiveEditor = <T extends BaseEditor>(
   editor.unsetNodes = (...args) => unsetNodes(editor, ...args);
   editor.unwrapNodes = (...args) => unwrapNodes(editor, ...args);
   editor.void = (...args) => getVoid(editor, ...args);
+  editor.word = (...args) => word(editor, ...args);
   editor.withoutNormalizing = (...args) => withoutNormalizing(editor, ...args);
   editor.wrapNodes = (...args) => wrapNodes(editor, ...args);
   editor.shouldMergeNodesRemovePrevNode = (...args) =>

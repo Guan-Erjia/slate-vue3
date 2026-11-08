@@ -19,7 +19,7 @@ const isMobileDevice = computed(() => {
   return isMobile && !isTablet;
 });
 
-const isFold = ref(false);
+const isFold = ref(true);
 
 provide("IS_FOLD", isFold);
 
