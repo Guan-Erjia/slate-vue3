@@ -194,6 +194,10 @@ export const Editable = defineComponent({
     const editor = useEditor();
     // Rerender editor when composition status changed
     const isComposing = useComposing();
+    const setComposing = (composing: boolean) => {
+      isComposing.value = composing;
+      IS_COMPOSING.set(editor, composing);
+    };
     watch(
       () => isComposing.value,
       (composing, _, onCleanup) => {
@@ -936,8 +940,7 @@ export const Editable = defineComponent({
               // won't be updated properly.
               // https://www.w3.org/TR/input-events-2/
               if (DOMEditor.isComposing(editor)) {
-                isComposing.value = false;
-                IS_COMPOSING.set(editor, false);
+                setComposing(false);
               }
             }
 
@@ -1544,8 +1547,7 @@ export const Editable = defineComponent({
       }
       if (DOMEditor.hasSelectableTarget(editor, event.target)) {
         Promise.resolve().then(() => {
-          isComposing.value = false;
-          IS_COMPOSING.set(editor, false);
+          setComposing(false);
         });
 
         androidManager?.handleCompositionEnd(event);
@@ -1610,8 +1612,7 @@ export const Editable = defineComponent({
         !isDOMEventTargetInput(event)
       ) {
         if (!DOMEditor.isComposing(editor)) {
-          isComposing.value = true;
-          IS_COMPOSING.set(editor, true);
+          setComposing(true);
         }
       }
     };
@@ -1635,6 +1636,10 @@ export const Editable = defineComponent({
         }
 
         compositionDOM.clear();
+        // Match slate-react: only the render-facing state flips here. The
+        // editor's composing state (`IS_COMPOSING`) is set by
+        // `compositionupdate` via `setComposing`, so flushing the DOM selection
+        // below still reads the selection the composition starts from.
         isComposing.value = true;
 
         flushDOMSelectionChange();
@@ -1873,8 +1878,7 @@ export const Editable = defineComponent({
           DOMEditor.isComposing(editor) &&
           (event.isComposing === false || isDeletingInVoid(editor, event))
         ) {
-          IS_COMPOSING.set(editor, false);
-          isComposing.value = false;
+          setComposing(false);
         }
 
         if (
