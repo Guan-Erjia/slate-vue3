@@ -2216,7 +2216,10 @@ export const Editable = defineComponent({
         RestoreDOM,
         {
           node: restoreDOMContainer,
-          receivedUserInput: receivedUserInput.value,
+          // Pass the ref itself: RestoreDOM's manager reads `.value` at
+          // mutation time, and a boolean snapshot would always read as
+          // `undefined`, silently disabling the restoreDOM mechanism.
+          receivedUserInput,
         },
         () =>
           h(
