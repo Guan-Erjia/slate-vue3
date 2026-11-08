@@ -1407,8 +1407,25 @@ export const Editable = defineComponent({
         text.compareDocumentPosition(anchor) &
         globalThis.Node.DOCUMENT_POSITION_FOLLOWING
       );
-      const range = DOMEditor.getWindow(editor).document.createRange();
-      range.setStart(text, atEnd ? text.childNodes.length : 0);
+
+      // The target must be a text node inside the rendered leaf: setting the
+      // caret on the `[data-slate-node="text"]` element itself is not
+      // resolvable by `toSlatePoint` on every platform.
+      const window = DOMEditor.getWindow(editor);
+      const walker = window.document.createTreeWalker(
+        text,
+        globalThis.NodeFilter.SHOW_TEXT,
+      );
+      const textNodes: globalThis.Text[] = [];
+      let current: globalThis.Node | null;
+      while ((current = walker.nextNode())) {
+        textNodes.push(current as globalThis.Text);
+      }
+      const targetNode = atEnd ? textNodes[textNodes.length - 1] : textNodes[0];
+      if (!targetNode) return false;
+
+      const range = window.document.createRange();
+      range.setStart(targetNode, atEnd ? targetNode.textContent!.length : 0);
       range.collapse(true);
 
       fixingFirefoxCaret = true;
