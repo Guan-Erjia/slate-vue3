@@ -50,6 +50,30 @@ type DOMSelection = globalThis.Selection;
 type DOMStaticRange = globalThis.StaticRange;
 type DOMPoint = [globalThis.Node, number];
 
+// COMPAT: Vue renders a text node between elements when a list of components
+// is rendered (vuejs/core#8444), and Firefox can place the caret in such an
+// empty text node. Those nodes are not part of the rendered Slate document, so
+// map the DOM point onto the adjacent rendered node before resolving it.
+// (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
+function compatEmptyNode([node, offset]: DOMPoint): DOMPoint {
+  if (node.nodeType !== 3 || node.textContent !== "") {
+    return [node, offset];
+  }
+
+  const isLeft = node.previousSibling === null;
+  let el = node[isLeft ? "nextSibling" : "previousSibling"];
+
+  while (el?.firstChild) {
+    el = isLeft ? el.firstChild : el.lastChild;
+  }
+
+  if (!el) {
+    return [node, offset];
+  }
+
+  return [el, isLeft ? 0 : el.textContent?.length || 0];
+}
+
 /**
  * A DOM-specific version of the `Editor` interface.
  */
@@ -832,9 +856,9 @@ export const DOMEditor: DOMEditorInterface = {
     },
   ): T extends true ? Point | null : Point => {
     const { exactMatch, suppressThrow } = options;
-    const [nearestNode, nearestOffset] = exactMatch
-      ? domPoint
-      : normalizeDOMPoint(domPoint);
+    const [nearestNode, nearestOffset] = compatEmptyNode(
+      exactMatch ? domPoint : normalizeDOMPoint(domPoint),
+    );
     const parentNode = nearestNode.parentNode as DOMElement;
     let searchDirection = options.searchDirection;
     let textNode: DOMElement | null = null;
@@ -1179,6 +1203,42 @@ export const DOMEditor: DOMEditorInterface = {
           focusOffset = domRange.focusOffset;
         }
 
+        if (IS_FIREFOX) {
+          if (
+            anchorNode instanceof HTMLElement &&
+            anchorNode.hasAttribute("data-slate-editor") &&
+            focusNode instanceof HTMLElement
+          ) {
+            const nodeList = Array.from(
+              anchorNode.querySelectorAll<HTMLElement>(
+                '[data-slate-string="true"]',
+              ),
+            ).filter(
+              (node) => !node.querySelector('[data-slate-string="true"]'),
+            );
+
+            if (nodeList.length > 0) {
+              const firstNode = nodeList[0];
+              const lastNode = nodeList[nodeList.length - 1];
+              anchorNode = firstNode.firstChild ?? firstNode;
+              anchorOffset = 0;
+              focusNode = lastNode.lastChild ?? lastNode;
+              focusOffset = focusNode.textContent?.length ?? 0;
+            }
+          } else {
+            if (anchorNode) {
+              const [el, offset] = compatEmptyNode([anchorNode, anchorOffset]);
+              anchorNode = el;
+              anchorOffset = offset;
+            }
+            if (focusNode) {
+              const [el, offset] = compatEmptyNode([focusNode, focusOffset]);
+              focusNode = el;
+              focusOffset = offset;
+            }
+          }
+        }
+
         // COMPAT: There's a bug in chrome that always returns `true` for
         // `isCollapsed` for a Selection that comes from a ShadowRoot.
         // (2020/08/08)
@@ -1197,6 +1257,18 @@ export const DOMEditor: DOMEditorInterface = {
         focusNode = domRange.endContainer;
         focusOffset = domRange.endOffset;
         isCollapsed = domRange.collapsed;
+        if (IS_FIREFOX) {
+          if (anchorNode) {
+            const [el, offset] = compatEmptyNode([anchorNode, anchorOffset]);
+            anchorNode = el;
+            anchorOffset = offset;
+          }
+          if (focusNode) {
+            const [el, offset] = compatEmptyNode([focusNode, focusOffset]);
+            focusNode = el;
+            focusOffset = offset;
+          }
+        }
       }
     }
 
