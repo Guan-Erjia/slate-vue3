@@ -50,29 +50,6 @@ type DOMSelection = globalThis.Selection;
 type DOMStaticRange = globalThis.StaticRange;
 type DOMPoint = [globalThis.Node, number];
 
-// compact vue3, get the real node element when renderList in firefox
-// (https://github.com/vuejs/core/issues/8444#issuecomment-1577843668)
-// (https://github.com/ianstormtaylor/slate/pull/5486#issue-1820720223)
-function compatEmptyNode([node, offset]: DOMPoint): DOMPoint {
-  if (node.nodeType !== 3 || node.textContent !== "") {
-    return [node, offset];
-  } else {
-    const isLeft = node.previousSibling === null;
-    let el = node[isLeft ? "nextSibling" : "previousSibling"];
-    while (el?.firstChild) {
-      el = isLeft ? el.firstChild : el.lastChild;
-    }
-    if (!el) {
-      throw new Error(
-        `Compact on vue3 empty childNode: Failed to find adjacent nodes: ${Scrubber.stringify(
-          node,
-        )}`,
-      );
-    }
-    return [el, isLeft ? 0 : el.textContent?.length || 0];
-  }
-}
-
 /**
  * A DOM-specific version of the `Editor` interface.
  */

@@ -1372,7 +1372,54 @@ export const Editable = defineComponent({
       IS_FOCUSED.delete(editor);
     };
 
+    // COMPAT: In Firefox, clicking into the padding/empty area of a block (or
+    // pressing End there) places the caret in an empty text node that is a
+    // direct child of the element's DOM node and not part of the Slate
+    // document. Such a selection cannot be converted to a Slate range and
+    // typing would be ignored, so move the caret to the edge of the block's
+    // text instead.
+    let fixingFirefoxCaret = false;
+    const fixFirefoxEmptyElementCaret = () => {
+      if (!IS_FIREFOX || fixingFirefoxCaret) return false;
+
+      const root = DOMEditor.findDocumentOrShadowRoot(editor);
+      const domSelection = getSelection(root);
+      const anchor = domSelection?.anchorNode;
+
+      if (
+        !domSelection ||
+        anchor?.nodeType !== 3 ||
+        anchor.textContent ||
+        domSelection.focusNode !== anchor
+      ) {
+        return false;
+      }
+
+      const parent = anchor.parentElement;
+      const elementNode = parent?.closest('[data-slate-node="element"]');
+      if (!elementNode || !DOMEditor.hasTarget(editor, anchor)) return false;
+
+      const text = elementNode.querySelector('[data-slate-node="text"]');
+      if (!text) return false;
+
+      // The caret is either at the start edge or at the end edge of the block.
+      const atEnd = !!(
+        text.compareDocumentPosition(anchor) &
+        globalThis.Node.DOCUMENT_POSITION_FOLLOWING
+      );
+      const range = DOMEditor.getWindow(editor).document.createRange();
+      range.setStart(text, atEnd ? text.childNodes.length : 0);
+      range.collapse(true);
+
+      fixingFirefoxCaret = true;
+      domSelection.removeAllRanges();
+      domSelection.addRange(range);
+      fixingFirefoxCaret = false;
+      return true;
+    };
+
     const onClick = (event: PointerEvent) => {
+      fixFirefoxEmptyElementCaret();
       if (DOMEditor.hasTarget(editor, event.target)) {
         flushDOMSelectionChange();
       }
@@ -1831,6 +1878,13 @@ export const Editable = defineComponent({
           "PageDown",
         ].includes(event.key);
 
+        // COMPAT: In Firefox, `Home`/`End` can leave the caret in the empty
+        // text node a block renders around its text, which cannot be resolved
+        // to a value selection. Fix it once the native caret move happened.
+        if (IS_FIREFOX && (event.key === "End" || event.key === "Home")) {
+          setTimeout(() => fixFirefoxEmptyElementCaret(), 0);
+        }
+
         const { selection } = editor;
         const element =
           editor.children[selection !== null ? selection.focus.path[0] : 0];
@@ -1958,6 +2012,15 @@ export const Editable = defineComponent({
 
         const wordBackward = Hotkeys.isMoveWordBackward(event);
         if (wordBackward || Hotkeys.isMoveWordForward(event)) {
+          // COMPAT: In Firefox, let the browser move the caret natively. Its
+          // word boundaries differ from `Intl.Segmenter` (used by the fallback
+          // below) and the native movement is what a plain input does, so the
+          // caret ends up where users expect. The resulting `selectionchange`
+          // syncs the value selection.
+          if (IS_FIREFOX) {
+            return;
+          }
+
           event.preventDefault();
 
           const root = DOMEditor.findDocumentOrShadowRoot(editor);
