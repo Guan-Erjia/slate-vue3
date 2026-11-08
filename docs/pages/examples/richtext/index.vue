@@ -69,6 +69,9 @@ const renderElement = ({
     case "bulleted-list":
       return h("ul", attributes, children);
 
+    case "heading-one":
+      return h("h1", attributes, children);
+
     case "heading":
       return h(`h${element.depth}`, attributes, children);
 

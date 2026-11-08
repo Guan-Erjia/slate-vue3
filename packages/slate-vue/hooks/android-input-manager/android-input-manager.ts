@@ -115,6 +115,11 @@ export function createAndroidInputManager({
   let actionTimeoutId: ReturnType<typeof setTimeout> | null = null;
   let lastCompositionActivity = 0;
   let lastInsertText = 0;
+  let lastCompositionText = "";
+  // Where the current composition started, i.e. where the composing text
+  // lives in the value. Committing replaces this range with the committed
+  // string.
+  let compositionStartPoint: Point | null = null;
   let compositionCleared = false;
   let hasUnrenderedMutations = false;
 
@@ -389,6 +394,10 @@ export function createAndroidInputManager({
       IS_COMPOSING.set(editor, false);
       flush();
 
+      // The commit (`insertText`) can be dispatched after `compositionend`;
+      // clear the range only once that event had a chance to be handled.
+      compositionStartPoint = null;
+
       if (compositionCleared) {
         // A cancelled composition can take the empty leaf's text node with
         // it. A forced render lets RestoreDOM put the leaf's DOM back, so the
@@ -406,6 +415,8 @@ export function createAndroidInputManager({
     IS_COMPOSING.set(editor, true);
     lastCompositionActivity = Date.now();
     compositionCleared = false;
+    lastCompositionText = "";
+    compositionStartPoint = null;
 
     if (compositionEndTimeoutId) {
       clearTimeout(compositionEndTimeoutId);
@@ -509,6 +520,17 @@ export function createAndroidInputManager({
 
       if (event.data) {
         compositionCleared = false;
+
+        // COMPAT: Committing a composition through the DevTools protocol
+        // (`Input.insertText`) does not dispatch `insertText`: it re-dispatches
+        // `insertCompositionText` with the same data before `compositionend`.
+        // The DOM already contains that text, so a second diff would apply it
+        // twice (e.g. "newss").
+        if (event.data === lastCompositionText) {
+          return;
+        }
+
+        lastCompositionText = event.data;
       } else {
         // The IME threw away what it was composing. The deferred text never
         // reached the value, so the value is already in the desired state -
@@ -573,6 +595,18 @@ export function createAndroidInputManager({
     targetRange = targetRange ?? editor.selection;
     if (!targetRange) {
       return;
+    }
+
+    // Remember where the composition started so a later commit can replace
+    // the composing text instead of appending to it. The first
+    // `insertCompositionText` of a composition reports the collapsed
+    // position the composition grows from.
+    if (
+      type === "insertCompositionText" &&
+      !compositionStartPoint &&
+      Range.isCollapsed(targetRange)
+    ) {
+      compositionStartPoint = targetRange.anchor;
     }
 
     // By default, the input manager tries to store text diffs so that we can
@@ -799,6 +833,93 @@ export function createAndroidInputManager({
         // the placeholder itself and thus includes the zero-width space inside edit events.
         if (EDITOR_TO_PENDING_INSERTION_MARKS.get(editor)) {
           text = text.replace("\uFEFF", "");
+        }
+
+        // COMPAT: Committing an IME composition. The browser has already
+        // replaced the composing text with the committed string in the DOM,
+        // and the reported target range may be collapsed instead of covering
+        // the composition. Storing a diff would insert the committed text a
+        // second time (e.g. composing "new" then committing "s" as "newss").
+        if (
+          (type === "insertText" || type === "insertFromComposition") &&
+          lastCompositionText !== "" &&
+          compositionStartPoint &&
+          Date.now() - lastCompositionActivity < COMPOSITION_IDLE_TIMEOUT
+        ) {
+          const start = compositionStartPoint;
+          compositionStartPoint = null;
+          lastCompositionText = "";
+
+          // The commit ends the composition, but the browser may not dispatch
+          // `compositionend` (e.g. when driven through the DevTools protocol).
+          // Leaving the composing flag set holds external/controlled value
+          // updates back forever.
+          IS_COMPOSING.set(editor, false);
+
+          // COMPAT: Committing an IME composition. The committed text
+          // replaces the composing text, but the browser can report a
+          // collapsed target range that does not cover the composition (e.g.
+          // Chrome DevTools' `Input.insertText`). Store a diff replacing the
+          // whole composing range so the committed text is not appended a
+          // second time. Composing diffs for the same leaf are dropped: the
+          // committed text supersedes them.
+          if (
+            canStoreDiff &&
+            Path.equals(start.path, targetRange.anchor.path) &&
+            start.offset <= targetRange.anchor.offset
+          ) {
+            const pending = EDITOR_TO_PENDING_DIFFS.get(editor);
+            if (pending?.length) {
+              EDITOR_TO_PENDING_DIFFS.set(
+                editor,
+                pending.filter(
+                  (change) => !Path.equals(change.path, start.path),
+                ),
+              );
+            }
+
+            const currentSelection = editor.selection;
+            storeDiff(start.path, {
+              start: start.offset,
+              end: targetRange.anchor.offset,
+              text,
+            });
+
+            // The native commit also wrote the text into the DOM, while
+            // RestoreDOM deliberately skips characterData mutations, so sync
+            // the native text node back to the value explicitly. On a real
+            // device the DOM already holds the committed text, making this a
+            // no-op.
+            setTimeout(() => {
+              try {
+                const { selection } = editor;
+                if (!selection || !Range.isCollapsed(selection)) return;
+                const { anchor } = selection;
+                if (!Editor.hasPath(editor, anchor.path)) return;
+                const leaf = Node.leaf(editor, anchor.path);
+                const domRange = DOMEditor.toDOMRange(
+                  editor,
+                  Editor.range(editor, anchor),
+                );
+                const textNode = domRange.startContainer;
+                if (
+                  textNode.nodeType === 3 &&
+                  textNode.textContent !== leaf.text
+                ) {
+                  textNode.textContent = leaf.text;
+                }
+              } catch {
+                // The DOM may have been torn down already; nothing to restore.
+              }
+            }, 0);
+
+            if (currentSelection) {
+              scheduleAction(() => {}, {
+                at: { path: start.path, offset: start.offset + text.length },
+              });
+            }
+            return;
+          }
         }
 
         if (

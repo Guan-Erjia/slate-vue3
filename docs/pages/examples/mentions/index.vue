@@ -244,6 +244,7 @@ const menuStyle = computed(() => {
         <div
           v-for="(char, i) in chars"
           :key="char"
+          @mousedown.prevent
           @click="onCharClick(char)"
           style="padding: 1px 3px; border-radius: 3px; cursor: pointer"
           :style="{ background: i === index ? '#B4D5FF' : 'transparent' }"
