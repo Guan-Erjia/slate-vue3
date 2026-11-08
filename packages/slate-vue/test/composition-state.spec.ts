@@ -1,6 +1,6 @@
 import { sleep } from "@test-utils";
 import { cleanup, render, fireEvent } from "@testing-library/vue";
-import { Descendant, Editor, Transforms } from "slate";
+import { Descendant, Editor, Range, Transforms } from "slate";
 import {
   createReactiveEditor,
   Editable,
@@ -9,7 +9,7 @@ import {
   useComposing,
 } from "slate-vue3";
 import { DOMEditor, IS_COMPOSING } from "slate-vue3/dom";
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { defineComponent, h, nextTick, unref } from "vue";
 
 afterEach(() => {
@@ -137,6 +137,16 @@ describe("composition state", () => {
     await sleep(10);
 
     selectDOMText(textbox, 6, 11);
+
+    // The DOM selection sync is debounced/throttled: wait for it to land in the
+    // value instead of relying on a fixed delay.
+    await vi.waitFor(
+      () => {
+        const { selection } = editor;
+        expect(selection && Range.isExpanded(selection)).toBe(true);
+      },
+      { timeout: 2000, interval: 20 },
+    );
 
     await fireEvent.compositionStart(textbox, { data: "" });
     await nextTick();
