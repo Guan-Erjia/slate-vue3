@@ -32,10 +32,7 @@ for (const type of ["link", "button"]) {
       .toBe(false);
     await expect
       .poll(() =>
-        editor.evaluate(
-          (editor, path) => editor.string([0]).includes("x"),
-          path,
-        ),
+        editor.evaluate((editor) => editor.string([0]).includes("x"), path),
       )
       .toBe(true);
     const after = await editor.evaluate((editor, path) => {

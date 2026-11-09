@@ -356,7 +356,7 @@ describe("decorations", () => {
           ...otherNodes(),
         ];
 
-        const decorate = ([_node, path]: NodeEntry) => {
+        const decorate = ([, path]: NodeEntry) => {
           const ranges = [];
           if (Path.isChild(path, [])) {
             ranges.push({
@@ -479,7 +479,7 @@ describe("decorations", () => {
           },
           ...otherNodes(),
         ];
-        const decorate = ([_node, path]: NodeEntry) => {
+        const decorate = ([, path]: NodeEntry) => {
           const ranges = [];
           if (Path.isChild(path, [])) {
             ranges.push(
@@ -538,7 +538,7 @@ describe("decorations", () => {
           { text: "1.2", decorations: [] },
         ]);
 
-        const decorate2 = ([_node, path]: NodeEntry) => {
+        const decorate2 = ([, path]: NodeEntry) => {
           const ranges = [];
           if (Path.equals(path, [0, 1])) {
             ranges.push({

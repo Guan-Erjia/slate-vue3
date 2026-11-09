@@ -1,12 +1,10 @@
 import { render, cleanup } from "@testing-library/vue";
-import { h, nextTick } from "vue";
+import { h } from "vue";
 import { createReactiveEditor } from "slate-vue3";
 import { DOMEditor, IS_COMPOSING } from "slate-vue3/dom";
 import { Editor } from "slate";
-
 import { Editable, Slate } from "slate-vue3";
 import { describe, afterEach, test, expect } from "vitest";
-import { sleep } from "@test-utils";
 
 const setup = (text: string) => {
   const editor = createReactiveEditor();

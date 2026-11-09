@@ -1,4 +1,4 @@
-import { createEditor, Descendant, Editor, Range, Transforms } from "slate";
+import { Descendant, Editor, Range, Transforms } from "slate";
 import { describe, test, expect } from "vitest";
 import { createReactiveEditor } from "../utils/createReactiveEditor";
 

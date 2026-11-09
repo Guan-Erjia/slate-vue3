@@ -1,9 +1,9 @@
 import { createReactiveEditor, Editable, Slate } from "slate-vue3";
 import { DOMEditor, IS_FOCUSED } from "slate-vue3/dom";
-import { Editor, Transforms, type Descendant } from "slate";
+import { Transforms, type Descendant } from "slate";
 import { h, defineComponent, onMounted, onUpdated, nextTick } from "vue";
 import { render } from "@testing-library/vue";
-import { describe, test, expect, vi } from "vitest";
+import { describe, test, expect } from "vitest";
 import type { RenderElementProps } from "slate-vue3";
 
 const renderElement = ({

@@ -60,7 +60,7 @@ test.describe("Inlines example", () => {
       }, scenario);
       await expect
         .poll(() =>
-          element.evaluate((element) => {
+          element.evaluate(() => {
             const selection = window.getSelection()!;
             return (
               selection.anchorNode?.parentElement?.closest("a") !== null &&

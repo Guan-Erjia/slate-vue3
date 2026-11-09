@@ -8,7 +8,7 @@ import {
   Slate,
   useComposing,
 } from "slate-vue3";
-import { DOMEditor, IS_COMPOSING } from "slate-vue3/dom";
+import { DOMEditor } from "slate-vue3/dom";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { defineComponent, h, nextTick, unref } from "vue";
 

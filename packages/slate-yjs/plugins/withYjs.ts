@@ -1,4 +1,4 @@
-import { BaseEditor, Editor, Point } from "slate";
+import { Editor, Point } from "slate";
 import { RelativePosition, Transaction, XmlText, YEvent } from "yjs";
 import { applyYjsEvents } from "../applyToSlate";
 import { applySlateOp } from "../applyToYjs";

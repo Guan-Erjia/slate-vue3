@@ -1,4 +1,4 @@
-import { createEditor, Editor, Transforms } from "slate";
+import { Editor, Transforms } from "slate";
 import { render } from "@testing-library/vue";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { createReactiveEditor, Editable, Slate } from "slate-vue3";

@@ -1,4 +1,4 @@
-import { onBeforeUpdate, onMounted, onUnmounted, onUpdated, Ref } from "vue";
+import { onBeforeUpdate, onMounted, onUnmounted, Ref } from "vue";
 
 export function useMutationObserver(
   node: Ref<HTMLElement | null>,

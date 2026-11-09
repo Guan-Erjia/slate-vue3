@@ -1,4 +1,4 @@
-import { Element, Node, Path, Text } from "slate";
+import { Element, Node, Path } from "slate";
 import { YTarget } from "../model/types";
 import { sliceInsertDelta, yTextToInsertDelta } from "./delta";
 import { XmlText } from "yjs";

@@ -52,7 +52,7 @@ const COMPOSITION_IDLE_TIMEOUT = 5000;
 const COMPOSITION_RECHECK_DELAY = 50;
 
 // Replace with `const debug = console.log` to debug
-const debug = (..._: unknown[]) => {};
+const debug = (...args: unknown[]) => void args;
 
 // Type guard to check if a value is a DataTransfer
 const isDataTransfer = (value: any): value is DataTransfer =>
@@ -374,7 +374,7 @@ export function createAndroidInputManager({
     }
   };
 
-  const handleCompositionEnd = (_event: CompositionEvent) => {
+  const handleCompositionEnd = () => {
     if (compositionEndTimeoutId) {
       clearTimeout(compositionEndTimeoutId);
     }
@@ -409,7 +409,7 @@ export function createAndroidInputManager({
     }, RESOLVE_DELAY);
   };
 
-  const handleCompositionStart = (_event: CompositionEvent) => {
+  const handleCompositionStart = () => {
     debug("composition start");
 
     IS_COMPOSING.set(editor, true);
@@ -1130,7 +1130,7 @@ export function createAndroidInputManager({
     }
   };
 
-  const handleKeyDown = (_: KeyboardEvent) => {
+  const handleKeyDown = () => {
     // COMPAT: Swiftkey closes the keyboard when typing inside a empty node
     // directly next to a non-contenteditable element (= the placeholder).
     // The only event fired soon enough for us to allow hiding the placeholder

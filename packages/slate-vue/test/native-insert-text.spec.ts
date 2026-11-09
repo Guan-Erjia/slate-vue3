@@ -3,7 +3,7 @@ import { h, nextTick } from "vue";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { createReactiveEditor, Editable, Slate } from "slate-vue3";
 import { DOMEditor, IS_NODE_MAP_DIRTY } from "slate-vue3/dom";
-import { Node, type NodeEntry, type Range, Transforms } from "slate";
+import { Node, type NodeEntry, Transforms } from "slate";
 
 vi.mock("slate-dom", async (importOriginal) => ({
   ...(await importOriginal<typeof import("slate-vue3/dom")>()),

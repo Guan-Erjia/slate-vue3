@@ -1,5 +1,4 @@
 import { h } from "vue";
-import type { VNode } from "vue";
 import { render } from "@testing-library/vue";
 import { describe, expect, it } from "vitest";
 import {

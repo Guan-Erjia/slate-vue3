@@ -35,7 +35,11 @@ test.describe("composing after toggling a mark on Android", () => {
     await expect
       .poll(() =>
         editor.evaluate((editor) =>
-          editor.children[0].children
+          (
+            editor.children[0] as {
+              children: { text: string; bold?: boolean }[];
+            }
+          ).children
             .filter((leaf) => leaf.bold)
             .map((leaf) => leaf.text),
         ),
@@ -78,7 +82,11 @@ test.describe("composing after toggling a mark on Android", () => {
     await expect
       .poll(() =>
         editor.evaluate((editor) =>
-          editor.children[0].children
+          (
+            editor.children[0] as {
+              children: { text: string; bold?: boolean }[];
+            }
+          ).children
             .filter((leaf) => leaf.bold)
             .map((leaf) => leaf.text),
         ),

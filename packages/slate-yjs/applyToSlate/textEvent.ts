@@ -1,4 +1,4 @@
-import { Editor, Element, isObject, Node, Operation, Path, Text } from "slate";
+import { Editor, Element, isObject, Node, Operation, Path } from "slate";
 import { XmlText, YTextEvent } from "yjs";
 import { Delta } from "../model/types";
 import { deltaInsertToSlateNode } from "../utils/convert";

@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { Descendant, BaseEditor, BaseRange, BaseText } from "slate";
+import { Descendant, BaseEditor, BaseRange } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 
 export type BlockQuoteElement = {

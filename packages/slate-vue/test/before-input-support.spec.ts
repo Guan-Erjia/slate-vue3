@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 const loadSupport = async (userAgent: string) => {
   const descriptor = Object.getOwnPropertyDescriptor(

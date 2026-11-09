@@ -46,15 +46,6 @@ const renderView = (
   return render(App);
 };
 
-const renderValue = (
-  editor: ReturnType<typeof setup>,
-  value: Descendant[] | undefined,
-) =>
-  render(Slate, {
-    props: { editor, value },
-    slots: { default: () => h(Editable) },
-  });
-
 afterEach(() => {
   cleanup();
   vi.clearAllTimers();

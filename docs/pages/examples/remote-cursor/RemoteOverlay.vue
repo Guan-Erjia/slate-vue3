@@ -30,7 +30,7 @@
 </template>
 <script setup lang="ts">
 import { useRemoteCursorOverlayPositions } from "slate-vue3/yjs";
-import { Ref, useTemplateRef } from "vue";
+import { useTemplateRef } from "vue";
 
 const overlayRef = useTemplateRef<HTMLDivElement>("overlay");
 // Use type assertion to satisfy the expected type

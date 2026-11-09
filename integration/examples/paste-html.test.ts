@@ -16,7 +16,7 @@ test.describe("paste html example", () => {
           new Event("paste", { bubbles: true, cancelable: true }),
           {
             clipboardData: {
-              getData: (type = "text/html") => htmlContent,
+              getData: () => htmlContent,
               types: ["text/html"],
             },
           },
@@ -60,8 +60,8 @@ test.describe("paste html example", () => {
         editor.children.map((node) => {
           if (!("children" in node)) return node.text;
           if ("url" in node) return node.url;
-          return node.children
-            .map((child) => ("text" in child ? child.text : ""))
+          return (node.children as any)
+            .map((child: any) => ("text" in child ? child.text : ""))
             .join("");
         }),
       );

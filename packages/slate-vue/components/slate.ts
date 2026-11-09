@@ -1,14 +1,12 @@
 import {
   computed,
   defineComponent,
-  nextTick,
   onMounted,
   onUnmounted,
   PropType,
   provide,
   ref,
   renderSlot,
-  VNode,
   watch,
 } from "vue";
 import {
@@ -19,22 +17,14 @@ import {
   SLATE_USE_EDITOR,
 } from "../utils/constants";
 import {
-  DecoratedRange,
   Descendant,
   Editor,
   Node,
-  NodeEntry,
   Operation,
   Scrubber,
   Transforms,
 } from "slate";
-import type {
-  RenderChunkProps,
-  RenderElementProps,
-  RenderLeafProps,
-  RenderPlaceholderProps,
-  RenderTextProps,
-} from "../utils/interface";
+import type { SlateProps } from "../utils/interface";
 import {
   copyNodeInUse,
   DOMEditor,
@@ -108,20 +98,7 @@ export const Slate = defineComponent({
       default: DEFAULT_PLACEHOLDER_RENDER,
     },
   },
-  setup(
-    props: {
-      editor: Editor;
-      initialValue?: Descendant[];
-      value?: Descendant[];
-      decorate: (entry: NodeEntry) => DecoratedRange[];
-      renderElement: (props: RenderElementProps) => VNode;
-      renderLeaf: (props: RenderLeafProps) => VNode;
-      renderText: (props: RenderTextProps) => VNode;
-      renderChunk: (props: RenderChunkProps) => VNode;
-      renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
-    },
-    { slots, emit },
-  ) {
+  setup(props: SlateProps, { slots, emit }) {
     const {
       editor,
       initialValue,
@@ -156,49 +133,39 @@ export const Slate = defineComponent({
       );
     }
 
-    let initializedEditor: Editor | null = null;
     let lastEmittedValue: Descendant[] | undefined;
     let lastAppliedValue: Descendant[] | undefined;
     let appliedChildren: Descendant[] | undefined;
 
-    const initializeEditor = () => {
-      if (initializedEditor === editor) {
-        return;
-      }
+    if (!Editor.isEditor(editor)) {
+      throw new Error(
+        `[Slate] editor is invalid! You passed: ${Scrubber.stringify(editor)}`,
+      );
+    }
 
-      if (!Editor.isEditor(editor)) {
-        throw new Error(
-          `[Slate] editor is invalid! You passed: ${Scrubber.stringify(editor)}`,
-        );
-      }
+    const nextValue = initialValue ?? controlledValue ?? editor.children;
 
-      const nextValue = initialValue ?? controlledValue ?? editor.children;
+    if (!Node.isNodeList(nextValue)) {
+      throw new Error(
+        `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
+          nextValue,
+        )}`,
+      );
+    }
 
-      if (!Node.isNodeList(nextValue)) {
-        throw new Error(
-          `[Slate] initialValue is invalid! Expected a list of elements but got: ${Scrubber.stringify(
-            nextValue,
-          )}`,
-        );
-      }
-
-      const copied =
-        initialValue === undefined && controlledValue === undefined
-          ? nextValue
-          : nextValue.map(copyNodeInUse);
-      const children = copied.every((node, i) => node === nextValue[i])
+    const copied =
+      initialValue === undefined && controlledValue === undefined
         ? nextValue
-        : copied;
+        : nextValue.map(copyNodeInUse);
+    const children = copied.every((node, i) => node === nextValue[i])
+      ? nextValue
+      : copied;
 
-      // Fall back to one empty block, matching the editor's default document.
-      editor.children =
-        children.length > 0 ? children : [{ children: [{ text: "" }] }];
-      initializedEditor = editor;
-      lastEmittedValue = undefined;
-      lastAppliedValue = controlledValue;
-    };
-
-    initializeEditor();
+    // Fall back to one empty block, matching the editor's default document.
+    editor.children =
+      children.length > 0 ? children : [{ children: [{ text: "" }] }];
+    lastEmittedValue = undefined;
+    lastAppliedValue = controlledValue;
 
     provide(SLATE_USE_EDITOR, editor);
     provideDecorateFn(decorate);

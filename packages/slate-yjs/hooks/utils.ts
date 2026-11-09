@@ -55,6 +55,7 @@ export function getCursorRange<TCursorData extends JsonObject = JsonObject>(
 
       cursorStates.set(cursorState, range);
     } catch (e) {
+      console.error(e);
       return null;
     }
   }
@@ -177,6 +178,7 @@ export function domEditorToDomRangeSafe(
   try {
     return DOMEditor.toDOMRange(editor, range);
   } catch (e) {
+    console.error(e);
     return null;
   }
 }

@@ -1,4 +1,4 @@
-import { createEditor, Editor } from "slate";
+import { Editor } from "slate";
 import { createReactiveEditor } from "../utils/createReactiveEditor";
 import { describe, it, expect, vi } from "vitest";
 import { DOMEditor } from "slate-vue3/dom";

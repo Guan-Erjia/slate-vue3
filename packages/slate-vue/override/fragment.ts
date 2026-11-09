@@ -1,4 +1,4 @@
-import { Editor, EditorInterface, Node } from "slate";
+import { Editor, EditorInterface } from "slate";
 import { nodeFragment } from "./node-fragment";
 
 export const fragment: EditorInterface["fragment"] = (editor, at) => {
