@@ -1,4 +1,13 @@
-import type { Text, Element, LeafPosition, Editor } from "slate";
+import type {
+  Text,
+  Element,
+  LeafPosition,
+  Editor,
+  Descendant,
+  NodeEntry,
+  DecoratedRange,
+} from "slate";
+import { DOMEditor } from "slate-vue3/dom";
 import type {
   CSSProperties,
   HTMLAttributes,
@@ -6,6 +15,28 @@ import type {
   VNodeChild,
   VNodeRef,
 } from "vue";
+
+export interface SlateProps {
+  editor: Editor;
+  initialValue?: Descendant[];
+  value?: Descendant[];
+  decorate: (entry: NodeEntry) => DecoratedRange[];
+  renderElement: (props: RenderElementProps) => VNode;
+  renderLeaf: (props: RenderLeafProps) => VNode;
+  renderText: (props: RenderTextProps) => VNode;
+  renderChunk: (props: RenderChunkProps) => VNode;
+  renderPlaceholder: (props: RenderPlaceholderProps) => VNode;
+}
+
+export interface EditableProps {
+  readOnly: boolean;
+  placeholder: string;
+  scrollSelectionIntoView: (
+    editor: DOMEditor,
+    domRange: globalThis.Range,
+  ) => void;
+  autoFocus: boolean;
+}
 
 /**
  * `RenderChunkProps` are passed to the `renderChunk` handler
@@ -68,7 +99,7 @@ export interface RenderElementProps {
     dir?: "rtl";
     ref: VNodeRef;
   };
-  editor?: Editor;
+  editor: Editor;
 }
 
 /**

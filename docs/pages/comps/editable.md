@@ -6,13 +6,13 @@
 
 ```typescript
 interface EditableProps {
-  readOnly: boolean;
-  placeholder: string;
-  scrollSelectionIntoView: (
+  readOnly?: boolean;
+  placeholder?: string;
+  scrollSelectionIntoView?: (
     editor: DOMEditor,
     domRange: globalThis.Range
   ) => void;
-  autoFocus: boolean
+  autoFocus?: boolean
 }
 ```
 

@@ -20,7 +20,6 @@ npm install slate-vue3
 ```html
 <script setup lang="ts">
 import { Slate, Editable, createReactiveEditor } from "slate-vue3";
-import { withDOM } from "slate-vue3/dom";
 import { withHistory } from "slate-history";
 
 const initialValue = [{
@@ -29,11 +28,10 @@ const initialValue = [{
 }];
 
 const editor = withHistory(createReactiveEditor());
-editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor>
+  <Slate :editor :initial-value>
     <Editable />
   </Slate>
 </template>

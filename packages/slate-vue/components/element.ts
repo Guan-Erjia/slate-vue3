@@ -192,6 +192,7 @@ export const ElementComp = defineComponent({
             }),
           ),
           element: props.element,
+          editor,
         });
       }
 
@@ -202,6 +203,7 @@ export const ElementComp = defineComponent({
           decorations: decorationsProps.value,
         }),
         element: props.element,
+        editor,
       });
     };
   },

@@ -52,11 +52,10 @@ const initialValue = [
   },
 ];
 const editor = createReactiveEditor();
-editor.children = initialValue;
 </script>
 
 <template>
-  <Slate :editor>
+  <Slate :editor :initial-value>
     <Editable />
   </Slate>
 </template>

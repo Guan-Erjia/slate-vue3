@@ -147,7 +147,7 @@ export const DEFAULT_ELEMENT_RENDER = ({
   children,
   editor,
 }: RenderElementProps) => {
-  const tag = editor?.isInline(element) ? "span" : "div";
+  const tag = editor.isInline(element) ? "span" : "div";
   return h(
     tag,
     {

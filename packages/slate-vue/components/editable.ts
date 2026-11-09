@@ -78,6 +78,7 @@ import { getPointAboveTrailingNewline } from "../utils/trailing-newline";
 import { getCharacterMoveUnit } from "../utils/character-move";
 import { useFlushDeferredSelectorsOnRender } from "../hooks/use-slate-selector";
 import { AndroidInputManager } from "../hooks/android-input-manager/android-input-manager";
+import { EditableProps } from "../utils/interface";
 
 const isTextDOMNode = (node: unknown): node is globalThis.Text =>
   isDOMNode(node) && node.nodeType === 3;
@@ -179,15 +180,7 @@ export const Editable = defineComponent({
       default: () => false,
     },
   },
-  setup(props: {
-    readOnly: boolean;
-    placeholder: string;
-    scrollSelectionIntoView: (
-      editor: DOMEditor,
-      domRange: globalThis.Range,
-    ) => void;
-    autoFocus: boolean;
-  }) {
+  setup(props: EditableProps) {
     const { placeholder, scrollSelectionIntoView } = props;
     const attributes: HTMLAttributes = useAttrs();
 

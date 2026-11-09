@@ -5,6 +5,8 @@ The `Slate` component is used to provide necessary rendering context and is a co
 ```typescript
 interface SlateComponentProps {
   editor: DOMEditor;
+  initialValue: Descendant[];
+  value: Descendant[];
   decorate: (entry: NodeEntry) => DecoratedRange[];
   renderElement: (props: RenderElementProps) => VNode;
   renderLeaf: (props: RenderLeafProps) => VNode;
@@ -16,19 +18,13 @@ interface SlateComponentProps {
 
 ## editor
 
-You need to create a slate instance through the `creatEditor` API and pass it into the component for context sharing through the **`top-level`** component
+You need to create a slate instance through the `createReactiveEditor` API and pass it into the component for context sharing through the **`top-level`** component
 
 ```typescript
 import { Descendant } from "slate";
 import { createReactiveEditor } from "slate-vue3";
-const initialValue: Descendant[] = [
-  {
-    type: "paragraph",
-    children: [{ text: "" }],
-  },
-];
+
 const editor = createReactiveEditor();
-editor.children = initialValue;
 ```
 
 ## renderElement
@@ -37,7 +33,7 @@ Rendering the control function of `Element` nodes, making branch judgments based
 
 ```typescript
 export interface RenderElementProps {
-  children: VNode;
+  children: VNode | VNodeChild[];
   element: Element;
   attributes: HTMLAttributes & {
     "data-slate-node": "element";
@@ -104,16 +100,15 @@ After the editor is split into chunks, the rendering content of each chunk can b
 
 ```typescript
 export interface RenderChunkProps {
-  highest: boolean
-  lowest: boolean
-  children: any
+  highest: boolean;
+  lowest: boolean;
+  children: any;
   attributes: {
-    'data-slate-chunk': true
-  }
+    "data-slate-chunk": true;
+  };
 }
 function renderChunk(props: RenderChunkProps): VNode {}
 ```
-
 
 ## decorate
 
