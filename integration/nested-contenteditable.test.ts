@@ -1,6 +1,5 @@
 import { test, expect, Locator } from "@playwright/test";
 import { getEditorHandle } from "./support/editor";
-import { E2E_BASE_URL } from "@test-utils";
 
 const focusEnd = async (element: Locator) => {
   await element.focus();
@@ -25,7 +24,7 @@ for (const contentEditable of ["true", "", "plaintext-only"]) {
   test(`nested contenteditable=${JSON.stringify(
     contentEditable,
   )} keeps typing and selection`, async ({ page }) => {
-    await page.goto(`${E2E_BASE_URL}images`);
+    await page.goto(`http://localhost:5173/slate-vue3/examples/images`);
     const outer = page.locator("[data-slate-editor]");
     const editor = await getEditorHandle(outer);
     const before = await editor.evaluate((editor) => editor.children);
@@ -66,7 +65,7 @@ for (const eventType of ["beforeinput", "input"]) {
   test(`nested ${eventType} history events do not undo the outer editor`, async ({
     page,
   }) => {
-    await page.goto(`${E2E_BASE_URL}images`);
+    await page.goto(`http://localhost:5173/slate-vue3/examples/images`);
     const outer = page.locator("[data-slate-editor]");
     const editor = await getEditorHandle(outer);
     await editor.evaluate((editor) => {

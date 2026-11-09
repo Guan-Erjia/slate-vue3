@@ -1,11 +1,11 @@
 import { test, expect } from "@playwright/test";
-import { E2E_BASE_URL } from "@test-utils";
 import { dragSelection, selectStrings } from "../support/move-text";
 import { getEditorHandle } from "../support/editor";
 
 test.describe("On richtext example", () => {
   test.beforeEach(
-    async ({ page }) => await page.goto(`${E2E_BASE_URL}richtext`),
+    async ({ page }) =>
+      await page.goto(`http://localhost:5173/slate-vue3/examples/richtext`),
   );
 
   test("renders rich text", async ({ page }) => {
@@ -170,7 +170,7 @@ for (const layout of ["heading", "paragraph-heading", "list"]) {
     test(`clearing ${layout} ${
       backward ? "backward" : "forward"
     } resets the document`, async ({ page }) => {
-      await page.goto(`${E2E_BASE_URL}richtext`);
+      await page.goto(`http://localhost:5173/slate-vue3/examples/richtext`);
       const element = page.getByRole("textbox");
       await element.click();
       const editor = await getEditorHandle(element);
