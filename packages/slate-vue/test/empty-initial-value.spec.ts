@@ -11,6 +11,7 @@ describe("an empty initialValue", () => {
     render(Slate, {
       props: {
         editor,
+        initialValue: [],
       },
       slots: {
         default: h(Editable),

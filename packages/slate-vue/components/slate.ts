@@ -143,6 +143,16 @@ export const Slate = defineComponent({
       );
     }
 
+    if (
+      initialValue === undefined &&
+      controlledValue === undefined &&
+      editor.children.length === 0
+    ) {
+      throw new Error(
+        "[Slate] editor.children is empty and no initialValue was provided. If this is intentional, pass initialValue={[]} to the Slate component.",
+      );
+    }
+
     const nextValue = initialValue ?? controlledValue ?? editor.children;
 
     if (!Node.isNodeList(nextValue)) {

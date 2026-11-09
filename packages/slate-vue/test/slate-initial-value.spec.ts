@@ -14,7 +14,7 @@ const App = defineComponent({
     return () =>
       h(
         Slate,
-        { editor: props.editor },
+        { editor: props.editor, initialValue },
         {
           default: () => h(Editable),
         },
