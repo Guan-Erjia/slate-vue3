@@ -1,9 +1,9 @@
 import { Text, LeafPosition, Element } from "slate";
 import { h, defineComponent, computed, ref, watch } from "vue";
 import { StringComp } from "./string";
-import { useRenderLeaf } from "../render/fn";
 import { PLACEHOLDER_SYMBOL, IS_ANDROID } from "slate-vue3/dom";
 import { PlaceholderComp } from "./placeholder";
+import { useRenderProps } from "../render/fn";
 
 // (https://github.com/ianstormtaylor/slate/pull/5368)
 const PLACEHOLDER_DELAY = IS_ANDROID ? 300 : 0;
@@ -20,7 +20,7 @@ export const LeafComp = defineComponent({
     parent: Element;
     leafPosition?: LeafPosition;
   }) {
-    const renderLeaf = useRenderLeaf();
+    const renderProps = useRenderProps();
 
     let showPlaceholderTimeoutRef: TimerId = null;
     const showPlaceholder = ref(false);
@@ -61,7 +61,7 @@ export const LeafComp = defineComponent({
         parent: props.parent,
       });
 
-      return renderLeaf({
+      return renderProps.renderLeaf({
         text: props.text,
         leaf: props.leaf,
         leafPosition: props.leafPosition,

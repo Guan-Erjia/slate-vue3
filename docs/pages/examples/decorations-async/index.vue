@@ -33,7 +33,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { h, onUnmounted, ref } from "vue";
+import { computed, h, onUnmounted, ref } from "vue";
 import {
   createReactiveEditor,
   Editable,
@@ -121,12 +121,15 @@ const handleChange = () => {
   }, 600);
 };
 
-const decorate = ([node, path]: NodeEntry): Range[] => {
-  if (!Text.isText(node)) return [];
-  return ranges.value
-    .filter((r) => r.anchor.path[0] === path[0])
-    .map((r) => ({ ...r, highlight: true }));
-};
+const decorate = computed(() => {
+  const currentRanges = ranges.value;
+  return ([node, path]: NodeEntry): Range[] => {
+    if (!Text.isText(node)) return [];
+    return currentRanges
+      .filter((r) => r.anchor.path[0] === path[0])
+      .map((r) => ({ ...r, highlight: true }));
+  };
+});
 
 const renderLeaf = ({ attributes, children, leaf }: RenderLeafProps) => {
   return h(

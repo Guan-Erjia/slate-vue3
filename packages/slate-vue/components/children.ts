@@ -14,7 +14,7 @@ import { TextComp } from "../components/text";
 import { ChunkTreeComp } from "../components/chunk";
 import { useEditor } from "../hooks/use-editor";
 import { getChunkTreeForNode } from "../chunking";
-import { useRenderChunk } from "../render/chunk";
+import { useRenderProps } from "../render/fn";
 
 /**
  * Children.
@@ -24,7 +24,7 @@ export const ChildrenComp = defineComponent({
   props: ["element", "decorations"],
   setup(props: { element: Ancestor; decorations: DecoratedRange[] }) {
     const editor = useEditor();
-    const renderChunk = useRenderChunk();
+    const renderProps = useRenderProps();
 
     const isBlock =
       Node.isElement(props.element) && !editor.isInline(props.element);
@@ -120,7 +120,7 @@ export const ChildrenComp = defineComponent({
         root: chunkTree,
         ancestor: chunkTree,
         renderElement: renderElementComponent,
-        renderChunk: renderChunk,
+        renderChunk: renderProps.renderChunk,
       });
     };
   },

@@ -1,53 +1,17 @@
-import { inject, provide, type VNode } from "vue";
+import { inject, provide } from "vue";
+import type { SlateProps } from "../utils/interface";
 
-import type {
-  RenderElementProps,
-  RenderLeafProps,
-  RenderTextProps,
-} from "../utils/interface";
-
-export const SLATE_INNER_RENDER_ELEMENT = Symbol("SLATE_INNER_RENDER_ELEMENT");
-export const provideRenderElement = (
-  fn: (props: RenderElementProps) => VNode,
-) => provide(SLATE_INNER_RENDER_ELEMENT, fn);
-export const useRenderElement = () => {
-  const ELEMENT_RENDER = inject<(props: RenderElementProps) => VNode>(
-    SLATE_INNER_RENDER_ELEMENT,
-  );
-  if (ELEMENT_RENDER === undefined) {
+export const SLATE_INNER_RENDER_PROPS = Symbol("SLATE_INNER_RENDER_PROPS");
+export const provideRenderProps = (props: SlateProps) =>
+  provide(SLATE_INNER_RENDER_PROPS, props);
+export const useRenderProps = () => {
+  const RENDER_PROPS = inject<
+    Omit<SlateProps, "editor" | "initialValue" | "value">
+  >(SLATE_INNER_RENDER_PROPS);
+  if (RENDER_PROPS === undefined) {
     throw new Error(
-      `The \`useRenderElement\` hook must be used inside the <Slate> component's context.`,
+      `The \`useRenderProps\` hook must be used inside the <Slate> component's context.`,
     );
   }
-  return ELEMENT_RENDER;
-};
-
-export const SLATE_INNER_RENDER_LEAF = Symbol("SLATE_INNER_RENDER_LEAF");
-export const provideRenderLeaf = (fn: (props: RenderLeafProps) => VNode) =>
-  provide(SLATE_INNER_RENDER_LEAF, fn);
-export const useRenderLeaf = () => {
-  const LEAF_RENDER = inject<(props: RenderLeafProps) => VNode>(
-    SLATE_INNER_RENDER_LEAF,
-  );
-  if (LEAF_RENDER === undefined) {
-    throw new Error(
-      `The \`useRenderLeaf\` hook must be used inside the <Slate> component's context.`,
-    );
-  }
-  return LEAF_RENDER;
-};
-
-export const SLATE_INNER_RENDER_TEXT = Symbol("SLATE_INNER_RENDER_TEXT");
-export const provideRenderText = (fn: (props: RenderTextProps) => VNode) =>
-  provide(SLATE_INNER_RENDER_TEXT, fn);
-export const useRenderText = () => {
-  const TEXT_RENDER = inject<(props: RenderTextProps) => VNode>(
-    SLATE_INNER_RENDER_TEXT,
-  );
-  if (TEXT_RENDER === undefined) {
-    throw new Error(
-      `The \`useRenderText\` hook must be used inside the <Slate> component's context.`,
-    );
-  }
-  return TEXT_RENDER;
+  return RENDER_PROPS;
 };

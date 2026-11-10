@@ -65,7 +65,6 @@ import { useEditor } from "../hooks/use-editor";
 import { EDITOR_TO_COMPOSING, useComposing } from "../hooks/use-composing";
 import { useReadOnly } from "../hooks/use-read-only";
 import { useEditorVersion } from "../render/version";
-import { injectDecorateFn } from "../render/decorate";
 import { RestoreDOM } from "./restore-dom/restore-dom";
 import { useTrackUserInput } from "../hooks/use-track-user-input";
 import { useAndroidInputManager } from "../hooks/android-input-manager/use-android-input-manager";
@@ -79,6 +78,7 @@ import { getCharacterMoveUnit } from "../utils/character-move";
 import { useFlushDeferredSelectorsOnRender } from "../hooks/use-slate-selector";
 import { AndroidInputManager } from "../hooks/android-input-manager/android-input-manager";
 import { EditableProps } from "../utils/interface";
+import { useRenderProps } from "../render/fn";
 
 const isTextDOMNode = (node: unknown): node is globalThis.Text =>
   isDOMNode(node) && node.nodeType === 3;
@@ -407,8 +407,9 @@ export const Editable = defineComponent({
     const editorVersion = useEditorVersion();
     const flushDeferred = useFlushDeferredSelectorsOnRender();
     onUpdated(flushDeferred);
+    const renderProps = useRenderProps();
     watch(
-      () => editorVersion.value,
+      [() => editorVersion.value, () => renderProps.decorate],
       (_version, _previousVersion, onCleanup) => {
         nextTick(() => {
           flushDeferred();
@@ -1113,8 +1114,6 @@ export const Editable = defineComponent({
       window.document.removeEventListener("drop", stoppedDragging);
     });
 
-    const decorate = injectDecorateFn();
-
     const showPlaceholder = computed(
       () =>
         Boolean(placeholder) &&
@@ -1133,7 +1132,7 @@ export const Editable = defineComponent({
     };
 
     const decorations = computed(() => {
-      const _decorations = decorate([editor, []]);
+      const _decorations = renderProps.decorate([editor, []]);
       if (showPlaceholder.value) {
         const start = Editor.start(editor, []);
         _decorations.push({

@@ -25,8 +25,8 @@ import {
 import { useReadOnly } from "../hooks/use-read-only";
 import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { useEditor } from "../hooks/use-editor";
-import { useRenderElement } from "../render/fn";
 import { useDecorations } from "../hooks/use-decorations";
+import { useRenderProps } from "../render/fn";
 
 const findSiblingDirection = (siblings: Iterable<Node>) => {
   for (const sibling of siblings) {
@@ -141,7 +141,7 @@ export const ElementComp = defineComponent({
       { immediate: true },
     );
 
-    const renderElement = useRenderElement();
+    const renderProps = useRenderProps();
     const { decorations, update } = useDecorations(() => props.element);
     onUpdated(update);
     const decorationsProps = computed(() => [
@@ -179,7 +179,7 @@ export const ElementComp = defineComponent({
           attributes.contenteditable = false;
         }
 
-        return renderElement({
+        return renderProps.renderElement({
           attributes,
           children: h(
             tag,
@@ -196,7 +196,7 @@ export const ElementComp = defineComponent({
         });
       }
 
-      return renderElement({
+      return renderProps.renderElement({
         attributes,
         children: h(ChildrenComp, {
           element: props.element,

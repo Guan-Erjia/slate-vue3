@@ -6,11 +6,11 @@ import {
 } from "slate-vue3/dom";
 import { onScopeDispose, shallowRef, watchEffect } from "vue";
 import { useEditor } from "./use-editor";
-import { injectDecorateFn } from "../render/decorate";
+import { useRenderProps } from "../render/fn";
 
 export const useDecorations = (getNode: () => Descendant) => {
   const editor = useEditor();
-  const decorate = injectDecorateFn();
+  const renderProps = useRenderProps();
   const decorations = shallowRef<DecoratedRange[]>([]);
   const nodePath = shallowRef<Path>(DOMEditor.findPath(editor, getNode()));
   let currentDecorations: DecoratedRange[] = [];
@@ -22,7 +22,7 @@ export const useDecorations = (getNode: () => Descendant) => {
   const stop = watchEffect(() => {
     const node = getNode();
     const path = nodePath.value;
-    const ranges = decorate([node, path]);
+    const ranges = renderProps.decorate?.([node, path]) ?? [];
     const equalityFn = Node.isText(node)
       ? isTextDecorationsEqual
       : isElementDecorationsEqual;

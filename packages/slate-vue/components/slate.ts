@@ -42,15 +42,8 @@ import {
   DEFAULT_PLACEHOLDER_RENDER,
   DEFAULT_TEXT_RENDER,
 } from "./utils";
-import { provideDecorateFn } from "../render/decorate";
-import {
-  provideRenderElement,
-  provideRenderLeaf,
-  provideRenderText,
-} from "../render/fn";
+import { provideRenderProps } from "../render/fn";
 import { provideEditorVersion } from "../render/version";
-import { provideRenderPlaceholder } from "../render/placeholder";
-import { provideRenderChunk } from "../render/chunk";
 import {
   SLATE_INNER_SELECTOR_CONTEXT,
   useSelectorContext,
@@ -99,17 +92,7 @@ export const Slate = defineComponent({
     },
   },
   setup(props: SlateProps, { slots, emit }) {
-    const {
-      editor,
-      initialValue,
-      value: controlledValue,
-      decorate,
-      renderElement,
-      renderLeaf,
-      renderPlaceholder,
-      renderText,
-      renderChunk,
-    } = props;
+    const { editor, initialValue, value: controlledValue } = props;
 
     if (controlledValue !== undefined && initialValue !== undefined) {
       throw new Error(
@@ -178,12 +161,7 @@ export const Slate = defineComponent({
     lastAppliedValue = controlledValue;
 
     provide(SLATE_USE_EDITOR, editor);
-    provideDecorateFn(decorate);
-    provideRenderElement(renderElement);
-    provideRenderLeaf(renderLeaf);
-    provideRenderText(renderText);
-    provideRenderPlaceholder(renderPlaceholder);
-    provideRenderChunk(renderChunk);
+    provideRenderProps(props);
 
     const isFocus = ref(DOMEditor.isFocused(editor));
     const selection = computed(() => editor.selection);

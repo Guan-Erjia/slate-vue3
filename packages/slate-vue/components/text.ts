@@ -17,11 +17,10 @@ import {
 } from "vue";
 import { useEditor } from "../hooks/use-editor";
 import { useDecorations } from "../hooks/use-decorations";
-import { useRenderText } from "../render/fn";
 import { isTextParentEquivalent } from "../utils/text-parent";
 import { LeafComp } from "./leaf";
-import { useEditorVersion } from "../render/version";
 import { RenderTextProps } from "../utils/interface";
+import { useRenderProps } from "../render/fn";
 
 export const TextComp = defineComponent({
   name: "slate-text",
@@ -45,13 +44,11 @@ export const TextComp = defineComponent({
       }
     };
 
-    const renderText = useRenderText();
+    const renderProps = useRenderProps();
     const renderTextAttributes: RenderTextProps["attributes"] = {
       "data-slate-node": "text",
       ref: textRef,
     };
-
-    const editorVersion = useEditorVersion();
 
     // Skip the forced re-render on the initial mount: there is no committed
     // DOM to restore the selection against yet, and forcing an extra render
@@ -85,7 +82,6 @@ export const TextComp = defineComponent({
     );
 
     onUpdated(() => {
-      editorVersion.value++;
       update();
     });
     const decoratedLeaves = computed(() =>
@@ -96,7 +92,7 @@ export const TextComp = defineComponent({
     );
 
     return () => {
-      return renderText({
+      return renderProps.renderText({
         text: props.text,
         attributes: renderTextAttributes,
         children: renderList(decoratedLeaves.value, (leaf, i) =>

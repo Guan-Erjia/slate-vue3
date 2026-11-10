@@ -1,7 +1,7 @@
 import { CSSProperties, defineComponent, ref, computed, VNodeRef } from "vue";
-import { useRenderPlaceholder } from "../render/placeholder";
 import { EDITOR_TO_PLACEHOLDER_ELEMENT, IS_WEBKIT } from "slate-vue3/dom";
 import { useEditor } from "../hooks/use-editor";
+import { useRenderProps } from "../render/fn";
 
 const style: CSSProperties = {
   position: "absolute",
@@ -52,10 +52,10 @@ export const PlaceholderComp = defineComponent({
       onPlaceholderResize: props.onPlaceholderResize,
     }));
 
-    const renderPlaceholder = useRenderPlaceholder();
+    const renderProps = useRenderProps();
 
     return () =>
-      renderPlaceholder({
+      renderProps.renderPlaceholder({
         children: props.placeholder,
         attributes: attributes.value,
       });

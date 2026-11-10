@@ -51,51 +51,56 @@ const searchPattern = computed(() =>
     : null,
 );
 
-const decorate = ([node, path]: NodeEntry): DecoratedRange[] => {
-  const ranges: DecoratedRange[] = [];
+const decorate = computed(() => {
   const pattern = searchPattern.value;
-  if (
-    pattern &&
-    Node.isElement(node) &&
-    Array.isArray(node.children) &&
-    node.children.every(Node.isText)
-  ) {
-    const texts = node.children.map((it) => it.text);
-    const str = texts.join("");
-    let index = 0;
-    let iterated = 0;
-    for (const match of str.matchAll(pattern)) {
-      const start = match.index!;
-      const length = match[0].length;
-      // Skip already iterated strings
-      while (index < texts.length && start >= iterated + texts[index].length) {
-        iterated = iterated + texts[index].length;
-        index++;
-      }
-      // Find the index of array and relative position
-      let offset = start - iterated;
-      let remaining = length;
-      while (index < texts.length && remaining > 0) {
-        const currentText = texts[index];
-        const currentPath = [...path, index];
-        const taken = Math.min(remaining, currentText.length - offset);
-        ranges.push({
-          anchor: { path: currentPath, offset },
-          focus: { path: currentPath, offset: offset + taken },
-          highlight: true,
-        });
-        remaining = remaining - taken;
-        if (remaining > 0) {
-          iterated = iterated + currentText.length;
-          // Next block will be indexed from 0
-          offset = 0;
+  return ([node, path]: NodeEntry): DecoratedRange[] => {
+    const ranges: DecoratedRange[] = [];
+    if (
+      pattern &&
+      Node.isElement(node) &&
+      Array.isArray(node.children) &&
+      node.children.every(Node.isText)
+    ) {
+      const texts = node.children.map((it) => it.text);
+      const str = texts.join("");
+      let index = 0;
+      let iterated = 0;
+      for (const match of str.matchAll(pattern)) {
+        const start = match.index!;
+        const length = match[0].length;
+        // Skip already iterated strings
+        while (
+          index < texts.length &&
+          start >= iterated + texts[index].length
+        ) {
+          iterated = iterated + texts[index].length;
           index++;
+        }
+        // Find the index of array and relative position
+        let offset = start - iterated;
+        let remaining = length;
+        while (index < texts.length && remaining > 0) {
+          const currentText = texts[index];
+          const currentPath = [...path, index];
+          const taken = Math.min(remaining, currentText.length - offset);
+          ranges.push({
+            anchor: { path: currentPath, offset },
+            focus: { path: currentPath, offset: offset + taken },
+            highlight: true,
+          });
+          remaining = remaining - taken;
+          if (remaining > 0) {
+            iterated = iterated + currentText.length;
+            // Next block will be indexed from 0
+            offset = 0;
+            index++;
+          }
         }
       }
     }
-  }
-  return ranges;
-};
+    return ranges;
+  };
+});
 
 const editor = withHistory(createReactiveEditor());
 editor.children = initialValue;

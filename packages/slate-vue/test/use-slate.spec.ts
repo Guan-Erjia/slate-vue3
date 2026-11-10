@@ -39,18 +39,17 @@ describe("useEditorVersion", () => {
     expect(getByText("Second: V = 0")).not.toBeNull();
 
     Transforms.insertText(editor, "!", { at: { path: [0, 0], offset: 4 } });
-    // Vue 版本会在编辑器变更和 Text 组件更新后各自增一次
     await nextTick();
     await nextTick();
 
-    expect(getByText("First: V = 2")).not.toBeNull();
-    expect(getByText("Second: V = 2")).not.toBeNull();
+    expect(getByText("First: V = 1")).not.toBeNull();
+    expect(getByText("Second: V = 1")).not.toBeNull();
 
     showThird.value = true;
     await nextTick();
 
-    expect(getByText("First: V = 2")).not.toBeNull();
-    expect(getByText("Second: V = 2")).not.toBeNull();
-    expect(getByText("Third: V = 2")).not.toBeNull();
+    expect(getByText("First: V = 1")).not.toBeNull();
+    expect(getByText("Second: V = 1")).not.toBeNull();
+    expect(getByText("Third: V = 1")).not.toBeNull();
   });
 });
