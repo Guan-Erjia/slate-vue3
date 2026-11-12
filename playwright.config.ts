@@ -64,7 +64,12 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
+  // `github` adds annotations for failures, `list` prints every test so the
+  // CI log shows progress instead of a wall of dots, `html` is uploaded as an
+  // artifact.
+  reporter: process.env.CI
+    ? [["github"], ["list"], ["html", { open: "never" }]]
+    : "list",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     viewport: { width: 1280, height: 720 },
