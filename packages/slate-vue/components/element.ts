@@ -1,5 +1,5 @@
 import { direction } from "direction";
-import { DecoratedRange, Editor, Element, Node } from "slate";
+import { Editor, Element, Node } from "slate";
 import { ChildrenComp } from "./children";
 import {
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -27,6 +27,7 @@ import { SLATE_USE_ELEMENT } from "../utils/constants";
 import { useEditor } from "../hooks/use-editor";
 import { useDecorations } from "../hooks/use-decorations";
 import { useRenderProps } from "../render/fn";
+import { ElementProps } from "../utils/interface";
 
 const findSiblingDirection = (siblings: Iterable<Node>) => {
   for (const sibling of siblings) {
@@ -84,7 +85,7 @@ const VOID_CHILDREN_ATTRS = {
 export const ElementComp = defineComponent({
   name: "slate-element",
   props: ["element", "decorations"],
-  setup(props: { element: Element; decorations: DecoratedRange[] }) {
+  setup(props: ElementProps) {
     const editor = useEditor();
 
     provide(SLATE_USE_ELEMENT, props);
@@ -142,8 +143,9 @@ export const ElementComp = defineComponent({
     );
 
     const renderProps = useRenderProps();
-    const { decorations, update } = useDecorations(() => props.element);
+    const { decorations, update } = useDecorations(props);
     onUpdated(update);
+
     const decorationsProps = computed(() => [
       ...props.decorations,
       ...decorations.value,

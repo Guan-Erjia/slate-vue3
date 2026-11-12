@@ -1,4 +1,4 @@
-import { Text, DecoratedRange, Element } from "slate";
+import { Text } from "slate";
 import {
   DOMEditor,
   EDITOR_TO_KEY_TO_ELEMENT,
@@ -19,18 +19,13 @@ import { useEditor } from "../hooks/use-editor";
 import { useDecorations } from "../hooks/use-decorations";
 import { isTextParentEquivalent } from "../utils/text-parent";
 import { LeafComp } from "./leaf";
-import { RenderTextProps } from "../utils/interface";
+import { RenderTextProps, TextProps } from "../utils/interface";
 import { useRenderProps } from "../render/fn";
 
 export const TextComp = defineComponent({
   name: "slate-text",
   props: ["text", "isLast", "decorations", "parent"],
-  setup(props: {
-    text: Text;
-    parent: Element;
-    isLast: boolean;
-    decorations: DecoratedRange[];
-  }) {
+  setup(props: TextProps) {
     const editor = useEditor();
     const textRef: VNodeRef = (ref) => {
       if (!ref || !(ref instanceof HTMLElement)) {
@@ -61,29 +56,28 @@ export const TextComp = defineComponent({
     // a wrong position.
 
     const KEY_TO_ELEMENT = EDITOR_TO_KEY_TO_ELEMENT.get(editor);
-    const { decorations, update } = useDecorations(() => props.text);
+    const { decorations, update } = useDecorations(props);
+    onUpdated(update);
 
-    // Slate 在修改文本时会重建父元素，即使父元素的属性没有变化。这里复用
-    // 语义等价的旧父元素，避免未修改的兄弟文本跟着重新渲染。
+    // Vue has no `React.memo` comparator, so mirror the one slate-react uses
+    // for its `Text` component: reuse the previous `parent` when the recreated
+    // element is semantically equivalent, otherwise unchanged sibling leaves
+    // would re-render together with the changed one.
     const parent = shallowRef(props.parent);
     watch(
       () => [props.parent, props.text] as const,
-      ([nextParent, nextText], previous) => {
-        const [prevParent, prevText] = previous ?? [nextParent, nextText];
+      ([nextParent, nextText], [prevParent, prevText]) => {
+        const equivalent =
+          nextText === prevText &&
+          isTextParentEquivalent(prevParent, nextParent, prevText, nextText);
 
-        if (
-          nextText !== prevText ||
-          !isTextParentEquivalent(prevParent, nextParent, prevText, nextText)
-        ) {
+        if (!equivalent) {
           parent.value = nextParent;
         }
       },
       { flush: "sync" },
     );
 
-    onUpdated(() => {
-      update();
-    });
     const decoratedLeaves = computed(() =>
       Text.decorations(props.text, [
         ...props.decorations,

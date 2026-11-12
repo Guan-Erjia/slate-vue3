@@ -38,6 +38,18 @@ export interface EditableProps {
   autoFocus: boolean;
 }
 
+export interface ElementProps {
+  element: Element;
+  decorations: DecoratedRange[];
+}
+
+export interface TextProps {
+  text: Text;
+  parent: Element;
+  isLast: boolean;
+  decorations: DecoratedRange[];
+}
+
 /**
  * `RenderChunkProps` are passed to the `renderChunk` handler
  */
