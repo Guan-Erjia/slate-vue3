@@ -1652,6 +1652,12 @@ export const Editable = defineComponent({
     const onCopy = (event: ClipboardEvent) => {
       if (
         DOMEditor.hasSelectableTarget(editor, event.target) &&
+        !isDOMEventTargetInput(event)
+      ) {
+        flushDOMSelectionChange();
+      }
+      if (
+        DOMEditor.hasSelectableTarget(editor, event.target) &&
         !isEventHandled(event, attributes.onCopy) &&
         !isDOMEventTargetInput(event)
       ) {
@@ -1666,6 +1672,12 @@ export const Editable = defineComponent({
       if (props.readOnly) {
         isEventHandled(event, attributes.onCut);
         return;
+      }
+      if (
+        DOMEditor.hasSelectableTarget(editor, event.target) &&
+        !isDOMEventTargetInput(event)
+      ) {
+        flushDOMSelectionChange();
       }
       if (
         DOMEditor.hasSelectableTarget(editor, event.target) &&
