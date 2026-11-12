@@ -19,7 +19,9 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           registry-url: "https://registry.npmjs.org/"
-          node-version: 'latest'
+          # `latest` can resolve to a prerelease (e.g. v27.0.0-alpha), which
+          # semantic-release rejects. Pin to a stable major instead.
+          node-version: '24'
           cache: 'pnpm'
           package-manager-cache: true
           cache-dependency-path: pnpm-lock.yaml

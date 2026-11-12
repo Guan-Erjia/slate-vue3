@@ -17,7 +17,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           registry-url: "https://registry.npmjs.org/"
-          node-version: 'latest'
+          # Avoid prerelease builds being picked up by `latest`.
+          node-version: '24'
           package-manager-cache: true
           cache: 'pnpm'
           cache-dependency-path: pnpm-lock.yaml
