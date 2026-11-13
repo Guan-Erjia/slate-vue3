@@ -1,11 +1,27 @@
 name: publish package
 on: workflow_dispatch
-permissions: write-all
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build-package:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate App Token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v6
+        with:
+          # semantic-release needs the full history and tags to determine the
+          # next version from conventional commits.
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
@@ -15,17 +31,13 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           registry-url: "https://registry.npmjs.org/"
-          node-version: "latest"
-          cache: "pnpm"
+          node-version: '24'
+          cache: 'pnpm'
           package-manager-cache: true
           cache-dependency-path: pnpm-lock.yaml
 
       - name: install dependencies
         run: pnpm install --no-frozen-lockfile
-
-      - name: check version
-        run: node ./scripts/check-version.js
-        id: check-version
 
       - name: run unit tests
         run: pnpm test run
@@ -46,18 +58,16 @@ jobs:
       - name: build package
         run: pnpm build-all
 
-      - name: publish to npm
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - name: configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: create GitHub release
-        id: release_tag
-        uses: softprops/action-gh-release@v3
-        with:
-          tag_name: v_${{ steps.check-version.outputs.version }}
-          name: release v_${{ steps.check-version.outputs.version }}
-          prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: release
+        run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"
+          HUSKY: 0

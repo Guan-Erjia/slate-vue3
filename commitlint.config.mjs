@@ -23,5 +23,9 @@ export default {
         "test",
       ],
     ],
+    // semantic-release puts generated release notes (with long commit URLs)
+    // in the release commit body, which would exceed the default limits.
+    "body-max-line-length": [0, "always"],
+    "footer-max-line-length": [0, "always"],
   },
 };
