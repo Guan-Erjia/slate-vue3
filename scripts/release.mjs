@@ -52,7 +52,7 @@ function ensureSigningConfigured() {
   throw new Error(`Unsupported Git signing format: ${format}.`);
 }
 
-function createSignedRelease(version, tag, stageReleaseFiles) {
+function createSignedRelease(version, stageReleaseFiles) {
   if (stageReleaseFiles) {
     git(["add", "--", packagePath, changelogPath]);
   }
@@ -69,9 +69,6 @@ function createSignedRelease(version, tag, stageReleaseFiles) {
     ],
     { stdio: "inherit" },
   );
-  execFileSync("git", ["tag", "-s", "-m", `Release ${tag}`, tag], {
-    stdio: "inherit",
-  });
 }
 
 async function generateChangelog(version) {
@@ -111,10 +108,6 @@ const latestTag = git([
 const taggedVersion = latestTag.slice("v_".length);
 
 if (packageJson.version !== taggedVersion) {
-  const pendingTag = releaseConfig.tagFormat.replace(
-    "${version}",
-    packageJson.version,
-  );
   const committedPackage = JSON.parse(git(["show", `HEAD:${packagePath}`]));
   const stagedFiles = git(["diff", "--cached", "--name-only"])
     .split("\n")
@@ -148,23 +141,15 @@ if (packageJson.version !== taggedVersion) {
     );
   }
 
-  if (git(["tag", "--list", pendingTag])) {
-    throw new Error(`Tag ${pendingTag} already exists.`);
-  }
-
   if (dryRun) {
     stdout.write(
-      `Would resume signed commit and tag creation for ${pendingTag}.\n`,
+      `Would resume signed release commit for ${packageJson.version}.\n`,
     );
   } else {
     ensureSigningConfigured();
-    createSignedRelease(
-      packageJson.version,
-      pendingTag,
-      stagedFiles.length === 0,
-    );
+    createSignedRelease(packageJson.version, stagedFiles.length === 0);
     stdout.write(
-      `Created signed release commit and tag ${pendingTag}. Push both to origin, then run the publish workflow with tag ${pendingTag}.\n`,
+      `Created signed release commit for ${packageJson.version}. Push it to origin, then run the publish workflow; it creates the tag after publishing.\n`,
     );
   }
   exit(0);
@@ -228,27 +213,22 @@ if (!releaseType) {
   }
 
   const nextVersion = `${major}.${minor}.${patch}`;
-  const nextTag = releaseConfig.tagFormat.replace("${version}", nextVersion);
-  const existingTag = git(["tag", "--list", nextTag]);
-
-  if (existingTag) {
-    throw new Error(`Tag ${nextTag} already exists.`);
-  }
-
   const changelog = await generateChangelog(nextVersion);
 
   if (dryRun) {
-    stdout.write(`Would prepare ${nextTag} (${releaseType}).\n\n${changelog}`);
+    stdout.write(
+      `Would prepare ${nextVersion} (${releaseType}).\n\n${changelog}`,
+    );
   } else {
     ensureSigningConfigured();
     packageJson.version = nextVersion;
     writeFileSync(packagePath, `${JSON.stringify(packageJson, null, 2)}\n`);
     writeFileSync(changelogPath, changelog);
 
-    createSignedRelease(nextVersion, nextTag, true);
+    createSignedRelease(nextVersion, true);
 
     stdout.write(
-      `Created signed release commit and tag ${nextTag}. Push both to origin, then run the publish workflow with tag ${nextTag}.\n`,
+      `Created signed release commit for ${nextVersion}. Push it to origin, then run the publish workflow; it creates the tag after publishing.\n`,
     );
   }
 }
