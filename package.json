@@ -70,7 +70,6 @@
     "@liveblocks/client": "^3.25.0",
     "@liveblocks/yjs": "^3.25.0",
     "@playwright/test": "^1.65.0",
-    "@semantic-release/commit-analyzer": "^13.0.1",
     "@testing-library/vue": "^8.1.0",
     "@types/is-hotkey": "^0.1.10",
     "@types/is-url": "^1.2.32",
