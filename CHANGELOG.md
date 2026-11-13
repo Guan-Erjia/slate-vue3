@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.2.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.1.0...v_2.2.0) (2026-11-13)
+## [2.2.1](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.1.0...v_2.2.1) (2026-11-13)
 
 ### Features
 
@@ -11,6 +11,7 @@
 ### Bug Fixes
 
 * process a pending selection change before copy and cut ([#6364](https://github.com/Guan-Erjia/slate-vue3/issues/6364)) ([e928596](https://github.com/Guan-Erjia/slate-vue3/commit/e92859643d35bf22629ea1123d2dd598a25349f0))
+* remove useless dependences ([fcd02dc](https://github.com/Guan-Erjia/slate-vue3/commit/fcd02dc14bb3c758357a1da132281dfb71deec5c))
 
 ## [2.1.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.0.0...v_2.1.0) (2026-11-10)
 
