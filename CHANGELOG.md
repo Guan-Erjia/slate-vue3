@@ -1,10 +1,21 @@
 # Changelog
 
-## [2.1.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.0.0...v_2.1.0) (2026-11-10)
+## [2.2.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.1.0...v_2.2.0) (2026-11-13)
 
 ### Features
 
 * add commit lint ([7b9b4f0](https://github.com/Guan-Erjia/slate-vue3/commit/7b9b4f0c5e2c02c79b35d86cc74c67a0ba0fcec2))
+* add semantic release ([2cb6881](https://github.com/Guan-Erjia/slate-vue3/commit/2cb688181a5440456e05b939e02787f45d660a53))
+* use decorations ([2248640](https://github.com/Guan-Erjia/slate-vue3/commit/2248640aaabae98f21caa296ce5fcf1b3079d581))
+
+### Bug Fixes
+
+* process a pending selection change before copy and cut ([#6364](https://github.com/Guan-Erjia/slate-vue3/issues/6364)) ([e928596](https://github.com/Guan-Erjia/slate-vue3/commit/e92859643d35bf22629ea1123d2dd598a25349f0))
+
+## [2.1.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.0.0...v_2.1.0) (2026-11-10)
+
+### Features
+
 * migrate render function ([a533890](https://github.com/Guan-Erjia/slate-vue3/commit/a533890acd5232a842941d6623eeceb8fdf657de))
 
 ### Bug Fixes
@@ -357,25 +368,25 @@
 
 ### Performance Improvements
 
-* 标记 key 为 raw ([68de6b0](https://github.com/Guan-Erjia/slate-vue3/commit/68de6b07fda81ec632472e69a2ab0280e094734e))
 * 取消 toRaw ([cbc80d7](https://github.com/Guan-Erjia/slate-vue3/commit/cbc80d7c30cceb826d2221f63e354e07d6cdf0d5))
 * 提取静态根节点，避免重算 ([a15385d](https://github.com/Guan-Erjia/slate-vue3/commit/a15385dc20ba6241b9bed81939a78f0aa88a23f4))
+* 标记 key 为 raw ([68de6b0](https://github.com/Guan-Erjia/slate-vue3/commit/68de6b07fda81ec632472e69a2ab0280e094734e))
 
 ## [0.7.5](https://github.com/Guan-Erjia/slate-vue3/compare/v_0.7.4...v_0.7.5) (2025-06-14)
 
 ### Bug Fixes
 
-* 补充缺失的key ([0ca3065](https://github.com/Guan-Erjia/slate-vue3/commit/0ca3065d17f6113bb822e1fba3ebf3a83c627fd9))
 * 改为使用原始指针，KEY_TO_CHUNK_TREE 换回原来的 ([edc547a](https://github.com/Guan-Erjia/slate-vue3/commit/edc547ae915724c13eee87be6516d9f8ebce65b5))
 * 添加 chunkTree 响应 ([0dac23f](https://github.com/Guan-Erjia/slate-vue3/commit/0dac23fd70702d79fb9790cc584b4ef7db34d34e))
+* 补充缺失的key ([0ca3065](https://github.com/Guan-Erjia/slate-vue3/commit/0ca3065d17f6113bb822e1fba3ebf3a83c627fd9))
 
 ## [0.7.4](https://github.com/Guan-Erjia/slate-vue3/compare/v_0.7.3...v_0.7.4) (2025-06-14)
 
 ### Performance Improvements
 
-* 添加 chunk 缓存 ([7073576](https://github.com/Guan-Erjia/slate-vue3/commit/7073576e3feb2cb7c9a221af7a39e49fd8ca02fc))
-* 性能优化 ([c7d55bc](https://github.com/Guan-Erjia/slate-vue3/commit/c7d55bc5e76c12f68c6c8866d19dae7312108a8a))
 * isEditor不依赖 editor 上的 key ([53d3cdb](https://github.com/Guan-Erjia/slate-vue3/commit/53d3cdb7a1d27d9c0f71b118d635af3d73842a3e))
+* 性能优化 ([c7d55bc](https://github.com/Guan-Erjia/slate-vue3/commit/c7d55bc5e76c12f68c6c8866d19dae7312108a8a))
+* 添加 chunk 缓存 ([7073576](https://github.com/Guan-Erjia/slate-vue3/commit/7073576e3feb2cb7c9a221af7a39e49fd8ca02fc))
 
 ## [0.7.3](https://github.com/Guan-Erjia/slate-vue3/compare/v_0.7.2...v_0.7.3) (2025-06-13)
 
@@ -391,8 +402,8 @@
 
 ### Performance Improvements
 
-* 删除 modifiedChunks ([db27cd0](https://github.com/Guan-Erjia/slate-vue3/commit/db27cd0345cff9b423cf6ff7c3b81eb0eca095af))
 * chunkTree改为静态传递，childrenFC 改为状态组件 ([14199e1](https://github.com/Guan-Erjia/slate-vue3/commit/14199e18992cf6ff214f763577d09031aecdf2c6))
+* 删除 modifiedChunks ([db27cd0](https://github.com/Guan-Erjia/slate-vue3/commit/db27cd0345cff9b423cf6ff7c3b81eb0eca095af))
 
 ## [0.7.1](https://github.com/Guan-Erjia/slate-vue3/compare/v_0.7.0...v_0.7.1) (2025-06-11)
 
@@ -405,9 +416,9 @@
 
 ### Bug Fixes
 
-* 节点根改变时，映射未更新([#12](https://github.com/Guan-Erjia/slate-vue3/issues/12)) ([7add98e](https://github.com/Guan-Erjia/slate-vue3/commit/7add98e6d80f469f1d83a3a846259690b9a0fde1))
 * huge-document 遗留问题 ([a98bffa](https://github.com/Guan-Erjia/slate-vue3/commit/a98bffa207a99542d21993ae8dbc12a5cc4e8caf))
 * text 组件恢复原逻辑 ([699f0f6](https://github.com/Guan-Erjia/slate-vue3/commit/699f0f6816cbd301b39e1a98ab3073b9ff7f39cb))
+* 节点根改变时，映射未更新([#12](https://github.com/Guan-Erjia/slate-vue3/issues/12)) ([7add98e](https://github.com/Guan-Erjia/slate-vue3/commit/7add98e6d80f469f1d83a3a846259690b9a0fde1))
 
 ### Performance Improvements
 
@@ -445,9 +456,9 @@
 
 ### Bug Fixes
 
-* 默认节点渲染行为与 slate-react 保持一致 ([9f23466](https://github.com/Guan-Erjia/slate-vue3/commit/9f2346602973b164efbd41b504e88c2b3c8b7e2f))
-* Placeholder 节点选择 data-slate-placeholder ([93d2499](https://github.com/Guan-Erjia/slate-vue3/commit/93d2499c1cfaaf1a9544f2067cac8ff4893f369b))
 * placeholder 实现与官方保持一致，调整案例([#9](https://github.com/Guan-Erjia/slate-vue3/issues/9)) ([b3e7f9d](https://github.com/Guan-Erjia/slate-vue3/commit/b3e7f9dcfa8466127f2146ae03d8b68dbce14b5f))
+* Placeholder 节点选择 data-slate-placeholder ([93d2499](https://github.com/Guan-Erjia/slate-vue3/commit/93d2499c1cfaaf1a9544f2067cac8ff4893f369b))
+* 默认节点渲染行为与 slate-react 保持一致 ([9f23466](https://github.com/Guan-Erjia/slate-vue3/commit/9f2346602973b164efbd41b504e88c2b3c8b7e2f))
 
 ### Performance Improvements
 
@@ -530,8 +541,8 @@
 
 ### Bug Fixes
 
-* 兼容选中vue3列表两侧空节点场景 ([8e42f02](https://github.com/Guan-Erjia/slate-vue3/commit/8e42f02bf6997c51e5dbd398a54b33a5c3ccae41))
 * isDOMEventHandled 同类问题，table 案例对齐slate官方案例 ([a29b3c4](https://github.com/Guan-Erjia/slate-vue3/commit/a29b3c4413d5e72117a687b2eda9044754c76b7c))
+* 兼容选中vue3列表两侧空节点场景 ([8e42f02](https://github.com/Guan-Erjia/slate-vue3/commit/8e42f02bf6997c51e5dbd398a54b33a5c3ccae41))
 
 ## [0.2.9](https://github.com/Guan-Erjia/slate-vue3/compare/v_0.2.8...v_0.2.9) (2025-04-14)
 
@@ -624,38 +635,38 @@
 ### Bug Fixes
 
 * 不用用户操作同一节点时报错 ([86f73d0](https://github.com/Guan-Erjia/slate-vue3/commit/86f73d0b5fa825188cc2d3f83d7c46fb9d69dc4a))
-* 路径问题 ([83674cb](https://github.com/Guan-Erjia/slate-vue3/commit/83674cb0a2d51e423b2cdc1da377db5c5b0f31b8))
-* 去掉console ([aed0af9](https://github.com/Guan-Erjia/slate-vue3/commit/aed0af9b092e34d396e99ece7a9dff7bb7f26078))
 * 依赖升级 ([b0bb406](https://github.com/Guan-Erjia/slate-vue3/commit/b0bb406418faefc8c49f7aa94a83cadc49d0129c))
+* 去掉console ([aed0af9](https://github.com/Guan-Erjia/slate-vue3/commit/aed0af9b092e34d396e99ece7a9dff7bb7f26078))
 * 引入方法还原 ([08c524f](https://github.com/Guan-Erjia/slate-vue3/commit/08c524f60d4922a9ad4a2fbe199c31ef45d195dd))
+* 路径问题 ([83674cb](https://github.com/Guan-Erjia/slate-vue3/commit/83674cb0a2d51e423b2cdc1da377db5c5b0f31b8))
 
 ### Performance Improvements
 
-* 删除多余逻辑 ([d4359dc](https://github.com/Guan-Erjia/slate-vue3/commit/d4359dc798b5345139d4d6100d55ca95278e2e9a))
 * 优化 useInheritRef 逻辑 ([fc07d7c](https://github.com/Guan-Erjia/slate-vue3/commit/fc07d7c1eb6cc141cbb56602c56f226a532680cb))
 * 优化 useInheritRef 逻辑 ([887d0c1](https://github.com/Guan-Erjia/slate-vue3/commit/887d0c1382c2fb21aea93fd3e2815bc526e36852))
+* 删除多余逻辑 ([d4359dc](https://github.com/Guan-Erjia/slate-vue3/commit/d4359dc798b5345139d4d6100d55ca95278e2e9a))
 
 ## [0.1.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_0.0.41...v_0.1.0) (2025-03-29)
 
 ### Features
 
-* 路径别名修改 ([357fb11](https://github.com/Guan-Erjia/slate-vue3/commit/357fb117c99430c856d2176292d1cb1a2a8e2ca6))
 * 删除无用的symbol ([f54e3db](https://github.com/Guan-Erjia/slate-vue3/commit/f54e3dbece2b06d90182e4697563a53a80406af9))
-* 添加slate-yjs ([a9bbea3](https://github.com/Guan-Erjia/slate-vue3/commit/a9bbea3451bdfdce80144928878ddc2110944998))
 * 协同功能测试 ([76bae95](https://github.com/Guan-Erjia/slate-vue3/commit/76bae951a0d5831b381ed5085b54aa50206596b7))
 * 新增yjs打包入口，添加external ([bceb8d6](https://github.com/Guan-Erjia/slate-vue3/commit/bceb8d6c7dd504fe11546e55ce607447106cbf77))
+* 添加slate-yjs ([a9bbea3](https://github.com/Guan-Erjia/slate-vue3/commit/a9bbea3451bdfdce80144928878ddc2110944998))
+* 路径别名修改 ([357fb11](https://github.com/Guan-Erjia/slate-vue3/commit/357fb117c99430c856d2176292d1cb1a2a8e2ca6))
 
 ### Bug Fixes
 
-* 部分类型问题 ([875d189](https://github.com/Guan-Erjia/slate-vue3/commit/875d189df10ba9dfa177fdb5a3f946b2b4efa318))
-* 待修复指针问题-数组越界 ([9bb73c1](https://github.com/Guan-Erjia/slate-vue3/commit/9bb73c1292916e8f5686d03c76db4c8bfbfb0f31))
-* 待修复指针问题-数组越界 ([b1b6b79](https://github.com/Guan-Erjia/slate-vue3/commit/b1b6b79e39bfee756937238c2c1ff0ae5d75c62d))
-* 合并节点执行顺序问题 ([4b5c4aa](https://github.com/Guan-Erjia/slate-vue3/commit/4b5c4aaa0deec989807e0b0d50c633f1efcd8cbe))
-* 节点判断异常 ([15f7360](https://github.com/Guan-Erjia/slate-vue3/commit/15f7360988c4cde97669f6b00d0d95dc427ceb77))
-* 类型问题 ([2f29303](https://github.com/Guan-Erjia/slate-vue3/commit/2f293037c14d702c106d01a4874799588d5f8b9d))
-* 文案错误 ([a76beb7](https://github.com/Guan-Erjia/slate-vue3/commit/a76beb7a73ffcd889b97426a637059cc373e6352))
 * yjs-flushChange调度问题，待优化 ([ddd5010](https://github.com/Guan-Erjia/slate-vue3/commit/ddd50101e5cd9c6d24379023127a3564f8a8423b))
 * yjs分割节点长度错误 ([2e7c33c](https://github.com/Guan-Erjia/slate-vue3/commit/2e7c33cff7bc50b1fa7420a101427435cca8139c))
+* 合并节点执行顺序问题 ([4b5c4aa](https://github.com/Guan-Erjia/slate-vue3/commit/4b5c4aaa0deec989807e0b0d50c633f1efcd8cbe))
+* 待修复指针问题-数组越界 ([9bb73c1](https://github.com/Guan-Erjia/slate-vue3/commit/9bb73c1292916e8f5686d03c76db4c8bfbfb0f31))
+* 待修复指针问题-数组越界 ([b1b6b79](https://github.com/Guan-Erjia/slate-vue3/commit/b1b6b79e39bfee756937238c2c1ff0ae5d75c62d))
+* 文案错误 ([a76beb7](https://github.com/Guan-Erjia/slate-vue3/commit/a76beb7a73ffcd889b97426a637059cc373e6352))
+* 类型问题 ([2f29303](https://github.com/Guan-Erjia/slate-vue3/commit/2f293037c14d702c106d01a4874799588d5f8b9d))
+* 节点判断异常 ([15f7360](https://github.com/Guan-Erjia/slate-vue3/commit/15f7360988c4cde97669f6b00d0d95dc427ceb77))
+* 部分类型问题 ([875d189](https://github.com/Guan-Erjia/slate-vue3/commit/875d189df10ba9dfa177fdb5a3f946b2b4efa318))
 
 ### Performance Improvements
 
@@ -704,8 +715,8 @@
 
 ### Bug Fixes
 
-* 事件绑定问题 ([0bc9dde](https://github.com/Guan-Erjia/slate-vue3/commit/0bc9dde2d61312d2de014c5da6a08aab9aebb6e4))
 * document获取错误 ([b128d46](https://github.com/Guan-Erjia/slate-vue3/commit/b128d469237d1e962664e48d6e49ff73d82edda0))
+* 事件绑定问题 ([0bc9dde](https://github.com/Guan-Erjia/slate-vue3/commit/0bc9dde2d61312d2de014c5da6a08aab9aebb6e4))
 
 ### Performance Improvements
 
@@ -725,123 +736,57 @@
 
 ### Features
 
-* 暴露 slate 实例 ([e7f2437](https://github.com/Guan-Erjia/slate-vue3/commit/e7f243705484ade13140866c179e5b79e6c50afb))
-* 避免children重复渲染 ([88eb240](https://github.com/Guan-Erjia/slate-vue3/commit/88eb240766ce56fbd69225e55f05f8ed090e26c4))
+* composing,readonly ([a7c92ba](https://github.com/Guan-Erjia/slate-vue3/commit/a7c92baea93548c0f83617bb056c73628caec6ba))
+* ref 改为 reactive ([91bb4b3](https://github.com/Guan-Erjia/slate-vue3/commit/91bb4b31ef400a0bf305e555b75464d8052593a7))
+* restore 改为 hooks ([9e368bd](https://github.com/Guan-Erjia/slate-vue3/commit/9e368bd4e5187ba1ec6e717fff3f27a430ac2953))
+* weakMap 问题 ([a4065aa](https://github.com/Guan-Erjia/slate-vue3/commit/a4065aa80738a8ec79d4bc050e41424c275cf94e))
+* 优化渲染逻辑 ([179d42e](https://github.com/Guan-Erjia/slate-vue3/commit/179d42e60fa1d0447cc200757e46c64dce80e28a))
+* 优化获取原始指针逻辑 ([08232a0](https://github.com/Guan-Erjia/slate-vue3/commit/08232a09a758a2a773a2df7538a24cad03632bbc))
+* 使用reactive维护editor ([c273329](https://github.com/Guan-Erjia/slate-vue3/commit/c273329bb3a59585e28790dd22c1cfae873e0da2))
+* 修改 jsx 传参 ([0877fe1](https://github.com/Guan-Erjia/slate-vue3/commit/0877fe1dcec29c81b36b047dc7ba0e86d74b9ff8))
+* 修改 leaf 组件 ([83fe7b1](https://github.com/Guan-Erjia/slate-vue3/commit/83fe7b1872b5cd113186ed7a48d2917f56891823))
+* 修改 WeakMap ([d500115](https://github.com/Guan-Erjia/slate-vue3/commit/d5001157b67b6a73279db3c4333157308919cb4b))
+* 修改createEditor ([eb0f29b](https://github.com/Guan-Erjia/slate-vue3/commit/eb0f29bdaea202be17ded7511256b4eee171ca6f))
+* 修改Editor类型 ([9a9bdd0](https://github.com/Guan-Erjia/slate-vue3/commit/9a9bdd0c5dcbf65e2949603f33f12e70a9d49d16))
+* 修改hooks ([d917777](https://github.com/Guan-Erjia/slate-vue3/commit/d917777d0cab27af51fb096e8f3919b21cfe0031))
+* 修改代理 ([87a49aa](https://github.com/Guan-Erjia/slate-vue3/commit/87a49aa9f71c12ebf2e946bc7a7db953c8886432))
+* 修改传参 ([0272adc](https://github.com/Guan-Erjia/slate-vue3/commit/0272adcb074ff242d551f9e53467340389cde643))
+* 修改图标文案 ([19894f4](https://github.com/Guan-Erjia/slate-vue3/commit/19894f4291a258f01ec336488fe114faf3a37629))
+* 修改至 useSelected ([34e3afe](https://github.com/Guan-Erjia/slate-vue3/commit/34e3afe307bf692619d666918c073f7bb184c85e))
 * 初始化逻辑迁移 ([39e6492](https://github.com/Guan-Erjia/slate-vue3/commit/39e649211dea9237382ac43bc07e60a0eb61c9db))
 * 初始化逻辑迁移 ([5266b7c](https://github.com/Guan-Erjia/slate-vue3/commit/5266b7caba2af17d1148bcc1dd36e4cc23e0123a))
-* 还原代码 ([df5fba5](https://github.com/Guan-Erjia/slate-vue3/commit/df5fba5bd1a7d8c11ed1e3663bb70989ae85792f))
+* 删除默认渲染 ([74a5a68](https://github.com/Guan-Erjia/slate-vue3/commit/74a5a68f0e1f9575b5ed7698df520f7fe76fa836))
 * 合并 hooks ([3ae7a21](https://github.com/Guan-Erjia/slate-vue3/commit/3ae7a212fd70cb246d6c3d1741705c4a22d1df23))
 * 合并 mutation-observer ([090523b](https://github.com/Guan-Erjia/slate-vue3/commit/090523b2a749809886f7b27569381a13e84d1b08))
 * 合并 use-track-user-input ([8521b8f](https://github.com/Guan-Erjia/slate-vue3/commit/8521b8fa3c7fdf8693df25b75ed35492b10420e6))
+* 声明问题 ([e2017db](https://github.com/Guan-Erjia/slate-vue3/commit/e2017dbed9dafdd3505b1ba62996da3c12081d05))
 * 恢复props响应 ([e0a966c](https://github.com/Guan-Erjia/slate-vue3/commit/e0a966cde4517e4d738f8698b9a0a35ee4612ef2))
 * 恢复props响应 ([50d0ef6](https://github.com/Guan-Erjia/slate-vue3/commit/50d0ef6d8a5b63875e8e26ff8a164e7f0fd35e08))
 * 恢复props响应 ([9983854](https://github.com/Guan-Erjia/slate-vue3/commit/99838540a00640c242ff12f5a7c1a726fd93a83e))
 * 恢复props响应 ([b5614e7](https://github.com/Guan-Erjia/slate-vue3/commit/b5614e789b0f67204cca52a4007fbe869c15ea8d))
 * 恢复props响应 ([ebde9f4](https://github.com/Guan-Erjia/slate-vue3/commit/ebde9f4fad7a0fa65335616993560c13bece2433))
-* 删除默认渲染 ([74a5a68](https://github.com/Guan-Erjia/slate-vue3/commit/74a5a68f0e1f9575b5ed7698df520f7fe76fa836))
-* 声明问题 ([e2017db](https://github.com/Guan-Erjia/slate-vue3/commit/e2017dbed9dafdd3505b1ba62996da3c12081d05))
-* 使用reactive维护editor ([c273329](https://github.com/Guan-Erjia/slate-vue3/commit/c273329bb3a59585e28790dd22c1cfae873e0da2))
-* 添加 useSelection ([8db1790](https://github.com/Guan-Erjia/slate-vue3/commit/8db1790627c21ef0424d6f27765b11dc35a9a476))
-* 添加 withHistory ([a704a06](https://github.com/Guan-Erjia/slate-vue3/commit/a704a067d6135bd93c8f7c2859b0b3333209563d))
-* 添加默认 render ([0a34ebf](https://github.com/Guan-Erjia/slate-vue3/commit/0a34ebf62231e4d7ba1e0f7492aff74979ff28c1))
-* 添加e2e测试 ([550e49a](https://github.com/Guan-Erjia/slate-vue3/commit/550e49ad19e75cb33b1c0d726c983b489b57200a))
 * 新增流水线 ([60fdbb3](https://github.com/Guan-Erjia/slate-vue3/commit/60fdbb3570708e1f24c5d1c09f9e8d98f5611302))
 * 新增透传 ref 方法，修改案例 ([22d343b](https://github.com/Guan-Erjia/slate-vue3/commit/22d343bac4a12de20289ddab0ff8e50629b4887d))
-* 修改 jsx 传参 ([0877fe1](https://github.com/Guan-Erjia/slate-vue3/commit/0877fe1dcec29c81b36b047dc7ba0e86d74b9ff8))
-* 修改 leaf 组件 ([83fe7b1](https://github.com/Guan-Erjia/slate-vue3/commit/83fe7b1872b5cd113186ed7a48d2917f56891823))
-* 修改 WeakMap ([d500115](https://github.com/Guan-Erjia/slate-vue3/commit/d5001157b67b6a73279db3c4333157308919cb4b))
-* 修改传参 ([0272adc](https://github.com/Guan-Erjia/slate-vue3/commit/0272adcb074ff242d551f9e53467340389cde643))
-* 修改代理 ([87a49aa](https://github.com/Guan-Erjia/slate-vue3/commit/87a49aa9f71c12ebf2e946bc7a7db953c8886432))
-* 修改图标文案 ([19894f4](https://github.com/Guan-Erjia/slate-vue3/commit/19894f4291a258f01ec336488fe114faf3a37629))
-* 修改至 useSelected ([34e3afe](https://github.com/Guan-Erjia/slate-vue3/commit/34e3afe307bf692619d666918c073f7bb184c85e))
-* 修改createEditor ([eb0f29b](https://github.com/Guan-Erjia/slate-vue3/commit/eb0f29bdaea202be17ded7511256b4eee171ca6f))
-* 修改Editor类型 ([9a9bdd0](https://github.com/Guan-Erjia/slate-vue3/commit/9a9bdd0c5dcbf65e2949603f33f12e70a9d49d16))
-* 修改hooks ([d917777](https://github.com/Guan-Erjia/slate-vue3/commit/d917777d0cab27af51fb096e8f3919b21cfe0031))
-* 优化获取原始指针逻辑 ([08232a0](https://github.com/Guan-Erjia/slate-vue3/commit/08232a09a758a2a773a2df7538a24cad03632bbc))
-* 优化渲染逻辑 ([179d42e](https://github.com/Guan-Erjia/slate-vue3/commit/179d42e60fa1d0447cc200757e46c64dce80e28a))
+* 暴露 slate 实例 ([e7f2437](https://github.com/Guan-Erjia/slate-vue3/commit/e7f243705484ade13140866c179e5b79e6c50afb))
+* 添加 useSelection ([8db1790](https://github.com/Guan-Erjia/slate-vue3/commit/8db1790627c21ef0424d6f27765b11dc35a9a476))
+* 添加 withHistory ([a704a06](https://github.com/Guan-Erjia/slate-vue3/commit/a704a067d6135bd93c8f7c2859b0b3333209563d))
+* 添加e2e测试 ([550e49a](https://github.com/Guan-Erjia/slate-vue3/commit/550e49ad19e75cb33b1c0d726c983b489b57200a))
+* 添加默认 render ([0a34ebf](https://github.com/Guan-Erjia/slate-vue3/commit/0a34ebf62231e4d7ba1e0f7492aff74979ff28c1))
+* 还原代码 ([df5fba5](https://github.com/Guan-Erjia/slate-vue3/commit/df5fba5bd1a7d8c11ed1e3663bb70989ae85792f))
+* 避免children重复渲染 ([88eb240](https://github.com/Guan-Erjia/slate-vue3/commit/88eb240766ce56fbd69225e55f05f8ed090e26c4))
 * 重构逻辑顺序 ([342f970](https://github.com/Guan-Erjia/slate-vue3/commit/342f970b3ad69aee822dcaf844b23eee71804194))
-* composing,readonly ([a7c92ba](https://github.com/Guan-Erjia/slate-vue3/commit/a7c92baea93548c0f83617bb056c73628caec6ba))
-* ref 改为 reactive ([91bb4b3](https://github.com/Guan-Erjia/slate-vue3/commit/91bb4b31ef400a0bf305e555b75464d8052593a7))
-* restore 改为 hooks ([9e368bd](https://github.com/Guan-Erjia/slate-vue3/commit/9e368bd4e5187ba1ec6e717fff3f27a430ac2953))
-* weakMap 问题 ([a4065aa](https://github.com/Guan-Erjia/slate-vue3/commit/a4065aa80738a8ec79d4bc050e41424c275cf94e))
 
 ### Bug Fixes
 
-* 安卓获取editor实例 ([e3374f4](https://github.com/Guan-Erjia/slate-vue3/commit/e3374f47ef109dacc3bef1d89cc6b8e09f88c193))
-* 测试用例修改 ([8ecbbd8](https://github.com/Guan-Erjia/slate-vue3/commit/8ecbbd87c6e1ae966cf03a4f93922a39a189bcc2))
-* 打包报错问题 ([8b31618](https://github.com/Guan-Erjia/slate-vue3/commit/8b31618b1041393ff60456a79878f4a19497acf6))
-* 打包问题 ([14aafb2](https://github.com/Guan-Erjia/slate-vue3/commit/14aafb293aeb7017615fa8ace2f1c24be9e6c272))
-* 待添加触发逻辑 ([96569d2](https://github.com/Guan-Erjia/slate-vue3/commit/96569d2ae2eefc2eff92b0b19460c3175ba48dff))
-* 单元测试工具路径 ([1ff246c](https://github.com/Guan-Erjia/slate-vue3/commit/1ff246c3d03aec38ac5287b00126579c9ea7b7c0))
-* 单元测试工具路径 ([70c21a7](https://github.com/Guan-Erjia/slate-vue3/commit/70c21a7eee444ddec190d84e963bc9d52d7c242c))
-* 单元测试模块加载问题 ([c5f3560](https://github.com/Guan-Erjia/slate-vue3/commit/c5f356056f11f85ed8e1fda8127286ba9a781597))
-* 单元测试reactive转换问题 ([3d19b2d](https://github.com/Guan-Erjia/slate-vue3/commit/3d19b2d3c5767d3f4c2c78ac56e7ab283cbbe2e1))
-* 导入路径问题 ([650f874](https://github.com/Guan-Erjia/slate-vue3/commit/650f8749f447a9b484c41b3cdcc99b2cd971b013))
-* 动态分词器依赖问题，支持代码高亮切换 ([442b36a](https://github.com/Guan-Erjia/slate-vue3/commit/442b36abd57a59093dcb2f575222965abb230704))
-* 分词节点被错误代理 ([6f8f771](https://github.com/Guan-Erjia/slate-vue3/commit/6f8f771a45e1a9caf6344943dcc3d0d634efbe8c))
-* 分词器过滤逻辑 ([52a12e9](https://github.com/Guan-Erjia/slate-vue3/commit/52a12e9df35c2fa9087a0abf327ee9201f5eac93))
-* 分词器问题 ([ccc4f2f](https://github.com/Guan-Erjia/slate-vue3/commit/ccc4f2fcc7ffc1db7f205245e0d6659a8fea38f1))
-* 分词器响应问题待修复，删除editor传参 ([a190c0c](https://github.com/Guan-Erjia/slate-vue3/commit/a190c0c53c05e98c44b953747af39bd59958f3e5))
-* 分词器性能问题 ([f31ce72](https://github.com/Guan-Erjia/slate-vue3/commit/f31ce7269eac9e1ae7ccfc179f4389d80efee70f))
-* 分词器性能问题 ([d54c95f](https://github.com/Guan-Erjia/slate-vue3/commit/d54c95ff48ac97a79ff27df8cc94de466dceb675))
-* 分词器key绑定问题 ([cc38cd7](https://github.com/Guan-Erjia/slate-vue3/commit/cc38cd7ecc3401094c7aeaab718b70c98a00869d))
-* 分词器key绑定问题 ([2437d0d](https://github.com/Guan-Erjia/slate-vue3/commit/2437d0df1129951852401cb5354dc96eddf750fb))
-* 改为浅拷贝 ([048a15f](https://github.com/Guan-Erjia/slate-vue3/commit/048a15fd11effe81eba5fb76c4456718a147a418))
-* 改为深拷贝，jsx 组件改为 h 函数 ([6d4a85b](https://github.com/Guan-Erjia/slate-vue3/commit/6d4a85bde2a2b6a81c61c4a26098177c2d9d56c1))
-* 工作空间声明冲突 ([9fb3f58](https://github.com/Guan-Erjia/slate-vue3/commit/9fb3f58ac440c52eaa04e53902caeb28c1287497))
-* 光标问题 ([8cb4cf8](https://github.com/Guan-Erjia/slate-vue3/commit/8cb4cf8e89d988d3b8da47d40ecc8d7e4afa63a2))
-* 光标问题 ([eaa8868](https://github.com/Guan-Erjia/slate-vue3/commit/eaa886896265c2c6906e74be25287ec04d3453ad))
-* 火狐 selection 问题 ([870b6c4](https://github.com/Guan-Erjia/slate-vue3/commit/870b6c4946b01194f64120cb32ba73bc1ae1a63b))
-* 火狐浏览器selection已修复 ([84ee4ce](https://github.com/Guan-Erjia/slate-vue3/commit/84ee4ce5f20bb89227ebf3efab6f8e89428a67b8))
-* 兼容firefox全选操作 ([4abba7d](https://github.com/Guan-Erjia/slate-vue3/commit/4abba7dffc711b2447a07544c85c8e026541528f))
-* 剪切时光标位置 ([087c27c](https://github.com/Guan-Erjia/slate-vue3/commit/087c27cbcc5475a592df7d8cb11bf254d375cfb4))
-* 剪切时行为异常 ([01268a1](https://github.com/Guan-Erjia/slate-vue3/commit/01268a1e5342ae673256046f7df29f4dce117902))
-* 解决遗留错误代理问题 ([ebfbff5](https://github.com/Guan-Erjia/slate-vue3/commit/ebfbff59ca7871245db676527f3c8bea16b7e34e))
-* 跨iframe渲染 ([9a1ff52](https://github.com/Guan-Erjia/slate-vue3/commit/9a1ff5221fc5d225f3063d23182c23dbf2e1abdc))
-* 类型问题 ([c6b11cd](https://github.com/Guan-Erjia/slate-vue3/commit/c6b11cd1c806aa6c4d1e6b9395557baaa35e0a51))
-* 类型问题 ([8d75c34](https://github.com/Guan-Erjia/slate-vue3/commit/8d75c34004cb8101b6f88f50054f85c33ae64f2d))
-* 路径解析 ([c8f91ef](https://github.com/Guan-Erjia/slate-vue3/commit/c8f91ef3238539cd40efbdea0cfe5ef12e45e411))
-* 名称问题 ([77a21a3](https://github.com/Guan-Erjia/slate-vue3/commit/77a21a30c288a67ad81cb58dbdf49d4ca7795734))
-* 去掉 include ([9ed37bc](https://github.com/Guan-Erjia/slate-vue3/commit/9ed37bce2963774d05841922ee0d8e506e55361a))
-* 删除多余引入 ([c369563](https://github.com/Guan-Erjia/slate-vue3/commit/c369563f587a8a43f002100b34490cd48cf380bd))
-* 删除工作空间 ([92626ff](https://github.com/Guan-Erjia/slate-vue3/commit/92626ff59c975809aca3623a76c59468a83ae707))
-* 删除工作空间配置 ([3672a99](https://github.com/Guan-Erjia/slate-vue3/commit/3672a997152ccbb78389389e04ad94bf827dbb8c))
-* 删除工作空间配置 ([3ba4b7c](https://github.com/Guan-Erjia/slate-vue3/commit/3ba4b7c6a77b82c9138229fe09678554e349ef55))
-* 删除工作空间配置 ([0deb148](https://github.com/Guan-Erjia/slate-vue3/commit/0deb1487275acca463e8ef3fbca54f467f8f7037))
-* 删除时光标位置 ([c839c4e](https://github.com/Guan-Erjia/slate-vue3/commit/c839c4e07cde03fa486b193ca003f9120dd314e4))
-* 删除console ([20a49df](https://github.com/Guan-Erjia/slate-vue3/commit/20a49df6e437af233695cd2498770f72a172e2f7))
-* 生命周期修改 ([578b297](https://github.com/Guan-Erjia/slate-vue3/commit/578b297ef2dd176629ceafbc18f08f19771023e7))
-* 事件处理，添加案例 ([f07af80](https://github.com/Guan-Erjia/slate-vue3/commit/f07af805719d409d86da7b8554f28780b14ac2d9))
-* 输出dir ([d11b1ea](https://github.com/Guan-Erjia/slate-vue3/commit/d11b1eaff647ea940be4479acd26e6ca5c2966ea))
-* 索引无法动态更新 ([c3b172f](https://github.com/Guan-Erjia/slate-vue3/commit/c3b172f1dcbed0d3b7c1964f2ba9469f047ead04))
-* 索引无法动态更新 ([9573dbb](https://github.com/Guan-Erjia/slate-vue3/commit/9573dbb141f19efaa9d60c876ffecbe149078609))
-* 添加缺失类型 ([a510e22](https://github.com/Guan-Erjia/slate-vue3/commit/a510e22406abf290fd56b97ca668575d4e91f97f))
-* 修复 isPlainObject类型问题 ([849043d](https://github.com/Guan-Erjia/slate-vue3/commit/849043dde95636efff2d6b7cf8fb9196d2f23cbb))
-* 修复响应 ([46f02a5](https://github.com/Guan-Erjia/slate-vue3/commit/46f02a5ac9e4959a38eb5a82fc957b91a17d4b3e))
-* 修复bug ([380233e](https://github.com/Guan-Erjia/slate-vue3/commit/380233e6959c8360ac5a99538cf878b1a86546dd))
-* 修复bug ([f7f88f6](https://github.com/Guan-Erjia/slate-vue3/commit/f7f88f643b8ded8ec242fc4eaf8d47d8b5b4ec70))
-* 修复bug ([074763a](https://github.com/Guan-Erjia/slate-vue3/commit/074763a1c1c0a55fe9b8a07b6069b9ac86811730))
-* 修复tsc 问题 ([c14b357](https://github.com/Guan-Erjia/slate-vue3/commit/c14b357a2ff5652231b1b9eec1d39a31f8a8a87b))
-* 修改 editor ([2c88369](https://github.com/Guan-Erjia/slate-vue3/commit/2c88369d080c0619bd15dd13283ef23535950da6))
-* 修改传参 ([3056893](https://github.com/Guan-Erjia/slate-vue3/commit/3056893fbf723ae2e3c0e5c84d2ba80a3dee7c17))
-* 修改入口 ([5b631ca](https://github.com/Guan-Erjia/slate-vue3/commit/5b631ca90d1f6e208aa80a1f3314b64cb1c1787c))
-* 修改入口 ([ddfb444](https://github.com/Guan-Erjia/slate-vue3/commit/ddfb444c561ddd66f5874f214dbdd0511ea1c84c))
-* 渲染子节点改为计算属性 ([c735139](https://github.com/Guan-Erjia/slate-vue3/commit/c73513997267ab74e8b23d57a161df8a6abdfd84))
-* 遗留逻辑补充 ([e054657](https://github.com/Guan-Erjia/slate-vue3/commit/e0546572341c437ac19be6c9e8ca275dfc7845de))
-* 语言切换问题 ([a713876](https://github.com/Guan-Erjia/slate-vue3/commit/a7138765385dfac12393c144b859b09432a9bb79))
-* 增加响应依赖 ([1991fac](https://github.com/Guan-Erjia/slate-vue3/commit/1991fac9f11ec2a987601196fdfcb15867e5ab30))
-* 增加组件响应，复制功能 ([77252d7](https://github.com/Guan-Erjia/slate-vue3/commit/77252d7fb69bf363739136eefcd903a0026fb42a))
-* 至 editable ([6d32a13](https://github.com/Guan-Erjia/slate-vue3/commit/6d32a130850ee28764685b4c4c7fb567c52f7965))
-* 重新导出 ([24a2f21](https://github.com/Guan-Erjia/slate-vue3/commit/24a2f2124a304c64d0979cd680f61e4cf7d9eef3))
 * babel问题 ([19f7c4e](https://github.com/Guan-Erjia/slate-vue3/commit/19f7c4e58a497730d42685ba79f7399c850f4b61))
 * children，element 增加响应依赖 ([8de8616](https://github.com/Guan-Erjia/slate-vue3/commit/8de86165d660e3a344577113fc121eb19b9a0564))
 * ChildrenFC上下文 ([c2dfd1d](https://github.com/Guan-Erjia/slate-vue3/commit/c2dfd1dd618565f68f650ddf4b9b3493ff87b841))
 * firefox浏览器selection兼容修复，待完善 ([75f9bb6](https://github.com/Guan-Erjia/slate-vue3/commit/75f9bb66c229614c63b11a3427c101146f67cb2c))
 * isLastText判断错误(https://github.com/Guan-Erjia/slate-vue3/issues/2) ([61f975d](https://github.com/Guan-Erjia/slate-vue3/commit/61f975d748f02e765eb44dfbfd859ea03b7daaca))
 * lib构建 ([cd34c42](https://github.com/Guan-Erjia/slate-vue3/commit/cd34c428acf568a2c7ca92d513a6484cd479044c))
-* placeholder高度问题，editable参数待调整 ([e7dae8a](https://github.com/Guan-Erjia/slate-vue3/commit/e7dae8a0438d826f7f78e25d6157f88660214a2d))
 * placeholder显示问题，分词器逻辑待梳理 ([1b5b5ca](https://github.com/Guan-Erjia/slate-vue3/commit/1b5b5ca0b0785a5dbfa6c0b204d85d15c2fa5146))
 * placeholder组件添加名称 ([95f682c](https://github.com/Guan-Erjia/slate-vue3/commit/95f682c56ea7e8b78ffe4790453203a41b6c55e5))
+* placeholder高度问题，editable参数待调整 ([e7dae8a](https://github.com/Guan-Erjia/slate-vue3/commit/e7dae8a0438d826f7f78e25d6157f88660214a2d))
 * Point代理问题 ([89835ca](https://github.com/Guan-Erjia/slate-vue3/commit/89835cabe3b724460e09d5884c55a719625eaeff))
 * richtext案例问题 ([5a1b06b](https://github.com/Guan-Erjia/slate-vue3/commit/5a1b06b1f29abb83bbf7415e83b5f08d4248d443))
 * selection问题，待添加触发逻辑 ([6a1d87b](https://github.com/Guan-Erjia/slate-vue3/commit/6a1d87bf7758c114cbc924cfc3adfd47ebc58f39))
@@ -855,30 +800,96 @@
 * webkit影子节点嵌套渲染问题 ([f44aa00](https://github.com/Guan-Erjia/slate-vue3/commit/f44aa004024456a94ed9193a6346f0c3a64f3c3e))
 * wrapNode路径问题 ([9c89cc7](https://github.com/Guan-Erjia/slate-vue3/commit/9c89cc78bae606bc8f90694cb53a1bab2b486b76))
 * zindex属性添加，selection事件调度问题待修复 ([7c27ade](https://github.com/Guan-Erjia/slate-vue3/commit/7c27adef79c08ef069ccac214b14d1cac060f1a0))
+* 事件处理，添加案例 ([f07af80](https://github.com/Guan-Erjia/slate-vue3/commit/f07af805719d409d86da7b8554f28780b14ac2d9))
+* 修复 isPlainObject类型问题 ([849043d](https://github.com/Guan-Erjia/slate-vue3/commit/849043dde95636efff2d6b7cf8fb9196d2f23cbb))
+* 修复bug ([380233e](https://github.com/Guan-Erjia/slate-vue3/commit/380233e6959c8360ac5a99538cf878b1a86546dd))
+* 修复bug ([f7f88f6](https://github.com/Guan-Erjia/slate-vue3/commit/f7f88f643b8ded8ec242fc4eaf8d47d8b5b4ec70))
+* 修复bug ([074763a](https://github.com/Guan-Erjia/slate-vue3/commit/074763a1c1c0a55fe9b8a07b6069b9ac86811730))
+* 修复tsc 问题 ([c14b357](https://github.com/Guan-Erjia/slate-vue3/commit/c14b357a2ff5652231b1b9eec1d39a31f8a8a87b))
+* 修复响应 ([46f02a5](https://github.com/Guan-Erjia/slate-vue3/commit/46f02a5ac9e4959a38eb5a82fc957b91a17d4b3e))
+* 修改 editor ([2c88369](https://github.com/Guan-Erjia/slate-vue3/commit/2c88369d080c0619bd15dd13283ef23535950da6))
+* 修改传参 ([3056893](https://github.com/Guan-Erjia/slate-vue3/commit/3056893fbf723ae2e3c0e5c84d2ba80a3dee7c17))
+* 修改入口 ([5b631ca](https://github.com/Guan-Erjia/slate-vue3/commit/5b631ca90d1f6e208aa80a1f3314b64cb1c1787c))
+* 修改入口 ([ddfb444](https://github.com/Guan-Erjia/slate-vue3/commit/ddfb444c561ddd66f5874f214dbdd0511ea1c84c))
+* 光标问题 ([8cb4cf8](https://github.com/Guan-Erjia/slate-vue3/commit/8cb4cf8e89d988d3b8da47d40ecc8d7e4afa63a2))
+* 光标问题 ([eaa8868](https://github.com/Guan-Erjia/slate-vue3/commit/eaa886896265c2c6906e74be25287ec04d3453ad))
+* 兼容firefox全选操作 ([4abba7d](https://github.com/Guan-Erjia/slate-vue3/commit/4abba7dffc711b2447a07544c85c8e026541528f))
+* 分词器key绑定问题 ([cc38cd7](https://github.com/Guan-Erjia/slate-vue3/commit/cc38cd7ecc3401094c7aeaab718b70c98a00869d))
+* 分词器key绑定问题 ([2437d0d](https://github.com/Guan-Erjia/slate-vue3/commit/2437d0df1129951852401cb5354dc96eddf750fb))
+* 分词器响应问题待修复，删除editor传参 ([a190c0c](https://github.com/Guan-Erjia/slate-vue3/commit/a190c0c53c05e98c44b953747af39bd59958f3e5))
+* 分词器性能问题 ([f31ce72](https://github.com/Guan-Erjia/slate-vue3/commit/f31ce7269eac9e1ae7ccfc179f4389d80efee70f))
+* 分词器性能问题 ([d54c95f](https://github.com/Guan-Erjia/slate-vue3/commit/d54c95ff48ac97a79ff27df8cc94de466dceb675))
+* 分词器过滤逻辑 ([52a12e9](https://github.com/Guan-Erjia/slate-vue3/commit/52a12e9df35c2fa9087a0abf327ee9201f5eac93))
+* 分词器问题 ([ccc4f2f](https://github.com/Guan-Erjia/slate-vue3/commit/ccc4f2fcc7ffc1db7f205245e0d6659a8fea38f1))
+* 分词节点被错误代理 ([6f8f771](https://github.com/Guan-Erjia/slate-vue3/commit/6f8f771a45e1a9caf6344943dcc3d0d634efbe8c))
+* 删除console ([20a49df](https://github.com/Guan-Erjia/slate-vue3/commit/20a49df6e437af233695cd2498770f72a172e2f7))
+* 删除多余引入 ([c369563](https://github.com/Guan-Erjia/slate-vue3/commit/c369563f587a8a43f002100b34490cd48cf380bd))
+* 删除工作空间 ([92626ff](https://github.com/Guan-Erjia/slate-vue3/commit/92626ff59c975809aca3623a76c59468a83ae707))
+* 删除工作空间配置 ([3672a99](https://github.com/Guan-Erjia/slate-vue3/commit/3672a997152ccbb78389389e04ad94bf827dbb8c))
+* 删除工作空间配置 ([3ba4b7c](https://github.com/Guan-Erjia/slate-vue3/commit/3ba4b7c6a77b82c9138229fe09678554e349ef55))
+* 删除工作空间配置 ([0deb148](https://github.com/Guan-Erjia/slate-vue3/commit/0deb1487275acca463e8ef3fbca54f467f8f7037))
+* 删除时光标位置 ([c839c4e](https://github.com/Guan-Erjia/slate-vue3/commit/c839c4e07cde03fa486b193ca003f9120dd314e4))
+* 剪切时光标位置 ([087c27c](https://github.com/Guan-Erjia/slate-vue3/commit/087c27cbcc5475a592df7d8cb11bf254d375cfb4))
+* 剪切时行为异常 ([01268a1](https://github.com/Guan-Erjia/slate-vue3/commit/01268a1e5342ae673256046f7df29f4dce117902))
+* 动态分词器依赖问题，支持代码高亮切换 ([442b36a](https://github.com/Guan-Erjia/slate-vue3/commit/442b36abd57a59093dcb2f575222965abb230704))
+* 单元测试reactive转换问题 ([3d19b2d](https://github.com/Guan-Erjia/slate-vue3/commit/3d19b2d3c5767d3f4c2c78ac56e7ab283cbbe2e1))
+* 单元测试工具路径 ([1ff246c](https://github.com/Guan-Erjia/slate-vue3/commit/1ff246c3d03aec38ac5287b00126579c9ea7b7c0))
+* 单元测试工具路径 ([70c21a7](https://github.com/Guan-Erjia/slate-vue3/commit/70c21a7eee444ddec190d84e963bc9d52d7c242c))
+* 单元测试模块加载问题 ([c5f3560](https://github.com/Guan-Erjia/slate-vue3/commit/c5f356056f11f85ed8e1fda8127286ba9a781597))
+* 去掉 include ([9ed37bc](https://github.com/Guan-Erjia/slate-vue3/commit/9ed37bce2963774d05841922ee0d8e506e55361a))
+* 名称问题 ([77a21a3](https://github.com/Guan-Erjia/slate-vue3/commit/77a21a30c288a67ad81cb58dbdf49d4ca7795734))
+* 增加响应依赖 ([1991fac](https://github.com/Guan-Erjia/slate-vue3/commit/1991fac9f11ec2a987601196fdfcb15867e5ab30))
+* 增加组件响应，复制功能 ([77252d7](https://github.com/Guan-Erjia/slate-vue3/commit/77252d7fb69bf363739136eefcd903a0026fb42a))
+* 安卓获取editor实例 ([e3374f4](https://github.com/Guan-Erjia/slate-vue3/commit/e3374f47ef109dacc3bef1d89cc6b8e09f88c193))
+* 导入路径问题 ([650f874](https://github.com/Guan-Erjia/slate-vue3/commit/650f8749f447a9b484c41b3cdcc99b2cd971b013))
+* 工作空间声明冲突 ([9fb3f58](https://github.com/Guan-Erjia/slate-vue3/commit/9fb3f58ac440c52eaa04e53902caeb28c1287497))
+* 待添加触发逻辑 ([96569d2](https://github.com/Guan-Erjia/slate-vue3/commit/96569d2ae2eefc2eff92b0b19460c3175ba48dff))
+* 打包报错问题 ([8b31618](https://github.com/Guan-Erjia/slate-vue3/commit/8b31618b1041393ff60456a79878f4a19497acf6))
+* 打包问题 ([14aafb2](https://github.com/Guan-Erjia/slate-vue3/commit/14aafb293aeb7017615fa8ace2f1c24be9e6c272))
+* 改为浅拷贝 ([048a15f](https://github.com/Guan-Erjia/slate-vue3/commit/048a15fd11effe81eba5fb76c4456718a147a418))
+* 改为深拷贝，jsx 组件改为 h 函数 ([6d4a85b](https://github.com/Guan-Erjia/slate-vue3/commit/6d4a85bde2a2b6a81c61c4a26098177c2d9d56c1))
+* 测试用例修改 ([8ecbbd8](https://github.com/Guan-Erjia/slate-vue3/commit/8ecbbd87c6e1ae966cf03a4f93922a39a189bcc2))
+* 添加缺失类型 ([a510e22](https://github.com/Guan-Erjia/slate-vue3/commit/a510e22406abf290fd56b97ca668575d4e91f97f))
+* 渲染子节点改为计算属性 ([c735139](https://github.com/Guan-Erjia/slate-vue3/commit/c73513997267ab74e8b23d57a161df8a6abdfd84))
+* 火狐 selection 问题 ([870b6c4](https://github.com/Guan-Erjia/slate-vue3/commit/870b6c4946b01194f64120cb32ba73bc1ae1a63b))
+* 火狐浏览器selection已修复 ([84ee4ce](https://github.com/Guan-Erjia/slate-vue3/commit/84ee4ce5f20bb89227ebf3efab6f8e89428a67b8))
+* 生命周期修改 ([578b297](https://github.com/Guan-Erjia/slate-vue3/commit/578b297ef2dd176629ceafbc18f08f19771023e7))
+* 类型问题 ([c6b11cd](https://github.com/Guan-Erjia/slate-vue3/commit/c6b11cd1c806aa6c4d1e6b9395557baaa35e0a51))
+* 类型问题 ([8d75c34](https://github.com/Guan-Erjia/slate-vue3/commit/8d75c34004cb8101b6f88f50054f85c33ae64f2d))
+* 索引无法动态更新 ([c3b172f](https://github.com/Guan-Erjia/slate-vue3/commit/c3b172f1dcbed0d3b7c1964f2ba9469f047ead04))
+* 索引无法动态更新 ([9573dbb](https://github.com/Guan-Erjia/slate-vue3/commit/9573dbb141f19efaa9d60c876ffecbe149078609))
+* 至 editable ([6d32a13](https://github.com/Guan-Erjia/slate-vue3/commit/6d32a130850ee28764685b4c4c7fb567c52f7965))
+* 解决遗留错误代理问题 ([ebfbff5](https://github.com/Guan-Erjia/slate-vue3/commit/ebfbff59ca7871245db676527f3c8bea16b7e34e))
+* 语言切换问题 ([a713876](https://github.com/Guan-Erjia/slate-vue3/commit/a7138765385dfac12393c144b859b09432a9bb79))
+* 跨iframe渲染 ([9a1ff52](https://github.com/Guan-Erjia/slate-vue3/commit/9a1ff5221fc5d225f3063d23182c23dbf2e1abdc))
+* 路径解析 ([c8f91ef](https://github.com/Guan-Erjia/slate-vue3/commit/c8f91ef3238539cd40efbdea0cfe5ef12e45e411))
+* 输出dir ([d11b1ea](https://github.com/Guan-Erjia/slate-vue3/commit/d11b1eaff647ea940be4479acd26e6ca5c2966ea))
+* 遗留逻辑补充 ([e054657](https://github.com/Guan-Erjia/slate-vue3/commit/e0546572341c437ac19be6c9e8ca275dfc7845de))
+* 重新导出 ([24a2f21](https://github.com/Guan-Erjia/slate-vue3/commit/24a2f2124a304c64d0979cd680f61e4cf7d9eef3))
 
 ### Performance Improvements
 
-* 打包时vue作为external ([817917f](https://github.com/Guan-Erjia/slate-vue3/commit/817917f1122139c516cf0374796e6c6c66946f5b))
-* 改一下反人类的代码实现 ([818335d](https://github.com/Guan-Erjia/slate-vue3/commit/818335d6c79342ea13e3a2456f169bea077bd634))
-* 减少参数传递 ([b2f1a26](https://github.com/Guan-Erjia/slate-vue3/commit/b2f1a26ca2df3ae4e475299d10936a84104e78cf))
-* 删除导入 ([7474d89](https://github.com/Guan-Erjia/slate-vue3/commit/7474d89fbc0b03e302e211616726b62e0b7844a8))
-* 删除多余参数 ([472e15e](https://github.com/Guan-Erjia/slate-vue3/commit/472e15e85f16b8138597331116f6f6412983d023))
-* 删除无关导入 ([cbdd0a5](https://github.com/Guan-Erjia/slate-vue3/commit/cbdd0a5e107818a5f693a67f7b3b9d1cf341b06a))
-* 删除无关依赖 ([cca397d](https://github.com/Guan-Erjia/slate-vue3/commit/cca397d89e2c65f6c587355582350466a38f73fd))
-* 删除无用配置 ([d86f1d5](https://github.com/Guan-Erjia/slate-vue3/commit/d86f1d5490a273e8242ecd96fc92aa9f99109fb5))
-* 删除无用key ([91d25d7](https://github.com/Guan-Erjia/slate-vue3/commit/91d25d7c71ebb766d5bed1ba34121bbfdbaf769f))
-* 删除异步调用 ([63239ca](https://github.com/Guan-Erjia/slate-vue3/commit/63239caee339c404ba6f46b7f2693ec7580ee1fe))
-* 删除状态 ([5518f57](https://github.com/Guan-Erjia/slate-vue3/commit/5518f57c732519fd3cd53ebc0af0c8faed65ae11))
-* 删除状态 ([4514660](https://github.com/Guan-Erjia/slate-vue3/commit/4514660fb0518e5e923a59d625a3ecb2268592e3))
-* 删除状态，safira影子节点待修复 ([d28d258](https://github.com/Guan-Erjia/slate-vue3/commit/d28d2584306313370b5f55c7bc4f6899d52bbd73))
-* 透传ref函数卸载时清理 ref ([8a80cba](https://github.com/Guan-Erjia/slate-vue3/commit/8a80cbaf9b1336c7dc5601a10ff90d38d59f1a1a))
-* 修改weakmap实现 ([66f9c64](https://github.com/Guan-Erjia/slate-vue3/commit/66f9c64f0d61d35a119429113abc7e571bd17bec))
-* 移除多余解构操作 ([2cda6f1](https://github.com/Guan-Erjia/slate-vue3/commit/2cda6f148e120746744093454a2e9f5012ebf5c9))
-* 重构 placeholder ([a875d10](https://github.com/Guan-Erjia/slate-vue3/commit/a875d107f58a2ca60737bced60703c2234876045))
-* 重构placeholder组件 ([7d658d1](https://github.com/Guan-Erjia/slate-vue3/commit/7d658d1ebf5198e3efd0c8b89adc8d33e4f3bb17))
 * focus方法改为异步函数，移除循环检查 ([b814756](https://github.com/Guan-Erjia/slate-vue3/commit/b814756d7c1668fb97fcaafa2c5e2b0ef00e405e))
 * selection事件调度改为Promise ([af5ecd9](https://github.com/Guan-Erjia/slate-vue3/commit/af5ecd905d49e74039f31e456a967775f2cd2a23))
 * selection事件调度改为Promise ([da5c89b](https://github.com/Guan-Erjia/slate-vue3/commit/da5c89b63f488e9b9c72d02b2eb48395da94db7a))
+* 修改weakmap实现 ([66f9c64](https://github.com/Guan-Erjia/slate-vue3/commit/66f9c64f0d61d35a119429113abc7e571bd17bec))
+* 减少参数传递 ([b2f1a26](https://github.com/Guan-Erjia/slate-vue3/commit/b2f1a26ca2df3ae4e475299d10936a84104e78cf))
+* 删除多余参数 ([472e15e](https://github.com/Guan-Erjia/slate-vue3/commit/472e15e85f16b8138597331116f6f6412983d023))
+* 删除导入 ([7474d89](https://github.com/Guan-Erjia/slate-vue3/commit/7474d89fbc0b03e302e211616726b62e0b7844a8))
+* 删除异步调用 ([63239ca](https://github.com/Guan-Erjia/slate-vue3/commit/63239caee339c404ba6f46b7f2693ec7580ee1fe))
+* 删除无关依赖 ([cca397d](https://github.com/Guan-Erjia/slate-vue3/commit/cca397d89e2c65f6c587355582350466a38f73fd))
+* 删除无关导入 ([cbdd0a5](https://github.com/Guan-Erjia/slate-vue3/commit/cbdd0a5e107818a5f693a67f7b3b9d1cf341b06a))
+* 删除无用key ([91d25d7](https://github.com/Guan-Erjia/slate-vue3/commit/91d25d7c71ebb766d5bed1ba34121bbfdbaf769f))
+* 删除无用配置 ([d86f1d5](https://github.com/Guan-Erjia/slate-vue3/commit/d86f1d5490a273e8242ecd96fc92aa9f99109fb5))
+* 删除状态 ([5518f57](https://github.com/Guan-Erjia/slate-vue3/commit/5518f57c732519fd3cd53ebc0af0c8faed65ae11))
+* 删除状态 ([4514660](https://github.com/Guan-Erjia/slate-vue3/commit/4514660fb0518e5e923a59d625a3ecb2268592e3))
+* 删除状态，safira影子节点待修复 ([d28d258](https://github.com/Guan-Erjia/slate-vue3/commit/d28d2584306313370b5f55c7bc4f6899d52bbd73))
+* 打包时vue作为external ([817917f](https://github.com/Guan-Erjia/slate-vue3/commit/817917f1122139c516cf0374796e6c6c66946f5b))
+* 改一下反人类的代码实现 ([818335d](https://github.com/Guan-Erjia/slate-vue3/commit/818335d6c79342ea13e3a2456f169bea077bd634))
+* 移除多余解构操作 ([2cda6f1](https://github.com/Guan-Erjia/slate-vue3/commit/2cda6f148e120746744093454a2e9f5012ebf5c9))
+* 透传ref函数卸载时清理 ref ([8a80cba](https://github.com/Guan-Erjia/slate-vue3/commit/8a80cbaf9b1336c7dc5601a10ff90d38d59f1a1a))
+* 重构 placeholder ([a875d10](https://github.com/Guan-Erjia/slate-vue3/commit/a875d107f58a2ca60737bced60703c2234876045))
+* 重构placeholder组件 ([7d658d1](https://github.com/Guan-Erjia/slate-vue3/commit/7d658d1ebf5198e3efd0c8b89adc8d33e4f3bb17))
 
 ### Reverts
 
