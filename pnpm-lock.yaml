@@ -97,8 +97,8 @@ importers:
         specifier: ^8.1.3
         version: 8.1.3
       conventional-changelog-conventionalcommits:
-        specifier: ^9.3.1
-        version: 9.3.1
+        specifier: ^10.4.1
+        version: 10.4.1
       eslint:
         specifier: ^10.14.0
         version: 10.14.0(jiti@2.7.0)
@@ -1741,10 +1741,6 @@ packages:
   conventional-changelog-conventionalcommits@10.4.1:
     resolution: {integrity: sha512-jS1LRFSbRoAr6JbhhRy1JYfNNUj5LM3+v49hRE03CgccsiYqgdVj/RTmrw4J1rylrqijHwdOlJWiJa61JHOgHg==}
     engines: {node: '>=22'}
-
-  conventional-changelog-conventionalcommits@9.3.1:
-    resolution: {integrity: sha512-dTYtpIacRpcZgrvBYvBfArMmK2xvIpv2TaxM0/ZI5CBtNUzvF2x0t15HsbRABWprS6UPmvj+PzHVjSx4qAVKyw==}
-    engines: {node: '>=18'}
 
   conventional-changelog-preset-loader@6.0.1:
     resolution: {integrity: sha512-GZ8E3RQzXQb3JFy0pKl8oeSf7ENIhvAMvJr+PlWkavZOesLHHdhkfNJ4SvW35eo1Fu2+EyVxWQ1tVvtzAG2iWg==}
@@ -5782,10 +5778,6 @@ snapshots:
   conventional-changelog-conventionalcommits@10.4.1:
     dependencies:
       '@conventional-changelog/template': 1.4.1
-
-  conventional-changelog-conventionalcommits@9.3.1:
-    dependencies:
-      compare-func: 2.0.0
 
   conventional-changelog-preset-loader@6.0.1: {}
 

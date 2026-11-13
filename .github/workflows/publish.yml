@@ -1,14 +1,20 @@
 name: publish package
-on: workflow_dispatch
-permissions: write-all
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing pushed release tag (for example v_2.2.0)
+        required: true
+        type: string
+permissions:
+  contents: write
 jobs:
   build-package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
-          # semantic-release needs the full history and tags to determine the
-          # next version from conventional commits.
+          ref: ${{ inputs.tag }}
           fetch-depth: 0
 
       - name: Setup pnpm
@@ -19,10 +25,8 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           registry-url: "https://registry.npmjs.org/"
-          # `latest` can resolve to a prerelease (e.g. v27.0.0-alpha), which
-          # semantic-release rejects. Pin to a stable major instead.
-          node-version: '24'
-          cache: 'pnpm'
+          node-version: "latest"
+          cache: "pnpm"
           package-manager-cache: true
           cache-dependency-path: pnpm-lock.yaml
 
@@ -48,17 +52,24 @@ jobs:
       - name: build package
         run: pnpm build-all
 
-      - name: configure git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      # Bumps the version from conventional commits, updates CHANGELOG.md,
-      # publishes to npm, commits the bump and creates the GitHub release.
-      - name: release
-        run: pnpm exec semantic-release
+      - name: validate release tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          PACKAGE_VERSION="$(node -p \"require('./package.json').version\")"
+          if [[ "$RELEASE_TAG" != "v_${PACKAGE_VERSION}" ]]; then
+            echo "Tag $RELEASE_TAG does not match package version $PACKAGE_VERSION"
+            exit 1
+          fi
+
+      - name: publish to npm
+        run: pnpm publish --no-git-checks --access public
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: "true"
+
+      - name: create GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: gh release create "$RELEASE_TAG" --title "$RELEASE_TAG" --generate-notes
