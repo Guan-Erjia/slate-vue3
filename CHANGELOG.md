@@ -1,3 +1,15 @@
+# [2.3.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.2.0...v_2.3.0) (2026-11-13)
+
+
+### Bug Fixes
+
+* remove useless dependences ([fcd02dc](https://github.com/Guan-Erjia/slate-vue3/commit/fcd02dc14bb3c758357a1da132281dfb71deec5c))
+
+
+### Features
+
+* automatic release ([e98a4b6](https://github.com/Guan-Erjia/slate-vue3/commit/e98a4b668a95e1a865042461f71460f991ff6913))
+
 # Changelog
 
 ## [2.2.1](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.1.0...v_2.2.1) (2026-11-13)
