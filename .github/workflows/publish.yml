@@ -1,21 +1,11 @@
 name: publish package
-on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: Existing pushed release tag (for example v_2.2.0)
-        required: true
-        type: string
-permissions:
-  contents: write
+on: workflow_dispatch
+permissions: write-all
 jobs:
   build-package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-        with:
-          ref: ${{ inputs.tag }}
-          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
@@ -32,6 +22,10 @@ jobs:
 
       - name: install dependencies
         run: pnpm install --no-frozen-lockfile
+
+      - name: check version
+        run: node ./scripts/check-version.js
+        id: check-version
 
       - name: run unit tests
         run: pnpm test run
@@ -52,24 +46,18 @@ jobs:
       - name: build package
         run: pnpm build-all
 
-      - name: validate release tag
-        env:
-          RELEASE_TAG: ${{ inputs.tag }}
-        run: |
-          PACKAGE_VERSION="$(node -p \"require('./package.json').version\")"
-          if [[ "$RELEASE_TAG" != "v_${PACKAGE_VERSION}" ]]; then
-            echo "Tag $RELEASE_TAG does not match package version $PACKAGE_VERSION"
-            exit 1
-          fi
-
       - name: publish to npm
-        run: pnpm publish --no-git-checks --access public
+        run: npm publish --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NPM_CONFIG_PROVENANCE: "true"
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - name: create GitHub release
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_TAG: ${{ inputs.tag }}
-        run: gh release create "$RELEASE_TAG" --title "$RELEASE_TAG" --generate-notes
+        id: release_tag
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: v_${{ steps.check-version.outputs.version }}
+          name: release v_${{ steps.check-version.outputs.version }}
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
