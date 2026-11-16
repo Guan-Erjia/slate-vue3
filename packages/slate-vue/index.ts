@@ -19,4 +19,6 @@ export { createAndroidInputManager } from "./hooks/android-input-manager/android
 
 export { createReactiveEditor } from "./utils/createReactiveEditor";
 
+export { ReactiveEditor } from "./utils/reactive-editor";
+
 export * from "./chunking";

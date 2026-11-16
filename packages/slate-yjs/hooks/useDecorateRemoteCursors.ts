@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted } from "vue";
 import { BaseRange, BaseText, NodeEntry, Range } from "slate";
 import { DOMEditor } from "slate-vue3/dom";
 import { JsonObject } from "@liveblocks/client";
@@ -8,6 +8,7 @@ import {
   RemoteCursorChangeEventListener,
 } from "../plugins/withCursors";
 import { getCursorRange } from "../hooks/utils";
+import { useRemoteCursorStates } from "./useRemoteCursorStates";
 
 export const REMOTE_CURSOR_DECORATION_PREFIX = "remote-cursor-";
 export const REMOTE_CURSOR_CARET_DECORATION_PREFIX = "remote-caret-";
@@ -86,7 +87,7 @@ function getDecoration<TCursorData extends JsonObject, TCaret extends boolean>(
 export function useDecorateRemoteCursors<
   TCursorData extends JsonObject = JsonObject,
 >(editor: CursorEditor<TCursorData> & DOMEditor, carets: boolean) {
-  const cursors = ref<Record<string, CursorState<TCursorData>>>({});
+  const cursors = useRemoteCursorStates<TCursorData>(editor);
   const changed = new Set<number>();
 
   const addChanged = changed.add.bind(changed);
@@ -118,19 +119,17 @@ export function useDecorateRemoteCursors<
     return () => CursorEditor.off(editor, "change", changeHandler);
   };
 
-  // 设置订阅
   let unsubscribe: () => void;
 
   onMounted(() => {
     unsubscribe = subscribe();
-    // 初始获取快照
   });
 
   onUnmounted(() => {
     unsubscribe?.();
   });
 
-  return (entry: NodeEntry) => {
+  return computed(() => (entry: NodeEntry) => {
     const [, path] = entry;
     if (path.length !== 1) {
       return [];
@@ -154,5 +153,5 @@ export function useDecorateRemoteCursors<
         getDecoration(clientId, state, range, true),
       ];
     });
-  };
+  });
 }

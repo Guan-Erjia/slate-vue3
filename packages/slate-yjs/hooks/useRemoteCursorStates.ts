@@ -17,9 +17,12 @@ const EDITOR_TO_CURSOR_STORE = new WeakMap<
 
 export function useRemoteCursorStates<
   TCursorData extends JsonObject = JsonObject,
->(): Ref<Record<string, CursorState<TCursorData>>> {
-  const editor = useEditor() as unknown as CursorEditor<TCursorData> &
-    DOMEditor;
+>(
+  _editor: CursorEditor<TCursorData> & DOMEditor,
+): Ref<Record<string, CursorState<TCursorData>>> {
+  const editor =
+    _editor ??
+    (useEditor() as unknown as CursorEditor<TCursorData> & DOMEditor);
   const cursors = ref<Record<string, CursorState<TCursorData>>>({});
   const changed = new Set<number>();
 

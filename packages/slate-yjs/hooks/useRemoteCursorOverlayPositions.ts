@@ -32,7 +32,7 @@ export function useRemoteCursorOverlayPositions<
 ) {
   const editor = useEditor() as unknown as CursorEditor<TCursorData> &
     DOMEditor;
-  const cursorStates = useRemoteCursorStates<TCursorData>();
+  const cursorStates = useRemoteCursorStates<TCursorData>(editor);
 
   const overlayPositionCache = ref(new WeakMap());
   const overlayPositions = ref<Record<string, OverlayPosition>>({});

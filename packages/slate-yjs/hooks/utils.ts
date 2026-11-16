@@ -23,7 +23,10 @@ export function useOnResize<T extends HTMLElement>(
   });
 }
 
-export type Store<T> = readonly [() => () => void, Ref<T>];
+export type Store<T> = readonly [
+  (onStoreChange: () => void) => () => void,
+  () => T,
+];
 
 const CHILDREN_TO_CURSOR_STATE_TO_RANGE = new WeakMap<
   Descendant[],

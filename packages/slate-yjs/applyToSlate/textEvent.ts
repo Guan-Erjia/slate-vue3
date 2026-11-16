@@ -1,5 +1,5 @@
-import { Editor, Element, isObject, Node, Operation, Path } from "slate";
-import { XmlText, YTextEvent } from "yjs";
+import { Editor, Element, Node, Operation, Path, Text } from "slate";
+import * as Y from "yjs";
 import { Delta } from "../model/types";
 import { deltaInsertToSlateNode } from "../utils/convert";
 import {
@@ -46,9 +46,9 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         const child = node.children[pathOffset];
         const childPath = [...slatePath, pathOffset];
 
-        if (!Node.isText(child)) {
-          // Ignore attribute updates on non-text nodes (which are backed by XmlText)
-          // to be consistent with deltaInsertToSlateNode. XmlText attributes don't show
+        if (!Text.isText(child)) {
+          // Ignore attribute updates on non-text nodes (which are backed by Y.XmlText)
+          // to be consistent with deltaInsertToSlateNode. Y.XmlText attributes don't show
           // up in deltas but in key changes (YEvent.changes.keys).
           continue;
         }
@@ -122,7 +122,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
         const childPath = [...slatePath, pathOffset];
 
         if (
-          Node.isText(child) &&
+          Text.isText(child) &&
           (pathOffset === startPathOffset || pathOffset === endPathOffset)
         ) {
           const start = pathOffset === startPathOffset ? startTextOffset : 0;
@@ -158,7 +158,7 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
       const child = node.children[pathOffset];
       const childPath = [...slatePath, pathOffset];
 
-      if (isObject(child) && Node.isText(child)) {
+      if (Text.isText(child)) {
         const lastOp = ops[ops.length - 1];
 
         /**
@@ -237,14 +237,14 @@ function applyDelta(node: Element, slatePath: Path, delta: Delta): Operation[] {
 }
 
 export function translateYTextEvent(
-  sharedRoot: XmlText,
+  sharedRoot: Y.XmlText,
   editor: Editor,
-  event: YTextEvent,
+  event: Y.YTextEvent,
 ): Operation[] {
   const { target, changes } = event;
   const delta = event.delta as Delta;
 
-  if (!(target instanceof XmlText)) {
+  if (!(target instanceof Y.XmlText)) {
     throw new Error("Unexpected target node type");
   }
 
@@ -252,7 +252,7 @@ export function translateYTextEvent(
   const slatePath = getSlatePath(sharedRoot, editor, target);
   const targetElement = Node.get(editor, slatePath);
 
-  if (Node.isText(targetElement)) {
+  if (Text.isText(targetElement)) {
     throw new Error("Cannot apply yTextEvent to text node");
   }
 

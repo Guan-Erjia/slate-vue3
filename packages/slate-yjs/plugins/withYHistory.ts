@@ -1,5 +1,5 @@
 import { Editor, Location, Transforms } from "slate";
-import { UndoManager } from "yjs";
+import * as Y from "yjs";
 import { HistoryStackItem, RelativeRange } from "../model/types";
 import {
   relativeRangeToSlateRange,
@@ -13,7 +13,7 @@ const DEFAULT_WITHOUT_SAVING_ORIGIN = Symbol(
 );
 
 export type YHistoryEditor = YjsEditor & {
-  undoManager: UndoManager;
+  undoManager: Y.UndoManager;
 
   withoutSavingOrigin: unknown;
 
@@ -25,7 +25,7 @@ export const YHistoryEditor = {
   isYHistoryEditor(value: unknown): value is YHistoryEditor {
     return (
       YjsEditor.isYjsEditor(value) &&
-      (value as YHistoryEditor).undoManager instanceof UndoManager &&
+      (value as YHistoryEditor).undoManager instanceof Y.UndoManager &&
       typeof (value as YHistoryEditor).undo === "function" &&
       typeof (value as YHistoryEditor).redo === "function" &&
       "withoutSavingOrigin" in value
@@ -50,7 +50,7 @@ export const YHistoryEditor = {
 };
 
 export type WithYHistoryOptions = NonNullable<
-  ConstructorParameters<typeof UndoManager>[1]
+  ConstructorParameters<typeof Y.UndoManager>[1]
 > & {
   withoutSavingOrigin?: unknown;
 };
@@ -65,7 +65,7 @@ export function withYHistory<T extends YjsEditor>(
 ): T & YHistoryEditor {
   const e = editor as T & YHistoryEditor;
 
-  const undoManager = new UndoManager(e.sharedRoot, {
+  const undoManager = new Y.UndoManager(e.sharedRoot, {
     trackedOrigins,
     ...options,
   });
@@ -172,12 +172,14 @@ export function withYHistory<T extends YjsEditor>(
 
   e.undo = () => {
     if (YjsEditor.connected(e)) {
+      YjsEditor.flushLocalChanges(e);
       e.undoManager.undo();
     }
   };
 
   e.redo = () => {
     if (YjsEditor.connected(e)) {
+      YjsEditor.flushLocalChanges(e);
       e.undoManager.redo();
     }
   };
