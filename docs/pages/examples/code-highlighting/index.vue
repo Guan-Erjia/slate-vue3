@@ -85,7 +85,7 @@ const App = () => {
     type: "code-block",
     language: "typescript",
     children: toCodeLines(`// TypeScript users only add this code
-import { BaseEditor, Descendant } from 'slate-vue3/core'
+import { BaseEditor, Descendant } from 'slate'
 import { DOMEditor } from 'slate-vue3/dom'
 
 type CustomElement = { type: 'paragraph'; children: CustomText[] }
