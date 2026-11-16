@@ -24,8 +24,8 @@ import MarkButton from "../richtext/MarkButton.vue";
 import BlockButton from "../richtext/BlockButton.vue";
 import AlignButton from "../richtext/AlignButton.vue";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
-import { faker } from "@faker-js/faker";
 import { Text } from "slate";
+import { randomCursorData } from "../remote-cursor/fake";
 
 const initialValue: CustomElement[] = [
   {
@@ -66,6 +66,11 @@ const renderElement = ({
   }
 };
 
+function addAlpha(hexColor: string, opacity: number): string {
+  const normalized = Math.round(Math.min(Math.max(opacity, 0), 1) * 255);
+  return hexColor + normalized.toString(16).toUpperCase();
+}
+
 const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   let _children: VNodeChild = children;
   let style: CSSProperties = {};
@@ -81,34 +86,46 @@ const renderLeaf = ({ leaf, attributes, children }: RenderLeafProps) => {
   if ("delete" in leaf) {
     style.textDecoration = "line-through";
   }
-  getRemoteCursorsOnLeaf<{ name: string }, Text>(leaf).forEach((cursor) => {
-    if (cursor.data) {
-      style.backgroundColor = "rgba(255, 0, 0, 0.5)";
-      attributes.contenteditable = false;
-      attributes.unselectable = "on";
-    }
-  });
+  getRemoteCursorsOnLeaf<{ name: string; color: string }, Text>(leaf).forEach(
+    (cursor) => {
+      if (cursor.data) {
+        style.backgroundColor = addAlpha(cursor.data.color, 0.5);
+        attributes.contenteditable = false;
+        attributes.unselectable = "on";
+      }
+    },
+  );
 
-  getRemoteCaretsOnLeaf<{ name: string }, Text>(leaf).forEach((caret) => {
-    if (caret.data) {
-      style = { position: "absolute", fontWeight: "normal" };
-      _children = [
-        h("span", {
-          contenteditable: false,
-          className: "cursor",
-        }),
-        h(
-          "span",
-          {
+  getRemoteCaretsOnLeaf<{ name: string; color: string }, Text>(leaf).forEach(
+    (caret) => {
+      if (caret.data) {
+        const backgroundColor = caret.data.color;
+        style = { position: "absolute", fontWeight: "normal" };
+        _children = [
+          h("span", {
             contenteditable: false,
-            className: "label",
-          },
-          [caret.data.name],
-        ),
-        children,
-      ];
-    }
-  });
+            className: "cursor",
+            style: {
+              backgroundColor,
+            },
+          }),
+          h(
+            "span",
+            {
+              contenteditable: false,
+              className: "label",
+              style: {
+                backgroundColor,
+                transform: "translateY(-100%)",
+              },
+            },
+            [caret.data.name],
+          ),
+          children,
+        ];
+      }
+    },
+  );
 
   return h(
     "code" in leaf ? "code" : "bold" in leaf ? "strong" : "span",
@@ -126,11 +143,7 @@ const editor = withCursors(
   withYHistory(withYjs(createReactiveEditor(), props.sharedType)),
   props.provider.awareness,
   {
-    data: {
-      name: `${faker.person.firstName()} ${faker.person.lastName()}`,
-      // color: ...
-      // can add other remote data
-    },
+    data: randomCursorData(),
   },
 );
 editor.children = initialValue;

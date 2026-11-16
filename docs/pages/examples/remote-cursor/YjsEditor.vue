@@ -16,8 +16,8 @@ import MarkButton from "../richtext/MarkButton.vue";
 import BlockButton from "../richtext/BlockButton.vue";
 import AlignButton from "../richtext/AlignButton.vue";
 import { LiveblocksYjsProvider } from "@liveblocks/yjs";
-import { faker } from "@faker-js/faker";
 import RemoteOverlay from "./RemoteOverlay.vue";
+import { randomCursorData } from "./fake";
 
 const initialValue: CustomElement[] = [
   {
@@ -88,11 +88,7 @@ const editor = withCursors(
   withYHistory(withYjs(createReactiveEditor(), props.sharedType)),
   props.provider.awareness,
   {
-    data: {
-      name: `${faker.person.firstName()} ${faker.person.lastName()}`,
-      // color: ...
-      // can add other remote data
-    },
+    data: randomCursorData(),
   },
 );
 editor.children = initialValue;

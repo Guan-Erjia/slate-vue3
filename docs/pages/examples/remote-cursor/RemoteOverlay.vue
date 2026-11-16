@@ -10,6 +10,7 @@
           top: position.top + 'px',
           left: position.left + 'px',
           width: position.width + 'px',
+          backgroundColor: addAlpha(cursor.data!.color, 0.5),
         }"
         :key="index"
       />
@@ -23,7 +24,9 @@
           left: cursor.caretPosition.left + 'px',
         }"
       >
-        <div class="label">{{ cursor.data.name }}</div>
+        <div class="label" :style="{ backgroundColor: cursor.data.color }">
+          {{ cursor.data.name }}
+        </div>
       </div>
     </template>
   </div>
@@ -31,11 +34,12 @@
 <script setup lang="ts">
 import { useRemoteCursorOverlayPositions } from "slate-vue3/yjs";
 import { useTemplateRef } from "vue";
+import { addAlpha } from "./fake";
 
 const overlayRef = useTemplateRef<HTMLDivElement>("overlay");
-// Use type assertion to satisfy the expected type
 const [cursors] = useRemoteCursorOverlayPositions<{
   name: string;
+  color: string;
 }>(overlayRef);
 </script>
 

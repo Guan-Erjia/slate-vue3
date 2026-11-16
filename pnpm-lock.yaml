@@ -84,6 +84,9 @@ importers:
       '@types/prismjs':
         specifier: ^1.26.6
         version: 1.26.6
+      '@types/randomcolor':
+        specifier: ^0.5.9
+        version: 0.5.9
       '@vitejs/plugin-vue':
         specifier: ^6.0.10
         version: 6.0.10(vite@8.3.6(@types/node@26.6.6)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.37.0)(yaml@2.9.1))(vue@3.5.45(typescript@6.0.3))
@@ -126,6 +129,9 @@ importers:
       prismjs:
         specifier: ^1.30.0
         version: 1.30.0
+      randomcolor:
+        specifier: ^0.6.2
+        version: 0.6.2
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
@@ -1228,6 +1234,9 @@ packages:
 
   '@types/prismjs@1.26.6':
     resolution: {integrity: sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw==}
+
+  '@types/randomcolor@0.5.9':
+    resolution: {integrity: sha512-k58cfpkK15AKn1m+oRd9nh5BnuiowhbyvBBdAzcddtARMr3xRzP0VlFaAKovSG6N6Knx08EicjPlOMzDejerrQ==}
 
   '@types/unist@3.0.3':
     resolution: {integrity: sha512-ko/gIFJRv177XgZsZcBwnqJN5x/Gien8qNOn0D5bQU/zAzVf9Zt3BlcUiLqhV9y4ARk0GbT3tnUiPNgnTXzc/Q==}
@@ -3260,6 +3269,9 @@ packages:
   quansync@0.2.11:
     resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
 
+  randomcolor@0.6.2:
+    resolution: {integrity: sha512-Mn6TbyYpFgwFuQ8KJKqf3bqqY9O1y37/0jgSK/61PUxV4QfIMv0+K2ioq8DfOjkBslcjwSzRfIDEXfzA9aCx7A==}
+
   rc@1.2.8:
     resolution: {integrity: sha512-y3bGgqKj3QBdxLbLkomlohkvsA8gdAiUQlSBJnBhfn+BPxg4bc62d8TcBW15wavDfgexCgccckhcZvywyQYPOw==}
     hasBin: true
@@ -5161,6 +5173,8 @@ snapshots:
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/prismjs@1.26.6': {}
+
+  '@types/randomcolor@0.5.9': {}
 
   '@types/unist@3.0.3': {}
 
@@ -7352,6 +7366,8 @@ snapshots:
       hookified: 2.2.0
 
   quansync@0.2.11: {}
+
+  randomcolor@0.6.2: {}
 
   rc@1.2.8:
     dependencies:
