@@ -1,0 +1,1 @@
+var e=e=>{let t=t=>{let n=e.ref;n&&(typeof n==`function`?n(t.el,{}):typeof n==`object`&&`value`in n&&(n.value=t.el))};return e.onVnodeMounted=t,e.onVnodeUpdated=t,e.onVnodeUnmounted=()=>{let t=e.ref;t&&(typeof t==`function`?t(null,{}):typeof t==`object`&&`value`in t&&(t.value=null))},e};export{e as t};
