@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "description": "slate-react library implemented with vue3",
+  "description": "A Slate.js rich text editor framework for Vue 3, inspired by slate-react.",
   "license": "MIT",
   "files": [
     "dist/"
@@ -131,13 +131,19 @@
   "keywords": [
     "slate-vue3",
     "slate-vue",
-    "slate",
-    "editor",
+    "slate.js",
+    "slatejs",
+    "slate-editor",
+    "vue3",
+    "vue-3",
+    "vue-editor",
+    "vue-rich-text-editor",
+    "rich-text-editor",
+    "richtext-editor",
     "contenteditable",
+    "wysiwyg",
+    "editor",
     "richtext",
-    "rich",
-    "editable",
-    "markdown",
-    "html"
+    "markdown"
   ]
 }

@@ -1,27 +1,48 @@
-[<img src="https://github.com/Guan-Erjia/slate-vue3/blob/master/public/banner.png" />](https://github.com/ianstormtaylor/slate)
+# slate-vue3
 
 <p align="center">
-  slate-<a style="color: #087ea4" href="https://react.dev/">react</a> library implemented with <a style="color: #42b883" href="https://vuejs.org/">vue3</a>
+  <img src="https://github.com/Guan-Erjia/slate-vue3/blob/master/public/banner.png" alt="slate-vue3 - Slate.js for Vue 3" />
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/slate-vue3?activeTab=code">
-    <img src="https://img.shields.io/bundlephobia/min/slate-vue3">
+  <strong>A Slate.js rich text editor framework for Vue 3.</strong>
+</p>
+
+<p align="center">
+  A Vue 3 implementation of the <a href="https://github.com/ianstormtaylor/slate">Slate</a> rich text editor framework, inspired by <a href="https://react.dev/">slate-react</a> and built for the Vue ecosystem.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/slate-vue3">
+    <img src="https://img.shields.io/npm/v/slate-vue3.svg?maxAge=3600&label=version&colorB=007ec6" alt="npm version" />
+  </a>
+  <a href="https://bundlephobia.com/package/slate-vue3">
+    <img src="https://img.shields.io/bundlephobia/min/slate-vue3" alt="Minified bundle size" />
   </a>
   <a href="https://join.slack.com/t/slate-js/shared_invite/zt-f8t986ip-7dA1DyiqPpzootz1snKXkw">
-    <img src="https://img.shields.io/badge/slack-slate--js-brightgreen.svg?logo=slack">
+    <img src="https://img.shields.io/badge/slack-slate--js-brightgreen.svg?logo=slack" alt="Slate Slack" />
   </a>
-  <a href="./package.json">
-    <img src="https://img.shields.io/npm/v/slate-vue3.svg?maxAge=3600&label=version&colorB=007ec6">
+  <a href="https://github.com/Guan-Erjia/slate-vue3">
+    <img src="https://img.shields.io/github/stars/Guan-Erjia/slate-vue3?style=social" alt="GitHub stars" />
   </a>
 </p>
-<br/>
+
+---
 
 > [!IMPORTANT]
 > **🚧 Major Refactor Notice**
 >
-> This project has undergone a **large-scale refactor**. The core library and all surrounding ecosystem packages have been **fully replaced with implementations identical to the official Slate**.
-> If you are on an older version, please read the migration guide carefully — legacy APIs may no longer be compatible.
+> This project has undergone a large-scale refactor. The core library and its surrounding ecosystem packages have been fully rewritten to align with the official Slate implementations.
+>
+> If you are upgrading from an older version, please read the migration guide carefully. Some legacy APIs may no longer be compatible.
+
+<br />
+
+### What is slate-vue3?
+
+**slate-vue3** brings the powerful and customizable [Slate](https://github.com/ianstormtaylor/slate) rich text editor framework
+
+<br />
 
 ### Why use it?
 
@@ -99,10 +120,10 @@ If you're using `slate` for the first time, check out the [Getting Started](http
 
 Due to the complexity of maintaining multiple packages and the lack of reusability of sub packages in other frameworks, slate-vue3 does not use workspace and only performs sub packaging during packaging
 
-| **Package**                                              |                                                                       **Version** | **Description**                                  |
-| :------------------------------------------------------- | --------------------------------------------------------------------------------: | :----------------------------------------------- |
-| [`slate-vue3/dom`](./packages/slate-dom)                 | ![](https://img.shields.io/npm/v/slate-dom.svg?maxAge=3600&label=&colorB=007ec6)  | DOM implementation of slate                      |
-| [`slate-vue3/yjs`](./packages/slate-yjs)                 | ![](https://img.shields.io/npm/v/slate-yjs.svg?maxAge=3600&label=&colorB=007ec6)  | integration of `slate-yjs`                       |
+| **Package**                              |                                                                      **Version** | **Description**             |
+| :--------------------------------------- | -------------------------------------------------------------------------------: | :-------------------------- |
+| [`slate-vue3/dom`](./packages/slate-dom) | ![](https://img.shields.io/npm/v/slate-dom.svg?maxAge=3600&label=&colorB=007ec6) | DOM implementation of slate |
+| [`slate-vue3/yjs`](./packages/slate-yjs) | ![](https://img.shields.io/npm/v/slate-yjs.svg?maxAge=3600&label=&colorB=007ec6) | integration of `slate-yjs`  |
 
 <br />
 
