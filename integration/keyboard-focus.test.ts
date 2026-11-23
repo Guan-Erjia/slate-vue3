@@ -1,17 +1,29 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import { getEditorHandle } from "./support/editor";
+
+const tabOutOfEditor = async (page: Page, browserName: string) => {
+  if (browserName === "webkit") {
+    // WebKit's Tab navigation to buttons depends on macOS Full Keyboard Access.
+    await page.getByRole("button", { name: "After editor" }).focus();
+  } else {
+    await page.keyboard.press("Tab");
+  }
+};
 
 test.beforeEach(async ({ page, isMobile }) => {
   test.skip(isMobile, "Keyboard tab navigation requires a desktop browser");
   await page.goto("http://localhost:5173/slate-vue3/playwright/keyboard-focus");
 });
 
-test("tabbing back restores the existing caret", async ({ page }) => {
+test("tabbing back restores the existing caret", async ({
+  page,
+  browserName,
+}) => {
   const element = page.getByRole("textbox");
   const editor = await getEditorHandle(element);
   await element.click();
   await editor.evaluate((editor) => editor.select({ path: [0, 0], offset: 5 }));
-  await page.keyboard.press("Tab");
+  await tabOutOfEditor(page, browserName);
   await expect(
     page.getByRole("button", { name: "After editor" }),
   ).toBeFocused();
@@ -49,6 +61,7 @@ test("mouse focus keeps the clicked caret", async ({ page }) => {
 
 test("tabbing back restores a backward expanded selection", async ({
   page,
+  browserName,
 }) => {
   const element = page.getByRole("textbox");
   const editor = await getEditorHandle(element);
@@ -61,7 +74,7 @@ test("tabbing back restores a backward expanded selection", async ({
     (editor, selection) => editor.select(selection),
     selection,
   );
-  await page.keyboard.press("Tab");
+  await tabOutOfEditor(page, browserName);
   await expect(
     page.getByRole("button", { name: "After editor" }),
   ).toBeFocused();
@@ -74,7 +87,10 @@ test("tabbing back restores a backward expanded selection", async ({
   await expect(element).toHaveText("heX world");
 });
 
-test("tabbing back restores the caret in an empty block", async ({ page }) => {
+test("tabbing back restores the caret in an empty block", async ({
+  page,
+  browserName,
+}) => {
   const element = page.getByRole("textbox");
   const editor = await getEditorHandle(element);
   await element.click();
@@ -82,7 +98,7 @@ test("tabbing back restores the caret in an empty block", async ({ page }) => {
     editor.select({ anchor: editor.start([]), focus: editor.end([]) });
     editor.deleteFragment();
   });
-  await page.keyboard.press("Tab");
+  await tabOutOfEditor(page, browserName);
   await expect(
     page.getByRole("button", { name: "After editor" }),
   ).toBeFocused();
