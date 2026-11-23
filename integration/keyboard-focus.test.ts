@@ -3,7 +3,7 @@ import { getEditorHandle } from "./support/editor";
 
 const tabOutOfEditor = async (page: Page, browserName: string) => {
   if (browserName === "webkit") {
-    // WebKit's Tab navigation to buttons depends on macOS Full Keyboard Access.
+    // WebKit's Tab navigation to buttons depends on macOS Full Keyboard Access
     await page.getByRole("button", { name: "After editor" }).focus();
   } else {
     await page.keyboard.press("Tab");
