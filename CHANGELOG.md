@@ -1,3 +1,15 @@
+# [2.4.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.3.0...v_2.4.0) (2026-11-23)
+
+
+### Bug Fixes
+
+* modify build configuration ([62d38c6](https://github.com/Guan-Erjia/slate-vue3/commit/62d38c6379b4426a84a5228cbc48f6339e27378c))
+
+
+### Features
+
+* maintain consistency with the behavior of slate-yjs ([c7db711](https://github.com/Guan-Erjia/slate-vue3/commit/c7db711d8c36faf25c1cfaafba91cf15b73df855))
+
 # [2.3.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.2.0...v_2.3.0) (2026-11-13)
 
 
