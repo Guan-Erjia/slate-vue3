@@ -103,6 +103,13 @@ If you have an idea for an example that shows a common use case, pull request it
 
 <br/>
 
+### Library build
+
+`pnpm build-all` produces one JavaScript file per entry: `dist/index.js`,
+`dist/dom.js`, and `dist/yjs.js`. The entries import each other where needed
+to share editor state; TypeScript declarations are emitted separately.
+Run `pnpm test:build` to verify the build output.
+
 ### Documentation
 
 This [**`document`**](https://guan-erjia.github.io/slate-vue3) serves only as a supplement to the slate document and mainly provides case studies and differences between `slate-vue3` and `slate-react`

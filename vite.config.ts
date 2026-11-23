@@ -71,18 +71,15 @@ export default defineConfig(({ command, mode }) => {
           formats: ["es"],
         },
         rollupOptions: {
-          external: ["vue", "yjs", "slate"],
+          external: ["vue", "yjs", "slate", "slate-vue3", "slate-vue3/dom"],
         },
       },
       plugins: [
         dts({
           tsconfigPath: "./tsconfig.json",
           entryRoot: "packages",
-          exclude: [
-            "./packages/docs/**/*",
-            "./test/**/*",
-            "./playwright.config.ts",
-          ],
+          include: ["./packages/**/*"],
+          exclude: ["./packages/**/test/**/*"],
           compilerOptions: {
             verbatimModuleSyntax: false,
           },
