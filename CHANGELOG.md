@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.4.0...v_2.4.1) (2026-11-23)
+
+
+### Bug Fixes
+
+* keyboard focus test ([7e93f43](https://github.com/Guan-Erjia/slate-vue3/commit/7e93f43fcfce32a83fc867e1ca2ec3a050e94afa))
+
 # [2.4.0](https://github.com/Guan-Erjia/slate-vue3/compare/v_2.3.0...v_2.4.0) (2026-11-23)
 
 
