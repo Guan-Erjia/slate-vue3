@@ -1,0 +1,1 @@
+import{F as e,M as t,g as n,t as r}from"./index-C449DUSO.js";var i={},a={style:{position:`relative`,"padding-bottom":`8px`,"margin-bottom":`10px`,"border-bottom":`2px solid #eee`},"data-testid":`menu`};function o(r,i){return t(),n(`div`,a,[e(r.$slots,`default`)])}var s=r(i,[[`render`,o]]);export{s as t};
